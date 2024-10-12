@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.report
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,8 +51,12 @@ class HomeViewModel(
             viewModelFactory {
                 initializer {
                     val repository = GroupRepositoryImpl()
-                    val groupListUseCase = GroupListUseCase(repository)
-                    HomeViewModel(groupListUseCase)
+                    val storage = StorageService()
+                    val groupListUseCase = GroupListUseCase(
+                        groupRepository = repository,
+                        storage = storage
+                    )
+                    HomeViewModel(groupListUseCase = groupListUseCase)
                 }
             }
     }

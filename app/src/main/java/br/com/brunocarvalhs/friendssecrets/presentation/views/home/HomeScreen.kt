@@ -119,7 +119,7 @@ fun HomeScreen(
                 navController.navigate(GroupNavigation.Create.route)
             }) {
                 Icon(Icons.Filled.Add, "Add")
-                Text(stringResource(R.string.action_create_group))
+                Text(stringResource(R.string.home_action_create_group))
             }
         }
     ) {
