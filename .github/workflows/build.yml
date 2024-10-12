@@ -27,14 +27,14 @@ jobs:
       - name: Set up JDK ${{ env.JDK_VERSION }}
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '${{ env.JDK_VERSION }}'
 
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: Swisyn/setup-android-sdk@v1
 
       - name: Setup Gradle
         run: echo "org.gradle.daemon=false" >> $GITHUB_WORKSPACE/gradle.properties
