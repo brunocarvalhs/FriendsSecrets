@@ -1,4 +1,8 @@
-# Pull Request Template 1
+---
+name: PR
+about: Novas funcionalidades ou recursos que podemos incluir
+title: 'feat: '
+---
 
 ## Descrição das Alterações
 <!-- Descreva as alterações feitas neste PR. -->
