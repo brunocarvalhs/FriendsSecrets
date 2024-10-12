@@ -30,7 +30,8 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
+          echo "API_KEY=${{ secrets.API_KEY }}" >> local.properties
+          echo "ANOTHER_KEY=${{ secrets.ANOTHER_KEY }}" >> local.properties
 
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
@@ -47,7 +48,7 @@ jobs:
       - name: Generate Keystore
         run: |
           keytool -genkeypair -v \
-            -keystore my-release-key.jks \
+            -keystore app/my-release-key.jks \  # Coloque o keystore no diretório 'app'
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
@@ -59,9 +60,6 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Grant execute permission to gradlew
-        run: chmod +x ./gradlew
-        
       - name: Build APK
         run: |
           ./gradlew assembleDebug
@@ -72,7 +70,7 @@ jobs:
 
       - name: Sign APK
         run: |
-          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=my-release-key.jks \
+          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=app/my-release-key.jks \ 
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
