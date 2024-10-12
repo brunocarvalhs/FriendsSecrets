@@ -7,7 +7,7 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   JDK_VERSION: 11
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
-  BUILD_TOOLS_VERSION: "30.0.2"
+  BUILD_TOOLS_VERSION: "34.0.0"
   APP_NAME: "FriendsSecrets"
 
 jobs:
@@ -15,9 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Preparing Environment
     outputs:
-      has-exec-permissions: ${{ steps.set_permissions.outcome == 'success' }}
       jdk-version: ${{ env.JDK_VERSION }}
-      android-sdk-tools: ${{ env.ANDROID_SDK_TOOLS }}
       gradle-opts: ${{ env.GRADLE_OPTS }}
     steps:
       - name: Checkout code
@@ -31,14 +29,13 @@ jobs:
           distribution: 'temurin'
           java-version: '${{ env.JDK_VERSION }}'
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
       - name: Setup Gradle
-        run: echo "org.gradle.daemon=false" >> $GITHUB_WORKSPACE/gradle.properties
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.5
 
   unit_tests:
     needs: preparing_environment
@@ -49,16 +46,11 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
       - name: Unit tests
         run: |
-          ./gradlew testDebugUnitTest --stacktrace
+          gradle testDebugUnitTest --stacktrace
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
           JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
           GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
 
   android_lint:
@@ -70,17 +62,12 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
       - if: startsWith(github.ref, 'refs/heads/master')
         name: Android Lint
         run: |
-          ./gradlew lintDebug
+          gradle lintDebug
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
           JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
           GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
 
   build:
@@ -96,12 +83,9 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
       - name: Extract versionName from build.gradle
         run: |
-          VERSION_NAME=$(./gradlew -q printVersionName)
+          VERSION_NAME=$(gradle -q printVersionName)
           echo "version=${VERSION_NAME}" >> $GITHUB_ENV
 
       - name: Get Build Date
@@ -110,23 +94,23 @@ jobs:
 
       - name: Build APK
         run: |
-          ./gradlew assembleDebug
+          gradle assembleDebug
 
       - name: Build AAB
         run: |
-          ./gradlew bundleDebug
+          gradle bundleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.APP_NAME }}-${{ env.version }}-${{ env.date }}-apk
-          path: ${{ github.workspace}} build/debug/signed/*.apk
+          path: ${{ github.workspace}}/build/debug/signed/*.apk
 
-      - name: Upload APK
+      - name: Upload AAB
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.APP_NAME }}-${{ env.version }}-${{ env.date }}-aab
-          path: ${{ github.workspace}} build/debug/signed/*.aab
+          path: ${{ github.workspace}}/build/debug/signed/*.aab
 
       - name: Create Branch
         uses: peterjgrainger/action-create-branch@v2.2.0
