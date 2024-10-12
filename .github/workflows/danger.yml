@@ -25,7 +25,7 @@ jobs:
       - name: Run Danger
         run: danger ci --dangerfile .github/danger/dangerfile.js  # Executa o Danger usando o arquivo no caminho especificado
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Passa o GITHUB_TOKEN como variável de ambiente
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Passa o GITHUB_TOKEN como variável de ambiente
 
       - name: Install GitHub CLI
         run: sudo apt-get install gh  # Instala o GitHub CLI
@@ -36,4 +36,4 @@ jobs:
           echo "Aprovação automática do PR"
           gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token padrão do GitHub Actions
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
