@@ -1,6 +1,6 @@
-import { danger, message, warn, fail } from 'danger';
-import { execSync } from 'child_process';
-import fs from 'fs';
+const { danger, message, warn, fail } = require('danger');
+const { execSync } = require('child_process');
+const fs = require('fs');
 
 // Verifica se a descrição do PR está presente e se tem um mínimo de caracteres
 if (danger.github.pr.body.length < 10) {
