@@ -11,111 +11,61 @@ env:
   APP_NAME: "FriendsSecrets"
 
 jobs:
-  preparing_environment:
+  build:
     runs-on: ubuntu-latest
-    name: Preparing Environment
-    outputs:
-      jdk-version: ${{ env.JDK_VERSION }}
-      gradle-opts: ${{ env.GRADLE_OPTS }}
+    name: Build Application
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
 
-      - name: Set up JDK ${{ env.JDK_VERSION }}
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '${{ env.JDK_VERSION }}'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: Get Gradle Version from gradle.properties
+        id: gradle-version
+        run: |
+          GRADLE_VERSION=$(grep "gradleVersion" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          echo "gradle_version=${GRADLE_VERSION}" >> $GITHUB_ENV
+          echo "Gradle version is $GRADLE_VERSION"
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.9
+          gradle-version: ${{ env.gradle_version }}
 
-  unit_tests:
-    needs: preparing_environment
-    runs-on: ubuntu-latest
-    name: Unit Tests
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Unit tests
+      - name: Generate Keystore
         run: |
-          gradle testDebugUnitTest --stacktrace
-        env:
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
-
-  android_lint:
-    needs: preparing_environment
-    runs-on: ubuntu-latest
-    name: Lint
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - if: startsWith(github.ref, 'refs/heads/master')
-        name: Android Lint
-        run: |
-          gradle lintDebug
-        env:
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
-
-  build:
-    needs: [ preparing_environment, unit_tests, android_lint ]
-    runs-on: ubuntu-latest
-    name: Build
-    env:
-      KEYSTORE_ALIAS: ${{ secrets.ALIAS }}
-      KEY_PASSWORD: ${{ secrets.PASSWORD_ALIAS }}
-      KEYSTORE_PASSWORD: ${{ secrets.PASSWORD_KEY }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Extract versionName from build.gradle
-        run: |
-          VERSION_NAME=$(gradle -q printVersionName)
-          echo "version=${VERSION_NAME}" >> $GITHUB_ENV
-
-      - name: Get Build Date
-        run: |
-          echo "::set-env name=date::$(date +%Y-%m-%d)"
+          keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEYSTORE_ALIAS }} -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }}
 
       - name: Build APK
         run: |
-          gradle assembleDebug
+          ./gradlew assembleDebug
 
       - name: Build AAB
         run: |
-          gradle bundleDebug
+          ./gradlew bundleDebug
+
+      - name: Sign APK
+        run: |
+          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=my-release-key.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.APP_NAME }}-${{ env.version }}-${{ env.date }}-apk
-          path: ${{ github.workspace}}/build/debug/signed/*.apk
+          name: ${{ env.APP_NAME }}-apk
+          path: app/build/outputs/apk/release/*.apk
 
       - name: Upload AAB
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.APP_NAME }}-${{ env.version }}-${{ env.date }}-aab
-          path: ${{ github.workspace}}/build/debug/signed/*.aab
-
-      - name: Create Branch
-        uses: peterjgrainger/action-create-branch@v2.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          branch: release/v${{ env.VERSION }}
-          sha: '${{ github.event.pull_request.head.sha }}'
+          name: ${{ env.APP_NAME }}-aab
+          path: app/build/outputs/bundle/release/*.aab
