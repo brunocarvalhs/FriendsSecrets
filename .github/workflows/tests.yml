@@ -11,14 +11,9 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
 
 jobs:
-  preparing_environment:
+  run_tests:
     runs-on: ubuntu-latest
-    name: Preparing Environment
-    outputs:
-      has-exec-permissions: ${{ steps.set_permissions.outcome == 'success' }}
-      jdk-version: ${{ env.JDK_VERSION }}
-      android-sdk-tools: ${{ env.ANDROID_SDK_TOOLS }}
-      gradle-opts: ${{ env.GRADLE_OPTS }}
+    name: Run Android Tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,25 +38,13 @@ jobs:
         run: echo "org.gradle.daemon=false" >> $GITHUB_WORKSPACE/gradle.properties
 
       - name: Extract version from VERSION.md
-        run: echo "::set-env name=version::$(cat VERSION.md)"
+        run: echo "version=$(cat VERSION.md)" >> $GITHUB_ENV
 
       - name: Get Build Date
-        run: echo "::set-env name=date::$(date +%Y-%m-%d)"
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
 
-  unit_tests:
-    needs: preparing_environment
-    runs-on: ubuntu-latest
-    name: Unit Tests
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - if: needs.preparing_environment.outputs.has-exec-permissions == 'false'
-        run: chmod +x gradlew
-
-      - if: startsWith(github.ref, 'refs/heads/master')
-        name: Create google-services release file
+      - name: Create google-services release file
+        if: startsWith(github.ref, 'refs/heads/master')
         run: |
           rm -f app/google-services.json
           echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
@@ -69,70 +52,38 @@ jobs:
       - name: Run unit tests debug
         run: ./gradlew testDebug
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
+          JDK_VERSION: ${{ env.JDK_VERSION }}
+          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - if: startsWith(github.ref, 'refs/heads/master')
-        name: Run unit tests release
+      - name: Run unit tests release
+        if: startsWith(github.ref, 'refs/heads/master')
         run: ./gradlew testRelease
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
-
-      - name: Comment Failure
-        if: ${{ failure() }}
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "Ops, Testes falhados, obrigado a corrigir esses erros."
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          reactions: "-1 | eyes"
-
-      - name: Comment Success
-        if: ${{ success() }}
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "Testes Unitários com sucesso, código funcional."
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          reactions: "+1 | laugh | rocket"
-
-  android_lint:
-    needs: preparing_environment
-    runs-on: ubuntu-latest
-    name: Lint
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-
-      - if: needs.preparing_environment.outputs.has-exec-permissions == 'false'
-        run: chmod +x gradlew
+          JDK_VERSION: ${{ env.JDK_VERSION }}
+          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
       - name: Android Lint Debug
         run: ./gradlew lintDebug
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
+          JDK_VERSION: ${{ env.JDK_VERSION }}
+          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - if: startsWith(github.ref, 'refs/heads/master')
-        name: Android Lint Debug
+      - name: Android Lint Release
+        if: startsWith(github.ref, 'refs/heads/master')
         run: ./gradlew lintRelease
         env:
-          HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
-          JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
-          ANDROID_SDK_TOOLS: ${{ needs.preparing_environment.outputs.android-sdk-tools }}
-          GRADLE_OPTS: ${{ needs.preparing_environment.outputs.gradle-opts }}
+          JDK_VERSION: ${{ env.JDK_VERSION }}
+          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
       - name: Comment Failure
         if: ${{ failure() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
-          message: "Ops, encontrado falhas no lint, por favor precisa corrigir."
+          message: "Ops, encontrado falhas nos testes ou lint, por favor precisa corrigir."
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "-1 | confused"
 
@@ -140,6 +91,6 @@ jobs:
         if: ${{ success() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
-          message: "Lint revisado com sucesso, aparentemente está tudo certo."
+          message: "Todos os testes e lint passaram com sucesso! Bom trabalho."
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "+1"
