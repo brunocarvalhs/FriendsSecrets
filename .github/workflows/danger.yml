@@ -19,13 +19,20 @@ jobs:
         with:
           node-version: '16'  # Especifica a versão do Node.js
 
-      - name: Install Danger
-        run: npm install -g danger  # Instala o Danger globalmente
+      - name: Install dependencies
+        run: |
+          npm install -g danger conventional-changelog  # Instala Danger e conventional-changelog globalmente
 
       - name: Run Danger
         run: danger ci --dangerfile .github/danger/dangerfile.js  # Executa o Danger usando o arquivo no caminho especificado
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Passa o GITHUB_TOKEN como variável de ambiente
+
+      - name: Generate CHANGELOG
+        run: |
+          npx conventional-changelog -o CHANGELOG.md  # Gera o CHANGELOG e salva em CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
 
       - name: Install GitHub CLI
         run: sudo apt-get install gh  # Instala o GitHub CLI
