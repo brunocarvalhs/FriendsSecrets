@@ -33,7 +33,11 @@ jobs:
       - name: Approve PR
         if: success() && !failure()  # Verifica se todas as etapas anteriores foram bem-sucedidas
         run: |
-          echo "Aprovação automática do PR"
-          gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
+          if [[ "${{ github.actor }}" == "${{ github.event.pull_request.user.login }}" ]]; then
+            echo "Você não pode aprovar seu próprio PR. Por favor, peça a um revisor para aprovar."
+          else
+            echo "Aprovação automática do PR"
+            gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
