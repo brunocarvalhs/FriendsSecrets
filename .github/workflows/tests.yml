@@ -2,7 +2,7 @@ name: Android Tests
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -32,14 +32,14 @@ jobs:
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
           echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
-          
+
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
         run: |
           GRADLE_VERSION=$(grep "gradleVersion" gradle.properties | cut -d'=' -f2 | tr -d ' ')
           echo "gradle_version=${GRADLE_VERSION}" >> $GITHUB_ENV
           echo "Gradle version is $GRADLE_VERSION"
-          
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -49,27 +49,58 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests
+        id: unit-tests
         run: ./gradlew testDebug
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
-      
+
       - name: Run Lint
+        id: lint
         run: ./gradlew lintDebug
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Comment Failure
+      - name: Set Labels for Unit Tests
         if: ${{ failure() }}
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
+        uses: actions/github-script@v6
         with:
-          message: "Ops, encontrado falhas nos testes ou lint, por favor precisa corrigir."
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          reactions: "-1 | confused"
+          script: |
+            const { context } = require('@actions/github');
+            const pullRequest = context.payload.pull_request;
+            const octokit = new require('@octokit/rest')();
+            octokit.pulls.update({
+              owner: pullRequest.base.repo.owner.login,
+              repo: pullRequest.base.repo.name,
+              pull_number: pullRequest.number,
+              labels: ['tests: failed']  // Adiciona a label de falha
+            });
 
-      - name: Comment Success
-        if: ${{ success() }}
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
+      - name: Set Labels for Lint
+        if: ${{ steps.lint.outcome == 'failure' }}
+        uses: actions/github-script@v6
         with:
-          message: "Todos os testes e lint passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          reactions: "+1"
+          script: |
+            const { context } = require('@actions/github');
+            const pullRequest = context.payload.pull_request;
+            const octokit = new require('@octokit/rest')();
+            octokit.pulls.update({
+              owner: pullRequest.base.repo.owner.login,
+              repo: pullRequest.base.repo.name,
+              pull_number: pullRequest.number,
+              labels: ['lint: failed']  // Adiciona a label de falha
+            });
+
+      - name: Set Success Labels
+        if: ${{ success() }} 
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context } = require('@actions/github');
+            const pullRequest = context.payload.pull_request;
+            const octokit = new require('@octokit/rest')();
+            octokit.pulls.update({
+              owner: pullRequest.base.repo.owner.login,
+              repo: pullRequest.base.repo.name,
+              pull_number: pullRequest.number,
+              labels: ['tests: success', 'lint: success', 'ready for merge']  // Adiciona as labels de sucesso
+            });
