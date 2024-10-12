@@ -30,8 +30,7 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "API_KEY=${{ secrets.API_KEY }}" >> local.properties
-          echo "ANOTHER_KEY=${{ secrets.ANOTHER_KEY }}" >> local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
 
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
