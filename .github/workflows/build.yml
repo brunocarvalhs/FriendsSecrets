@@ -1,4 +1,5 @@
 name: Build Application Debug
+
 on:
   push:
     branches: [ develop ]
@@ -46,6 +47,24 @@ jobs:
 
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebug
+        env:
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+
+      - name: Check for Unit Test Failures
+        if: ${{ failure() }}
+        run: exit 1
+      
+      - name: Run Lint
+        run: ./gradlew lintDebug
+        env:
+          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+
+      - name: Check for Lint Failures
+        if: ${{ failure() }}
+        run: exit 1
 
       - name: Build and Sign APK Debug
         run: |
