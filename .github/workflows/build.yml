@@ -47,7 +47,7 @@ jobs:
       - name: Generate Keystore
         run: |
           keytool -genkeypair -v \
-            -keystore app/my-release-key.jks \
+            -keystore app/release.keystore \
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
@@ -55,7 +55,6 @@ jobs:
             -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
             -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
             -keypass "${{ secrets.KEY_PASSWORD }}"
-
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
@@ -70,7 +69,7 @@ jobs:
 
       - name: Sign APK
         run: |
-          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=app/my-release-key.jks \ 
+          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
