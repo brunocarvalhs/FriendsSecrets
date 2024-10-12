@@ -1,0 +1,37 @@
+name: Danger
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]  # Aciona o Danger em várias ações no PR
+    branches:
+      - develop  # Define a branch para a qual o PR será criado
+
+jobs:
+  danger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Especifica a versão do Node.js
+
+      - name: Install Danger
+        run: npm install -g danger  # Instala o Danger globalmente
+
+      - name: Run Danger
+        run: danger ci --dangerfile .github/danger/dangerfile.js  # Executa o Danger usando o arquivo no caminho especificado
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh  # Instala o GitHub CLI
+
+      - name: Approve PR
+        if: success() && !failure()  # Verifica se todas as etapas anteriores foram bem-sucedidas
+        run: |
+          echo "Aprovação automática do PR"
+          gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token padrão do GitHub Actions

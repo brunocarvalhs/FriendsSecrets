@@ -27,6 +27,11 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
+
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
         run: |
@@ -41,7 +46,18 @@ jobs:
 
       - name: Generate Keystore
         run: |
-          keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEYSTORE_ALIAS }} -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }}
+          keytool -genkeypair -v \
+            -keystore my-release-key.jks \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -alias ${{ secrets.KEYSTORE_ALIAS }} \
+            -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
+            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -keypass ${{ secrets.KEY_PASSWORD }}
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
 
       - name: Build APK
         run: |
