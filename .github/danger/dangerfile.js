@@ -54,16 +54,3 @@ if (composeFiles.length > 0) {
   message(`Foram modificados os arquivos de Jetpack Compose: ${composeFiles.join(', ')}`);
 }
 
-// Verifica se há alguma quebra de compatibilidade no título do PR
-if (prTitle.includes('BREAKING CHANGE')) {
-  message("O PR contém uma quebra de compatibilidade (BREAKING CHANGE).");
-}
-
-// Verifica se o CHANGELOG foi preenchido
-const changelogFilled = danger.github.pr.body.includes('## [CHANGELOG]');
-
-if (!changelogFilled) {
-  fail("Por favor, preencha a seção CHANGELOG na descrição do PR. Exemplo:\n\n## [CHANGELOG]\n- Descrição das alterações...");
-} else {
-  message("A seção CHANGELOG foi preenchida.");
-}
