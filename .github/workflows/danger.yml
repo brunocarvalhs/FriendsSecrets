@@ -28,12 +28,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Passa o GITHUB_TOKEN como variável de ambiente
 
-      - name: Generate CHANGELOG
-        run: |
-          npx conventional-changelog -o CHANGELOG.md  # Gera o CHANGELOG e salva em CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
-
       - name: Install GitHub CLI
         run: sudo apt-get install gh  # Instala o GitHub CLI
 
