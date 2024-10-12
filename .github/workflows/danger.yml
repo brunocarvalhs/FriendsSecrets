@@ -34,4 +34,4 @@ jobs:
           echo "Aprovação automática do PR"
           gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token padrão do GitHub Actions
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
