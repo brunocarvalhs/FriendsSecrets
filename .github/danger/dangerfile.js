@@ -1,6 +1,4 @@
 const { danger, message, warn, fail } = require('danger');
-const { execSync } = require('child_process');
-const fs = require('fs');
 
 // Verifica se a descrição do PR está presente e se tem um mínimo de caracteres
 if (danger.github.pr.body.length < 10) {
@@ -61,11 +59,11 @@ if (prTitle.includes('BREAKING CHANGE')) {
   message("O PR contém uma quebra de compatibilidade (BREAKING CHANGE).");
 }
 
-// Gera o CHANGELOG
-try {
-  // Executa o comando para gerar o CHANGELOG
-  execSync('npx conventional-changelog -o CHANGELOG.md', { stdio: 'inherit' });
-  message("CHANGELOG gerado com sucesso!");
-} catch (error) {
-  fail("Erro ao gerar o CHANGELOG: " + error.message);
+// Verifica se o CHANGELOG foi preenchido
+const changelogFilled = danger.github.pr.body.includes('## [CHANGELOG]');
+
+if (!changelogFilled) {
+  fail("Por favor, preencha a seção CHANGELOG na descrição do PR. Exemplo:\n\n## [CHANGELOG]\n- Descrição das alterações...");
+} else {
+  message("A seção CHANGELOG foi preenchida.");
 }
