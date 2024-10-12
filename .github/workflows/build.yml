@@ -43,6 +43,9 @@ jobs:
         run: |
           keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEYSTORE_ALIAS }} -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }}
 
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
+        
       - name: Build APK
         run: |
           ./gradlew assembleDebug
