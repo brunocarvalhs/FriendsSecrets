@@ -59,13 +59,13 @@ jobs:
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-apk
           path: app/build/outputs/apk/release/*.apk
 
       - name: Upload AAB
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-aab
           path: app/build/outputs/bundle/release/*.aab
