@@ -53,7 +53,8 @@ jobs:
         run: chmod +x gradlew
 
       - name: Unit tests
-        run: ./gradlew testDebug --stacktrace
+        run: |
+          ./gradlew testDebugUnitTest --stacktrace
         env:
           HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
           JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
@@ -74,7 +75,8 @@ jobs:
 
       - if: startsWith(github.ref, 'refs/heads/master')
         name: Android Lint
-        run: ./gradlew lintDebug
+        run: |
+          ./gradlew lintDebug
         env:
           HAS_EXEC_PERMISSIONS: ${{ needs.preparing_environment.outputs.has-exec-permissions }}
           JDK_VERSION: ${{ needs.preparing_environment.outputs.jdk-version }}
@@ -103,13 +105,16 @@ jobs:
           echo "version=${VERSION_NAME}" >> $GITHUB_ENV
 
       - name: Get Build Date
-        run: echo "::set-env name=date::$(date +%Y-%m-%d)"
+        run: |
+          echo "::set-env name=date::$(date +%Y-%m-%d)"
 
       - name: Build APK
-        run: ./gradlew assembleDebug
+        run: |
+          ./gradlew assembleDebug
 
       - name: Build AAB
-        run: ./gradlew bundleDebug
+        run: |
+          ./gradlew bundleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
