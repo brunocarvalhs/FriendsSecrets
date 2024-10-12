@@ -28,11 +28,22 @@
     <!--  Generative AI  -->
     <string name="ai_prompt">你好，我需要给 %s 的礼物建议，他/她喜欢 %s，作为秘密朋友 %s。</string>
 
-    <!-- Add Member Bottom Sheet -->
+    <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">添加新成员</string>
     <string name="add_member_bottom_sheet_input_new_member">新成员</string>
     <string name="add_member_bottom_sheet_input_new_member_error_message">无效名称！只允许字母和空格。</string>
     <string name="add_member_bottom_sheet_input_liker">喜好</string>
     <string name="add_member_bottom_sheet_button_label">添加成员</string>
     <string name="add_member_bottom_sheet_text_button_label">完成</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">群组已存在</string>
+    <string name="exception_group_not_found">未找到群组</string>
+    <string name="require_name_cannot_be_blank">名称不能为空</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">名称不能超过255个字符</string>
+    <string name="require_group_must_have_at_least_one_member">群组必须至少有一个成员</string>
+    <string name="require_group_cannot_have_more_than_2_members">群组不能有超过2个成员</string>
+    <string name="require_draw_already_held">抽签已进行</string>
+    <string name="require_group_id_cannot_be_blank">群组ID不能为空</string>
+    <string name="exception_minimums_members_of_draw">群组必须至少有3名参与者才能进行抽签。</string>
 </resources>

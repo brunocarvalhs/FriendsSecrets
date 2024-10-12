@@ -7,76 +7,55 @@ on:
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   JDK_VERSION: 17
-  ANDROID_SDK_TOOLS: latest
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
+  BUILD_TOOLS_VERSION: "34.0.0"
+  APP_NAME: "FriendsSecrets"
 
 jobs:
-  run_tests:
+  build:
     runs-on: ubuntu-latest
-    name: Run Android Tests
+    name: Build Application
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
 
-      - name: Set up JDK ${{ env.JDK_VERSION }}
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '${{ env.JDK_VERSION }}'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
+          
+      - name: Get Gradle Version from gradle.properties
+        id: gradle-version
+        run: |
+          GRADLE_VERSION=$(grep "gradleVersion" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          echo "gradle_version=${GRADLE_VERSION}" >> $GITHUB_ENV
+          echo "Gradle version is $GRADLE_VERSION"
+          
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: ${{ env.gradle_version }}
+
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          sdk-version: ${{ env.ANDROID_SDK_TOOLS }}
-
-      - name: Setup Gradle
-        run: echo "org.gradle.daemon=false" >> $GITHUB_WORKSPACE/gradle.properties
-
-      - name: Extract version from VERSION.md
-        run: echo "version=$(cat VERSION.md)" >> $GITHUB_ENV
-
-      - name: Get Build Date
-        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_ENV
-
-      - name: Create google-services release file
-        if: startsWith(github.ref, 'refs/heads/master')
-        run: |
-          rm -f app/google-services.json
-          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
-
-      - name: Run unit tests debug
+      - name: Run Unit Tests
         run: ./gradlew testDebug
         env:
-          JDK_VERSION: ${{ env.JDK_VERSION }}
-          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
-
-      - name: Run unit tests release
-        if: startsWith(github.ref, 'refs/heads/master')
-        run: ./gradlew testRelease
-        env:
-          JDK_VERSION: ${{ env.JDK_VERSION }}
-          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
-
-      - name: Android Lint Debug
+      
+      - name: Run Lint
         run: ./gradlew lintDebug
         env:
-          JDK_VERSION: ${{ env.JDK_VERSION }}
-          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
-
-      - name: Android Lint Release
-        if: startsWith(github.ref, 'refs/heads/master')
-        run: ./gradlew lintRelease
-        env:
-          JDK_VERSION: ${{ env.JDK_VERSION }}
-          ANDROID_SDK_TOOLS: ${{ env.ANDROID_SDK_TOOLS }}
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
       - name: Comment Failure
