@@ -56,6 +56,15 @@ jobs:
             -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
             -keypass "${{ secrets.KEY_PASSWORD }}"
             
+      - name: Verify Keystore Existence
+        run: |
+          if [ ! -f app/release.keystore ]; then
+            echo "Keystore not found! Exiting."
+            exit 1
+          else
+            echo "Keystore found at app/release.keystore."
+          fi
+
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
