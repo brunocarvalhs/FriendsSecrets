@@ -31,14 +31,14 @@ jobs:
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
           echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
-
+          
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
         run: |
           GRADLE_VERSION=$(grep "gradleVersion" gradle.properties | cut -d'=' -f2 | tr -d ' ')
           echo "gradle_version=${GRADLE_VERSION}" >> $GITHUB_ENV
           echo "Gradle version is $GRADLE_VERSION"
-
+          
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -55,33 +55,29 @@ jobs:
             -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
             -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
             -keypass "${{ secrets.KEY_PASSWORD }}"
-
+            
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Build APK
+      - name: Build and Sign APK Debug
         run: |
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=app/release.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Signed APK Debug
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}-apk-debug
+          path: app/build/outputs/apk/debug/*.apk
 
       - name: Build AAB
         run: |
           ./gradlew bundleDebug
 
-      - name: Sign APK
-        run: |
-          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=app/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.APP_NAME }}-apk
-          path: app/build/outputs/apk/release/*.apk
-
       - name: Upload AAB
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-aab
-          path: app/build/outputs/bundle/release/*.aab
+          path: app/build/outputs/bundle/debug/*.aab
