@@ -24,6 +24,19 @@ android {
         buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
     }
 
+    signingConfigs {
+        create("release") {
+            val keyStorePassword = System.getenv("KEYSTORE_PASSWORD")
+            val keyStoreAlias = System.getenv("KEYSTORE_ALIAS")
+            val keyStoreAliasPassword = System.getenv("KEY_PASSWORD")
+            if (keyStorePassword != null && keyStoreAlias != null && keyStoreAliasPassword != null) {
+                storeFile = file("release.keystore")
+                storePassword = keyStorePassword
+                keyAlias = keyStoreAlias
+                keyPassword = keyStoreAliasPassword
+            }
+        }
+    }
     buildTypes {
         debug {
             isDebuggable = true
