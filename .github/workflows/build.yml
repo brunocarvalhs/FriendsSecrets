@@ -44,6 +44,9 @@ jobs:
         with:
           gradle-version: ${{ env.gradle_version }}
 
+      - name: Give execution permissions to gradlew
+        run: chmod +x gradlew
+
       - name: Build and Sign APK Debug
         run: |
           ./gradlew assembleDebug
