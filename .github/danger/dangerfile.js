@@ -7,14 +7,18 @@ function getLibsFromFile(fileName) {
     const fileContent = fs.readFileSync(fileName, 'utf-8');
     return fileContent.split('\n').map(lib => lib.trim()).filter(lib => lib.length > 0);
   } catch (error) {
-    fail(`Erro ao ler o arquivo ${fileName}: ${error.message}`);
+    if (error.code === 'ENOENT') {
+      message(`Arquivo ${fileName} não encontrado. Certifique-se de que o arquivo existe e está no diretório correto.`);
+    } else {
+      fail(`Erro ao ler o arquivo ${fileName}: ${error.message}`);
+    }
     return [];
   }
 }
 
 // Carrega bibliotecas bloqueadas e depreciadas dos arquivos .txt
-const blockedLibs = getLibsFromFile('blockedLibs.txt');
-const deprecatedLibs = getLibsFromFile('deprecatedLibs.txt');
+const blockedLibs = getLibsFromFile('.github/danger/blockedLibs.txt');
+const deprecatedLibs = getLibsFromFile('.github/danger/deprecatedLibs.txt');
 
 // Verifica se a descrição do PR está presente e tem o mínimo de caracteres
 function checkPRDescription() {
