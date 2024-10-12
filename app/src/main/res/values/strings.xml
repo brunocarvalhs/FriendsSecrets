@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">Group description</string>
+    <string name="group_create_input_name">Group name</string>
+    <string name="group_create_text_button_member">Members</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">See less</string>
+    <string name="group_details_text_button_label_see_more">See more</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">Send Feedback</string>
+    <string name="group_details_drop_menu_item_text_settings">Settings</string>
+    <string name="group_details_drop_menu_item_text_edit">Edit</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">Join a group</string>
+    <string name="home_drop_menu_item_text_settings">Settings</string>
+    <string name="home_action_create_group">Create a new group</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">Success!</string>
+    <string name="group_create_action_save_group">Save group</string>
+    <string name="group_details_action_draw_members">Draw</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">Hi, I need a gift suggestion for %s, who likes %s, for the secret friend %s.</string>
+
+    <!--  Add Member Bottom Sheet  -->
+    <string name="add_member_bottom_sheet_title_label">Add a new member</string>
+    <string name="add_member_bottom_sheet_input_new_member">New member</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">Invalid name! Only letters and spaces are allowed.</string>
+    <string name="add_member_bottom_sheet_input_liker">Likes</string>
+    <string name="add_member_bottom_sheet_button_label">Add member</string>
+    <string name="add_member_bottom_sheet_text_button_label">Finish</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">Group already exists</string>
+    <string name="exception_group_not_found">Group not found</string>
+    <string name="require_name_cannot_be_blank">Name cannot be blank</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">Name cannot be longer than 255 characters</string>
+    <string name="require_group_must_have_at_least_one_member">Group must have at least one member</string>
+    <string name="require_group_cannot_have_more_than_2_members">Group cannot have more than 2 members</string>
+    <string name="require_draw_already_held">Draw already held</string>
+    <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
+    <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">समूह विवरण</string>
+    <string name="group_create_input_name">समूह का नाम</string>
+    <string name="group_create_text_button_member">सदस्य</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">कम दिखाएँ</string>
+    <string name="group_details_text_button_label_see_more">अधिक दिखाएँ</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">फीडबैक भेजें</string>
+    <string name="group_details_drop_menu_item_text_settings">सेटिंग्स</string>
+    <string name="group_details_drop_menu_item_text_edit">संपादित करें</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">एक समूह में शामिल हों</string>
+    <string name="home_drop_menu_item_text_settings">सेटिंग्स</string>
+    <string name="home_action_create_group">एक नया समूह बनाएं</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">सफलता!</string>
+    <string name="group_create_action_save_group">समूह सहेजें</string>
+    <string name="group_details_action_draw_members">लॉटरी</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">नमस्ते, मुझे %s के लिए एक उपहार सुझाव चाहिए, जिसे %s पसंद है, एक गुप्त मित्र %s के लिए।</string>
+
+    <!-- Add Member Bottom Sheet -->
+    <string name="add_member_bottom_sheet_title_label">एक नया सदस्य जोड़ें</string>
+    <string name="add_member_bottom_sheet_input_new_member">नया सदस्य</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">अवैध नाम! केवल अक्षर और स्पेस की अनुमति है।</string>
+    <string name="add_member_bottom_sheet_input_liker">पसंद</string>
+    <string name="add_member_bottom_sheet_button_label">सदस्य जोड़ें</string>
+    <string name="add_member_bottom_sheet_text_button_label">समाप्त करें</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">समूह पहले से मौजूद है।</string>
+    <string name="exception_group_not_found">समूह नहीं मिला।</string>
+    <string name="require_name_cannot_be_blank">नाम खाली नहीं हो सकता।</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">नाम 255 अक्षरों से अधिक नहीं हो सकता।</string>
+    <string name="require_group_must_have_at_least_one_member">समूह में कम से कम एक सदस्य होना चाहिए।</string>
+    <string name="require_group_cannot_have_more_than_2_members">समूह में 2 से अधिक सदस्य नहीं हो सकते।</string>
+    <string name="require_draw_already_held">लॉटरी पहले ही हो चुकी है।</string>
+    <string name="require_group_id_cannot_be_blank">समूह ID खाली नहीं हो सकता।</string>
+    <string name="exception_minimums_members_of_draw">लॉटरी करने के लिए समूह में कम से कम 3 प्रतिभागी होने चाहिए।</string>
+</resources>

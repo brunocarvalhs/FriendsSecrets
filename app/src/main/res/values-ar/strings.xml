@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">وصف المجموعة</string>
+    <string name="group_create_input_name">اسم المجموعة</string>
+    <string name="group_create_text_button_member">الأعضاء</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">عرض أقل</string>
+    <string name="group_details_text_button_label_see_more">عرض المزيد</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">إرسال ملاحظات</string>
+    <string name="group_details_drop_menu_item_text_settings">الإعدادات</string>
+    <string name="group_details_drop_menu_item_text_edit">تعديل</string>
+    <string name="group_details_action_draw_members">سحب القرعة</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">الانضمام إلى مجموعة</string>
+    <string name="home_drop_menu_item_text_settings">الإعدادات</string>
+    <string name="home_action_create_group">إنشاء مجموعة جديدة</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">نجاح!</string>
+    <string name="group_create_action_save_group">حفظ المجموعة</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">مرحبًا، أحتاج إلى اقتراح هدية لـ %s، الذي يحب %s، لصديق سري %s.</string>
+
+    <!--  Add Member Bottom Sheet  -->
+    <string name="add_member_bottom_sheet_title_label">إضافة عضو جديد</string>
+    <string name="add_member_bottom_sheet_input_new_member">عضو جديد</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">اسم غير صالح! يسمح فقط بالحروف والمسافات.</string>
+    <string name="add_member_bottom_sheet_input_liker">الاهتمامات</string>
+    <string name="add_member_bottom_sheet_button_label">إضافة عضو</string>
+    <string name="add_member_bottom_sheet_text_button_label">إنهاء</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">المجموعة موجودة بالفعل</string>
+    <string name="exception_group_not_found">لم يتم العثور على المجموعة</string>
+    <string name="require_name_cannot_be_blank">لا يمكن أن يكون الاسم فارغًا</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">لا يمكن أن يكون الاسم أطول من 255 حرفًا</string>
+    <string name="require_group_must_have_at_least_one_member">يجب أن تحتوي المجموعة على عضو واحد على الأقل</string>
+    <string name="require_group_cannot_have_more_than_2_members">لا يمكن أن تحتوي المجموعة على أكثر من عضوين</string>
+    <string name="require_draw_already_held">تم إجراء السحب بالفعل</string>
+    <string name="require_group_id_cannot_be_blank">لا يمكن أن يكون معرف المجموعة فارغًا</string>
+    <string name="exception_minimums_members_of_draw">يجب أن تحتوي المجموعة على 3 مشاركين على الأقل لإجراء السحب.</string>
+</resources>

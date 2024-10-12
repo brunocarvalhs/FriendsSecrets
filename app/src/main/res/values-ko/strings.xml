@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">그룹 설명</string>
+    <string name="group_create_input_name">그룹 이름</string>
+    <string name="group_create_text_button_member">회원</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">덜 보기</string>
+    <string name="group_details_text_button_label_see_more">더 보기</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">피드백 보내기</string>
+    <string name="group_details_drop_menu_item_text_settings">설정</string>
+    <string name="group_details_drop_menu_item_text_edit">편집</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">그룹에 가입하기</string>
+    <string name="home_drop_menu_item_text_settings">설정</string>
+    <string name="home_action_create_group">새 그룹 만들기</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">성공!</string>
+    <string name="group_create_action_save_group">그룹 저장</string>
+    <string name="group_details_action_draw_members">추첨하기</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">안녕하세요, %s를 위해 %s를 좋아하는 선물 제안이 필요합니다, 비밀 친구 %s를 위해.</string>
+
+    <!-- Add Member Bottom Sheet -->
+    <string name="add_member_bottom_sheet_title_label">새 멤버 추가</string>
+    <string name="add_member_bottom_sheet_input_new_member">새로운 멤버</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">유효하지 않은 이름! 문자와 공백만 허용됩니다.</string>
+    <string name="add_member_bottom_sheet_input_liker">취향</string>
+    <string name="add_member_bottom_sheet_button_label">멤버 추가</string>
+    <string name="add_member_bottom_sheet_text_button_label">완료</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">그룹은 이미 존재합니다.</string>
+    <string name="exception_group_not_found">그룹을 찾을 수 없습니다.</string>
+    <string name="require_name_cannot_be_blank">이름은 비어있을 수 없습니다.</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">이름은 255자를 초과할 수 없습니다.</string>
+    <string name="require_group_must_have_at_least_one_member">그룹에는 최소한 1명의 멤버가 필요합니다.</string>
+    <string name="require_group_cannot_have_more_than_2_members">그룹은 2명 이상의 멤버를 가질 수 없습니다.</string>
+    <string name="require_draw_already_held">추첨이 이미 진행되었습니다.</string>
+    <string name="require_group_id_cannot_be_blank">그룹 ID는 비어 있을 수 없습니다.</string>
+    <string name="exception_minimums_members_of_draw">추첨을 하려면 그룹에 최소 3명의 참가자가 필요합니다.</string>
+</resources>

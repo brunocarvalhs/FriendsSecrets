@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">群组描述</string>
+    <string name="group_create_input_name">群组名称</string>
+    <string name="group_create_text_button_member">成员</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">查看更少</string>
+    <string name="group_details_text_button_label_see_more">查看更多</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">发送反馈</string>
+    <string name="group_details_drop_menu_item_text_settings">设置</string>
+    <string name="group_details_drop_menu_item_text_edit">编辑</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">加入群组</string>
+    <string name="home_drop_menu_item_text_settings">设置</string>
+    <string name="home_action_create_group">创建新群组</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">成功!</string>
+    <string name="group_create_action_save_group">保存群组</string>
+    <string name="group_details_action_draw_members">抽签</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">你好，我需要给 %s 的礼物建议，他/她喜欢 %s，作为秘密朋友 %s。</string>
+
+    <!-- Add Member Bottom Sheet -->
+    <string name="add_member_bottom_sheet_title_label">添加新成员</string>
+    <string name="add_member_bottom_sheet_input_new_member">新成员</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">无效名称！只允许字母和空格。</string>
+    <string name="add_member_bottom_sheet_input_liker">喜好</string>
+    <string name="add_member_bottom_sheet_button_label">添加成员</string>
+    <string name="add_member_bottom_sheet_text_button_label">完成</string>
+</resources>

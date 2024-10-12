@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  App  -->
+    <string name="app_name">FriendsSecrets</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">Descripción del grupo</string>
+    <string name="group_create_input_name">Nombre del grupo</string>
+    <string name="group_create_text_button_member">Miembros</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">Ver menos</string>
+    <string name="group_details_text_button_label_see_more">Ver más</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">Enviar comentarios</string>
+    <string name="group_details_drop_menu_item_text_settings">Configuraciones</string>
+    <string name="group_details_drop_menu_item_text_edit">Editar</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_join_a_group">Unirse a un grupo</string>
+    <string name="home_drop_menu_item_text_settings">Configuraciones</string>
+    <string name="home_action_create_group">Crear un nuevo grupo</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">¡Éxito!</string>
+    <string name="group_create_action_save_group">Guardar grupo</string>
+    <string name="group_details_action_draw_members">Sorteo</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">Hola, necesito una sugerencia de regalo para %s, que le gusta %s, para el amigo secreto %s.</string>
+
+    <!-- Add Member Bottom Sheet -->
+    <string name="add_member_bottom_sheet_title_label">Agregar un nuevo miembro</string>
+    <string name="add_member_bottom_sheet_input_new_member">Nuevo miembro</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">¡Nombre inválido! Solo se permiten letras y espacios.</string>
+    <string name="add_member_bottom_sheet_input_liker">Gustos</string>
+    <string name="add_member_bottom_sheet_button_label">Agregar miembro</string>
+    <string name="add_member_bottom_sheet_text_button_label">Finalizar</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">El grupo ya existe.</string>
+    <string name="exception_group_not_found">Grupo no encontrado.</string>
+    <string name="require_name_cannot_be_blank">El nombre no puede estar vacío.</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">El nombre no puede tener más de 255 caracteres.</string>
+    <string name="require_group_must_have_at_least_one_member">El grupo debe tener al menos un miembro.</string>
+    <string name="require_group_cannot_have_more_than_2_members">El grupo no puede tener más de 2 miembros.</string>
+    <string name="require_draw_already_held">El sorteo ya se ha realizado.</string>
+    <string name="require_group_id_cannot_be_blank">La ID del grupo no puede estar vacía.</string>
+    <string name="exception_minimums_members_of_draw">El grupo debe tener al menos 3 participantes para realizar el sorteo.</string>
+</resources>
