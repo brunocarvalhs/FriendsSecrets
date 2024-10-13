@@ -63,21 +63,14 @@ function checkForUnitTests(createdFiles, modifiedFiles, deletedFiles) {
   // Padrão que identifica arquivos de testes unitários
   const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
 
-  // Filtra os arquivos criados, modificados e excluídos que correspondem ao padrão de teste unitário
-  const createdUnitTestFiles = (createdFiles || []).filter(file => {
-    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
-    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
-  });
+  // Normaliza os caminhos e filtra os arquivos criados, modificados e excluídos
+  const normalizeAndFilter = (files) => {
+    return (files || []).map(file => file.replace(/\\/g, '/')).filter(file => file.endsWith('.kt') && unitTestPattern.test(file));
+  };
 
-  const modifiedUnitTestFiles = (modifiedFiles || []).filter(file => {
-    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
-    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
-  });
-
-  const deletedUnitTestFiles = (deletedFiles || []).filter(file => {
-    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
-    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
-  });
+  const createdUnitTestFiles = normalizeAndFilter(createdFiles);
+  const modifiedUnitTestFiles = normalizeAndFilter(modifiedFiles);
+  const deletedUnitTestFiles = normalizeAndFilter(deletedFiles);
 
   // Verifica se houve criação de novos testes
   if (createdUnitTestFiles.length > 0) {
@@ -98,6 +91,17 @@ function checkForUnitTests(createdFiles, modifiedFiles, deletedFiles) {
     message(`Os seguintes testes unitários foram excluídos: ${deletedUnitTestFiles.join(', ')}`);
   } else {
     warn("Nenhum teste unitário foi excluído.");
+  }
+
+  // Verifica se há arquivos que contenham 'Test' na lista de todos os arquivos do PR
+  const allFiles = [...createdFiles, ...modifiedFiles, ...deletedFiles];
+  const testMentionPattern = /Test/;
+
+  const testMentionedFiles = allFiles.filter(file => testMentionPattern.test(file));
+  if (testMentionedFiles.length > 0) {
+    message(`Os seguintes arquivos mencionam 'Test': ${testMentionedFiles.join(', ')}`);
+  } else {
+    warn("Nenhum arquivo menciona 'Test'.");
   }
 }
 
