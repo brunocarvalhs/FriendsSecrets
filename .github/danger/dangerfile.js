@@ -60,30 +60,36 @@ function checkModifiedFiles(modifiedFiles) {
 
 // Verifica se o PR contém testes
 function checkForTests(modifiedFiles) {
-  const hasUnitTests = modifiedFiles.some(file =>
-    file.endsWith('.kt') && (
-      file.includes('Test') ||
-      file.includes('Tests') ||
-      file.includes('UnitTest') ||
-      file.includes('/test/') ||  // Check if it's within a 'test' directory
-      file.includes('Unit')  // In case unit tests are suffixed with 'Unit'
-    )
-  );
+  console.log("Modified files:", modifiedFiles); // Log modified files for debugging
 
-  const hasInstrumentationTests = modifiedFiles.some(file =>
-    file.endsWith('.kt') && (
-      file.includes('InstrumentationTest') ||
-      file.includes('AndroidTest') ||
-      file.includes('UITest') ||
-      file.includes('/androidTest/')  // Check if it's within an 'androidTest' directory
-    )
-  );
+  const hasUnitTests = modifiedFiles.some(file => {
+    const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
+    return normalizedFile.endsWith('.kt') && (
+      normalizedFile.includes('Test') ||
+      normalizedFile.includes('Tests') ||
+      normalizedFile.includes('UnitTest') ||
+      normalizedFile.includes('/test/') ||  // Check if it's within a 'test' directory
+      normalizedFile.includes('Unit')  // In case unit tests are suffixed with 'Unit'
+    );
+  });
+
+  const hasInstrumentationTests = modifiedFiles.some(file => {
+    const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
+    return normalizedFile.endsWith('.kt') && (
+      normalizedFile.includes('InstrumentationTest') ||
+      normalizedFile.includes('AndroidTest') ||
+      normalizedFile.includes('UITest') ||
+      normalizedFile.includes('/androidTest/')  // Check if it's within an 'androidTest' directory
+    );
+  });
 
   if (!hasUnitTests && !hasInstrumentationTests) {
     warn("Este PR não contém testes. Considere adicionar testes.");
+  } else {
+    console.log("Unit tests found:", hasUnitTests); // Log the result of unit test check
+    console.log("Instrumentation tests found:", hasInstrumentationTests); // Log the result of instrumentation test check
   }
 }
-
 
 // Verifica se há arquivos relacionados ao Jetpack Compose
 function checkForComposeFiles(modifiedFiles) {
