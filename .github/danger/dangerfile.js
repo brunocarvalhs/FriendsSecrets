@@ -22,7 +22,7 @@ const deprecatedLibs = getLibsFromFile('.github/danger/deprecatedLibs.txt');
 
 // Verifica se a descrição do PR está presente e tem o mínimo de caracteres
 function checkPRDescription() {
-  const prDescription = danger.github.pr.body;
+  const prDescription = danger.github.pr.body || '';
   if (prDescription.length < 10) {
     fail("A descrição do PR deve ter pelo menos 10 caracteres.");
   }
@@ -60,29 +60,25 @@ function checkModifiedFiles(modifiedFiles) {
 
 // Verifica se o PR contém testes
 function checkForTests(modifiedFiles) {
-  core.info("Modified files: " + modifiedFiles.join(", ")); // Log modified files for debugging
-
   // Regular expression patterns for unit and instrumentation tests
-  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/; // Match directories or suffixes for unit tests
-  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/; // Match directories or suffixes for instrumentation tests
+  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
+  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/;
 
   const hasUnitTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
-    const isUnitTest = normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
-    return isUnitTest;
+    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
   const hasInstrumentationTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
-    const isInstrumentationTest = normalizedFile.endsWith('.kt') && instrumentationTestPattern.test(normalizedFile);
-    return isInstrumentationTest;
+    return normalizedFile.endsWith('.kt') && instrumentationTestPattern.test(normalizedFile);
   });
 
   if (!hasUnitTests && !hasInstrumentationTests) {
-    warn("Este PR não contém testes. Considere adicionar testes."); // Use warning log
+    warn("Este PR não contém testes. Considere adicionar testes.");
   } else {
-    message("Unit tests found: " + hasUnitTests); // Log the result of unit test check
-    message("Instrumentation tests found: " + hasInstrumentationTests); // Log the result of instrumentation test check
+    if (hasUnitTests) message("Unit tests foram encontrados.");
+    if (hasInstrumentationTests) message("Instrumentation tests foram encontrados.");
   }
 }
 
@@ -123,42 +119,40 @@ function checkAndroidCoreFiles(modifiedFiles) {
 
 // Verifica se bibliotecas bloqueadas foram adicionadas ou modificadas
 async function checkForBlockedLibs(modifiedFiles) {
-    // Filtra os arquivos gradle relevantes
-    const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
+  const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
 
-    for (const file of gradleFiles) {
-        const fileContent = await danger.git.diffForFile(file);
-        if (fileContent && fileContent.diff) {
-            const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
+  for (const file of gradleFiles) {
+    const fileContent = await danger.git.diffForFile(file);
+    if (fileContent && fileContent.diff) {
+      const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
 
-            blockedLibs.forEach(blockedLib => {
-                const isBlockedLibAdded = addedLines.some(line => line.includes(blockedLib) || line.includes(blockedLib.split(':')[0])); // Verifica o grupo também
-                if (isBlockedLibAdded) {
-                    fail(`A biblioteca bloqueada ${blockedLib} foi adicionada ou modificada no arquivo ${file}. Remova ou substitua esta dependência.`);
-                }
-            });
+      blockedLibs.forEach(blockedLib => {
+        const isBlockedLibAdded = addedLines.some(line => line.includes(blockedLib) || line.includes(blockedLib.split(':')[0]));
+        if (isBlockedLibAdded) {
+          fail(`A biblioteca bloqueada ${blockedLib} foi adicionada ou modificada no arquivo ${file}. Remova ou substitua esta dependência.`);
         }
+      });
     }
+  }
 }
 
 // Verifica se bibliotecas depreciadas foram adicionadas ou modificadas
 async function checkForDeprecatedLibs(modifiedFiles) {
-    // Filtra os arquivos gradle relevantes
-    const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
+  const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
 
-    for (const file of gradleFiles) {
-        const fileContent = await danger.git.diffForFile(file);
-        if (fileContent && fileContent.diff) {
-            const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
+  for (const file of gradleFiles) {
+    const fileContent = await danger.git.diffForFile(file);
+    if (fileContent && fileContent.diff) {
+      const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
 
-            deprecatedLibs.forEach(deprecatedLib => {
-                const isDeprecatedLibAdded = addedLines.some(line => line.includes(deprecatedLib) || line.includes(deprecatedLib.split(':')[0])); // Verifica o grupo também
-                if (isDeprecatedLibAdded) {
-                    warn(`A biblioteca depreciada ${deprecatedLib} foi adicionada ou modificada no arquivo ${file}. Considere atualizar esta dependência.`);
-                }
-            });
+      deprecatedLibs.forEach(deprecatedLib => {
+        const isDeprecatedLibAdded = addedLines.some(line => line.includes(deprecatedLib) || line.includes(deprecatedLib.split(':')[0]));
+        if (isDeprecatedLibAdded) {
+          warn(`A biblioteca depreciada ${deprecatedLib} foi adicionada ou modificada no arquivo ${file}. Considere atualizar esta dependência.`);
         }
+      });
     }
+  }
 }
 
 // Função principal para rodar todas as verificações
