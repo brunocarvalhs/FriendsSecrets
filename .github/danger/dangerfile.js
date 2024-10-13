@@ -155,11 +155,11 @@ async function runPRChecks() {
   checkPRTitle();
 
   // Obter todos os arquivos do PR: modificados, adicionados e removidos
-  const allFiles = [
-    ...danger.git.created_files,   // Arquivos adicionados
-    ...danger.git.modified_files,  // Arquivos modificados
-    ...danger.git.deleted_files    // Arquivos removidos
-  ];
+  const createdFiles = danger.git.created_files;
+  const modifiedFiles = danger.git.modified_files;
+  const deletedFiles = danger.git.deleted_files;
+
+  const allFiles = [...createdFiles, ...modifiedFiles, ...deletedFiles];
 
   checkLibsVersionsFile(allFiles);
   checkModifiedFiles(allFiles);
