@@ -1,5 +1,6 @@
 const { danger, message, warn, fail } = require('danger');
 const fs = require('fs');
+const core = require('@actions/core');
 
 // Função para ler bibliotecas bloqueadas e depreciadas dos arquivos de texto
 function getLibsFromFile(fileName) {
@@ -60,34 +61,31 @@ function checkModifiedFiles(modifiedFiles) {
 
 // Verifica se o PR contém testes
 function checkForTests(modifiedFiles) {
-  console.log("Modified files:", modifiedFiles); // Log modified files for debugging
+  core.info("Modified files: " + modifiedFiles.join(", ")); // Log modified files for debugging
+
+  // Regular expression patterns for unit and instrumentation tests
+  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/; // Match directories or suffixes for unit tests
+  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/; // Match directories or suffixes for instrumentation tests
 
   const hasUnitTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
-    return normalizedFile.endsWith('.kt') && (
-      normalizedFile.includes('Test') ||
-      normalizedFile.includes('Tests') ||
-      normalizedFile.includes('UnitTest') ||
-      normalizedFile.includes('/test/') ||  // Check if it's within a 'test' directory
-      normalizedFile.includes('Unit')  // In case unit tests are suffixed with 'Unit'
-    );
+    const isUnitTest = normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
+    core.info(`Checking unit test: ${normalizedFile}, Result: ${isUnitTest}`); // Log the check result
+    return isUnitTest;
   });
 
   const hasInstrumentationTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
-    return normalizedFile.endsWith('.kt') && (
-      normalizedFile.includes('InstrumentationTest') ||
-      normalizedFile.includes('AndroidTest') ||
-      normalizedFile.includes('UITest') ||
-      normalizedFile.includes('/androidTest/')  // Check if it's within an 'androidTest' directory
-    );
+    const isInstrumentationTest = normalizedFile.endsWith('.kt') && instrumentationTestPattern.test(normalizedFile);
+    core.info(`Checking instrumentation test: ${normalizedFile}, Result: ${isInstrumentationTest}`); // Log the check result
+    return isInstrumentationTest;
   });
 
   if (!hasUnitTests && !hasInstrumentationTests) {
-    warn("Este PR não contém testes. Considere adicionar testes.");
+    core.warning("Este PR não contém testes. Considere adicionar testes."); // Use warning log
   } else {
-    console.log("Unit tests found:", hasUnitTests); // Log the result of unit test check
-    console.log("Instrumentation tests found:", hasInstrumentationTests); // Log the result of instrumentation test check
+    core.info("Unit tests found: " + hasUnitTests); // Log the result of unit test check
+    core.info("Instrumentation tests found: " + hasInstrumentationTests); // Log the result of instrumentation test check
   }
 }
 
