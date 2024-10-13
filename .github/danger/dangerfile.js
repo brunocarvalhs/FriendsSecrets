@@ -1,6 +1,5 @@
 const { danger, message, warn, fail } = require('danger');
 const fs = require('fs');
-const core = require('@actions/core');
 
 // Função para ler bibliotecas bloqueadas e depreciadas dos arquivos de texto
 function getLibsFromFile(fileName) {
@@ -70,22 +69,20 @@ function checkForTests(modifiedFiles) {
   const hasUnitTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
     const isUnitTest = normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
-    core.info(`Checking unit test: ${normalizedFile}, Result: ${isUnitTest}`); // Log the check result
     return isUnitTest;
   });
 
   const hasInstrumentationTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
     const isInstrumentationTest = normalizedFile.endsWith('.kt') && instrumentationTestPattern.test(normalizedFile);
-    core.info(`Checking instrumentation test: ${normalizedFile}, Result: ${isInstrumentationTest}`); // Log the check result
     return isInstrumentationTest;
   });
 
   if (!hasUnitTests && !hasInstrumentationTests) {
-    core.warning("Este PR não contém testes. Considere adicionar testes."); // Use warning log
+    warn("Este PR não contém testes. Considere adicionar testes."); // Use warning log
   } else {
-    core.info("Unit tests found: " + hasUnitTests); // Log the result of unit test check
-    core.info("Instrumentation tests found: " + hasInstrumentationTests); // Log the result of instrumentation test check
+    message("Unit tests found: " + hasUnitTests); // Log the result of unit test check
+    message("Instrumentation tests found: " + hasInstrumentationTests); // Log the result of instrumentation test check
   }
 }
 
