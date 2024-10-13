@@ -59,20 +59,33 @@ function checkModifiedFiles(modifiedFiles) {
 }
 
 // Verifica se o PR contém novos ou modificados testes unitários
-function checkForUnitTests(modifiedFiles) {
+function checkForUnitTests(createdFiles, modifiedFiles) {
   // Padrão que identifica arquivos de testes unitários
   const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
 
-  // Filtra apenas os arquivos Kotlin que são testes unitários
-  const unitTestFiles = modifiedFiles.filter(file => {
+  // Filtra os arquivos criados e modificados que correspondem ao padrão de teste unitário
+  const createdUnitTestFiles = createdFiles.filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
-  if (unitTestFiles.length > 0) {
-    message(`Os seguintes testes unitários foram modificados ou adicionados: ${unitTestFiles.join(', ')}`);
+  const modifiedUnitTestFiles = modifiedFiles.filter(file => {
+    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
+    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
+  });
+
+  // Verifica se houve criação de novos testes
+  if (createdUnitTestFiles.length > 0) {
+    message(`Os seguintes novos testes unitários foram criados: ${createdUnitTestFiles.join(', ')}`);
   } else {
-    warn("Nenhum novo teste unitário foi adicionado ou modificado.");
+    warn("Nenhum novo teste unitário foi criado.");
+  }
+
+  // Verifica se houve modificação de testes existentes
+  if (modifiedUnitTestFiles.length > 0) {
+    message(`Os seguintes testes unitários foram modificados: ${modifiedUnitTestFiles.join(', ')}`);
+  } else {
+    warn("Nenhum teste unitário existente foi modificado.");
   }
 }
 
