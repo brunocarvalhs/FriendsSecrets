@@ -64,17 +64,17 @@ function checkForUnitTests(createdFiles, modifiedFiles, deletedFiles) {
   const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
 
   // Filtra os arquivos criados, modificados e excluídos que correspondem ao padrão de teste unitário
-  const createdUnitTestFiles = createdFiles.filter(file => {
+  const createdUnitTestFiles = (createdFiles || []).filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
-  const modifiedUnitTestFiles = modifiedFiles.filter(file => {
+  const modifiedUnitTestFiles = (modifiedFiles || []).filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
-  const deletedUnitTestFiles = deletedFiles.filter(file => {
+  const deletedUnitTestFiles = (deletedFiles || []).filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
@@ -174,21 +174,23 @@ async function checkForDeprecatedLibs(modifiedFiles) {
   }
 }
 
-// Função principal para rodar todas as verificações
 async function runPRChecks() {
   checkPRDescription();
   checkPRTitle();
 
-  // Obter todos os arquivos do PR: modificados, adicionados e removidos
-  const createdFiles = danger.git.created_files;
-  const modifiedFiles = danger.git.modified_files;
-  const deletedFiles = danger.git.deleted_files;
+  // Garante que os arquivos sejam arrays, mesmo que estejam indefinidos
+  const createdFiles = danger.git.created_files || [];  // Arquivos criados
+  const modifiedFiles = danger.git.modified_files || []; // Arquivos modificados
+  const deletedFiles = danger.git.deleted_files || [];   // Arquivos removidos
 
   const allFiles = [...createdFiles, ...modifiedFiles, ...deletedFiles];
 
   checkLibsVersionsFile(allFiles);
   checkModifiedFiles(allFiles);
+
+  // Verifica os arquivos de teste criados, modificados e excluídos
   checkForUnitTests(createdFiles, modifiedFiles, deletedFiles);
+
   checkForComposeFiles(allFiles);
   checkAndroidCoreFiles(allFiles); // Verifica arquivos principais do projeto Android
 
