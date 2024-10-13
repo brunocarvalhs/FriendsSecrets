@@ -60,9 +60,11 @@ function checkModifiedFiles(modifiedFiles) {
 
 // Verifica se o PR contém testes
 function checkForTests(modifiedFiles) {
+  message("Modified files: " + modifiedFiles.join(", ")); // Log modified files for debugging
+
   // Regular expression patterns for unit and instrumentation tests
-  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
-  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/;
+  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/; // Match directories or suffixes for unit tests
+  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/; // Match directories or suffixes for instrumentation tests
 
   const hasUnitTests = modifiedFiles.some(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
