@@ -58,29 +58,21 @@ function checkModifiedFiles(modifiedFiles) {
   }
 }
 
-// Verifica se o PR contém testes
-function checkForTests(modifiedFiles) {
-  message("Modified files: " + modifiedFiles.join(", ")); // Log modified files for debugging
+// Verifica se o PR contém novos ou modificados testes unitários
+function checkForUnitTests(modifiedFiles) {
+  // Padrão que identifica arquivos de testes unitários
+  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
 
-  // Regular expression patterns for unit and instrumentation tests
-  const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/; // Match directories or suffixes for unit tests
-  const instrumentationTestPattern = /(\/androidTest\/|InstrumentationTest|AndroidTest|UITest)$/; // Match directories or suffixes for instrumentation tests
-
-  const hasUnitTests = modifiedFiles.some(file => {
-    const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
+  // Filtra apenas os arquivos Kotlin que são testes unitários
+  const unitTestFiles = modifiedFiles.filter(file => {
+    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
-  const hasInstrumentationTests = modifiedFiles.some(file => {
-    const normalizedFile = file.replace(/\\/g, '/'); // Normalize path separators
-    return normalizedFile.endsWith('.kt') && instrumentationTestPattern.test(normalizedFile);
-  });
-
-  if (!hasUnitTests && !hasInstrumentationTests) {
-    warn("Este PR não contém testes. Considere adicionar testes.");
+  if (unitTestFiles.length > 0) {
+    message(`Os seguintes testes unitários foram modificados ou adicionados: ${unitTestFiles.join(', ')}`);
   } else {
-    if (hasUnitTests) message("Unit tests foram encontrados.");
-    if (hasInstrumentationTests) message("Instrumentation tests foram encontrados.");
+    warn("Nenhum novo teste unitário foi adicionado ou modificado.");
   }
 }
 
