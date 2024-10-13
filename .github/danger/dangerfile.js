@@ -157,7 +157,7 @@ async function runPRChecks() {
   const modifiedFiles = danger.git.modified_files;
   checkLibsVersionsFile(modifiedFiles);
   checkModifiedFiles(modifiedFiles);
-  checkForTests(modifiedFiles);
+  checkForUnitTests(modifiedFiles);
   checkForComposeFiles(modifiedFiles);
   checkAndroidCoreFiles(modifiedFiles); // Verifica arquivos principais do projeto Android
 
