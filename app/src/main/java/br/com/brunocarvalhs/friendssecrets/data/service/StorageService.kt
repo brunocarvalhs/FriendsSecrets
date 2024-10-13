@@ -8,7 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import com.google.gson.Gson
 
 class StorageService(
-    private val context: Application = CustomApplication.instance,
+    private val context: Application = CustomApplication.getInstance(),
     private val storageName: String = BuildConfig.APPLICATION_ID,
     val gson: Gson = Gson()
 ) {

@@ -11,7 +11,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import kotlin.random.Random
 
 class GroupCreateUseCase(
-    private val context: Context = CustomApplication.instance,
+    private val context: Context = CustomApplication.getInstance(),
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
 ) {
