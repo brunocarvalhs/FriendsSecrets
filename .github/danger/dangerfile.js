@@ -58,18 +58,23 @@ function checkModifiedFiles(modifiedFiles) {
   }
 }
 
-// Verifica se o PR contém novos ou modificados testes unitários
-function checkForUnitTests(createdFiles, modifiedFiles) {
+// Verifica se o PR contém novos, modificados ou excluídos testes unitários
+function checkForUnitTests(createdFiles, modifiedFiles, deletedFiles) {
   // Padrão que identifica arquivos de testes unitários
   const unitTestPattern = /(\/test\/|Test|Tests|UnitTest|Unit)$/;
 
-  // Filtra os arquivos criados e modificados que correspondem ao padrão de teste unitário
+  // Filtra os arquivos criados, modificados e excluídos que correspondem ao padrão de teste unitário
   const createdUnitTestFiles = createdFiles.filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
 
   const modifiedUnitTestFiles = modifiedFiles.filter(file => {
+    const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
+    return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
+  });
+
+  const deletedUnitTestFiles = deletedFiles.filter(file => {
     const normalizedFile = file.replace(/\\/g, '/'); // Normaliza os separadores de caminho
     return normalizedFile.endsWith('.kt') && unitTestPattern.test(normalizedFile);
   });
@@ -86,6 +91,13 @@ function checkForUnitTests(createdFiles, modifiedFiles) {
     message(`Os seguintes testes unitários foram modificados: ${modifiedUnitTestFiles.join(', ')}`);
   } else {
     warn("Nenhum teste unitário existente foi modificado.");
+  }
+
+  // Verifica se houve exclusão de testes
+  if (deletedUnitTestFiles.length > 0) {
+    message(`Os seguintes testes unitários foram excluídos: ${deletedUnitTestFiles.join(', ')}`);
+  } else {
+    warn("Nenhum teste unitário foi excluído.");
   }
 }
 
@@ -176,7 +188,7 @@ async function runPRChecks() {
 
   checkLibsVersionsFile(allFiles);
   checkModifiedFiles(allFiles);
-  checkForUnitTests(allFiles); // Verifica apenas testes unitários
+  checkForUnitTests(createdFiles, modifiedFiles, deletedFiles);
   checkForComposeFiles(allFiles);
   checkAndroidCoreFiles(allFiles); // Verifica arquivos principais do projeto Android
 
