@@ -75,33 +75,44 @@ function checkForUnitTests(createdFiles, modifiedFiles, deletedFiles) {
   // Verifica se houve criação de novos testes
   if (createdUnitTestFiles.length > 0) {
     message(`Os seguintes novos testes unitários foram criados: ${createdUnitTestFiles.join(', ')}`);
-  } else {
-    warn("Nenhum novo teste unitário foi criado.");
   }
 
   // Verifica se houve modificação de testes existentes
   if (modifiedUnitTestFiles.length > 0) {
     message(`Os seguintes testes unitários foram modificados: ${modifiedUnitTestFiles.join(', ')}`);
-  } else {
-    warn("Nenhum teste unitário existente foi modificado.");
   }
 
   // Verifica se houve exclusão de testes
   if (deletedUnitTestFiles.length > 0) {
     message(`Os seguintes testes unitários foram excluídos: ${deletedUnitTestFiles.join(', ')}`);
-  } else {
-    warn("Nenhum teste unitário foi excluído.");
   }
 
   // Verifica se há arquivos que contenham 'Test' na lista de todos os arquivos do PR
   const allFiles = [...createdFiles, ...modifiedFiles, ...deletedFiles];
   const testMentionPattern = /Test/;
 
-  const testMentionedFiles = allFiles.filter(file => testMentionPattern.test(file));
-  if (testMentionedFiles.length > 0) {
-    message(`Os seguintes arquivos mencionam 'Test': ${testMentionedFiles.join(', ')}`);
-  } else {
-    warn("Nenhum arquivo menciona 'Test'.");
+  const testMentionedModifiedFiles = modifiedFiles.filter(file => testMentionPattern.test(file));
+  const testMentionedCreatedFiles = createdFiles.filter(file => testMentionPattern.test(file));
+  const testMentionedDeletedFiles = deletedFiles.filter(file => testMentionPattern.test(file));
+
+  // Se algum arquivo modificado menciona 'Test'
+  if (testMentionedModifiedFiles.length > 0) {
+    message(`Os seguintes arquivos modificados mencionam 'Test': ${testMentionedModifiedFiles.join(', ')}`);
+  }
+
+  // Se algum arquivo criado menciona 'Test'
+  if (testMentionedCreatedFiles.length > 0) {
+    message(`Os seguintes arquivos criados mencionam 'Test': ${testMentionedCreatedFiles.join(', ')}`);
+  }
+
+  // Se algum arquivo excluído menciona 'Test'
+  if (testMentionedDeletedFiles.length > 0) {
+    message(`Os seguintes arquivos excluídos mencionam 'Test': ${testMentionedDeletedFiles.join(', ')}`);
+  }
+
+  // Resumo de testes afetados
+  if (createdUnitTestFiles.length === 0 && modifiedUnitTestFiles.length === 0 && deletedUnitTestFiles.length === 0) {
+    warn("Nenhum teste unitário foi criado, modificado ou excluído.");
   }
 }
 
