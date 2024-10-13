@@ -154,15 +154,21 @@ async function runPRChecks() {
   checkPRDescription();
   checkPRTitle();
 
-  const modifiedFiles = danger.git.modified_files;
-  checkLibsVersionsFile(modifiedFiles);
-  checkModifiedFiles(modifiedFiles);
-  checkForUnitTests(modifiedFiles); // Verifica apenas testes unitários
-  checkForComposeFiles(modifiedFiles);
-  checkAndroidCoreFiles(modifiedFiles); // Verifica arquivos principais do projeto Android
+  // Obter todos os arquivos do PR: modificados, adicionados e removidos
+  const allFiles = [
+    ...danger.git.created_files,   // Arquivos adicionados
+    ...danger.git.modified_files,  // Arquivos modificados
+    ...danger.git.deleted_files    // Arquivos removidos
+  ];
 
-  await checkForBlockedLibs(modifiedFiles);  // Verifica bibliotecas bloqueadas
-  await checkForDeprecatedLibs(modifiedFiles);  // Verifica bibliotecas depreciadas
+  checkLibsVersionsFile(allFiles);
+  checkModifiedFiles(allFiles);
+  checkForUnitTests(allFiles); // Verifica apenas testes unitários
+  checkForComposeFiles(allFiles);
+  checkAndroidCoreFiles(allFiles); // Verifica arquivos principais do projeto Android
+
+  await checkForBlockedLibs(allFiles);  // Verifica bibliotecas bloqueadas
+  await checkForDeprecatedLibs(allFiles);  // Verifica bibliotecas depreciadas
 }
 
 // Executa as verificações
