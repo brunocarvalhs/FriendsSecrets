@@ -60,14 +60,30 @@ function checkModifiedFiles(modifiedFiles) {
 
 // Verifica se o PR contém testes
 function checkForTests(modifiedFiles) {
-  const hasTests = modifiedFiles.some(file =>
-    file.endsWith('.kt') && (file.includes('Test') || file.includes('spec'))
+  const hasUnitTests = modifiedFiles.some(file =>
+    file.endsWith('.kt') && (
+      file.includes('Test') ||
+      file.includes('Tests') ||
+      file.includes('UnitTest') ||
+      file.includes('/test/') ||  // Check if it's within a 'test' directory
+      file.includes('Unit')  // In case unit tests are suffixed with 'Unit'
+    )
   );
 
-  if (!hasTests) {
+  const hasInstrumentationTests = modifiedFiles.some(file =>
+    file.endsWith('.kt') && (
+      file.includes('InstrumentationTest') ||
+      file.includes('AndroidTest') ||
+      file.includes('UITest') ||
+      file.includes('/androidTest/')  // Check if it's within an 'androidTest' directory
+    )
+  );
+
+  if (!hasUnitTests && !hasInstrumentationTests) {
     warn("Este PR não contém testes. Considere adicionar testes.");
   }
 }
+
 
 // Verifica se há arquivos relacionados ao Jetpack Compose
 function checkForComposeFiles(modifiedFiles) {
