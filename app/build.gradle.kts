@@ -66,7 +66,7 @@ android {
         compose = true
         buildConfig = true
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/LICENSE.md"
             excludes += "/META-INF/LICENSE-notice.md"
@@ -98,15 +98,12 @@ dependencies {
     implementation(libs.lottie.compose)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
-    testImplementation(libs.mockk.android)
-    testImplementation(libs.mockk.agent)
+    testImplementation(libs.mockito.inline)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.mockk)
-    androidTestImplementation(libs.mockk.android)
-    androidTestImplementation(libs.mockk.agent)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

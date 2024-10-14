@@ -7,7 +7,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 
 class GroupDrawUseCase(
-    private val context: Context = CustomApplication.instance,
+    private val context: Context = CustomApplication.getInstance(),
     private val groupRepository: GroupRepository
 ) {
     suspend fun invoke(group: GroupEntities) = runCatching {

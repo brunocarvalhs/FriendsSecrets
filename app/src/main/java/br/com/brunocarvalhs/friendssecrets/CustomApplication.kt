@@ -6,10 +6,6 @@ import timber.log.Timber
 
 class CustomApplication : Application() {
 
-    init {
-        instance = this
-    }
-
     override fun onCreate() {
         super.onCreate()
         setup()
@@ -27,6 +23,13 @@ class CustomApplication : Application() {
     }
 
     companion object {
-        lateinit var instance: CustomApplication
+        private lateinit var instance: CustomApplication
+
+        fun getInstance() : CustomApplication {
+            if (!Companion::instance.isInitialized) {
+                instance = CustomApplication()
+            }
+            return instance
+        }
     }
 }
