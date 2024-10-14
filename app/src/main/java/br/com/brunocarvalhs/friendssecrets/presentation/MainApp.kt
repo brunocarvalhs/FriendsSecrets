@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.generativeGraph
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.groupGraph
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.homeGraph
+import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.settingsGraph
 
 @Composable
 fun MainApp(navController: NavHostController) {
@@ -13,6 +14,7 @@ fun MainApp(navController: NavHostController) {
         homeGraph(navController = navController, route = Screen.Home.route)
         groupGraph(navController = navController, route = Screen.Group.route)
         generativeGraph(navController = navController, route = Screen.Generative.route)
+        settingsGraph(navController = navController, route = Screen.Settings.route)
     }
 }
 
@@ -20,6 +22,7 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object Group : Screen("group")
     data object Generative : Screen("generative")
+    data object Settings : Screen("settings")
 
     companion object {
         val START_DESTINATION = Home.route

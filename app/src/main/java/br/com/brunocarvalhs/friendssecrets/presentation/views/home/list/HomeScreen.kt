@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -108,12 +109,16 @@ private fun HomeContent(
                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.home_drop_menu_item_text_join_a_group)) },
-                            onClick = { /* Handle edit! */ },
+                            onClick = { showBottomSheet = true },
                             leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) }
                         )
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.home_drop_menu_item_text_settings)) },
-                            onClick = { /* Handle settings! */ },
+                            onClick = {
+                                navController.navigate(
+                                    route = Screen.Settings.route
+                                )
+                            },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Settings,

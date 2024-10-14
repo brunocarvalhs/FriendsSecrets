@@ -26,6 +26,8 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
@@ -37,6 +39,11 @@ fun EmptyGroupComponent(
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_group))
 
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -45,13 +52,14 @@ fun EmptyGroupComponent(
         LottieAnimation(
             modifier = Modifier.size(200.dp),
             composition = composition,
+            progress = progress
         )
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Bem vindo!",
+                text = "Ops!",
                 style = MaterialTheme.typography.headlineLarge,
             )
         }
