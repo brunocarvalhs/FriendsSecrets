@@ -1,12 +1,29 @@
+package br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -16,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -25,9 +44,9 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 import kotlinx.coroutines.launch
 
 @Composable
-fun OnboardingScreen(navController: NavHostController) {
+fun OnboardingScreen(navController: NavHostController, initialPage: Int = 0) {
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = initialPage,
         initialPageOffsetFraction = 0f,
         pageCount = { 3 }
     )
@@ -153,10 +172,16 @@ fun OnboardingPage(
     }
 }
 
+private class OnboardingPreviewProvider : PreviewParameterProvider<Int> {
+    override val values = sequenceOf(0, 1, 2)
+}
+
 @Preview
 @Composable
-fun OnboardingContentPreview() {
+fun OnboardingContentPreview(
+    @PreviewParameter(OnboardingPreviewProvider::class) page: Int,
+) {
     FriendsSecretsTheme {
-        OnboardingScreen(navController = rememberNavController())
+        OnboardingScreen(navController = rememberNavController(), initialPage = page)
     }
 }
