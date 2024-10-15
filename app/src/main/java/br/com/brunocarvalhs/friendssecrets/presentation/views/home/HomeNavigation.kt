@@ -8,8 +8,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric.BiometricScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardingScreen
 
 sealed class HomeNavigation(
     override val route: String,
@@ -18,9 +21,12 @@ sealed class HomeNavigation(
 ) : NavigationBase {
 
     data object Home : HomeNavigation("list")
+    data object Onboarding : HomeNavigation("onboarding}")
+    data object Biometric : HomeNavigation("biometric")
 
     companion object {
-        val START_DESTINATION = Home.route
+        val START_DESTINATION =
+            if (BiometricManager.isBiometricPromptEnabled()) Biometric.route else Home.route
     }
 }
 
@@ -29,6 +35,12 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController, route: String) {
         composable(HomeNavigation.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
             HomeScreen(navController = navController, viewModel = homeViewModel)
+        }
+        composable(HomeNavigation.Onboarding.route) {
+            OnboardingScreen(navController = navController)
+        }
+        composable(HomeNavigation.Biometric.route) {
+            BiometricScreen(navController = navController)
         }
     }
 }

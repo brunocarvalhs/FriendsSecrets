@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -76,12 +77,10 @@ private fun SettingsContent(
             Column {
                 Text(text = "General", modifier = Modifier.padding(top = 16.dp))
                 SettingsListItemOptions(
-                    selected = false,
+                    selected = BiometricManager.isBiometricPromptEnabled(),
                     title = "Fingerprint",
                     icon = Icons.Sharp.Fingerprint,
-                    onClick = {
-
-                    }
+                    onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
                 )
                 generalRouters?.forEach { router ->
                     SettingsListItemNavigation(navController, router)
