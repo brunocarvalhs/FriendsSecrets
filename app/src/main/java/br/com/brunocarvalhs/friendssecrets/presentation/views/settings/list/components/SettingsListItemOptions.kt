@@ -22,23 +22,25 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 
 @Composable
 fun SettingsListItemOptions(
-    navController: NavHostController,
+    selected: Boolean = false,
     title: String,
     icon: ImageVector,
     onClick: (Boolean) -> Unit,
 ) {
-    var checked by rememberSaveable { mutableStateOf(value = false) }
+    var checked by rememberSaveable { mutableStateOf(value = selected) }
+
+    fun onClick(value: Boolean) {
+        checked = value
+        onClick.invoke(value)
+    }
 
     ListItem(
-        modifier = Modifier.clickable { onClick.invoke(checked.not()) },
+        modifier = Modifier.clickable { onClick(checked.not()) },
         headlineContent = { Text(title) },
         trailingContent = {
             Switch(
                 checked = checked,
-                onCheckedChange = {
-                    onClick.invoke(it)
-                    checked = it
-                }
+                onCheckedChange = { onClick(it) }
             )
         },
         leadingContent = {
@@ -56,7 +58,7 @@ fun SettingsListItemOptions(
 private fun SettingsListItemOptionsPreview() {
     FriendsSecretsTheme {
         SettingsListItemOptions(
-            navController = rememberNavController(),
+            selected = false,
             icon = Icons.AutoMirrored.Filled.ForwardToInbox,
             title = "Notifications",
             onClick = {}

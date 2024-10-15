@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
@@ -74,21 +76,21 @@ private fun SettingsContent(
             Column {
                 Text(text = "General", modifier = Modifier.padding(top = 16.dp))
                 SettingsListItemOptions(
-                    navController = navController,
+                    selected = false,
                     title = "Fingerprint",
                     icon = Icons.Sharp.Fingerprint,
                     onClick = {
 
                     }
                 )
-                SettingsListItemOptions(
-                    navController = navController,
-                    title = "Dynamic Theme",
-                    icon = Icons.Sharp.Style,
-                    onClick = {
-
-                    }
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    SettingsListItemOptions(
+                        selected = ThemeManager.isDynamicThemeEnabled(),
+                        title = "Dynamic Theme",
+                        icon = Icons.Sharp.Style,
+                        onClick = { ThemeManager.setDynamicThemeEnabled(it) }
+                    )
+                }
                 generalRouters?.forEach {
                     SettingsListItemNavigation(navController, it)
                 }
@@ -105,7 +107,6 @@ private fun SettingsContent(
         }
     }
 }
-
 
 
 @Preview(

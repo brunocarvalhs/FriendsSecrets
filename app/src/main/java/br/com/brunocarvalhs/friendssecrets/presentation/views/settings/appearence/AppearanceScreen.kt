@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
@@ -35,6 +37,8 @@ fun AppearanceScreen(navController: NavHostController) {
 private fun AppearanceContent(
     navController: NavHostController,
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
+
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -68,29 +72,27 @@ private fun AppearanceContent(
             item {
                 ThemeSelect(
                     modifier = Modifier.fillMaxWidth(),
-                    selected = "LIGHT",
+                    selected = ThemeManager.theme.name,
                     onClick = { theme ->
                         when (theme) {
                             Theme.LIGHT.name -> {
-
+                                ThemeManager.setTheme(Theme.LIGHT)
                             }
+
                             Theme.DARK.name -> {
-
+                                ThemeManager.setTheme(Theme.DARK)
                             }
-                            Theme.SYSTEM.name -> {
 
+                            Theme.SYSTEM.name -> {
+                                ThemeManager.setTheme(if (isDarkTheme) Theme.DARK else Theme.LIGHT)
                             }
                         }
                     },
                 )
             }
-            item {
-
-            }
         }
     }
 }
-
 
 
 @Composable
