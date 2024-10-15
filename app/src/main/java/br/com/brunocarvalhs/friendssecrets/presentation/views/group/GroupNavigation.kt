@@ -14,12 +14,14 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.Group
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawScreen
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawViewModel
 
 sealed class GroupNavigation(
     override val route: String,
     override val arguments: List<NamedNavArgument> = emptyList(),
     override val deepLinks: List<NavDeepLink> = emptyList(),
-): NavigationBase {
+) : NavigationBase {
 
     data object Create : GroupNavigation(
         route = "group/create",
@@ -37,6 +39,13 @@ sealed class GroupNavigation(
         arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
     ) {
         fun createRoute(groupId: String) = "group/$groupId"
+    }
+
+    data object Revelation : GroupNavigation(
+        route = "group/{groupId}/revelation",
+        arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
+    ) {
+        fun createRoute(groupId: String) = "group/$groupId/revelation"
     }
 
     companion object {
@@ -63,8 +72,36 @@ fun NavGraphBuilder.groupGraph(navController: NavController, route: String) {
             deepLinks = GroupNavigation.Read.deepLinks
         ) {
             val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: GroupDetailsViewModel = viewModel(factory = GroupDetailsViewModel.Factory)
+            val viewModel: GroupDetailsViewModel =
+                viewModel(factory = GroupDetailsViewModel.Factory)
             GroupDetailsScreen(
+                navController = navController,
+                viewModel = viewModel,
+                groupId = groupId
+            )
+        }
+        composable(
+            route = GroupNavigation.Edit.route,
+            arguments = GroupNavigation.Edit.arguments,
+            deepLinks = GroupNavigation.Edit.deepLinks
+        ) {
+            val groupId = it.arguments?.getString("groupId") ?: ""
+            val viewModel: GroupDetailsViewModel =
+                viewModel(factory = GroupDetailsViewModel.Factory)
+            GroupDetailsScreen(
+                navController = navController,
+                viewModel = viewModel,
+                groupId = groupId
+            )
+        }
+        composable(
+            route = GroupNavigation.Revelation.route,
+            arguments = GroupNavigation.Revelation.arguments,
+            deepLinks = GroupNavigation.Revelation.deepLinks
+        ) {
+            val groupId = it.arguments?.getString("groupId") ?: ""
+            val viewModel: DrawViewModel = viewModel(factory = DrawViewModel.Factory)
+            DrawScreen(
                 navController = navController,
                 viewModel = viewModel,
                 groupId = groupId

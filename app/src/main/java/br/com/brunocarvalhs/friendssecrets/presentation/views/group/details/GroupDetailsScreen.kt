@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -43,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -61,7 +59,6 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.GenerativeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import kotlinx.coroutines.delay
 
@@ -74,7 +71,6 @@ fun GroupDetailsScreen(
     groupId: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
@@ -88,141 +84,117 @@ fun GroupDetailsScreen(
     }
 
     GroupDetailsContent(
+        groupId = groupId,
         navController = navController,
         uiState = uiState,
-        onShare = { participant, secret, token ->
-            viewModel.eventIntent(
-                intent = GroupDetailsIntent.ShareMember(
-                    context = context,
-                    member = participant,
-                    secret = secret,
-                    token = token
-                )
-            )
-        },
-        onDraw = {
-            viewModel.eventIntent(
-                intent = GroupDetailsIntent.DrawMembers(group = it)
-            )
-        },
-        onRefresh = {
-            viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
-        },
-        onAI = { description, participant, likes ->
-            val prompt = context.getString(R.string.ai_prompt, participant, likes, description)
-            navController.navigate(
-                route = GenerativeNavigation.Chat.createRoute(prompt)
-            )
-        }
+        onEvent = viewModel::eventIntent,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GroupDetailsContent(
+    groupId: String = "",
     navController: NavController,
     uiState: GroupDetailsUiState,
-    onShare: (String, String, String) -> Unit = { _, _, _ -> },
-    onDraw: (GroupEntities) -> Unit = {},
-    onRefresh: () -> Unit = {},
-    onAI: (String, String, String) -> Unit = { _, _, _ -> },
+    onEvent: (GroupDetailsIntent) -> Unit = {},
 ) {
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    Scaffold(
-        topBar = {
-            LargeTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    if (uiState is GroupDetailsUiState.Success) {
-                        Text(uiState.group.name)
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More"
-                        )
-                    }
-                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
-                                onClick = {
-                                    navController.navigate(
-                                        route = GroupNavigation.Edit.createRoute(uiState.group.id)
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.Edit,
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.group_details_drop_menu_item_text_settings)) },
-                            onClick = { /* Handle settings! */ },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Settings,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                        if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                            HorizontalDivider()
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.group_details_action_draw_members)) },
-                                onClick = { onDraw.invoke(uiState.group) },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Filled.Refresh,
-                                        contentDescription = null
-                                    )
-                                },
-                                trailingIcon = { Text("F11", textAlign = TextAlign.Center) }
-                            )
-                        }
-                    }
-                },
-                navigationIcon = {
-                    NavigationBackIconButton(navController = navController)
-                },
-                scrollBehavior = scrollBehavior
+    fun onDraw(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.DrawMembers(group = group))
+    }
+
+    fun revelationDraw(group: GroupEntities) {
+        navController.navigate(route = GroupNavigation.Revelation.createRoute(group.id))
+    }
+
+    fun onShare(participant: String, secret: String, token: String) {
+        onEvent.invoke(
+            GroupDetailsIntent.ShareMember(
+                context = context, member = participant, secret = secret, token = token
             )
-        }, floatingActionButton = {
+        )
+    }
+
+    Scaffold(topBar = {
+        LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ), title = {
             if (uiState is GroupDetailsUiState.Success) {
-                if (uiState.group.draws.isNotEmpty()) {
-                    ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
-                        Icon(Icons.Filled.People, "my secret friend")
-                        Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
-                    }
-                } else if (uiState.group.isOwner && uiState.group.draws.isEmpty()) {
-                    ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
-                        Icon(Icons.Filled.Refresh, "draw")
-                        Text(stringResource(R.string.group_details_action_draw_members))
-                    }
+                Text(uiState.group.name)
+            }
+        }, actions = {
+            IconButton(onClick = { expanded = true }) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert, contentDescription = "More"
+                )
+            }
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
+                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
+                        onClick = {
+                            navController.navigate(
+                                route = GroupNavigation.Edit.createRoute(uiState.group.id)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Edit, contentDescription = null
+                            )
+                        })
+                }
+                DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_settings)) },
+                    onClick = { },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Settings, contentDescription = null
+                        )
+                    })
+                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
+                    HorizontalDivider()
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.group_details_action_draw_members)) },
+                        onClick = { onDraw(group = uiState.group) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Refresh, contentDescription = null
+                            )
+                        },
+                    )
                 }
             }
-        }) {
+        }, navigationIcon = {
+            NavigationBackIconButton(navController = navController)
+        }, scrollBehavior = scrollBehavior
+        )
+    }, floatingActionButton = {
+        if (uiState is GroupDetailsUiState.Success) {
+            if (uiState.group.draws.isNotEmpty()) {
+                ExtendedFloatingActionButton(onClick = { revelationDraw(uiState.group) }) {
+                    Icon(Icons.Filled.People, "my secret friend")
+                    Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
+                }
+            } else if (uiState.group.isOwner && uiState.group.draws.isEmpty()) {
+                ExtendedFloatingActionButton(onClick = { onDraw(uiState.group) }) {
+                    Icon(Icons.Filled.Refresh, "draw")
+                    Text(stringResource(R.string.group_details_action_draw_members))
+                }
+            }
+        }
+    }) {
         when (uiState) {
             is GroupDetailsUiState.Error -> {
-                ErrorComponent(
-                    modifier = Modifier
-                        .padding(it)
-                        .fillMaxSize(),
+                ErrorComponent(modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
                     message = uiState.message,
-                    onBack = { navController.popBackStack() }
-                )
+                    onBack = { navController.popBackStack() })
             }
 
             GroupDetailsUiState.Loading -> {
@@ -250,8 +222,7 @@ private fun GroupDetailsContent(
                             ) {
                                 ExpandableText(
                                     text = uiState.group.description?.textWithFormatting()
-                                        .orEmpty(),
-                                    maxLines = 3
+                                        .orEmpty(), maxLines = 3
                                 )
                             }
                         }
@@ -273,9 +244,12 @@ private fun GroupDetailsContent(
                                 participant = participant,
                                 group = uiState.group,
                                 isAdministrator = uiState.group.isOwner,
-                                onShare = onShare,
-                                likes = uiState.group.members[participant]?.split("|").orEmpty(),
-                                onAI = onAI
+                                onShare = { member, secret, token ->
+                                    onShare(
+                                        participant = member, secret = secret, token = token
+                                    )
+                                },
+                                likes = uiState.group.members[participant]?.split("|").orEmpty()
                             )
                             HorizontalDivider()
                         }
@@ -296,7 +270,9 @@ private fun GroupDetailsContent(
     }
     when (uiState) {
         is GroupDetailsUiState.Draw -> {
-            SuccessComponent(redirectTo = onRefresh)
+            SuccessComponent(redirectTo = {
+                onEvent.invoke(GroupDetailsIntent.FetchGroup(groupId))
+            })
         }
     }
 }
@@ -333,17 +309,13 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
         GroupDetailsUiState.Loading,
         GroupDetailsUiState.Error(message = "Error"),
         // Members ----------------------------------------------------------------
-        GroupDetailsUiState.Success(
-            group = GroupModel(
-                name = "Group",
-                description = "Description",
-                members = mutableMapOf<String, String>().apply {
-                    repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
-                    }
+        GroupDetailsUiState.Success(group = GroupModel(name = "Group",
+            description = "Description",
+            members = mutableMapOf<String, String>().apply {
+                repeat(10) {
+                    this["Member $it"] = "Secret Santa $it"
                 }
-            )
-        ),
+            })),
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group sorteado",
@@ -363,16 +335,14 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
 
         // Admin -----------------------------------------------------------------
         GroupDetailsUiState.Success(
-            group = GroupModel(
-                name = "Group admin",
+            group = GroupModel(name = "Group admin",
                 isOwner = true,
                 description = "Description",
                 members = mutableMapOf<String, String>().apply {
                     repeat(10) {
                         this["Member $it"] = "Secret Santa $it"
                     }
-                }
-            ),
+                }),
         ),
         GroupDetailsUiState.Success(
             group = GroupModel(
@@ -396,24 +366,17 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
 
 @Composable
 @Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
+    name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES
 )
 @Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
+    name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO
 )
 fun GroupDetailsScreenPreview(
     @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState,
 ) {
     FriendsSecretsTheme {
-        GroupDetailsContent(
-            navController = rememberNavController(),
-            uiState = state,
-            onShare = { _, _, _ -> },
-            onDraw = { }
-        )
+        GroupDetailsContent(navController = rememberNavController(), uiState = state, onEvent = {
+
+        })
     }
 }
