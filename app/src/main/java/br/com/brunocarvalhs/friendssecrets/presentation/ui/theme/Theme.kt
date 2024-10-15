@@ -255,8 +255,8 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun FriendsSecretsTheme(
-    darkTheme: Boolean = ThemeManager.isDarkTheme(),
-    dynamicColor: Boolean = ThemeManager.isDynamicThemeEnabled(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
   val colorScheme = when {
