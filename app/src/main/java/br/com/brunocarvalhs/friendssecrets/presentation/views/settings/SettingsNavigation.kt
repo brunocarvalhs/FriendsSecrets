@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.settings
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,7 +33,7 @@ sealed class SettingsNavigation(
 
     data object Appearance : SettingsNavigation(
         title = "Appearance",
-        icon = Icons.Outlined.Settings,
+        icon = Icons.Outlined.Palette,
         route = "appearance"
     )
 

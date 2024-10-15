@@ -83,24 +83,16 @@ private fun SettingsContent(
 
                     }
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    SettingsListItemOptions(
-                        selected = ThemeManager.isDynamicThemeEnabled(),
-                        title = "Dynamic Theme",
-                        icon = Icons.Sharp.Style,
-                        onClick = { ThemeManager.setDynamicThemeEnabled(it) }
-                    )
-                }
-                generalRouters?.forEach {
-                    SettingsListItemNavigation(navController, it)
+                generalRouters?.forEach { router ->
+                    SettingsListItemNavigation(navController, router)
                 }
             }
 
             supportRouters?.let {
                 Column {
                     Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
-                    supportRouters.forEach {
-                        SettingsListItemNavigation(navController, it)
+                    supportRouters.forEach { router ->
+                        SettingsListItemNavigation(navController, router)
                     }
                 }
             }

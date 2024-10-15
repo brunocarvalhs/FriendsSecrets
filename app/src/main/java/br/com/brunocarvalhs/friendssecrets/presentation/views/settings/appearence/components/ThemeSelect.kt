@@ -35,7 +35,6 @@ fun ThemeSelect(
     onClick: (String) -> Unit = {},
     selected: String = Theme.LIGHT.name,
 ) {
-    val darkTheme = isSystemInDarkTheme() // Verifica se o sistema está no tema escuro
     val (selectedTheme, setSelectedTheme) = remember { mutableStateOf(selected) }
 
     Row(
@@ -72,14 +71,6 @@ fun ThemeSelect(
                 onClick(theme)
             }
         )
-    }
-
-    if (selectedTheme == Theme.SYSTEM.name) {
-        if (darkTheme) {
-            println("Sistema está no modo escuro")
-        } else {
-            println("Sistema está no modo claro")
-        }
     }
 }
 

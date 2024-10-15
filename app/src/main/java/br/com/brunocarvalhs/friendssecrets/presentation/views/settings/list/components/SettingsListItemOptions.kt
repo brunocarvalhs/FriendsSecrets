@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
 import androidx.compose.material3.HorizontalDivider
@@ -35,7 +36,7 @@ fun SettingsListItemOptions(
     }
 
     ListItem(
-        modifier = Modifier.clickable { onClick(checked.not()) },
+        modifier = Modifier.clickable { onClick(checked.not()) }.selectableGroup(),
         headlineContent = { Text(title) },
         trailingContent = {
             Switch(

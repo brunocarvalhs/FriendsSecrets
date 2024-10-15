@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
@@ -193,11 +193,19 @@ private fun GroupDetailsContent(
                 scrollBehavior = scrollBehavior
             )
         }, floatingActionButton = {
-            if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
-                    Icon(Icons.Filled.Refresh, "draw")
-                    Text(stringResource(R.string.group_details_action_draw_members))
+            if (uiState is GroupDetailsUiState.Success) {
+                if (uiState.group.isDraw) {
+                    ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
+                        Icon(Icons.Filled.People, "my secret friend")
+                        Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
+                    }
+                } else if (uiState.group.isOwner) {
+                    ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
+                        Icon(Icons.Filled.Refresh, "draw")
+                        Text(stringResource(R.string.group_details_action_draw_members))
+                    }
                 }
+
             }
         }) {
         when (uiState) {

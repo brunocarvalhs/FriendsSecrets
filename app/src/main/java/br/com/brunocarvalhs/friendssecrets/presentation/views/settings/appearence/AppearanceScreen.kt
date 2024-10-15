@@ -1,12 +1,14 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.os.Build
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +28,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components.Theme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components.ThemeSelect
+import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components.SettingsListItemOptions
 
 @Composable
 fun AppearanceScreen(navController: NavHostController) {
@@ -37,8 +40,6 @@ fun AppearanceScreen(navController: NavHostController) {
 private fun AppearanceContent(
     navController: NavHostController,
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
-
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -74,21 +75,22 @@ private fun AppearanceContent(
                     modifier = Modifier.fillMaxWidth(),
                     selected = ThemeManager.theme.name,
                     onClick = { theme ->
-                        when (theme) {
-                            Theme.LIGHT.name -> {
-                                ThemeManager.setTheme(Theme.LIGHT)
-                            }
-
-                            Theme.DARK.name -> {
-                                ThemeManager.setTheme(Theme.DARK)
-                            }
-
-                            Theme.SYSTEM.name -> {
-                                ThemeManager.setTheme(if (isDarkTheme) Theme.DARK else Theme.LIGHT)
-                            }
-                        }
+                        ThemeManager.setTheme(theme = Theme.valueOf(theme))
                     },
                 )
+            }
+            item {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(text = "Selecting a particular option will change the appearance (coloring) of the application according to your preferences.")
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SettingsListItemOptions(
+                        selected = ThemeManager.isDynamicThemeEnabled(),
+                        title = "Dynamic Theme",
+                        icon = Icons.Sharp.Style,
+                        onClick = { state -> ThemeManager.setDynamicThemeEnabled(state) }
+                    )
+                }
             }
         }
     }
