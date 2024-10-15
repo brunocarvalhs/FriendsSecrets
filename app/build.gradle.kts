@@ -66,7 +66,7 @@ android {
         compose = true
         buildConfig = true
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/LICENSE.md"
             excludes += "/META-INF/LICENSE-notice.md"
@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.lottie.compose)
+    implementation(libs.androidx.biometric)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)

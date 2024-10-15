@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.0"
+biometric = "1.1.0"
 gson = "2.11.0"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -30,6 +31,7 @@ timber = "5.0.1"
 uiTextGoogleFonts = "1.7.3"
 
 [libraries]
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
