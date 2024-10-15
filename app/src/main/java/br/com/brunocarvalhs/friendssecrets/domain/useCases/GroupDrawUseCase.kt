@@ -12,7 +12,7 @@ class GroupDrawUseCase(
 ) {
     suspend fun invoke(group: GroupEntities) = runCatching {
         validationMembers(group.members)
-        validationDraw(group.draws, group.isDraw)
+        validationDraw(group.draws)
         groupRepository.drawMembers(group)
     }
 
@@ -20,8 +20,7 @@ class GroupDrawUseCase(
         require(value = members.size > 2) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
     }
 
-    private fun validationDraw(draw: Map<String, String>, isDraw: Boolean) {
+    private fun validationDraw(draw: Map<String, String>) {
         require(value = draw.isEmpty()) { context.getString(R.string.require_draw_already_held) }
-        require(value = !isDraw) { context.getString(R.string.require_draw_already_held) }
     }
 }

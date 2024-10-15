@@ -1,11 +1,14 @@
 package br.com.brunocarvalhs.friendssecrets.data.service
 
+import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.MinimumsMembersOfDrawException
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 
-class DrawService {
-    
-    fun drawMembers(group: GroupEntities) : Map<String, String> {
+class DrawService(
+    private val cryptoService: CryptoService = CryptoService()
+) {
+
+    fun drawMembers(group: GroupEntities): Map<String, String> {
         val participants = group.members.keys.toMutableList()
 
         if (participants.size < 3) {
@@ -22,9 +25,14 @@ class DrawService {
         val secretSantaMap = HashMap<String, String>()
 
         participants.forEachIndexed { index, participant ->
-            secretSantaMap[participant] = shuffled[index]
+            secretSantaMap[participant] = cryptoService.encrypt(shuffled[index])
         }
 
         return secretSantaMap
     }
+
+    fun revelation(code: String): String {
+        return cryptoService.decrypt(code)
+    }
 }
+

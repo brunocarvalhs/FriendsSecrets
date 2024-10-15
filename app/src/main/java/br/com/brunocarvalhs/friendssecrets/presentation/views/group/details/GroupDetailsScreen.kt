@@ -178,13 +178,20 @@ private fun GroupDetailsContent(
                                 )
                             }
                         )
-                        HorizontalDivider()
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.group_details_drop_menu_item_text_send_feedback)) },
-                            onClick = { /* Handle send feedback! */ },
-                            leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
-                            trailingIcon = { Text("F11", textAlign = TextAlign.Center) }
-                        )
+                        if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
+                            HorizontalDivider()
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.group_details_action_draw_members)) },
+                                onClick = { onDraw.invoke(uiState.group) },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Filled.Refresh,
+                                        contentDescription = null
+                                    )
+                                },
+                                trailingIcon = { Text("F11", textAlign = TextAlign.Center) }
+                            )
+                        }
                     }
                 },
                 navigationIcon = {
@@ -194,18 +201,17 @@ private fun GroupDetailsContent(
             )
         }, floatingActionButton = {
             if (uiState is GroupDetailsUiState.Success) {
-                if (uiState.group.isDraw) {
+                if (uiState.group.draws.isNotEmpty()) {
                     ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
                         Icon(Icons.Filled.People, "my secret friend")
                         Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
                     }
-                } else if (uiState.group.isOwner) {
+                } else if (uiState.group.isOwner && uiState.group.draws.isEmpty()) {
                     ExtendedFloatingActionButton(onClick = { onDraw.invoke(uiState.group) }) {
                         Icon(Icons.Filled.Refresh, "draw")
                         Text(stringResource(R.string.group_details_action_draw_members))
                     }
                 }
-
             }
         }) {
         when (uiState) {
@@ -325,6 +331,8 @@ fun ExpandableText(
 private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetailsUiState> {
     override val values = sequenceOf(
         GroupDetailsUiState.Loading,
+        GroupDetailsUiState.Error(message = "Error"),
+        // Members ----------------------------------------------------------------
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group",
@@ -339,19 +347,24 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group sorteado",
-                isDraw = true,
                 description = "Description",
                 members = mutableMapOf<String, String>().apply {
                     repeat(10) {
                         this["Member $it"] = "Secret Santa $it"
                     }
-                }
+                },
+                draws = mutableMapOf<String, String>().apply {
+                    repeat(10) {
+                        this["Member $it"] = "Secret Santa $it"
+                    }
+                },
             )
         ),
+
+        // Admin -----------------------------------------------------------------
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group admin",
-                isDraw = true,
                 isOwner = true,
                 description = "Description",
                 members = mutableMapOf<String, String>().apply {
@@ -361,7 +374,23 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
                 }
             ),
         ),
-        GroupDetailsUiState.Error(message = "Error")
+        GroupDetailsUiState.Success(
+            group = GroupModel(
+                name = "Group admin sorteado",
+                isOwner = true,
+                description = "Description",
+                members = mutableMapOf<String, String>().apply {
+                    repeat(10) {
+                        this["Member $it"] = "Secret Santa $it"
+                    }
+                },
+                draws = mutableMapOf<String, String>().apply {
+                    repeat(10) {
+                        this["Member $it"] = "Secret Santa $it"
+                    }
+                },
+            ),
+        ),
     )
 }
 

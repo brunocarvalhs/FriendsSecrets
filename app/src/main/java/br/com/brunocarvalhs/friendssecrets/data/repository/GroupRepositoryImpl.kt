@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.service.DrawService
@@ -12,13 +13,18 @@ import kotlinx.coroutines.tasks.await
 
 internal class GroupRepositoryImpl(
     private val firestore: FirebaseFirestore = Firebase.firestore,
-    private val drawService: DrawService = DrawService()
+    private val cryptoService: CryptoService = CryptoService(),
+    private val drawService: DrawService = DrawService(
+        cryptoService = cryptoService
+    )
 ) : GroupRepository {
 
     override suspend fun create(group: GroupEntities) {
+        val data = cryptoService.encryptMap(group.toMap(), setOf(GroupEntities.TOKEN, GroupEntities.ID))
+
         firestore.collection(GroupEntities.COLLECTION_NAME)
             .document(group.id)
-            .set(group.toMap())
+            .set(data)
             .await()
     }
 
@@ -28,9 +34,11 @@ internal class GroupRepositoryImpl(
     }
 
     override suspend fun update(group: GroupEntities) {
+        val data = cryptoService.encryptMap(group.toMap(), setOf(GroupEntities.TOKEN, GroupEntities.ID))
+
         firestore.collection(GroupEntities.COLLECTION_NAME)
             .document(group.id)
-            .set(group.toMap())
+            .set(data)
             .await()
     }
 
@@ -41,19 +49,6 @@ internal class GroupRepositoryImpl(
     override suspend fun list(list: List<String>): List<GroupEntities> {
         return firestore.collection(GroupEntities.COLLECTION_NAME)
             .whereIn(GroupEntities.TOKEN, list).get().await()
-            .toObjects(GroupModel::class.java)
-    }
-
-    override suspend fun search(query: String): List<GroupEntities> {
-        return firestore.collection(GroupEntities.COLLECTION_NAME)
-            .whereEqualTo(GroupEntities.NAME, query)
-            .get().await()
-            .toObjects(GroupModel::class.java)
-    }
-
-    override suspend fun searchByMember(memberId: String): List<GroupEntities> {
-        return firestore.collection(GroupEntities.COLLECTION_NAME)
-            .whereArrayContains(GroupEntities.MEMBERS, memberId).get().await()
             .toObjects(GroupModel::class.java)
     }
 
@@ -69,11 +64,7 @@ internal class GroupRepositoryImpl(
 
         firestore.collection(GroupEntities.COLLECTION_NAME)
             .document(group.id)
-            .update(
-                mapOf(
-                    GroupEntities.DRAWS to secretSantaMap,
-                    GroupEntities.IS_DRAW to true
-                )
-            ).await()
+            .update(mapOf(GroupEntities.DRAWS to secretSantaMap))
+            .await()
     }
 }

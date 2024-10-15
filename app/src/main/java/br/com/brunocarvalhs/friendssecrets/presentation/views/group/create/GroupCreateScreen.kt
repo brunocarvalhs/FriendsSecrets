@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,13 +44,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun GroupCreateScreen(

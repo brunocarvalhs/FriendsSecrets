@@ -8,8 +8,6 @@ interface GroupRepository {
     suspend fun update(group: GroupEntities)
     suspend fun delete(groupId: String)
     suspend fun list(list: List<String>): List<GroupEntities>
-    suspend fun search(query: String): List<GroupEntities>
-    suspend fun searchByMember(memberId: String): List<GroupEntities>
     suspend fun drawMembers(group: GroupEntities)
     suspend fun searchByToken(token: String): GroupEntities?
 }
