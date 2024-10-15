@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.settings
+package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.sharp.Fingerprint
+import androidx.compose.material.icons.sharp.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,6 +27,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components.SettingsListItemNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components.SettingsListItemOptions
 
 @Composable
 fun SettingsScreen(
@@ -44,7 +49,7 @@ fun SettingsScreen(
 private fun SettingsContent(
     navController: NavHostController,
     generalRouters: List<SettingsNavigation>? = null,
-    supportRouters: List<SettingsNavigation>? = null
+    supportRouters: List<SettingsNavigation>? = null,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -66,29 +71,31 @@ private fun SettingsContent(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it).padding(16.dp)) {
-            generalRouters?.let {
-                Column {
-                    Text(text = "General", modifier = Modifier.padding(top = 16.dp))
-                    generalRouters.forEach {
-                        ListItem(
-                            modifier = Modifier.clickable { navController.navigate(it.route) },
-                            headlineContent = { Text(it.title) },
-                            trailingContent = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = "Localized description",
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    imageVector = it.icon,
-                                    contentDescription = it.title,
-                                )
-                            }
-                        )
-                        HorizontalDivider()
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .padding(16.dp)
+        ) {
+            Column {
+                Text(text = "General", modifier = Modifier.padding(top = 16.dp))
+                SettingsListItemOptions(
+                    navController = navController,
+                    title = "Fingerprint",
+                    icon = Icons.Sharp.Fingerprint,
+                    onClick = {
+
                     }
+                )
+                SettingsListItemOptions(
+                    navController = navController,
+                    title = "Dynamic Theme",
+                    icon = Icons.Sharp.Style,
+                    onClick = {
+
+                    }
+                )
+                generalRouters?.forEach {
+                    SettingsListItemNavigation(navController, it)
                 }
             }
 
@@ -96,29 +103,15 @@ private fun SettingsContent(
                 Column {
                     Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
                     supportRouters.forEach {
-                        ListItem(
-                            modifier = Modifier.clickable { navController.navigate(it.route) },
-                            headlineContent = { Text(it.title) },
-                            trailingContent = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = "Localized description",
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    imageVector = it.icon,
-                                    contentDescription = it.title,
-                                )
-                            }
-                        )
-                        HorizontalDivider()
+                        SettingsListItemNavigation(navController, it)
                     }
                 }
             }
         }
     }
 }
+
+
 
 @Preview(
     name = "Dark Mode",
