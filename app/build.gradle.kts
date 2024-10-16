@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.lottie.compose)
+    implementation(libs.androidx.biometric)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)

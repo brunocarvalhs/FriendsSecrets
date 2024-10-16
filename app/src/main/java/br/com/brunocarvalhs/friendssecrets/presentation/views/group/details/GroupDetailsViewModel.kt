@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 class GroupDetailsViewModel(
@@ -45,15 +44,12 @@ class GroupDetailsViewModel(
         }
     }
 
-    @OptIn(ExperimentalEncodingApi::class)
     private fun shareMember(context: Context, member: String, secret: String, token: String) {
-        val code: String = Base64.encode(secret.toByteArray())
-
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
-                "Olá $member, baixando nosso aplicativo, código do grupo: $token e seu amigo secreto é: $code"
+                "Olá $member, baixando nosso aplicativo, código do grupo: $token e seu amigo secreto é: $secret"
             )
             type = "text/plain"
         }

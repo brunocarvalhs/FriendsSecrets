@@ -6,18 +6,16 @@ interface GroupEntities {
     val name: String
     val description: String?
     val members: Map<String, String>
-    val isDraw: Boolean
     val draws: Map<String, String>
     val isOwner: Boolean
 
-    fun toMap(): Map<*, *>
+    fun toMap(): Map<String, Any>
 
     fun toCopy(
         token: String = this.token,
         name: String = this.name,
         description: String? = this.description,
         members: Map<String, String> = this.members,
-        isDraw: Boolean = this.isDraw,
         draws: Map<String, String> = this.draws,
         isOwner: Boolean = this.isOwner,
     ): GroupEntities
@@ -32,7 +30,6 @@ interface GroupEntities {
         const val DESCRIPTION = "description"
         const val MEMBERS = "members"
         const val DRAWS = "draws"
-        const val IS_DRAW = "isDraw"
-        const val IS_OWNER = "isOwner"
+        const val IS_OWNER = "is_owner"
     }
 }

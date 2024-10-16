@@ -46,4 +46,5 @@
     <string name="require_draw_already_held">Draw already held</string>
     <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
     <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
+    <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
 </resources>
