@@ -1,7 +1,11 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
+import android.content.Context
+import android.provider.Settings
+import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 class CustomApplication : Application() {
@@ -13,6 +17,7 @@ class CustomApplication : Application() {
     }
 
     private fun setup() {
+        setupCrashlytics()
         setupTimber()
     }
 
@@ -21,6 +26,11 @@ class CustomApplication : Application() {
         else CrashLoggerProvider()
 
         Timber.plant(type)
+    }
+
+    private fun setupCrashlytics() {
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
+        CrashlyticsProvider.setUserId(this)
     }
 
     companion object {

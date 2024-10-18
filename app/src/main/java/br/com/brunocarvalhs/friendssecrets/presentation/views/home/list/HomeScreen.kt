@@ -45,6 +45,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.utils.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
@@ -66,6 +69,15 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        AnalyticsProvider.track(
+            event = AnalyticsEvents.VISUALIZATION,
+            params = mapOf(
+                AnalyticsParams.SCREEN_NAME to HomeNavigation.Home.route
+            )
+        )
+    }
 
     LaunchedEffect(Unit) {
         if (context.isFistAppOpen()) navController.navigate(HomeNavigation.Onboarding.route)

@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.lottie.compose)
     implementation(libs.androidx.biometric)
+    implementation(libs.firebase.config)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)
