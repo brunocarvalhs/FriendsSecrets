@@ -12,4 +12,5 @@ sealed interface GroupDetailsIntent {
         val secret: String,
         val token: String,
     ) : GroupDetailsIntent
+    data class ExitGroup(val groupId: String) : GroupDetailsIntent
 }

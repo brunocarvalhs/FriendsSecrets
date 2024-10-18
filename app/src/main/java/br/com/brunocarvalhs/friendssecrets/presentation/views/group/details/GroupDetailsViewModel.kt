@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 class GroupDetailsViewModel(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
+    private val groupExitUseCase: GroupExitUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupDetailsUiState> =
@@ -35,12 +37,24 @@ class GroupDetailsViewModel(
         when (intent) {
             is GroupDetailsIntent.FetchGroup -> fetchGroup(intent.groupId)
             is GroupDetailsIntent.DrawMembers -> drawMembers(intent.group)
+            is GroupDetailsIntent.ExitGroup -> exitGroup(intent.groupId)
             is GroupDetailsIntent.ShareMember -> shareMember(
                 context = intent.context,
                 member = intent.member,
                 secret = intent.secret,
                 token = intent.token
             )
+        }
+    }
+
+    private fun exitGroup(groupId: String) {
+        _uiState.value = GroupDetailsUiState.Loading
+        viewModelScope.launch {
+            groupExitUseCase.invoke(groupId).onSuccess {
+                _uiState.value = GroupDetailsUiState.Exit
+            }.onFailure {
+                _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+            }
         }
     }
 
@@ -95,9 +109,14 @@ class GroupDetailsViewModel(
                     val groupDrawUseCase = GroupDrawUseCase(
                         groupRepository = repository
                     )
+                    val groupExitUseCase = GroupExitUseCase(
+                        groupRepository = repository,
+                        storage = storage
+                    )
                     GroupDetailsViewModel(
                         groupReadUseCase = groupReadUseCase,
-                        groupDrawUseCase = groupDrawUseCase
+                        groupDrawUseCase = groupDrawUseCase,
+                        groupExitUseCase = groupExitUseCase
                     )
                 }
             }

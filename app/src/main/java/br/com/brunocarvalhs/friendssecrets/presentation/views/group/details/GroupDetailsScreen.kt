@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -76,10 +76,15 @@ fun GroupDetailsScreen(
         viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
     }
 
-    LaunchedEffect(Unit) {
-        if (uiState is GroupDetailsUiState.Draw) {
-            delay(timeMillis = 1000)
-            viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is GroupDetailsUiState.Draw -> {
+                delay(timeMillis = 1000)
+                viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
+            }
+            is GroupDetailsUiState.Exit -> {
+                navController.popBackStack()
+            }
         }
     }
 
@@ -109,6 +114,10 @@ private fun GroupDetailsContent(
         onEvent.invoke(GroupDetailsIntent.DrawMembers(group = group))
     }
 
+    fun exitGroup(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.ExitGroup(groupId))
+    }
+
     fun revelationDraw(group: GroupEntities) {
         navController.navigate(route = GroupNavigation.Revelation.createRoute(group.id))
     }
@@ -130,45 +139,49 @@ private fun GroupDetailsContent(
                 Text(uiState.group.name)
             }
         }, actions = {
-            IconButton(onClick = { expanded = true }) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert, contentDescription = "More"
-                )
-            }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
-                        onClick = {
-                            navController.navigate(
-                                route = GroupNavigation.Edit.createRoute(uiState.group.id)
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Outlined.Edit, contentDescription = null
-                            )
-                        })
-                }
-                DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_settings)) },
-                    onClick = { },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Settings, contentDescription = null
-                        )
-                    })
-                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                    HorizontalDivider()
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.group_details_action_draw_members)) },
-                        onClick = { onDraw(group = uiState.group) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Filled.Refresh, contentDescription = null
-                            )
-                        },
+            if (uiState is GroupDetailsUiState.Success) {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert, contentDescription = "More"
                     )
                 }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    if (uiState.group.isOwner) {
+                        DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
+                            onClick = {
+                                navController.navigate(
+                                    route = GroupNavigation.Edit.createRoute(uiState.group.id)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Edit, contentDescription = null
+                                )
+                            })
+                    }
+                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group)) },
+                        onClick = { exitGroup(uiState.group) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = null
+                            )
+                        }
+                    )
+                    if (uiState.group.isOwner) {
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.group_details_action_draw_members)) },
+                            onClick = { onDraw(group = uiState.group) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Filled.Refresh, contentDescription = null
+                                )
+                            },
+                        )
+                    }
+                }
             }
+
         }, navigationIcon = {
             NavigationBackIconButton(navController = navController)
         }, scrollBehavior = scrollBehavior
