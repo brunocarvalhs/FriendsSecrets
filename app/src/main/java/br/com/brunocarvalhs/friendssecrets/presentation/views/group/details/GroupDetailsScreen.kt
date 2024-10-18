@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -225,8 +226,12 @@ private fun GroupDetailsContent(
                 ) {
                     item {
                         uiState.group.description?.let {
-                            Row {
-                                Text(text = "Descrição")
+                            Row(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(text = "Descrição", style = MaterialTheme.typography.titleMedium)
                             }
                             Row(
                                 modifier = Modifier
