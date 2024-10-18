@@ -109,7 +109,8 @@ fun NavGraphBuilder.groupGraph(
             DrawScreen(
                 navController = navController,
                 viewModel = viewModel,
-                groupId = groupId
+                groupId = groupId,
+                toggleManager = toggleManager
             )
         }
     }

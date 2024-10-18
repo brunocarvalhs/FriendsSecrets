@@ -92,11 +92,11 @@ fun HomeScreen(
         uiState = uiState,
         onEvent = viewModel::event,
         isSettingsEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_ENABLED),
         isJoinGroupEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.HOME_IS_JOIN_GROUP_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.HOME_IS_JOIN_GROUP_ENABLED),
         isCreateGroupEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.HOME_IS_CREATE_GROUP_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.HOME_IS_CREATE_GROUP_ENABLED),
     )
 }
 

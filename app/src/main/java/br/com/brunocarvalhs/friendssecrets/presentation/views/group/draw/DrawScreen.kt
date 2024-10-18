@@ -39,6 +39,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -52,6 +54,7 @@ fun DrawScreen(
     viewModel: DrawViewModel = viewModel(
         factory = DrawViewModel.Factory
     ),
+    toggleManager: ToggleManager,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -63,7 +66,9 @@ fun DrawScreen(
         groupId = groupId,
         navController = navController,
         uiState = uiState.value,
-        eventIntent = viewModel::eventIntent
+        eventIntent = viewModel::eventIntent,
+        isGenerativeEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.DRAW_IS_GENERATIVE_ENABLED),
     )
 }
 
@@ -74,6 +79,7 @@ private fun DrawContent(
     navController: NavController,
     uiState: DrawUiState,
     eventIntent: (DrawIntent) -> Unit,
+    isGenerativeEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
 
@@ -101,18 +107,20 @@ private fun DrawContent(
             }
         }
         if (uiState is DrawUiState.Success) {
-            ExtendedFloatingActionButton(onClick = {
-                eventIntent(
-                    DrawIntent.GenerativeDraw(
-                        context = context,
-                        navigation = navController,
-                        group = uiState.group,
-                        secret = uiState.draw.keys.first(),
-                        likes = uiState.draw.values.first().split("|").toList()
+            if (isGenerativeEnabled) {
+                ExtendedFloatingActionButton(onClick = {
+                    eventIntent(
+                        DrawIntent.GenerativeDraw(
+                            context = context,
+                            navigation = navController,
+                            group = uiState.group,
+                            secret = uiState.draw.keys.first(),
+                            likes = uiState.draw.values.first().split("|").toList()
+                        )
                     )
-                )
-            }) {
-                Text(text = "Dicas de presentes")
+                }) {
+                    Text(text = "Dicas de presentes")
+                }
             }
         }
     }) {

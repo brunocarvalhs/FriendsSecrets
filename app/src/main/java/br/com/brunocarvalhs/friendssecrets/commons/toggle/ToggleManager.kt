@@ -36,7 +36,7 @@ class ToggleManager(
             }
     }
 
-    fun isFeatureEnabled(featureKey: String): Boolean {
-        return remoteConfig.getBoolean(featureKey)
+    fun isFeatureEnabled(featureKey: ToggleKeys): Boolean {
+        return remoteConfig.getBoolean(featureKey.toString())
     }
 }

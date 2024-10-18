@@ -36,13 +36,13 @@ fun SettingsScreen(
     SettingsContent(
         navController = navController,
         isFingerprintEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED),
         isAppearanceEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED),
         isReportIssueEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED),
         isFAQEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED.toString()),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED),
     )
 }
 
