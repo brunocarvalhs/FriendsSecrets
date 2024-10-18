@@ -5,6 +5,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
+import timber.log.Timber
 
 class ToggleManager(
     private val context: Context
@@ -13,9 +14,11 @@ class ToggleManager(
     private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
         setConfigSettingsAsync(
             FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(3600)
+                .setMinimumFetchIntervalInSeconds(360)
                 .build()
         )
+
+        setDefaultsAsync(defaultToggle)
     }
 
     init {
@@ -26,9 +29,9 @@ class ToggleManager(
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    println("Values updated successfully.")
+                    Timber.i("Values updated successfully.")
                 } else {
-                    println("Failed to update values.")
+                    Timber.i("Failed to update values.")
                 }
             }
     }

@@ -39,7 +39,7 @@ fun NavGraphBuilder.homeGraph(
     navigation(startDestination = HomeNavigation.START_DESTINATION, route = route) {
         composable(HomeNavigation.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
-            HomeScreen(navController = navController, viewModel = homeViewModel)
+            HomeScreen(navController = navController, viewModel = homeViewModel, toggleManager = toggleManager)
         }
         composable(HomeNavigation.Onboarding.route) {
             OnboardingScreen(navController = navController)

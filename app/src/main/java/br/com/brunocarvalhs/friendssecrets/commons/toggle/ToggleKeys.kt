@@ -1,6 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.commons.toggle
 
 enum class ToggleKeys {
+    HOME_IS_JOIN_GROUP_ENABLED,
+    HOME_IS_CREATE_GROUP_ENABLED,
     SETTINGS_IS_ENABLED,
     SETTINGS_IS_FINGERPRINT_ENABLED,
     SETTINGS_IS_APPEARANCE_ENABLED,

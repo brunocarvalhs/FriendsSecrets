@@ -36,13 +36,13 @@ fun SettingsScreen(
     SettingsContent(
         navController = navController,
         isFingerprintEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED.name),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED.toString()),
         isAppearanceEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED.name),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED.toString()),
         isReportIssueEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED.name),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED.toString()),
         isFAQEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED.name),
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED.toString()),
     )
 }
 
@@ -50,10 +50,10 @@ fun SettingsScreen(
 @Composable
 private fun SettingsContent(
     navController: NavHostController,
-    isFingerprintEnabled: Boolean = false,
-    isAppearanceEnabled: Boolean = false,
-    isReportIssueEnabled: Boolean = false,
-    isFAQEnabled: Boolean = false,
+    isFingerprintEnabled: Boolean = true,
+    isAppearanceEnabled: Boolean = true,
+    isReportIssueEnabled: Boolean = true,
+    isFAQEnabled: Boolean = true,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -124,10 +124,6 @@ private fun SettingsContentPreview() {
     FriendsSecretsTheme {
         SettingsContent(
             navController = rememberNavController(),
-            isFingerprintEnabled = true,
-            isAppearanceEnabled = true,
-            isReportIssueEnabled = true,
-            isFAQEnabled = true,
         )
     }
 }
