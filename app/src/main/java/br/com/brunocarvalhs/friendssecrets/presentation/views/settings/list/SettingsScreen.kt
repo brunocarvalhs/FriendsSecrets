@@ -81,7 +81,9 @@ private fun SettingsContent(
                 .padding(16.dp)
         ) {
             Column {
-                Text(text = "General", modifier = Modifier.padding(top = 16.dp))
+                if (isAppearanceEnabled || isFingerprintEnabled) {
+                    Text(text = "General", modifier = Modifier.padding(top = 16.dp))
+                }
                 if (isFingerprintEnabled) {
                     SettingsListItemOptions(
                         selected = BiometricManager.isBiometricPromptEnabled(),
@@ -96,7 +98,9 @@ private fun SettingsContent(
             }
 
             Column {
-                Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
+                if (isReportIssueEnabled || isFAQEnabled) {
+                    Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
+                }
                 if (isReportIssueEnabled) {
                     SettingsListItemNavigation(navController, SettingsNavigation.ReportIssue)
                 }
