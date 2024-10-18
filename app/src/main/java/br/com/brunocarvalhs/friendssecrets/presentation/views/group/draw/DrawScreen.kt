@@ -112,7 +112,7 @@ private fun DrawContent(
                     )
                 )
             }) {
-                Text(text = "Revelar meu amigo secreto")
+                Text(text = "Dicas de presentes")
             }
         }
     }) {

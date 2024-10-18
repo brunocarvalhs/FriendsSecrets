@@ -41,6 +41,7 @@ class DrawViewModel(
                 navigation = intent.navigation,
                 group = intent.group,
                 secret = intent.secret,
+                likes = intent.likes
             )
         }
     }
@@ -52,11 +53,7 @@ class DrawViewModel(
         secret: String,
         likes: List<String> = emptyList(),
     ) {
-        val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name.apply {
-            group.description?.let {
-                plus(" $it")
-            }
-        })
+        val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name)
         
         navigation.navigate(
             route = GenerativeNavigation.Chat.createRoute(prompt)
