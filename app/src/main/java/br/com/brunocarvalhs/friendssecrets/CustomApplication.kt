@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets
 import android.app.Application
 import android.content.Context
 import android.provider.Settings
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -17,7 +18,7 @@ class CustomApplication : Application() {
     }
 
     private fun setup() {
-        setupCrashlytics()
+        setupFirebase()
         setupTimber()
     }
 
@@ -28,9 +29,10 @@ class CustomApplication : Application() {
         Timber.plant(type)
     }
 
-    private fun setupCrashlytics() {
+    private fun setupFirebase() {
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
         CrashlyticsProvider.setUserId(this)
+        AnalyticsProvider.setUserId(this)
     }
 
     companion object {

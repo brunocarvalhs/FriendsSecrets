@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.crashlytics
 
 import android.content.Context
-import android.provider.Settings
+import android.provider.Settings.Secure
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -22,7 +22,7 @@ object CrashlyticsProvider {
 
     fun setUserId(context: Context) {
         val deviceId =
-            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            Secure.getString(context.contentResolver, Secure.ANDROID_ID)
         crashlytics.setUserId(deviceId)
     }
 
