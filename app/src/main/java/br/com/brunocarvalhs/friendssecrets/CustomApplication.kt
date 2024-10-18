@@ -8,6 +8,7 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         setup()
     }
 
@@ -23,13 +24,13 @@ class CustomApplication : Application() {
     }
 
     companion object {
-        private lateinit var instance: CustomApplication
+        @Volatile
+        private var instance: CustomApplication? = null
 
-        fun getInstance() : CustomApplication {
-            if (!Companion::instance.isInitialized) {
-                instance = CustomApplication()
+        fun getInstance(): CustomApplication {
+            return instance ?: synchronized(this) {
+                instance ?: CustomApplication().also { instance = it }
             }
-            return instance
         }
     }
 }

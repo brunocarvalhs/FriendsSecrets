@@ -2,12 +2,10 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Fingerprint
-import androidx.compose.material.icons.sharp.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation

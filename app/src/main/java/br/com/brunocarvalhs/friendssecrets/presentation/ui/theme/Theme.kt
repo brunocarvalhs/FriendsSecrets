@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 
 private val lightScheme = lightColorScheme(
@@ -246,7 +247,7 @@ data class ColorFamily(
     val color: Color,
     val onColor: Color,
     val colorContainer: Color,
-    val onColorContainer: Color
+    val onColorContainer: Color,
 )
 
 val unspecified_scheme = ColorFamily(
@@ -255,23 +256,21 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun FriendsSecretsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
+    darkTheme: Boolean = if (LocalInspectionMode.current) isSystemInDarkTheme() else ThemeManager.isDarkTheme(),
+    dynamicColor: Boolean = if (LocalInspectionMode.current) false else ThemeManager.isDynamicThemeEnabled(),
+    content: @Composable () -> Unit,
 ) {
-  val colorScheme = when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-          val context = LocalContext.current
-          if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-      }
-      
-      darkTheme -> darkScheme
-      else -> lightScheme
-  }
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = AppTypography,
-    content = content
-  )
+        darkTheme -> darkScheme
+        else -> lightScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme, typography = AppTypography, content = content
+    )
 }
