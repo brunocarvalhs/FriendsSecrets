@@ -34,7 +34,7 @@ object ThemeManager {
     }
 
     internal fun setDynamicThemeEnabled(enabled: Boolean) {
-        setTheme(Theme.valueOf(themeState.value))
+        storage.save(DYNAMIC_THEME_KEY, enabled)
         isDynamicThemeEnabled = enabled
     }
 
