@@ -83,6 +83,7 @@ fun GroupDetailsScreen(
                 delay(timeMillis = 1000)
                 viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
             }
+
             is GroupDetailsUiState.Exit -> {
                 navController.popBackStack()
             }
@@ -116,7 +117,11 @@ private fun GroupDetailsContent(
     }
 
     fun exitGroup(group: GroupEntities) {
-        onEvent.invoke(GroupDetailsIntent.ExitGroup(groupId))
+        onEvent.invoke(GroupDetailsIntent.ExitGroup(group.id))
+    }
+
+    fun deleteGroup(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.DeleteGroup(group.id))
     }
 
     fun revelationDraw(group: GroupEntities) {
@@ -160,14 +165,23 @@ private fun GroupDetailsContent(
                                 )
                             })
                     }
-                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group)) },
-                        onClick = { exitGroup(uiState.group) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = null
-                            )
+                    DropdownMenuItem(text = {
+                        if (uiState.group.isOwner) {
+                            Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin))
+                        } else {
+                            Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group))
                         }
-                    )
+                    }, onClick = {
+                        if (uiState.group.isOwner) {
+                            deleteGroup(uiState.group)
+                        } else {
+                            exitGroup(uiState.group)
+                        }
+                    }, leadingIcon = {
+                        Icon(
+                            Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = null
+                        )
+                    })
                     if (uiState.group.isOwner) {
                         HorizontalDivider()
                         DropdownMenuItem(
@@ -231,7 +245,9 @@ private fun GroupDetailsContent(
                                     .padding(16.dp)
                                     .fillMaxWidth()
                             ) {
-                                Text(text = "Descrição", style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    text = "Descrição", style = MaterialTheme.typography.titleMedium
+                                )
                             }
                             Row(
                                 modifier = Modifier
@@ -327,13 +343,15 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
         GroupDetailsUiState.Loading,
         GroupDetailsUiState.Error(message = "Error"),
         // Members ----------------------------------------------------------------
-        GroupDetailsUiState.Success(group = GroupModel(name = "Group",
-            description = "Description",
-            members = mutableMapOf<String, String>().apply {
-                repeat(10) {
-                    this["Member $it"] = "Secret Santa $it"
-                }
-            })),
+        GroupDetailsUiState.Success(
+            group = GroupModel(name = "Group",
+                description = "Description",
+                members = mutableMapOf<String, String>().apply {
+                    repeat(10) {
+                        this["Member $it"] = "Secret Santa $it"
+                    }
+                })
+        ),
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group sorteado",

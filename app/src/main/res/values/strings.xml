@@ -65,5 +65,6 @@
     <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
     <string name="biometric_screen_unlock">Unlock</string>
     <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Apagar o grupo</string>
 </resources>
 

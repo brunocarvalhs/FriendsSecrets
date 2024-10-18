@@ -12,6 +12,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
@@ -24,7 +25,8 @@ import kotlinx.coroutines.launch
 class GroupDetailsViewModel(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
-    private val groupExitUseCase: GroupExitUseCase
+    private val groupExitUseCase: GroupExitUseCase,
+    private val groupDeleteUseCase: GroupDeleteUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupDetailsUiState> =
@@ -38,12 +40,24 @@ class GroupDetailsViewModel(
             is GroupDetailsIntent.FetchGroup -> fetchGroup(intent.groupId)
             is GroupDetailsIntent.DrawMembers -> drawMembers(intent.group)
             is GroupDetailsIntent.ExitGroup -> exitGroup(intent.groupId)
+            is GroupDetailsIntent.DeleteGroup -> deleteGroup(intent.groupId)
             is GroupDetailsIntent.ShareMember -> shareMember(
                 context = intent.context,
                 member = intent.member,
                 secret = intent.secret,
                 token = intent.token
             )
+        }
+    }
+
+    private fun deleteGroup(groupId: String) {
+        _uiState.value = GroupDetailsUiState.Loading
+        viewModelScope.launch {
+            groupDeleteUseCase.invoke(groupId).onSuccess {
+                _uiState.value = GroupDetailsUiState.Exit
+            }.onFailure {
+                _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+            }
         }
     }
 
@@ -113,10 +127,15 @@ class GroupDetailsViewModel(
                         groupRepository = repository,
                         storage = storage
                     )
+                    val groupDeleteUseCase = GroupDeleteUseCase(
+                        groupRepository = repository,
+                        storage = storage
+                    )
                     GroupDetailsViewModel(
                         groupReadUseCase = groupReadUseCase,
                         groupDrawUseCase = groupDrawUseCase,
-                        groupExitUseCase = groupExitUseCase
+                        groupExitUseCase = groupExitUseCase,
+                        groupDeleteUseCase = groupDeleteUseCase
                     )
                 }
             }
