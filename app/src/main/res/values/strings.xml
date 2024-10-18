@@ -57,5 +57,12 @@
         Seu código para acessar o amigo secreto é: %3$s.\n\n
         🚀 Não perca tempo, baixe o app e comece a diversão agora!
     </string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Log in using your biometric credential</string>
+    <string name="biometric_screen_use_account_password">Use account password</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
+    <string name="biometric_screen_unlock">Unlock</string>
 </resources>
 
