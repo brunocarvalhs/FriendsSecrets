@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -70,7 +71,7 @@ class DrawViewModel(
                     _uiState.value = DrawUiState.Idle
                 }
             }.onFailure {
-                _uiState.value = DrawUiState.Error(it.message.orEmpty())
+                _uiState.value = DrawUiState.Error(it.report()?.message.orEmpty())
             }
         }
     }
