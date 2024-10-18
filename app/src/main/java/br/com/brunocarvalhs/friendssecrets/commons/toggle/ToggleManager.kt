@@ -1,31 +1,24 @@
 package br.com.brunocarvalhs.friendssecrets.commons.toggle
 
+import android.content.Context
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 
-object ToggleManager {
+class ToggleManager(
+    private val context: Context
+) {
 
-    private val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-
-    init {
-        setupRemoteConfig()
+    private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
+        setConfigSettingsAsync(
+            FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build()
+        )
     }
 
-    private fun setupRemoteConfig() {
-        val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(3600)
-            .build()
-
-        remoteConfig.setConfigSettingsAsync(configSettings)
-
-        // Definindo parâmetros padrão (exemplo)
-        val defaultConfigMap = mapOf(
-            "feature_x_enabled" to false,
-            "feature_y_enabled" to true
-        )
-
-        remoteConfig.setDefaultsAsync(defaultConfigMap)
-
+    init {
         fetchAndActivate()
     }
 
@@ -33,9 +26,9 @@ object ToggleManager {
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    println("Valores atualizados com sucesso.")
+                    println("Values updated successfully.")
                 } else {
-                    println("Falha ao atualizar valores.")
+                    println("Failed to update values.")
                 }
             }
     }

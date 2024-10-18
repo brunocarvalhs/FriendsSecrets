@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
@@ -29,13 +31,18 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.comp
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    generalRouters: List<SettingsNavigation>? = null,
-    supportRouters: List<SettingsNavigation>? = null,
+    toggleManager: ToggleManager,
 ) {
     SettingsContent(
         navController = navController,
-        generalRouters = generalRouters,
-        supportRouters = supportRouters
+        isFingerprintEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED.name),
+        isAppearanceEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED.name),
+        isReportIssueEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED.name),
+        isFAQEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED.name),
     )
 }
 
@@ -43,8 +50,10 @@ fun SettingsScreen(
 @Composable
 private fun SettingsContent(
     navController: NavHostController,
-    generalRouters: List<SettingsNavigation>? = null,
-    supportRouters: List<SettingsNavigation>? = null,
+    isFingerprintEnabled: Boolean = false,
+    isAppearanceEnabled: Boolean = false,
+    isReportIssueEnabled: Boolean = false,
+    isFAQEnabled: Boolean = false,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -73,23 +82,26 @@ private fun SettingsContent(
         ) {
             Column {
                 Text(text = "General", modifier = Modifier.padding(top = 16.dp))
-                SettingsListItemOptions(
-                    selected = BiometricManager.isBiometricPromptEnabled(),
-                    title = "Fingerprint",
-                    icon = Icons.Sharp.Fingerprint,
-                    onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
-                )
-                generalRouters?.forEach { router ->
-                    SettingsListItemNavigation(navController, router)
+                if (isFingerprintEnabled) {
+                    SettingsListItemOptions(
+                        selected = BiometricManager.isBiometricPromptEnabled(),
+                        title = "Fingerprint",
+                        icon = Icons.Sharp.Fingerprint,
+                        onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
+                    )
+                }
+                if (isAppearanceEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.Appearance)
                 }
             }
 
-            supportRouters?.let {
-                Column {
-                    Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
-                    supportRouters.forEach { router ->
-                        SettingsListItemNavigation(navController, router)
-                    }
+            Column {
+                Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
+                if (isReportIssueEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.ReportIssue)
+                }
+                if (isFAQEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.FAQ)
                 }
             }
         }
@@ -112,13 +124,10 @@ private fun SettingsContentPreview() {
     FriendsSecretsTheme {
         SettingsContent(
             navController = rememberNavController(),
-            generalRouters = listOf(
-                SettingsNavigation.Appearance,
-            ),
-            supportRouters = listOf(
-                SettingsNavigation.ReportIssue,
-                SettingsNavigation.FAQ
-            )
+            isFingerprintEnabled = true,
+            isAppearanceEnabled = true,
+            isReportIssueEnabled = true,
+            isFAQEnabled = true,
         )
     }
 }

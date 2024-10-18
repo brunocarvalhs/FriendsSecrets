@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric.BiometricScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeViewModel
@@ -30,7 +31,11 @@ sealed class HomeNavigation(
     }
 }
 
-fun NavGraphBuilder.homeGraph(navController: NavHostController, route: String) {
+fun NavGraphBuilder.homeGraph(
+    navController: NavHostController,
+    route: String,
+    toggleManager: ToggleManager,
+) {
     navigation(startDestination = HomeNavigation.START_DESTINATION, route = route) {
         composable(HomeNavigation.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)

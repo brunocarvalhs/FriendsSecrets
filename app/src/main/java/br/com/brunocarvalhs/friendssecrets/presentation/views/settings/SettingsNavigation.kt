@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.AppearanceScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.faq.FAQScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.SettingsScreen
@@ -51,25 +52,15 @@ sealed class SettingsNavigation(
 
     companion object {
         val START_DESTINATION = Settings.route
-
-        val GENERAL_ROUTES = listOf(
-            Appearance,
-        )
-
-        val SUPPORT_ROUTES = listOf(
-            ReportIssue,
-            FAQ
-        )
     }
 }
 
-fun NavGraphBuilder.settingsGraph(navController: NavHostController, route: String) {
+fun NavGraphBuilder.settingsGraph(navController: NavHostController, route: String, toggleManager: ToggleManager) {
     navigation(startDestination = SettingsNavigation.START_DESTINATION, route = route) {
         composable(SettingsNavigation.Settings.route) {
             SettingsScreen(
                 navController = navController,
-                generalRouters = SettingsNavigation.GENERAL_ROUTES,
-                supportRouters = SettingsNavigation.SUPPORT_ROUTES
+                toggleManager = toggleManager
             )
         }
         composable(SettingsNavigation.Appearance.route) {

@@ -13,9 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 class MainActivity : FragmentActivity() {
+
+    private val toggleManager = ToggleManager(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,7 @@ class MainActivity : FragmentActivity() {
                             )
                         }
                     }
-                    MainApp(navController)
+                    MainApp(navController = navController, toggleManager = toggleManager)
                 }
             }
         }
