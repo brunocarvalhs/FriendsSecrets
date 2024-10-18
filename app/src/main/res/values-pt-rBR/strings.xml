@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">FriendsSecrets</string>
+    <string name="app_name">Friends Secrets</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Descrição do grupo</string>
@@ -11,7 +11,6 @@
     <!--  Group Details Screen  -->
     <string name="group_details_text_button_label_see_less">Ver menos</string>
     <string name="group_details_text_button_label_see_more">Ver mais</string>
-    <string name="group_details_drop_menu_item_text_send_feedback">Enviar feedback</string>
     <string name="group_details_drop_menu_item_text_settings">Configurações</string>
     <string name="group_details_drop_menu_item_text_edit">Editar</string>
 
@@ -46,4 +45,15 @@
     <string name="require_draw_already_held">O sorteio já foi realizado.</string>
     <string name="require_group_id_cannot_be_blank">O ID do grupo não pode estar em branco.</string>
     <string name="exception_minimums_members_of_draw">Para realizar o sorteio, o grupo precisa ter pelo menos 3 participantes.</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">
+        Olá %1$s! 👋\n\n
+        Você foi convidado para participar de uma brincadeira especial! 🎉\n\n
+        Acesse o link e descubra quem é o seu Amigo Secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
+        Mas caso não consiga acessar o link, baixe nosso aplicativo Friends Secrets através deste link: %4$s.\n\n
+        Use o código do grupo: %2$s para entrar e, depois, clique em %5$s.\n\n
+        Seu código para acessar o amigo secreto é: %3$s.\n\n
+        🚀 Não perca tempo, e planeja seu presente para seu amigo secreto agora!
+    </string>
 </resources>

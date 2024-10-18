@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -48,7 +49,7 @@ class GroupDetailsViewModel(
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
-                "Olá $member, baixando nosso aplicativo, código do grupo: $token e seu amigo secreto é: $secret"
+                context.getString(R.string.group_details_share_member, member, token, secret, "https://play.google.com/store/apps/details?id=br.com.brunocarvalhs.friendssecrets")
             )
             type = "text/plain"
         }

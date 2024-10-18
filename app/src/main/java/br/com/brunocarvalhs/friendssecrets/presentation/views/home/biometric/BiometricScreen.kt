@@ -7,6 +7,9 @@ import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -45,7 +48,15 @@ fun BiometricScreen(
             @RequiresApi(Build.VERSION_CODES.R)
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                navController.navigate(HomeNavigation.Home.route)
+                navController.navigate(
+                    route = HomeNavigation.Home.route,
+                    builder = {
+                        popUpTo(HomeNavigation.Biometric.route) {
+                            inclusive = true
+                            saveState = true
+                        }
+                    }
+                )
             }
 
             override fun onAuthenticationFailed() {
@@ -76,12 +87,18 @@ private fun BiometricContent(
 ) {
     Scaffold {
         Column(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Row(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Icon(Icons.Filled.Lock, contentDescription = null)
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(text = "Biometric Authentication")
             }
             TextButton(

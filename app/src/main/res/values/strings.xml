@@ -47,4 +47,15 @@
     <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
     <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
     <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">
+        Olá %1$s! 👋\n\n
+        Você foi convidado para participar de uma brincadeira especial! 🎉\n\n
+        Baixe nosso aplicativo através deste link: %4$s.\n
+        Use o código do grupo: %2$s para entrar e, depois, clique em \"Descobrir seu amigo secreto\".\n
+        Seu código para acessar o amigo secreto é: %3$s.\n\n
+        🚀 Não perca tempo, baixe o app e comece a diversão agora!
+    </string>
 </resources>
+
