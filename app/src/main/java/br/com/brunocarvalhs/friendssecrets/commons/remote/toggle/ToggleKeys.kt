@@ -1,6 +1,7 @@
-package br.com.brunocarvalhs.friendssecrets.commons.toggle
+package br.com.brunocarvalhs.friendssecrets.commons.remote.toggle
 
 enum class ToggleKeys {
+    APP_IS_THEME_REMOTE,
     DRAW_IS_GENERATIVE_ENABLED,
     HOME_IS_JOIN_GROUP_ENABLED,
     HOME_IS_CREATE_GROUP_ENABLED,

@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.crashlytics
+package br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics
 
 import android.content.Context
 import android.provider.Settings.Secure

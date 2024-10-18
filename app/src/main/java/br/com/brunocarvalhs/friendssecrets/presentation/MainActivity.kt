@@ -13,12 +13,15 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 class MainActivity : FragmentActivity() {
 
     private val toggleManager = ToggleManager(context = this)
+    private val themeRemoteProvider = ThemeRemoteProvider(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,10 @@ class MainActivity : FragmentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            FriendsSecretsTheme {
+            FriendsSecretsTheme(
+                isThemeRemote = toggleManager.isFeatureEnabled(ToggleKeys.APP_IS_THEME_REMOTE),
+                themeRemoteProvider = themeRemoteProvider
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,

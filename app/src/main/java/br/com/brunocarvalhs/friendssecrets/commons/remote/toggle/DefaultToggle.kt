@@ -1,8 +1,10 @@
-package br.com.brunocarvalhs.friendssecrets.commons.toggle
+package br.com.brunocarvalhs.friendssecrets.commons.remote.toggle
 
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleKeys.*
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys.*
 
 internal val defaultToggle = mapOf(
+    // App
+    APP_IS_THEME_REMOTE.toString() to true,
     // Draw
     DRAW_IS_GENERATIVE_ENABLED.toString() to false,
     // Home

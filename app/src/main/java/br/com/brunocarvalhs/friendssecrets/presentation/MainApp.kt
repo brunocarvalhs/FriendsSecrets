@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.presentation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.generativeGraph
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.groupGraph
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.homeGraph

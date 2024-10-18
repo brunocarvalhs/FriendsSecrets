@@ -13,7 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.AppearanceScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.faq.FAQScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.SettingsScreen

@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsScreen

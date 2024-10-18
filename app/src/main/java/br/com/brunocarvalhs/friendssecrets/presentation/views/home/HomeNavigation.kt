@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric.BiometricScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeViewModel

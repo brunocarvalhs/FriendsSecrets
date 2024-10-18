@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.provider.Settings
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.CrashlyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber

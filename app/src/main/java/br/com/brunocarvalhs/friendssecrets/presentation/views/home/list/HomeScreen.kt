@@ -48,9 +48,9 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.commons.utils.isFistAppOpen
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
