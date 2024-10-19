@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.domain.useCases
 import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
@@ -11,12 +12,16 @@ class GroupExitUseCase(
     private val context: Context = CustomApplication.getInstance(),
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
+    private val performance: PerformanceManager
 ) {
     suspend fun invoke(groupId: String): Result<Unit> = runCatching {
+        performance.start(GroupExitUseCase::class.java.simpleName)
         validationGroupId(groupId)
         val group = groupRepository.read(groupId)
         clearGroup(group)
         clearAdmin(group)
+    }.also {
+        performance.stop(GroupExitUseCase::class.java.simpleName)
     }
 
     private fun validationGroupId(groupId: String) {

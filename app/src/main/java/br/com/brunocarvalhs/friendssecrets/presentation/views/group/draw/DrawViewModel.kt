@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -84,10 +85,12 @@ class DrawViewModel(
                 val repository = GroupRepositoryImpl()
                 val storage = StorageService()
                 val cryptoService = CryptoService()
+                val performance = PerformanceManager()
                 val drawRevelationUseCase = DrawRevelationUseCase(
                     repository = repository,
                     storage = storage,
-                    cryptoService = cryptoService
+                    cryptoService = cryptoService,
+                    performance = performance
                 )
                 DrawViewModel(drawRevelationUseCase = drawRevelationUseCase)
             }

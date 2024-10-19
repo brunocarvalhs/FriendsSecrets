@@ -36,7 +36,6 @@ class GroupDrawUseCaseTest {
         val group = mockk<GroupEntities> {
             every { name } returns "Test Group"
             every { description } returns "This is a test group"
-            every { isDraw } returns false
             every { draws } returns emptyMap()
             every { members } returns mapOf(
                 "member1" to "Member 1",
@@ -55,7 +54,6 @@ class GroupDrawUseCaseTest {
         val group = mockk<GroupEntities> {
             every { name } returns "Test Group"
             every { description } returns "This is a test group"
-            every { isDraw } returns false
             every { draws } returns emptyMap()
             every { members } returns emptyMap()
         }

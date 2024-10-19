@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -9,13 +10,17 @@ import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 class GroupByTokenUseCase(
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
+    private val performance: PerformanceManager,
 ) {
     suspend fun invoke(token: String): Result<GroupEntities> = runCatching {
+        performance.start(GroupByTokenUseCase::class.java.simpleName)
         validationToken(token = token)
         val groupList = searchByToken(token)
         val group = groupRepository.searchByToken(token)
         saveGroup(token, groupList)
         group ?: throw GroupNotFoundException()
+    }.also {
+        performance.stop(GroupByTokenUseCase::class.java.simpleName)
     }
 
     private fun validationToken(token: String) {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
@@ -56,9 +57,11 @@ class GroupCreateViewModel(
                 initializer {
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
+                    val performance = PerformanceManager()
                     val useCase = GroupCreateUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     GroupCreateViewModel(useCase = useCase)
                 }

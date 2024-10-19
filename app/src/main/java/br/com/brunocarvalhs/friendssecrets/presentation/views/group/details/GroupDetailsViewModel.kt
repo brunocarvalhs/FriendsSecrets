@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
@@ -116,20 +117,25 @@ class GroupDetailsViewModel(
                 initializer {
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
+                    val performance = PerformanceManager()
                     val groupReadUseCase = GroupReadUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     val groupDrawUseCase = GroupDrawUseCase(
-                        groupRepository = repository
+                        groupRepository = repository,
+                        performance = performance
                     )
                     val groupExitUseCase = GroupExitUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     val groupDeleteUseCase = GroupDeleteUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     GroupDetailsViewModel(
                         groupReadUseCase = groupReadUseCase,

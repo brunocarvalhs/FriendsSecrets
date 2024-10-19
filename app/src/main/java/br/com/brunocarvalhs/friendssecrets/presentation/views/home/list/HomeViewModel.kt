@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
@@ -61,13 +62,16 @@ class HomeViewModel(
                 initializer {
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
+                    val performance = PerformanceManager()
                     val groupListUseCase = GroupListUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     val groupByTokenUseCase = GroupByTokenUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     HomeViewModel(
                         groupListUseCase = groupListUseCase,
