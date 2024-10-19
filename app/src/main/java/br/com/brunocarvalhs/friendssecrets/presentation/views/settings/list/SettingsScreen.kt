@@ -15,10 +15,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
@@ -66,7 +68,7 @@ private fun SettingsContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = SettingsNavigation.Settings.title)
+                    Text(text = stringResource(SettingsNavigation.Settings.title))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
@@ -82,12 +84,12 @@ private fun SettingsContent(
         ) {
             Column {
                 if (isAppearanceEnabled || isFingerprintEnabled) {
-                    Text(text = "General", modifier = Modifier.padding(top = 16.dp))
+                    Text(text = stringResource(R.string.settings_screen_general), modifier = Modifier.padding(top = 16.dp))
                 }
                 if (isFingerprintEnabled) {
                     SettingsListItemOptions(
                         selected = BiometricManager.isBiometricPromptEnabled(),
-                        title = "Fingerprint",
+                        title = stringResource(R.string.settings_screen_security),
                         icon = Icons.Sharp.Fingerprint,
                         onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
                     )
@@ -99,7 +101,7 @@ private fun SettingsContent(
 
             Column {
                 if (isReportIssueEnabled || isFAQEnabled) {
-                    Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
+                    Text(text = stringResource(R.string.settings_screen_support), modifier = Modifier.padding(top = 16.dp))
                 }
                 if (isReportIssueEnabled) {
                     SettingsListItemNavigation(navController, SettingsNavigation.ReportIssue)

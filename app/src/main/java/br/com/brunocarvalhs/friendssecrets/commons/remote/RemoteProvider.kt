@@ -12,7 +12,7 @@ class RemoteProvider {
     private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
         setConfigSettingsAsync(
             FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(360)
+                .setMinimumFetchIntervalInSeconds(3600)
                 .build()
         )
     }

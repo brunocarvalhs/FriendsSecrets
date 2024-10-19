@@ -26,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -179,17 +178,23 @@ private fun GroupDetailsContent(
                         }
                     }, leadingIcon = {
                         Icon(
-                            Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = null
+                            imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
+                            contentDescription = if (uiState.group.isOwner) {
+                                stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin)
+                            } else {
+                                stringResource(R.string.group_details_drop_menu_item_text_exit_to_group)
+                            }
                         )
                     })
                     if (uiState.group.isOwner) {
                         HorizontalDivider()
                         DropdownMenuItem(
-                            text = { Text(stringResource(R.string.group_details_action_draw_members)) },
+                            text = { Text(text = stringResource(R.string.group_details_action_draw_members)) },
                             onClick = { onDraw(group = uiState.group) },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Filled.Refresh, contentDescription = null
+                                    imageVector = Icons.Filled.Refresh,
+                                    contentDescription = stringResource(R.string.group_details_action_draw_members)
                                 )
                             },
                         )
@@ -205,13 +210,19 @@ private fun GroupDetailsContent(
         if (uiState is GroupDetailsUiState.Success) {
             if (uiState.group.draws.isNotEmpty()) {
                 ExtendedFloatingActionButton(onClick = { revelationDraw(uiState.group) }) {
-                    Icon(Icons.Filled.People, "my secret friend")
-                    Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
+                    Icon(
+                        imageVector = Icons.Filled.People,
+                        contentDescription = stringResource(R.string.group_details_action_preview_my_secret_friend)
+                    )
+                    Text(text = stringResource(R.string.group_details_action_preview_my_secret_friend))
                 }
             } else if (uiState.group.isOwner && uiState.group.draws.isEmpty()) {
                 ExtendedFloatingActionButton(onClick = { onDraw(uiState.group) }) {
-                    Icon(Icons.Filled.Refresh, "draw")
-                    Text(stringResource(R.string.group_details_action_draw_members))
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = stringResource(R.string.group_details_action_draw_members)
+                    )
+                    Text(text = stringResource(R.string.group_details_action_draw_members))
                 }
             }
         }
@@ -246,7 +257,8 @@ private fun GroupDetailsContent(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Descrição", style = MaterialTheme.typography.titleMedium
+                                    text = stringResource(R.string.group_details_description),
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             }
                             Row(
@@ -269,7 +281,7 @@ private fun GroupDetailsContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Membros")
+                            Text(text = stringResource(R.string.group_details_members))
                         }
                     }
                     if (uiState.group.draws.isNotEmpty()) {

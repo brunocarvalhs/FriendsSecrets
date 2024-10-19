@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -61,7 +62,10 @@ fun OnboardingScreen(navController: NavHostController, initialPage: Int = 0) {
                         .align(Alignment.TopEnd)
                         .padding(16.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Fechar")
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.onboarding_screen_close)
+                    )
                 }
             }
         }
