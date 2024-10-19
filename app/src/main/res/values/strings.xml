@@ -84,5 +84,7 @@
     <string name="draw_screen_code_secret">Código secreto</string>
     <string name="draw_screen_title_like">Gostos</string>
     <string name="onboarding_screen_close">Fechar</string>
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_finish">Começar</string>
 </resources>
 

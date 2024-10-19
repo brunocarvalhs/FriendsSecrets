@@ -5,6 +5,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class RemoteProvider {
@@ -53,6 +54,11 @@ class RemoteProvider {
     }
 
     fun getString(key: String): String {
+        return remoteConfig.getString(key)
+    }
+
+    suspend fun getAsyncString(key: String): String {
+        remoteConfig.fetchAndActivate().await()
         return remoteConfig.getString(key)
     }
 

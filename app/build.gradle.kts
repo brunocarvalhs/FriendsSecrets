@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.biometric)
     implementation(libs.firebase.config)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)

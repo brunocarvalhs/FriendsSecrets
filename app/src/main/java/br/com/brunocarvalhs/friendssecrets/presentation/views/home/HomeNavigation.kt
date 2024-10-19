@@ -8,11 +8,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
-import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric.BiometricScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardingScreen
 
 sealed class HomeNavigation(
@@ -39,10 +40,18 @@ fun NavGraphBuilder.homeGraph(
     navigation(startDestination = HomeNavigation.START_DESTINATION, route = route) {
         composable(HomeNavigation.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
-            HomeScreen(navController = navController, viewModel = homeViewModel, toggleManager = toggleManager)
+            HomeScreen(
+                navController = navController,
+                viewModel = homeViewModel,
+                toggleManager = toggleManager
+            )
         }
         composable(HomeNavigation.Onboarding.route) {
-            OnboardingScreen(navController = navController)
+            val onboardingViewModel: OnboardViewModel = viewModel(factory = OnboardViewModel.Factory)
+            OnboardingScreen(
+                navController = navController,
+                viewModel = onboardingViewModel
+            )
         }
         composable(HomeNavigation.Biometric.route) {
             BiometricScreen(navController = navController)
