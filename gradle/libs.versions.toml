@@ -11,28 +11,22 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
 lifecycleViewmodelCompose = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.03"
+activityCompose = "1.9.3"
+composeBom = "2024.10.00"
 generativeai = "0.9.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 lottieCompose = "4.0.0"
 material3 = "1.3.0"
-materialIconsExtended = "1.7.3"
+materialIconsExtended = "1.7.4"
 mockitoInline = "4.8.0"
 mockk = "1.13.13"
-mockkAndroid = "1.13.13"
-mockkAgent = "1.13.13"
-navigationCompose = "2.8.2"
-firebasePerf = "21.0.1"
+navigationCompose = "2.8.3"
 googleFirebaseFirebasePerf = "1.4.2"
 googleGmsGoogleServices = "4.4.2"
-firebaseCrashlytics = "19.2.0"
-googleFirebaseCrashlytics = "2.9.2"
-firebaseFirestore = "25.1.0"
-firebaseAnalytics = "22.1.2"
+googleFirebaseCrashlytics = "3.0.2"
 timber = "5.0.1"
-uiTextGoogleFonts = "1.7.3"
-firebaseConfig = "22.0.0"
+uiTextGoogleFonts = "1.7.4"
+firebaseBom = "33.4.0"
 
 [libraries]
 android-documentation-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "androidDocumentationPlugin" }
@@ -57,16 +51,17 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3",  version.ref = "material3" }
 generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-firebase-perf = { group = "com.google.firebase", name = "firebase-perf", version.ref = "firebasePerf" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-perf = { group = "com.google.firebase", name = "firebase-perf" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
-firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
