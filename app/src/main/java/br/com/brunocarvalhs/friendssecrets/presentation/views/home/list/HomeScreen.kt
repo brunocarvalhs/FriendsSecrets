@@ -45,7 +45,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.utils.isFistAppOpen
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
@@ -63,9 +68,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.Factory
     ),
+    toggleManager: ToggleManager,
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        AnalyticsProvider.track(
+            event = AnalyticsEvents.VISUALIZATION,
+            params = mapOf(
+                AnalyticsParams.SCREEN_NAME to HomeNavigation.Home.route
+            )
+        )
+    }
 
     LaunchedEffect(Unit) {
         if (context.isFistAppOpen()) navController.navigate(HomeNavigation.Onboarding.route)
@@ -75,8 +90,13 @@ fun HomeScreen(
     HomeContent(
         navController = navController,
         uiState = uiState,
-        onRefresh = { viewModel.event(HomeIntent.FetchGroups) },
-        onGroupToEnter = { viewModel.event(HomeIntent.GroupToEnter(it)) }
+        onEvent = viewModel::event,
+        isSettingsEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_ENABLED),
+        isJoinGroupEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.HOME_IS_JOIN_GROUP_ENABLED),
+        isCreateGroupEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.HOME_IS_CREATE_GROUP_ENABLED),
     )
 }
 
@@ -85,8 +105,10 @@ fun HomeScreen(
 private fun HomeContent(
     navController: NavController,
     uiState: HomeUiState,
-    onRefresh: () -> Unit = {},
-    onGroupToEnter: (String) -> Unit = {},
+    onEvent: (HomeIntent) -> Unit = {},
+    isSettingsEnabled: Boolean = true,
+    isJoinGroupEnabled: Boolean = true,
+    isCreateGroupEnabled: Boolean = true,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -105,43 +127,49 @@ private fun HomeContent(
 
                 },
                 actions = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More"
-                        )
-                    }
-                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.home_drop_menu_item_text_join_a_group)) },
-                            onClick = { showBottomSheet = true },
-                            leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.home_drop_menu_item_text_settings)) },
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Settings.route
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Settings,
-                                    contentDescription = null
+                    if (isSettingsEnabled || isJoinGroupEnabled) {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More"
+                            )
+                        }
+                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                            if (isJoinGroupEnabled) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.home_drop_menu_item_text_join_a_group)) },
+                                    onClick = { showBottomSheet = true },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Outlined.Edit,
+                                            contentDescription = null
+                                        )
+                                    }
                                 )
                             }
-                        )
+                            if (isSettingsEnabled) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.home_drop_menu_item_text_settings)) },
+                                    onClick = { navController.navigate(route = Screen.Settings.route) },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Outlined.Settings,
+                                            contentDescription = null
+                                        )
+                                    }
+                                )
+                            }
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
-            when (uiState) {
-                is HomeUiState.Error, HomeUiState.Loading -> {}
-                is HomeUiState.Success -> {
-                    if (uiState.list.isEmpty()) return@Scaffold
+            if (uiState is HomeUiState.Success) {
+                if (uiState.list.isEmpty()) return@Scaffold
 
+                if (isCreateGroupEnabled) {
                     ExtendedFloatingActionButton(onClick = {
                         navController.navigate(GroupNavigation.Create.route)
                     }) {
@@ -157,7 +185,7 @@ private fun HomeContent(
                 ErrorComponent(
                     modifier = Modifier.padding(it),
                     message = uiState.errorMessage,
-                    onRefresh = onRefresh
+                    onRefresh = { onEvent(HomeIntent.FetchGroups) }
                 )
             }
 
@@ -165,12 +193,10 @@ private fun HomeContent(
                 if (uiState.list.isEmpty()) {
                     EmptyGroupComponent(
                         modifier = Modifier.padding(it),
-                        onGroupToEnter = {
-                            showBottomSheet = true
-                        },
-                        onCreateGroup = {
-                            navController.navigate(GroupNavigation.Create.route)
-                        }
+                        onGroupToEnter = { showBottomSheet = true },
+                        onCreateGroup = { navController.navigate(GroupNavigation.Create.route) },
+                        isJoinGroupEnabled = isJoinGroupEnabled,
+                        isCreateGroupEnabled = isCreateGroupEnabled
                     )
                 } else {
                     LazyColumn(
@@ -205,7 +231,7 @@ private fun HomeContent(
     if (showBottomSheet) {
         GroupToEnterBottomSheet(
             onDismiss = { showBottomSheet = false },
-            onToEnter = { onGroupToEnter.invoke(it) }
+            onToEnter = { onEvent(HomeIntent.GroupToEnter(it)) }
         )
     }
 }

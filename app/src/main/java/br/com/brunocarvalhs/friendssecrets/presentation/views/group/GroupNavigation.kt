@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsScreen
@@ -53,7 +54,11 @@ sealed class GroupNavigation(
     }
 }
 
-fun NavGraphBuilder.groupGraph(navController: NavController, route: String) {
+fun NavGraphBuilder.groupGraph(
+    navController: NavController,
+    route: String,
+    toggleManager: ToggleManager,
+) {
     navigation(
         startDestination = GroupNavigation.START_DESTINATION,
         route = route
@@ -104,7 +109,8 @@ fun NavGraphBuilder.groupGraph(navController: NavController, route: String) {
             DrawScreen(
                 navController = navController,
                 viewModel = viewModel,
-                groupId = groupId
+                groupId = groupId,
+                toggleManager = toggleManager
             )
         }
     }

@@ -16,7 +16,6 @@ class GroupModelTest {
         assertEquals("", groupModel.name) // Default name is empty
         assertNull(groupModel.description) // Default description is null
         assertTrue(groupModel.members.isEmpty()) // Default members map is empty
-        assertFalse(groupModel.isDraw) // Default isDraw is false
         assertTrue(groupModel.draws.isEmpty()) // Default draws map is empty
         assertFalse(groupModel.isOwner) // Default isOwner is false
     }
@@ -30,7 +29,6 @@ class GroupModelTest {
             name = "Test Group",
             description = "A group for testing",
             members = members,
-            isDraw = true,
             draws = mapOf("user1" to "user2"),
             isOwner = true // This will be filtered out in toMap
         )
@@ -42,7 +40,6 @@ class GroupModelTest {
         assertTrue(resultMap.containsKey(GroupEntities.NAME))
         assertTrue(resultMap.containsKey(GroupEntities.DESCRIPTION))
         assertTrue(resultMap.containsKey(GroupEntities.MEMBERS))
-        assertTrue(resultMap.containsKey(GroupEntities.IS_DRAW))
         assertFalse(resultMap.containsKey(GroupEntities.IS_OWNER)) // Ensure the owner key is filtered out
     }
 
@@ -56,7 +53,6 @@ class GroupModelTest {
             name = "Test Group",
             description = "A group for testing",
             members = members,
-            isDraw = true,
             draws = mapOf("user1" to "user2"),
             isOwner = false
         )
@@ -66,7 +62,6 @@ class GroupModelTest {
             name = "New Test Group",
             description = "New description",
             members = mapOf("user1" to "User One", "user2" to "User Two"),
-            isDraw = false,
             draws = mapOf(),
             isOwner = true
         )
@@ -76,7 +71,6 @@ class GroupModelTest {
         assertEquals("New Test Group", copiedGroupModel.name)
         assertEquals("New description", copiedGroupModel.description)
         assertEquals(2, copiedGroupModel.members.size)
-        assertFalse(copiedGroupModel.isDraw)
         assertTrue(copiedGroupModel.draws.isEmpty())
         assertTrue(copiedGroupModel.isOwner)
     }

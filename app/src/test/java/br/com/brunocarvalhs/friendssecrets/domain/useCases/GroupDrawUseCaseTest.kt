@@ -1,11 +1,14 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.runs
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -14,20 +17,25 @@ class GroupDrawUseCaseTest {
 
     private lateinit var mockContext: CustomApplication
     private lateinit var repository: GroupRepository
+    private lateinit var performance: PerformanceManager
     private lateinit var useCase: GroupDrawUseCase
 
     @Before
     fun setup() {
         mockContext = mockk(relaxed = true)
         repository = mockk(relaxed = true)
+        performance = mockk(relaxed = true)
 
         mockkObject(CustomApplication)
         every { CustomApplication.getInstance() } returns mockContext
         every { mockContext.getString(any()) } returns "Test String"
+        every { performance.start(any()) } just runs
+        every { performance.stop(any()) } just runs
 
         useCase = GroupDrawUseCase(
             context = mockContext,
-            groupRepository = repository
+            groupRepository = repository,
+            performance = performance
         )
     }
 
@@ -36,7 +44,6 @@ class GroupDrawUseCaseTest {
         val group = mockk<GroupEntities> {
             every { name } returns "Test Group"
             every { description } returns "This is a test group"
-            every { isDraw } returns false
             every { draws } returns emptyMap()
             every { members } returns mapOf(
                 "member1" to "Member 1",
@@ -55,7 +62,6 @@ class GroupDrawUseCaseTest {
         val group = mockk<GroupEntities> {
             every { name } returns "Test Group"
             every { description } returns "This is a test group"
-            every { isDraw } returns false
             every { draws } returns emptyMap()
             every { members } returns emptyMap()
         }

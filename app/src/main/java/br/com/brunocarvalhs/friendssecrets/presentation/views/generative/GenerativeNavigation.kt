@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.chat.ChatGenerativeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.chat.ChatGenerativeViewModel
 
@@ -35,7 +36,11 @@ sealed class GenerativeNavigation(
     }
 }
 
-fun NavGraphBuilder.generativeGraph(navController: NavHostController, route: String) {
+fun NavGraphBuilder.generativeGraph(
+    navController: NavHostController,
+    route: String,
+    toggleManager: ToggleManager,
+) {
     navigation(startDestination = GenerativeNavigation.START_DESTINATION, route = route) {
         composable(GenerativeNavigation.Chat.route) {
             val data = it.arguments?.getString("data")

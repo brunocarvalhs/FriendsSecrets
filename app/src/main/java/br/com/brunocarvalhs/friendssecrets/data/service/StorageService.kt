@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import com.google.gson.Gson
+import timber.log.Timber
 
 class StorageService(
     private val context: Application = CustomApplication.getInstance(),
@@ -17,23 +18,45 @@ class StorageService(
     }
 
     fun <T> save(key: String, value: T) {
-        sharedPreferences.edit().putString(key, gson.toJson(value)).apply()
+        try {
+            sharedPreferences.edit().putString(key, gson.toJson(value)).apply()
+        } catch (e: Exception) {
+            Timber.e(e.message, e)
+        }
     }
 
     inline fun <reified T> load(key: String): T? {
-        val json = this.sharedPreferences.getString(key, null)
-        return this.gson.fromJson(json, T::class.java)
+        return try {
+            val json = this.sharedPreferences.getString(key, null)
+            this.gson.fromJson(json, T::class.java)
+        } catch (e: Exception) {
+            Timber.e(e.message, e)
+            null
+        }
     }
 
     fun remove(key: String) {
-        sharedPreferences.edit().remove(key).apply()
+        try {
+            sharedPreferences.edit().remove(key).apply()
+        } catch (e: Exception) {
+            Timber.e(e.message, e)
+        }
     }
 
     fun clear() {
-        sharedPreferences.edit().clear().apply()
+        try {
+            sharedPreferences.edit().clear().apply()
+        } catch (e: Exception) {
+            Timber.e(e.message, e)
+        }
     }
 
     fun contains(key: String): Boolean {
-        return sharedPreferences.contains(key)
+        return try {
+            sharedPreferences.contains(key)
+        } catch (e: Exception) {
+            Timber.e(e.message, e)
+            false
+        }
     }
 }
