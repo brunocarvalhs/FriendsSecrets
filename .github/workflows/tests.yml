@@ -45,6 +45,11 @@ jobs:
         with:
           gradle-version: ${{ env.gradle_version }}
 
+      - name: Create google-services release file
+        run: |
+          rm -f app/google-services.json
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
