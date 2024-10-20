@@ -129,7 +129,10 @@ async function checkForBlockedLibs(modifiedFiles) {
 
       blockedLibs.forEach(blockedLib => {
         const exactMatchPattern = new RegExp(`\\b${blockedLib.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`);
-        const isBlockedLibAdded = addedLines.some(line => exactMatchPattern.test(line));
+        const isBlockedLibAdded = addedLines.some(line => {
+          return exactMatchPattern.test(line);
+        });
+
         if (isBlockedLibAdded) {
           fail(`A biblioteca bloqueada ${blockedLib} foi adicionada ou modificada no arquivo ${file}. Remova ou substitua esta dependência.`);
         }
