@@ -118,7 +118,6 @@ function checkAndroidCoreFiles(modifiedFiles) {
   }
 }
 
-// Verifica se bibliotecas bloqueadas foram adicionadas ou modificadas
 async function checkForBlockedLibs(modifiedFiles) {
   const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
 
@@ -128,7 +127,9 @@ async function checkForBlockedLibs(modifiedFiles) {
       const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
 
       blockedLibs.forEach(blockedLib => {
-        const isBlockedLibAdded = addedLines.some(line => line.includes(blockedLib) || line.includes(blockedLib.split(':')[0]));
+        const isBlockedLibAdded = addedLines.some(line => {
+          return line.includes(blockedLib) || line.includes(blockedLib.split(':')[0]);
+        });
         if (isBlockedLibAdded) {
           fail(`A biblioteca bloqueada ${blockedLib} foi adicionada ou modificada no arquivo ${file}. Remova ou substitua esta dependência.`);
         }
@@ -147,9 +148,11 @@ async function checkForDeprecatedLibs(modifiedFiles) {
       const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
 
       deprecatedLibs.forEach(deprecatedLib => {
-        const isDeprecatedLibAdded = addedLines.some(line => line.includes(deprecatedLib) || line.includes(deprecatedLib.split(':')[0]));
+        const isDeprecatedLibAdded = addedLines.some(line => {
+          return line.includes(deprecatedLib) || line.includes(deprecatedLib.split(':')[0]);
+        });
         if (isDeprecatedLibAdded) {
-          warn(`A biblioteca depreciada ${deprecatedLib} foi adicionada ou modificada no arquivo ${file}. Considere atualizar esta dependência.`);
+          warn(`A biblioteca depreciada ${deprecatedLib} foi adicionada ou modificada no arquivo ${file}. Considere atualizá-la.`);
         }
       });
     }
