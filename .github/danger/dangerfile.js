@@ -118,6 +118,7 @@ function checkAndroidCoreFiles(modifiedFiles) {
   }
 }
 
+// Verifica se bibliotecas bloqueadas foram adicionadas ou modificadas
 async function checkForBlockedLibs(modifiedFiles) {
   const gradleFiles = modifiedFiles.filter(file => file.endsWith('build.gradle.kts') || file.includes('libs.versions.toml'));
 
@@ -127,9 +128,8 @@ async function checkForBlockedLibs(modifiedFiles) {
       const addedLines = fileContent.diff.split('\n').filter(line => line.startsWith('+'));
 
       blockedLibs.forEach(blockedLib => {
-        const isBlockedLibAdded = addedLines.some(line => {
-          return line.includes(blockedLib) || line.includes(blockedLib.split(':')[0]);
-        });
+        const exactMatchPattern = new RegExp(`\\b${blockedLib.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`);
+        const isBlockedLibAdded = addedLines.some(line => exactMatchPattern.test(line));
         if (isBlockedLibAdded) {
           fail(`A biblioteca bloqueada ${blockedLib} foi adicionada ou modificada no arquivo ${file}. Remova ou substitua esta dependência.`);
         }
