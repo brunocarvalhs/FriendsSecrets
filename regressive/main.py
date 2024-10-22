@@ -18,7 +18,7 @@ options.load_capabilities({
 	"appium:automationName": "UIAutomator2",
 	"appium:appActivity": "br.com.brunocarvalhs.friendssecrets.presentation.MainActivity",
 	"appium:appPackage": "br.com.brunocarvalhs.friendssecrets",
-	"appium:deviceName": "RQCW905DH4D",
+	"appium:deviceName": "emulator-5554",
 	"appium:ensureWebviewsHavePages": True,
 	"appium:nativeWebScreenshot": True,
 	"appium:newCommandTimeout": 3600,
