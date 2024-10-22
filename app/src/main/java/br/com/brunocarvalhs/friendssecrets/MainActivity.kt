@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation
+package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -16,6 +16,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 class MainActivity : FragmentActivity() {
