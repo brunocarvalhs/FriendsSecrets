@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +40,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -52,6 +56,7 @@ fun DrawScreen(
     viewModel: DrawViewModel = viewModel(
         factory = DrawViewModel.Factory
     ),
+    toggleManager: ToggleManager,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -63,7 +68,9 @@ fun DrawScreen(
         groupId = groupId,
         navController = navController,
         uiState = uiState.value,
-        eventIntent = viewModel::eventIntent
+        eventIntent = viewModel::eventIntent,
+        isGenerativeEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.DRAW_IS_GENERATIVE_ENABLED),
     )
 }
 
@@ -74,17 +81,18 @@ private fun DrawContent(
     navController: NavController,
     uiState: DrawUiState,
     eventIntent: (DrawIntent) -> Unit,
+    isGenerativeEnabled: Boolean = true,
 ) {
     val context = LocalContext.current
 
-    var secret by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
+    var secret by remember { mutableStateOf(TextFieldValue()) }
 
     Scaffold(topBar = {
         LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ), title = {
-            Text("Seu amigo secreto é ...")
+            Text(text = stringResource(R.string.draw_screen_title))
         }, navigationIcon = {
             NavigationBackIconButton(navController = navController)
         })
@@ -93,26 +101,29 @@ private fun DrawContent(
             ExtendedFloatingActionButton(onClick = {
                 eventIntent(
                     DrawIntent.FetchDraw(
-                        group = groupId, code = secret.text
+                        group = groupId,
+                        code = secret.text
                     )
                 )
             }) {
-                Text(text = "Revelar meu amigo secreto")
+                Text(text = stringResource(R.string.draw_screen_action_title))
             }
         }
         if (uiState is DrawUiState.Success) {
-            ExtendedFloatingActionButton(onClick = {
-                eventIntent(
-                    DrawIntent.GenerativeDraw(
-                        context = context,
-                        navigation = navController,
-                        group = uiState.group,
-                        secret = uiState.draw.keys.first(),
-                        likes = uiState.draw.values.first().split("|").toList()
+            if (isGenerativeEnabled) {
+                ExtendedFloatingActionButton(onClick = {
+                    eventIntent(
+                        DrawIntent.GenerativeDraw(
+                            context = context,
+                            navigation = navController,
+                            group = uiState.group,
+                            secret = uiState.draw.keys.first(),
+                            likes = uiState.draw.values.first().split("|").toList()
+                        )
                     )
-                )
-            }) {
-                Text(text = "Revelar meu amigo secreto")
+                }) {
+                    Text(text = stringResource(R.string.draw_screen_action_generative))
+                }
             }
         }
     }) {
@@ -133,7 +144,7 @@ private fun DrawContent(
                         OutlinedTextField(
                             value = secret,
                             onValueChange = { value -> secret = value },
-                            label = { Text(text = "Código secreto") },
+                            label = { Text(text = stringResource(R.string.draw_screen_code_secret)) },
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -155,7 +166,7 @@ private fun DrawContent(
                             Text(text = uiState.draw.keys.first())
                         }
                         Column {
-                            Text(text = "Gostos")
+                            Text(text = stringResource(R.string.draw_screen_title_like))
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(3),
                             ) {

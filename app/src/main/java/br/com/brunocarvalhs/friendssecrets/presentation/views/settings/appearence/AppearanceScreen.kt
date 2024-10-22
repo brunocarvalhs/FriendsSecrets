@@ -18,10 +18,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -51,7 +53,7 @@ private fun AppearanceContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = SettingsNavigation.Appearance.title)
+                    Text(text = stringResource(SettingsNavigation.Appearance.title))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
@@ -67,7 +69,7 @@ private fun AppearanceContent(
                 .fillMaxSize()
         ) {
             item {
-                Text(text = "Selecting a particular option will change the appearance (coloring) of the application according to your preferences.")
+                Text(text = stringResource(R.string.appearance_screen_title))
                 Spacer(modifier = Modifier.height(24.dp))
             }
             item {
@@ -82,11 +84,11 @@ private fun AppearanceContent(
             item {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     Spacer(modifier = Modifier.height(24.dp))
-                    Text(text = "Selecting a particular option will change the appearance (coloring) of the application according to your preferences.")
+                    Text(text = stringResource(R.string.appearance_screen_title_description))
                     Spacer(modifier = Modifier.height(24.dp))
                     SettingsListItemOptions(
                         selected = ThemeManager.isDynamicThemeEnabled(),
-                        title = "Dynamic Theme",
+                        title = stringResource(R.string.appearance_screen_dynamic_title),
                         icon = Icons.Sharp.Style,
                         onClick = { state -> ThemeManager.setDynamicThemeEnabled(state) }
                     )

@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.commons.utils.textWithFormatting
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.textWithFormatting
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 
 @Composable

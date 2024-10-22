@@ -47,4 +47,44 @@
     <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
     <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
     <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">
+        Olá %1$s! 👋\n\n
+        Você foi convidado para participar de uma brincadeira especial! 🎉\n\n
+        Baixe nosso aplicativo através deste link: %4$s.\n
+        Use o código do grupo: %2$s para entrar e, depois, clique em \"Descobrir seu amigo secreto\".\n
+        Seu código para acessar o amigo secreto é: %3$s.\n\n
+        🚀 Não perca tempo, baixe o app e comece a diversão agora!
+    </string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Log in using your biometric credential</string>
+    <string name="biometric_screen_use_account_password">Use account password</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
+    <string name="biometric_screen_unlock">Unlock</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Apagar o grupo</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_appearance">Appearance</string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_report_an_issue">Report an issue</string>
+    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
+    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o aplicativo ajuste suas cores automaticamente com base no papel de parede do dispositivo.</string>
+    <string name="appearance_screen_title">A seleção de uma opção específica alterará a aparência (coloração) do aplicativo de acordo com suas preferências.</string>
+    <string name="settings_screen_general">General</string>
+    <string name="settings_screen_security">Fingerprint</string>
+    <string name="settings_screen_support">Support</string>
+    <string name="group_details_description">Descrição</string>
+    <string name="group_details_members">Membros</string>
+    <string name="draw_screen_title">Seu amigo secreto é ...</string>
+    <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
+    <string name="draw_screen_action_generative">Dicas de presentes</string>
+    <string name="draw_screen_code_secret">Código secreto</string>
+    <string name="draw_screen_title_like">Gostos</string>
+    <string name="onboarding_screen_close">Fechar</string>
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_finish">Começar</string>
 </resources>
+

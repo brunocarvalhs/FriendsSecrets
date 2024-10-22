@@ -29,8 +29,14 @@ internal class GroupRepositoryImpl(
     }
 
     override suspend fun read(groupId: String): GroupEntities {
-        return firestore.collection(GroupEntities.COLLECTION_NAME).document(groupId).get().await()
-            .toObject(GroupModel::class.java) ?: throw GroupNotFoundException()
+        val documentSnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
+            .document(groupId)
+            .get()
+            .await()
+        if (!documentSnapshot.exists()) { throw GroupNotFoundException() }
+        val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
+        val decryptedData = cryptoService.decryptMap(encryptedData, setOf(GroupEntities.TOKEN, GroupEntities.ID))
+        return GroupModel.fromMap(decryptedData)
     }
 
     override suspend fun update(group: GroupEntities) {
@@ -47,16 +53,32 @@ internal class GroupRepositoryImpl(
     }
 
     override suspend fun list(list: List<String>): List<GroupEntities> {
-        return firestore.collection(GroupEntities.COLLECTION_NAME)
-            .whereIn(GroupEntities.TOKEN, list).get().await()
-            .toObjects(GroupModel::class.java)
+        val querySnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
+            .whereIn(GroupEntities.TOKEN, list)
+            .get()
+            .await()
+
+        return querySnapshot.documents.map { documentSnapshot ->
+            val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
+            val decryptedData = cryptoService.decryptMap(encryptedData, setOf(GroupEntities.TOKEN, GroupEntities.ID))
+            GroupModel.fromMap(decryptedData)
+        }
     }
 
     override suspend fun searchByToken(token: String): GroupEntities? {
-        return firestore.collection(GroupEntities.COLLECTION_NAME)
+        val querySnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .whereEqualTo(GroupEntities.TOKEN, token)
-            .get().await()
-            .toObjects(GroupModel::class.java).firstOrNull()
+            .get()
+            .await()
+
+        if (querySnapshot.isEmpty) {
+            return null
+        }
+        val documentSnapshot = querySnapshot.documents.first()
+        val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
+
+        val decryptedData = cryptoService.decryptMap(encryptedData, setOf(GroupEntities.TOKEN, GroupEntities.ID))
+        return GroupModel.fromMap(decryptedData)
     }
 
     override suspend fun drawMembers(group: GroupEntities) {

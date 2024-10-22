@@ -2,12 +2,10 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Fingerprint
-import androidx.compose.material.icons.sharp.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -17,12 +15,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
@@ -32,13 +33,18 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.comp
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    generalRouters: List<SettingsNavigation>? = null,
-    supportRouters: List<SettingsNavigation>? = null,
+    toggleManager: ToggleManager,
 ) {
     SettingsContent(
         navController = navController,
-        generalRouters = generalRouters,
-        supportRouters = supportRouters
+        isFingerprintEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED),
+        isAppearanceEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED),
+        isReportIssueEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED),
+        isFAQEnabled = toggleManager
+            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_FAQ_ENABLED),
     )
 }
 
@@ -46,8 +52,10 @@ fun SettingsScreen(
 @Composable
 private fun SettingsContent(
     navController: NavHostController,
-    generalRouters: List<SettingsNavigation>? = null,
-    supportRouters: List<SettingsNavigation>? = null,
+    isFingerprintEnabled: Boolean = true,
+    isAppearanceEnabled: Boolean = true,
+    isReportIssueEnabled: Boolean = true,
+    isFAQEnabled: Boolean = true,
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -60,7 +68,7 @@ private fun SettingsContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = SettingsNavigation.Settings.title)
+                    Text(text = stringResource(SettingsNavigation.Settings.title))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
@@ -75,24 +83,31 @@ private fun SettingsContent(
                 .padding(16.dp)
         ) {
             Column {
-                Text(text = "General", modifier = Modifier.padding(top = 16.dp))
-                SettingsListItemOptions(
-                    selected = BiometricManager.isBiometricPromptEnabled(),
-                    title = "Fingerprint",
-                    icon = Icons.Sharp.Fingerprint,
-                    onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
-                )
-                generalRouters?.forEach { router ->
-                    SettingsListItemNavigation(navController, router)
+                if (isAppearanceEnabled || isFingerprintEnabled) {
+                    Text(text = stringResource(R.string.settings_screen_general), modifier = Modifier.padding(top = 16.dp))
+                }
+                if (isFingerprintEnabled) {
+                    SettingsListItemOptions(
+                        selected = BiometricManager.isBiometricPromptEnabled(),
+                        title = stringResource(R.string.settings_screen_security),
+                        icon = Icons.Sharp.Fingerprint,
+                        onClick = { state -> BiometricManager.setBiometricPromptEnabled(state) }
+                    )
+                }
+                if (isAppearanceEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.Appearance)
                 }
             }
 
-            supportRouters?.let {
-                Column {
-                    Text(text = "Support", modifier = Modifier.padding(top = 16.dp))
-                    supportRouters.forEach { router ->
-                        SettingsListItemNavigation(navController, router)
-                    }
+            Column {
+                if (isReportIssueEnabled || isFAQEnabled) {
+                    Text(text = stringResource(R.string.settings_screen_support), modifier = Modifier.padding(top = 16.dp))
+                }
+                if (isReportIssueEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.ReportIssue)
+                }
+                if (isFAQEnabled) {
+                    SettingsListItemNavigation(navController, SettingsNavigation.FAQ)
                 }
             }
         }
@@ -115,13 +130,6 @@ private fun SettingsContentPreview() {
     FriendsSecretsTheme {
         SettingsContent(
             navController = rememberNavController(),
-            generalRouters = listOf(
-                SettingsNavigation.Appearance,
-            ),
-            supportRouters = listOf(
-                SettingsNavigation.ReportIssue,
-                SettingsNavigation.FAQ
-            )
         )
     }
 }

@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.utils
+package br.com.brunocarvalhs.friendssecrets.commons.extensions
 
 import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.BuildConfig

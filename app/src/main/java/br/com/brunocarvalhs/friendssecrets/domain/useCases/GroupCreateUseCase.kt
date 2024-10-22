@@ -4,6 +4,7 @@ import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.token
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
@@ -14,6 +15,7 @@ class GroupCreateUseCase(
     private val context: Context = CustomApplication.getInstance(),
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
+    private val performance: PerformanceManager,
 ) {
     suspend fun invoke(
         name: String,
@@ -21,6 +23,7 @@ class GroupCreateUseCase(
         members: Map<String, String>,
     ): Result<Unit> =
         runCatching {
+            performance.start(GroupCreateUseCase::class.java.simpleName)
             validationName(name)
             validationMembers(members)
             var group: GroupEntities =
@@ -31,6 +34,8 @@ class GroupCreateUseCase(
             groupRepository.create(group)
             defineAdmin(group)
             includeGroup(group)
+        }.also {
+            performance.stop(GroupCreateUseCase::class.java.simpleName)
         }
 
     private fun validationName(name: String) {

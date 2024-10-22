@@ -2,6 +2,8 @@ package br.com.brunocarvalhs.friendssecrets.data.model
 
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.token
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 import kotlin.random.Random
@@ -43,5 +45,14 @@ internal data class GroupModel(
             draws = draws,
             isOwner = isOwner
         )
+    }
+
+    companion object {
+        private val gson = Gson()
+
+        fun fromMap(map: Map<String, Any>): GroupModel {
+            val json = gson.toJson(map)
+            return gson.fromJson(json, GroupModel::class.java)
+        }
     }
 }
