@@ -14,7 +14,7 @@
         android:theme="@style/Theme.FriendsSecrets"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.FriendsSecrets">
             <intent-filter>
