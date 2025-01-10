@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">FriendsSecrets</string>
+    <string name="app_name">フレンズシークレット</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">グループの説明</string>
@@ -9,41 +9,82 @@
     <string name="group_create_text_button_member">メンバー</string>
 
     <!--  Group Details Screen  -->
-    <string name="group_details_text_button_label_see_less">もっと見る</string>
+    <string name="group_details_text_button_label_see_less">少なく表示</string>
     <string name="group_details_text_button_label_see_more">もっと見る</string>
     <string name="group_details_drop_menu_item_text_send_feedback">フィードバックを送信</string>
     <string name="group_details_drop_menu_item_text_settings">設定</string>
     <string name="group_details_drop_menu_item_text_edit">編集</string>
 
     <!--  Home Screen  -->
-    <string name="home_drop_menu_item_text_join_a_group">グループに参加</string>
+    <string name="home_drop_menu_item_text_join_a_group">グループに参加する</string>
     <string name="home_drop_menu_item_text_settings">設定</string>
-    <string name="home_action_create_group">新しいグループを作成</string>
+    <string name="home_action_create_group">新しいグループを作成する</string>
 
     <!--  Draw Component  -->
-    <string name="draw_text_feedback">成功!</string>
+    <string name="draw_text_feedback">成功！</string>
     <string name="group_create_action_save_group">グループを保存</string>
-    <string name="group_details_action_draw_members">くじ引き</string>
+    <string name="group_details_action_draw_members">抽選する</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">こんにちは、%s のために %s が好きなギフトの提案が必要です。秘密の友人 %s です。</string>
+    <string name="ai_prompt">こんにちは、%sが好きな%sのために、シークレットフレンド%sへのプレゼントの提案が必要です。</string>
 
-    <!-- Add Member Bottom Sheet -->
+    <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">新しいメンバーを追加</string>
     <string name="add_member_bottom_sheet_input_new_member">新しいメンバー</string>
-    <string name="add_member_bottom_sheet_input_new_member_error_message">無効な名前！文字とスペースのみが許可されています。</string>
-    <string name="add_member_bottom_sheet_input_liker">好み</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">無効な名前です！文字とスペースのみが許可されます。</string>
+    <string name="add_member_bottom_sheet_input_liker">好きなもの</string>
     <string name="add_member_bottom_sheet_button_label">メンバーを追加</string>
     <string name="add_member_bottom_sheet_text_button_label">完了</string>
 
     <!--  Exceptions and Requirements  -->
-    <string name="exception_group_already_exist">グループはすでに存在します。</string>
-    <string name="exception_group_not_found">グループが見つかりません。</string>
-    <string name="require_name_cannot_be_blank">名前は空にできません。</string>
-    <string name="require_name_cannot_be_longer_than_255_characters">名前は255文字を超えてはいけません。</string>
-    <string name="require_group_must_have_at_least_one_member">グループには少なくとも1人のメンバーが必要です。</string>
-    <string name="require_group_cannot_have_more_than_2_members">グループには2人以上のメンバーがいないといけません。</string>
-    <string name="require_draw_already_held">くじ引きはすでに行われました。</string>
-    <string name="require_group_id_cannot_be_blank">グループIDは空にできません。</string>
-    <string name="exception_minimums_members_of_draw">くじ引きを行うには、グループに少なくとも3人の参加者が必要です。</string>
+    <string name="exception_group_already_exist">グループは既に存在します</string>
+    <string name="exception_group_not_found">グループが見つかりません</string>
+    <string name="require_name_cannot_be_blank">名前を空にすることはできません</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">名前は255文字を超えることはできません</string>
+    <string name="require_group_must_have_at_least_one_member">グループには少なくとも1人のメンバーが必要です</string>
+    <string name="require_group_cannot_have_more_than_2_members">グループには2人以上のメンバーを含めることはできません</string>
+    <string name="require_draw_already_held">抽選はすでに実施されています</string>
+    <string name="require_group_id_cannot_be_blank">グループIDを空にすることはできません</string>
+    <string name="exception_minimums_members_of_draw">抽選を実施するには、グループに少なくとも3人の参加者が必要です。</string>
+    <string name="group_details_action_preview_my_secret_friend">私の友達の秘密</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">
+        こんにちは %1$s! 👋\n\n
+        特別なゲームに参加するよう招待されました！ 🎉\n\n
+        リンクにアクセスして、あなたのシークレットサンタが誰かを見つけてください: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
+        リンクにアクセスできない場合は、このリンクからフレンズシークレットアプリをダウンロードしてください: https://play.google.com/store/apps/details?id=%4$s.\n\n
+        グループコードを使用して参加してください: %2$s その後、%5$s をクリックします。\n\n
+        シークレットサンタにアクセスするためのコードは: %3$s。\n\n
+        🚀 今すぐ準備を始めて、シークレットサンタのためのプレゼントを計画してください！
+    </string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">フレンズシークレットを使用するにはロックを解除</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">バイオメトリック認証情報を使用してログイン</string>
+    <string name="biometric_screen_use_account_password">アカウントのパスワードを使用</string>
+    <string name="biometric_screen_biometric_authentication">フレンズシークレットがロックされています</string>
+    <string name="biometric_screen_unlock">ロック解除</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">グループを退出</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">グループを削除</string>
+    <string name="title_settings">設定</string>
+    <string name="title_appearance">外観</string>
+    <string name="title_faq">よくある質問</string>
+    <string name="title_report_an_issue">問題を報告する</string>
+    <string name="appearance_screen_dynamic_title">動的テーマ</string>
+    <string name="appearance_screen_title_description">動的テーマを有効にすると、デバイスの壁紙に基づいてアプリが色を自動的に調整します。</string>
+    <string name="appearance_screen_title">特定のオプションを選択すると、好みに応じてアプリの外観（配色）が変更されます。</string>
+    <string name="settings_screen_general">一般</string>
+    <string name="settings_screen_security">指紋認証</string>
+    <string name="settings_screen_support">サポート</string>
+    <string name="group_details_description">説明</string>
+    <string name="group_details_members">メンバー</string>
+    <string name="draw_screen_title">あなたのシークレットフレンドは...</string>
+    <string name="draw_screen_action_title">私のシークレットフレンドを表示</string>
+    <string name="draw_screen_action_generative">ギフトのヒント</string>
+    <string name="draw_screen_code_secret">シークレットコード</string>
+    <string name="draw_screen_title_like">好きなもの</string>
+    <string name="onboarding_screen_close">閉じる</string>
+    <string name="onboarding_next">次へ</string>
+    <string name="onboarding_finish">開始</string>
 </resources>

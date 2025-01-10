@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">FriendsSecrets</string>
+    <string name="app_name">Friends Secrets</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Group description</string>
@@ -50,12 +50,13 @@
 
     <!-- Shared Link -->
     <string name="group_details_share_member">
-        Olá %1$s! 👋\n\n
-        Você foi convidado para participar de uma brincadeira especial! 🎉\n\n
-        Baixe nosso aplicativo através deste link: %4$s.\n
-        Use o código do grupo: %2$s para entrar e, depois, clique em \"Descobrir seu amigo secreto\".\n
-        Seu código para acessar o amigo secreto é: %3$s.\n\n
-        🚀 Não perca tempo, baixe o app e comece a diversão agora!
+        Hello %1$s! 👋\n\n
+        You have been invited to participate in a special game! 🎉\n\n
+        Access the link and find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
+        But if you can\'t access the link, download our Friends Secrets app through this link: https://play.google.com/store/apps/details?id=%4$s.\n\n
+        Use the group code: %2$s to join, then click %5$s.\n\n
+        Your code to access Secret Santa is: %3$s.\n\n
+        🚀 Don't waste time, and plan your gift for your Secret Santa now!
     </string>
 
     <!--  Biometric  -->
