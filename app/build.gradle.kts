@@ -25,6 +25,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
+        buildConfigField("String", "apiKey", "\"${System.getenv("API_KEY")}\"")
     }
 
     signingConfigs {
