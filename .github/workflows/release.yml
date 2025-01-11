@@ -53,7 +53,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-24.04
-    name: Run Unit Tests
+    name: Unit Tests
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
@@ -71,7 +71,7 @@ jobs:
 
   lint-check:
     runs-on: ubuntu-24.04
-    name: Run Lint Check
+    name: Lint Check
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
