@@ -12,9 +12,9 @@ env:
   APP_NAME: "FriendsSecrets"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    name: Build Application
+  checkout-and-setup:
+    runs-on: ubuntu-24.04
+    name: Checkout and Setup Environment
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,18 +32,31 @@ jobs:
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
           echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
-          
-      - name: Get Gradle Version from gradle.properties
-        id: gradle-version
+      - name: Create google-services.json
         run: |
-          GRADLE_VERSION=$(grep "gradleVersion" gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          echo "gradle_version=${GRADLE_VERSION}" >> $GITHUB_ENV
-          echo "Gradle version is $GRADLE_VERSION"
-          
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+      - name: Cache Gradle
+        uses: actions/cache@v3
         with:
-          gradle-version: ${{ env.gradle_version }}
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Upload Workspace
+        uses: actions/upload-artifact@v3
+        with:
+          name: workspace
+          path: ./
+
+  unit-tests:
+    runs-on: ubuntu-24.04
+    name: Run Unit Tests
+    needs: checkout-and-setup
+    steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
 
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
@@ -53,22 +66,39 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Check for Unit Test Failures
-        if: ${{ failure() }}
-        run: exit 1
-      
+  lint-check:
+    runs-on: ubuntu-24.04
+    name: Run Lint Check
+    needs: checkout-and-setup
+    steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+
+      - name: Give execution permissions to gradlew
+        run: chmod +x gradlew
+
       - name: Run Lint
         run: ./gradlew lintDebug
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Check for Lint Failures
-        if: ${{ failure() }}
-        run: exit 1
+  build-apk:
+    runs-on: ubuntu-24.04
+    name: Build APK
+    needs: [unit-tests, lint-check]
+    steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
 
-      - name: Build and Sign APK Debug
-        run: |
-          ./gradlew assembleDebug
+      - name: Give execution permissions to gradlew
+        run: chmod +x gradlew
+
+      - name: Build APK Debug
+        run: ./gradlew assembleDebug
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
@@ -76,10 +106,22 @@ jobs:
           name: ${{ env.APP_NAME }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk
 
-      - name: Build AAB
-        run: |
-          ./gradlew bundleDebug
-
+  build-aab:
+    runs-on: ubuntu-24.04
+    name: Build AAB
+    needs: [unit-tests, lint-check]
+    steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+  
+      - name: Give execution permissions to gradlew
+        run: chmod +x gradlew
+  
+      - name: Build AAB Debug
+        run: ./gradlew bundleDebug
+  
       - name: Upload Debug AAB
         uses: actions/upload-artifact@v3
         with:

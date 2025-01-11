@@ -81,8 +81,8 @@ private fun GroupCreateContent(
     uiState: GroupCreateUiState,
     onSave: (String, String, Map<String, String>) -> Unit,
 ) {
-    var name by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
-    var description by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
+    var name by remember { mutableStateOf(TextFieldValue()) }
+    var description by remember { mutableStateOf(TextFieldValue()) }
     val members = remember { mutableStateMapOf<String, String>() }
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -108,7 +108,7 @@ private fun GroupCreateContent(
                     members
                 )
             }) {
-                Icon(Icons.Filled.Check, "Save")
+                Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
                 Text(stringResource(R.string.group_create_action_save_group))
             }
         }
@@ -153,7 +153,7 @@ private fun GroupCreateContent(
                                 Text(text = stringResource(R.string.group_create_text_button_member))
                             }
                             IconButton(onClick = { showBottomSheet = true }) {
-                                Icon(Icons.Filled.Add, "Add")
+                                Icon(Icons.Filled.Add, stringResource(R.string.group_create_text_button_member))
                             }
                         }
                     }

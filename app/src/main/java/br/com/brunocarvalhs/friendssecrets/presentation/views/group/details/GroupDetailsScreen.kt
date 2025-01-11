@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -76,10 +76,16 @@ fun GroupDetailsScreen(
         viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
     }
 
-    LaunchedEffect(Unit) {
-        if (uiState is GroupDetailsUiState.Draw) {
-            delay(timeMillis = 1000)
-            viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is GroupDetailsUiState.Draw -> {
+                delay(timeMillis = 1000)
+                viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
+            }
+
+            is GroupDetailsUiState.Exit -> {
+                navController.popBackStack()
+            }
         }
     }
 
@@ -109,6 +115,14 @@ private fun GroupDetailsContent(
         onEvent.invoke(GroupDetailsIntent.DrawMembers(group = group))
     }
 
+    fun exitGroup(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.ExitGroup(group.id))
+    }
+
+    fun deleteGroup(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.DeleteGroup(group.id))
+    }
+
     fun revelationDraw(group: GroupEntities) {
         navController.navigate(route = GroupNavigation.Revelation.createRoute(group.id))
     }
@@ -130,45 +144,64 @@ private fun GroupDetailsContent(
                 Text(uiState.group.name)
             }
         }, actions = {
-            IconButton(onClick = { expanded = true }) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert, contentDescription = "More"
-                )
-            }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
-                        onClick = {
-                            navController.navigate(
-                                route = GroupNavigation.Edit.createRoute(uiState.group.id)
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Outlined.Edit, contentDescription = null
-                            )
-                        })
-                }
-                DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_settings)) },
-                    onClick = { },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Settings, contentDescription = null
-                        )
-                    })
-                if (uiState is GroupDetailsUiState.Success && uiState.group.isOwner) {
-                    HorizontalDivider()
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.group_details_action_draw_members)) },
-                        onClick = { onDraw(group = uiState.group) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Filled.Refresh, contentDescription = null
-                            )
-                        },
+            if (uiState is GroupDetailsUiState.Success) {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert, contentDescription = "More"
                     )
                 }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    if (uiState.group.isOwner) {
+                        DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
+                            onClick = {
+                                navController.navigate(
+                                    route = GroupNavigation.Edit.createRoute(uiState.group.id)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Edit, contentDescription = null
+                                )
+                            })
+                    }
+                    DropdownMenuItem(text = {
+                        if (uiState.group.isOwner) {
+                            Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin))
+                        } else {
+                            Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group))
+                        }
+                    }, onClick = {
+                        if (uiState.group.isOwner) {
+                            deleteGroup(uiState.group)
+                        } else {
+                            exitGroup(uiState.group)
+                        }
+                    }, leadingIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
+                            contentDescription = if (uiState.group.isOwner) {
+                                stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin)
+                            } else {
+                                stringResource(R.string.group_details_drop_menu_item_text_exit_to_group)
+                            }
+                        )
+                    })
+                    if (uiState.group.isOwner) {
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.group_details_action_draw_members)) },
+                            onClick = { onDraw(group = uiState.group) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Refresh,
+                                    contentDescription = stringResource(R.string.group_details_action_draw_members)
+                                )
+                            },
+                        )
+                    }
+                }
             }
+
         }, navigationIcon = {
             NavigationBackIconButton(navController = navController)
         }, scrollBehavior = scrollBehavior
@@ -177,13 +210,19 @@ private fun GroupDetailsContent(
         if (uiState is GroupDetailsUiState.Success) {
             if (uiState.group.draws.isNotEmpty()) {
                 ExtendedFloatingActionButton(onClick = { revelationDraw(uiState.group) }) {
-                    Icon(Icons.Filled.People, "my secret friend")
-                    Text(stringResource(R.string.group_details_action_preview_my_secret_friend))
+                    Icon(
+                        imageVector = Icons.Filled.People,
+                        contentDescription = stringResource(R.string.group_details_action_preview_my_secret_friend)
+                    )
+                    Text(text = stringResource(R.string.group_details_action_preview_my_secret_friend))
                 }
             } else if (uiState.group.isOwner && uiState.group.draws.isEmpty()) {
                 ExtendedFloatingActionButton(onClick = { onDraw(uiState.group) }) {
-                    Icon(Icons.Filled.Refresh, "draw")
-                    Text(stringResource(R.string.group_details_action_draw_members))
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = stringResource(R.string.group_details_action_draw_members)
+                    )
+                    Text(text = stringResource(R.string.group_details_action_draw_members))
                 }
             }
         }
@@ -212,8 +251,15 @@ private fun GroupDetailsContent(
                 ) {
                     item {
                         uiState.group.description?.let {
-                            Row {
-                                Text(text = "Descrição")
+                            Row(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.group_details_description),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
                             }
                             Row(
                                 modifier = Modifier
@@ -235,7 +281,7 @@ private fun GroupDetailsContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Membros")
+                            Text(text = stringResource(R.string.group_details_members))
                         }
                     }
                     if (uiState.group.draws.isNotEmpty()) {
@@ -309,13 +355,15 @@ private class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetail
         GroupDetailsUiState.Loading,
         GroupDetailsUiState.Error(message = "Error"),
         // Members ----------------------------------------------------------------
-        GroupDetailsUiState.Success(group = GroupModel(name = "Group",
-            description = "Description",
-            members = mutableMapOf<String, String>().apply {
-                repeat(10) {
-                    this["Member $it"] = "Secret Santa $it"
-                }
-            })),
+        GroupDetailsUiState.Success(
+            group = GroupModel(name = "Group",
+                description = "Description",
+                members = mutableMapOf<String, String>().apply {
+                    repeat(10) {
+                        this["Member $it"] = "Secret Santa $it"
+                    }
+                })
+        ),
         GroupDetailsUiState.Success(
             group = GroupModel(
                 name = "Group sorteado",

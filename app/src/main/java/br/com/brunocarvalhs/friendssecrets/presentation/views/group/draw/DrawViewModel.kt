@@ -8,6 +8,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -41,6 +43,7 @@ class DrawViewModel(
                 navigation = intent.navigation,
                 group = intent.group,
                 secret = intent.secret,
+                likes = intent.likes
             )
         }
     }
@@ -52,11 +55,7 @@ class DrawViewModel(
         secret: String,
         likes: List<String> = emptyList(),
     ) {
-        val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name.apply {
-            group.description?.let {
-                plus(" $it")
-            }
-        })
+        val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name)
         
         navigation.navigate(
             route = GenerativeNavigation.Chat.createRoute(prompt)
@@ -73,7 +72,7 @@ class DrawViewModel(
                     _uiState.value = DrawUiState.Idle
                 }
             }.onFailure {
-                _uiState.value = DrawUiState.Error(it.message.orEmpty())
+                _uiState.value = DrawUiState.Error(it.report()?.message.orEmpty())
             }
         }
     }
@@ -86,10 +85,12 @@ class DrawViewModel(
                 val repository = GroupRepositoryImpl()
                 val storage = StorageService()
                 val cryptoService = CryptoService()
+                val performance = PerformanceManager()
                 val drawRevelationUseCase = DrawRevelationUseCase(
                     repository = repository,
                     storage = storage,
-                    cryptoService = cryptoService
+                    cryptoService = cryptoService,
+                    performance = performance
                 )
                 DrawViewModel(drawRevelationUseCase = drawRevelationUseCase)
             }

@@ -34,7 +34,7 @@ object ThemeManager {
     }
 
     internal fun setDynamicThemeEnabled(enabled: Boolean) {
-        setTheme(Theme.valueOf(themeState.value))
+        storage.save(DYNAMIC_THEME_KEY, enabled)
         isDynamicThemeEnabled = enabled
     }
 
@@ -44,7 +44,7 @@ object ThemeManager {
 
     internal fun isDarkTheme(): Boolean {
         return if (theme == Theme.SYSTEM) {
-            getSystemTheme(CustomApplication.instance) == Theme.DARK
+            getSystemTheme(CustomApplication.getInstance()) == Theme.DARK
         } else {
             theme == Theme.DARK
         }
