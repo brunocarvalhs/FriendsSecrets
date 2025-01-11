@@ -87,9 +87,9 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-  build-debug:
+  build-apk:
     runs-on: ubuntu-24.04
-    name: Build APK and AAB Debug
+    name: Build APK
     needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
@@ -103,38 +103,53 @@ jobs:
       - name: Build APK Debug
         run: ./gradlew assembleDebug
 
-      - name: Build AAB Debug
-        run: ./gradlew bundleDebug
-
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk
 
+      - name: Decode google-services.json and use as serviceCredentialsFileContent
+        run: |
+          # Decodificar o arquivo google-services.json de base64 e armazenar no arquivo temporário
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" | base64 --decode > $GITHUB_WORKSPACE/temp-google-services.json
+          # Agora, defina a variável de ambiente com o caminho do arquivo temporário
+          echo "SERVICE_CREDENTIALS_FILE=$GITHUB_WORKSPACE/temp-google-services.json" >> $GITHUB_ENV
+    
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          serviceCredentialsFileContent: ${{ env.SERVICE_CREDENTIALS_FILE }}
+          groups: "testers"
+          file: app/build/outputs/apk/debug/*.apk
+        continue-on-error: true
+
+  build-aab:
+    runs-on: ubuntu-24.04
+    name: Build AAB
+    needs: [unit-tests, lint-check]
+    steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+  
+      - name: Give execution permissions to gradlew
+        run: chmod +x gradlew
+  
+      - name: Build AAB Debug
+        run: ./gradlew bundleDebug
+  
       - name: Upload Debug AAB
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-aab-debug
           path: app/build/outputs/bundle/debug/*.aab
-
-      - name: Decode google-services.json and use as serviceCredentialsFileContent
-        run: |
-          export SERVICE_CREDENTIALS=$(cat app/google-services.json | base64)
-          echo "SERVICE_CREDENTIALS=$SERVICE_CREDENTIALS" >> $GITHUB_ENV
-
-      - name: Upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          serviceCredentialsFileContent: ${{ env.SERVICE_CREDENTIALS }}
-          groups: "testers"
-          file: app/build/outputs/apk/debug/*.apk # Altere para .aab se quiser enviar o bundle
-        continue-on-error: true
-        
+          
   cleanup:
     runs-on: ubuntu-24.04
     name: Cleanup Artifacts
-    needs: [checkout-and-setup, unit-tests, lint-check, build-debug]
+    needs: [checkout-and-setup, unit-tests, lint-check, build-apk, build-aab]
     if: always() # Executa mesmo se jobs anteriores falharem
     steps:
       - name: Cleanup sensitive files
