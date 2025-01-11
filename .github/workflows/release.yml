@@ -107,14 +107,17 @@ jobs:
       - name: Generate Keystore
         run: |
           echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
+
+      - name: Check if keystore exists
+        run: |
+          if [ -f "app/release.keystore" ]; then
+            echo "Keystore exists"
+          else
+            echo "Keystore does not exist"
+            exit 1
         
       - name: Build APK
-        run: |
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=app/release.keystore \
-            -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
-            -Pandroid.injected.signing.key.alias=$KEYSTORE_ALIAS \
-            -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+        run: ./gradlew assembleRelease
             
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
@@ -143,13 +146,16 @@ jobs:
         run: |
           echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
 
-      - name: Build AAB
+      - name: Check if keystore exists
         run: |
-          ./gradlew bundleRelease \
-            -Pandroid.injected.signing.store.file=app/release.keystore \
-            -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
-            -Pandroid.injected.signing.key.alias=$KEYSTORE_ALIAS \
-            -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+          if [ -f "app/release.keystore" ]; then
+            echo "Keystore exists"
+          else
+            echo "Keystore does not exist"
+            exit 1
+
+      - name: Build AAB
+        run: ./gradlew bundleRelease
             
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v3
