@@ -104,10 +104,6 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Generate Keystore
-        run: |
-          echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
-
       - name: Check if keystore exists
         run: |
           if [ -f "app/release.keystore" ]; then
@@ -142,10 +138,6 @@ jobs:
 
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
-
-      - name: Generate Keystore
-        run: |
-          echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
 
       - name: Check if keystore exists
         run: |
