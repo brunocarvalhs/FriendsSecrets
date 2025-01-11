@@ -2,7 +2,7 @@ name: Android Tests
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -19,19 +19,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+  setup-java:
+    runs-on: ubuntu-latest
+    name: Set up JDK and Gradle
+    needs: build
+    steps:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '${{ env.JDK_VERSION }}'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-
-      - name: Create local.properties
-        run: |
-          echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
 
       - name: Get Gradle Version from gradle.properties
         id: gradle-version
@@ -45,14 +42,37 @@ jobs:
         with:
           gradle-version: ${{ env.gradle_version }}
 
+  setup-android-sdk:
+    runs-on: ubuntu-latest
+    name: Setup Android SDK
+    needs: setup-java
+    steps:
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
+
       - name: Create google-services release file
         run: |
           rm -f app/google-services.json
           echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
+  grant-execution-permission:
+    runs-on: ubuntu-latest
+    name: Give execution permissions to gradlew
+    needs: setup-android-sdk
+    steps:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
+  run-tests:
+    runs-on: ubuntu-latest
+    name: Run Unit Tests and Lint
+    needs: grant-execution-permission
+    steps:
       - name: Run Unit Tests
         run: ./gradlew testDebug
         env:
@@ -63,16 +83,26 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
+  comment-failure:
+    runs-on: ubuntu-latest
+    name: Comment Failure
+    if: ${{ failure() }}
+    needs: run-tests
+    steps:
       - name: Comment Failure
-        if: ${{ failure() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "Ops, encontrado falhas nos testes ou lint, por favor precisa corrigir."
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "-1 | confused"
 
+  comment-success:
+    runs-on: ubuntu-latest
+    name: Comment Success
+    if: ${{ success() }}
+    needs: run-tests
+    steps:
       - name: Comment Success
-        if: ${{ success() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "Todos os testes e lint passaram com sucesso! Bom trabalho."
