@@ -19,7 +19,7 @@ android {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -45,6 +45,7 @@ android {
             )
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
