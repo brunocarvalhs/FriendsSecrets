@@ -13,7 +13,7 @@ env:
 
 jobs:
   checkout-and-setup:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     name: Checkout and Setup Environment
     steps:
       - name: Checkout code
@@ -52,7 +52,7 @@ jobs:
           path: ./
 
   unit-tests:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     name: Run Unit Tests
     needs: checkout-and-setup
     steps:
@@ -70,9 +70,9 @@ jobs:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
   lint-check:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     name: Run Lint Check
-    needs: checkout-and-setup
+    needs: unit-tests
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -87,10 +87,10 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-  build-apk:
-    runs-on: ubuntu-24.04
-    name: Build APK
-    needs: [unit-tests, lint-check]
+  build-debug:
+    runs-on: ubuntu-latest
+    name: Build APK and AAB Debug
+    needs: lint-check
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -103,58 +103,31 @@ jobs:
       - name: Build APK Debug
         run: ./gradlew assembleDebug
 
+      - name: Build AAB Debug
+        run: ./gradlew bundleDebug
+
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk
 
-      - name: Decode google-services.json and use as serviceCredentialsFileContent
-        run: |
-          # Decodificar o arquivo google-services.json de base64 e armazenar no arquivo temporário
-          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" | base64 --decode > $GITHUB_WORKSPACE/temp-google-services.json
-          # Agora, defina a variável de ambiente com o caminho do arquivo temporário
-          echo "SERVICE_CREDENTIALS_FILE=$GITHUB_WORKSPACE/temp-google-services.json" >> $GITHUB_ENV
-        continue-on-error: true
-    
-      - name: Upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          serviceCredentialsFileContent: ${{ env.SERVICE_CREDENTIALS_FILE }}
-          groups: "testers"
-          file: app/build/outputs/apk/debug/*.apk
-        continue-on-error: true
-
-  build-aab:
-    runs-on: ubuntu-24.04
-    name: Build AAB
-    needs: [unit-tests, lint-check]
-    steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v3
-        with:
-          name: workspace
-  
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-  
-      - name: Build AAB Debug
-        run: ./gradlew bundleDebug
-  
       - name: Upload Debug AAB
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.APP_NAME }}-aab-debug
           path: app/build/outputs/bundle/debug/*.aab
-          
-  cleanup:
-    runs-on: ubuntu-24.04
-    name: Cleanup Artifacts
-    needs: [checkout-and-setup, unit-tests, lint-check, build-apk, build-aab]
-    if: always() # Executa mesmo se jobs anteriores falharem
-    steps:
-      - name: Cleanup sensitive files
+
+      - name: Decode google-services.json and use as serviceCredentialsFileContent
         run: |
-          echo "Removing sensitive files..."
-          rm -f app/google-services.json
-          echo "Cleanup complete."
+          export SERVICE_CREDENTIALS=$(cat app/google-services.json | base64)
+          echo "SERVICE_CREDENTIALS=$SERVICE_CREDENTIALS" >> $GITHUB_ENV
+
+      - name: Firebase App Distribution
+        uses: hasretsariyer/firebase-app-distribution-github-action@v1
+        with:
+          app_id: ${{secrets.FIREBASE_APP_ID}}
+          firebase_token: ${{secrets.FIREBASE_TOKEN}}
+          app_file: app/build/outputs/apk/debug/*.apk
+          tester_groups: maintainers
+        continue-on-error: true
