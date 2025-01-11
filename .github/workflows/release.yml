@@ -44,10 +44,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-            
-      # Adicionado para garantir que o keystore seja decodificado corretamente
-      - name: Decode Keystore
-        run: echo ${{ secrets.KEYSTORE_BASE64 }} | base64 --decode > app/release.keystore
 
       - name: Upload Workspace
         uses: actions/upload-artifact@v3
@@ -104,13 +100,26 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Build APK Release
+      - name: Generate Keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore app/release.keystore \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -alias "${{ secrets.KEYSTORE_ALIAS }}" \
+            -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
+            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
+            -keypass "${{ secrets.KEY_PASSWORD }}"
+        
+      - name: Build APK
         run: |
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file=app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -130,13 +139,26 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Build AAB Release
+      - name: Generate Keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore app/release.keystore \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -alias "${{ secrets.KEYSTORE_ALIAS }}" \
+            -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
+            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
+            -keypass "${{ secrets.KEY_PASSWORD }}"
+
+      - name: Build AAB
         run: |
           ./gradlew bundleRelease \
             -Pandroid.injected.signing.store.file=app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v3
         with:
