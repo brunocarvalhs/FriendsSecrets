@@ -102,15 +102,7 @@ jobs:
 
       - name: Generate Keystore
         run: |
-          keytool -genkeypair -v \
-            -keystore app/release.keystore \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -alias "${{ secrets.KEYSTORE_ALIAS }}" \
-            -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
-            -keypass "${{ secrets.KEY_PASSWORD }}"
+          echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
         
       - name: Build APK
         run: |
@@ -141,15 +133,7 @@ jobs:
 
       - name: Generate Keystore
         run: |
-          keytool -genkeypair -v \
-            -keystore app/release.keystore \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -alias "${{ secrets.KEYSTORE_ALIAS }}" \
-            -dname "CN=My Name, OU=My Organization, O=My Company, L=My City, ST=My State, C=My Country" \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
-            -keypass "${{ secrets.KEY_PASSWORD }}"
+          echo ${{ secrets.RELEASE_KEYSTORE }} | base64 --decode > app/release.keystore
 
       - name: Build AAB
         run: |
