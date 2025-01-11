@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,6 +56,7 @@ fun MemberItem(
             .background(ListItemDefaults.colors().containerColor),
     ) {
         ListItem(
+            modifier = Modifier.clickable(onClick = { isLiked = !isLiked }),
             headlineContent = {
                 Text(text = participant)
             },
@@ -64,7 +66,7 @@ fun MemberItem(
                         onClick = { isLiked = !isLiked }
                     ) {
                         Icon(
-                            imageVector = if (isVisibleLiked) Icons.Sharp.KeyboardArrowUp
+                            imageVector = if (isVisibleLiked || isLiked) Icons.Sharp.KeyboardArrowUp
                             else Icons.Sharp.KeyboardArrowDown,
                             contentDescription = "bottom"
                         )
@@ -139,10 +141,12 @@ fun MemberItem(
 
 
                 items(likes) { like ->
-                    AssistChip(
-                        onClick = {},
-                        label = { Text(like) }
-                    )
+                    if (like.isNotBlank()) {
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(like) }
+                        )
+                    }
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             }
@@ -188,6 +192,20 @@ private fun MemberItemVisiblePreview() {
             isAdministrator = false,
             isVisibleLiked = true,
             likes = listOf("Like 1", "Like 2", "Like 3", "Like 4", "Like 5", "Like 6")
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun MemberItemVisibleBlankPreview() {
+    FriendsSecretsTheme {
+        MemberItem(
+            participant = "Member 1",
+            group = GroupModel(),
+            isAdministrator = false,
+            isVisibleLiked = true,
+            likes = listOf("", "", "", "", "", "Like 6")
         )
     }
 }
