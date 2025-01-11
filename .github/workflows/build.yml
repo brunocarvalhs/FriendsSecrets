@@ -33,6 +33,10 @@ jobs:
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
           echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
 
+      - name: Create google-services.json
+        run: |
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+
       - name: Cache Gradle
         uses: actions/cache@v3
         with:
@@ -41,10 +45,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Upload Source
+      - name: Upload Workspace
         uses: actions/upload-artifact@v3
         with:
-          name: source-code
+          name: workspace
           path: ./
 
   unit-tests:
@@ -52,10 +56,10 @@ jobs:
     name: Run Unit Tests
     needs: checkout-and-setup
     steps:
-      - name: Download Source
+      - name: Download Workspace
         uses: actions/download-artifact@v3
         with:
-          name: source-code
+          name: workspace
 
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
@@ -65,38 +69,30 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Check for Unit Test Failures
-        if: ${{ failure() }}
-        run: exit 1
-
   lint-check:
     runs-on: ubuntu-latest
     name: Run Lint Check
     needs: unit-tests
     steps:
-      - name: Download Source
+      - name: Download Workspace
         uses: actions/download-artifact@v3
         with:
-          name: source-code
+          name: workspace
 
       - name: Run Lint
         run: ./gradlew lintDebug
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Check for Lint Failures
-        if: ${{ failure() }}
-        run: exit 1
-
   build-debug:
     runs-on: ubuntu-latest
     name: Build APK and AAB Debug
     needs: lint-check
     steps:
-      - name: Download Source
+      - name: Download Workspace
         uses: actions/download-artifact@v3
         with:
-          name: source-code
+          name: workspace
 
       - name: Build APK Debug
         run: ./gradlew assembleDebug
