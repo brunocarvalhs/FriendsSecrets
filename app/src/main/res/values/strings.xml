@@ -49,7 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">Hello %1$s! 👋\n\nYou have been invited to participate in a special game! 🎉\n\nAccess the link and find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nBut if you can&apos;t access the link, download our Friends Secrets app through this link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse the group code: %2$s to join, then click %5$s.\n\nYour code to access Secret Santa is: %3$s.\n\n🚀 Don't waste time, and plan your gift for your Secret Santa now!</string>
+    <string name="group_details_share_member">Hello %1$s! 👋\n\nYou have been invited to join an exciting game! 🎉\n\nClick the link to find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nIf you cannot access the link, download our Friends Secrets app using this link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse the group code: %2$s to join, then click on %5$s.\n\nYour Secret Santa code is: %3$s.\n\n🚀 Do not waste time, start planning your Secret Santa gift now!</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>

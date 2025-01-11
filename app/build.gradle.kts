@@ -13,12 +13,11 @@ plugins {
 
 android {
     namespace = "br.com.brunocarvalhs.friendssecrets"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
