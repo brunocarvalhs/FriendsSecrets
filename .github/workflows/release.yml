@@ -172,7 +172,7 @@ jobs:
     steps:
       - name: Get App Version
         run: |
-          VERSION=$(cat VERSION.md)
+          VERSION=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\(.*\)"/\1/')
           echo "version=$VERSION" >> $GITHUB_ENV
 
       - name: Calculate module name
