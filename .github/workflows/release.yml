@@ -171,7 +171,9 @@ jobs:
     needs: [build-apk, build-aab]
     steps:
       - name: Get App Version
-        run: echo "version=$(cat VERSION.md)" >> $GITHUB_ENV
+        run: |
+          VERSION=$(cat VERSION.md)
+          echo "version=$VERSION" >> $GITHUB_ENV
 
       - name: Calculate module name
         id: module_name
@@ -184,6 +186,8 @@ jobs:
         with:
           tag_name: ${{ env.version }}
           release_name: ${{ env.module_name }} v${{ env.version }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
