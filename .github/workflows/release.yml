@@ -91,6 +91,10 @@ jobs:
     runs-on: ubuntu-24.04
     name: Build APK
     needs: [unit-tests, lint-check]
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -108,9 +112,9 @@ jobs:
         run: |
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file=app/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
+            -Pandroid.injected.signing.key.alias=$KEYSTORE_ALIAS \
+            -Pandroid.injected.signing.key.password=$KEY_PASSWORD
             
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
@@ -122,6 +126,10 @@ jobs:
     runs-on: ubuntu-24.04
     name: Build AAB
     needs: [unit-tests, lint-check]
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -139,9 +147,9 @@ jobs:
         run: |
           ./gradlew bundleRelease \
             -Pandroid.injected.signing.store.file=app/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
+            -Pandroid.injected.signing.key.alias=$KEYSTORE_ALIAS \
+            -Pandroid.injected.signing.key.password=$KEY_PASSWORD
             
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v3
