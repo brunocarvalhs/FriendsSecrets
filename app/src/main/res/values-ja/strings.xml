@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">フレンズシークレット</string>
+    <string name="app_name">秘密の友達</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">グループの説明</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">抽選する</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">こんにちは、%sが好きな%sのために、シークレットフレンド%sへのプレゼントの提案が必要です。</string>
+    <string name="ai_prompt" formatted="false">こんにちは、%sが好きな%sのために、シークレットフレンド%sへのプレゼントの提案が必要です。</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">新しいメンバーを追加</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">私の友達の秘密</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        こんにちは %1$s! 👋\n\n
-        特別なゲームに参加するよう招待されました！ 🎉\n\n
-        リンクにアクセスして、あなたのシークレットサンタが誰かを見つけてください: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        リンクにアクセスできない場合は、このリンクからフレンズシークレットアプリをダウンロードしてください: https://play.google.com/store/apps/details?id=%4$s.\n\n
-        グループコードを使用して参加してください: %2$s その後、%5$s をクリックします。\n\n
-        シークレットサンタにアクセスするためのコードは: %3$s。\n\n
-        🚀 今すぐ準備を始めて、シークレットサンタのためのプレゼントを計画してください！
-    </string>
+    <string name="group_details_share_member">こんにちは %1$s! 👋\n\n特別なゲームに参加するよう招待されました！ 🎉\n\nリンクにアクセスして、あなたのシークレットサンタが誰かを見つけてください: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nリンクにアクセスできない場合は、このリンクからフレンズシークレットアプリをダウンロードしてください: https://play.google.com/store/apps/details?id=%4$s.\n\nグループコードを使用して参加してください: %2$s その後、%5$s をクリックします。\n\nシークレットサンタにアクセスするためのコードは: %3$s。\n\n🚀 今すぐ準備を始めて、シークレットサンタのためのプレゼントを計画してください！</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">フレンズシークレットを使用するにはロックを解除</string>

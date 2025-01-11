@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">好友秘密</string>
+    <string name="app_name">秘密朋友</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">群组描述</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">抽签</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">你好，我需要为喜欢 %s 的好友 %s 提供一个礼物建议，作为秘密好友 %s。</string>
+    <string name="ai_prompt" formatted="false">你好，我需要为喜欢 %s 的好友 %s 提供一个礼物建议，作为秘密好友 %s。</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">添加新成员</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">我的好友秘密</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        你好 %1$s！👋\n\n
-        你已被邀请参加一个特别的游戏！🎉\n\n
-        点击链接，发现你的秘密好友是谁：https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        如果无法访问链接，请通过此链接下载我们的好友秘密应用程序：https://play.google.com/store/apps/details?id=%4$s。\n\n
-        使用群组代码：%2$s 加入，然后点击 %5$s。\n\n
-        你的秘密好友访问代码是：%3$s。\n\n
-        🚀 不要犹豫，现在就开始计划你的礼物吧！
-    </string>
+    <string name="group_details_share_member">你好 %1$s！👋\n\n你已被邀请参加一个特别的游戏！🎉\n\n点击链接，发现你的秘密好友是谁：https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\n如果无法访问链接，请通过此链接下载我们的好友秘密应用程序：https://play.google.com/store/apps/details?id=%4$s。\n\n使用群组代码：%2$s 加入，然后点击 %5$s。\n\n你的秘密好友访问代码是：%3$s。\n\n🚀 不要犹豫，现在就开始计划你的礼物吧！</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">解锁以使用好友秘密</string>

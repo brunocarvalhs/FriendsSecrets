@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">프렌즈 시크릿</string>
+    <string name="app_name">비밀 친구</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">그룹 설명</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">추첨</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">%s를 위한 선물 제안이 필요합니다. %s를 좋아하는 시크릿 프렌드 %s를 위해서요.</string>
+    <string name="ai_prompt" formatted="false">%s를 위한 선물 제안이 필요합니다. %s를 좋아하는 시크릿 프렌드 %s를 위해서요.</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">새 멤버 추가</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">내 친구들의 비밀</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        안녕하세요 %1$s! 👋\n\n
-        특별한 게임에 초대되었습니다! 🎉\n\n
-        링크를 열어 당신의 시크릿 산타가 누구인지 확인하세요: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        링크에 접근할 수 없다면, 이 링크를 통해 프렌즈 시크릿 앱을 다운로드하세요: https://play.google.com/store/apps/details?id=%4$s.\n\n
-        그룹 코드를 사용하세요: %2$s 가입 후 %5$s를 클릭하세요.\n\n
-        시크릿 산타에 접근하기 위한 코드: %3$s.\n\n
-        🚀 시간을 낭비하지 말고 지금 바로 선물을 준비하세요!
-    </string>
+    <string name="group_details_share_member">안녕하세요 %1$s! 👋\n\n특별한 게임에 초대되었습니다! 🎉\n\n링크를 열어 당신의 시크릿 산타가 누구인지 확인하세요: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\n링크에 접근할 수 없다면, 이 링크를 통해 프렌즈 시크릿 앱을 다운로드하세요: https://play.google.com/store/apps/details?id=%4$s.\n\n그룹 코드를 사용하세요: %2$s 가입 후 %5$s를 클릭하세요.\n\n시크릿 산타에 접근하기 위한 코드: %3$s.\n\n🚀 시간을 낭비하지 말고 지금 바로 선물을 준비하세요!</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">프렌즈 시크릿을 사용하려면 잠금 해제</string>

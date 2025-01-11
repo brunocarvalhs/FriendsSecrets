@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">AmigosSecretos</string>
+    <string name="app_name">Amigo Secreto</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Descrição do grupo</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">Sortear</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">Olá, preciso de uma sugestão de presente para %s, que gosta de %s, para o amigo secreto %s.</string>
+    <string name="ai_prompt" formatted="false" >Olá, preciso de uma sugestão de presente para %s, que gosta de %s, para o amigo secreto %s.</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">Adicionar um novo membro</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">Segredos dos Meus Amigos</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        Olá %1$s! 👋\n\n
-        Você foi convidado para participar de um jogo especial! 🎉\n\n
-        Acesse o link e descubra quem é o seu Amigo Secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        Caso não consiga acessar o link, baixe nosso app Amigos Secretos através deste link: https://play.google.com/store/apps/details?id=%4$s.\n\n
-        Use o código do grupo: %2$s para participar e clique em %5$s.\n\n
-        Seu código para acessar o Amigo Secreto é: %3$s.\n\n
-        🚀 Não perca tempo e comece a planejar seu presente agora mesmo!
-    </string>
+    <string name="group_details_share_member">Olá %1$s! 👋\n\nVocê foi convidado para participar de um jogo especial! 🎉\n\nAcesse o link e descubra quem é o seu Amigo Secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nCaso não consiga acessar o link, baixe nosso app Amigos Secretos através deste link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse o código do grupo: %2$s para participar e clique em %5$s.\n\nSeu código para acessar o Amigo Secreto é: %3$s.\n\n🚀 Não perca tempo e comece a planejar seu presente agora mesmo!</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">Desbloqueie para usar Amigos Secretos</string>

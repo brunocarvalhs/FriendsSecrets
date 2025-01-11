@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">Freunde Geheimnisse</string>
+    <string name="app_name">Geheimer Santa</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Gruppenbeschreibung</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">Auslosen</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">Hallo, ich brauche eine Geschenkidee für %s, der/die %s mag, für den geheimen Freund %s.</string>
+    <string name="ai_prompt" formatted="false">Hallo, ich brauche eine Geschenkidee für %s, der/die %s mag, für den geheimen Freund %s.</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">Neues Mitglied hinzufügen</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">Die Geheimnisse meiner Freunde</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        Hallo %1$s! 👋\n\n
-        Du wurdest eingeladen, an einem besonderen Spiel teilzunehmen! 🎉\n\n
-        Besuche den Link, um herauszufinden, wer dein geheimer Weihnachtsmann ist: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        Falls du den Link nicht öffnen kannst, lade unsere FreundeGeheimnisse-App über diesen Link herunter: https://play.google.com/store/apps/details?id=%4$s.\n\n
-        Verwende den Gruppencode: %2$s, um beizutreten, und klicke dann auf %5$s.\n\n
-        Dein Code für den geheimen Weihnachtsmann lautet: %3$s.\n\n
-        🚀 Verschwende keine Zeit und plane jetzt dein Geschenk für deinen geheimen Freund!
-    </string>
+    <string name="group_details_share_member">Hallo %1$s! 👋\n\nDu wurdest eingeladen, an einem besonderen Spiel teilzunehmen! 🎉\n\nBesuche den Link, um herauszufinden, wer dein geheimer Weihnachtsmann ist: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nFalls du den Link nicht öffnen kannst, lade unsere FreundeGeheimnisse-App über diesen Link herunter: https://play.google.com/store/apps/details?id=%4$s.\n\nVerwende den Gruppencode: %2$s, um beizutreten, und klicke dann auf %5$s.\n\nDein Code für den geheimen Weihnachtsmann lautet: %3$s.\n\n🚀 Verschwende keine Zeit und plane jetzt dein Geschenk für deinen geheimen Freund!</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">Entsperren, um FreundeGeheimnisse zu nutzen</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">أسرار الأصدقاء</string>
+    <string name="app_name">سانتا سري</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">وصف المجموعة</string>
@@ -26,7 +26,7 @@
     <string name="group_details_action_draw_members">سحب</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">مرحبًا، أحتاج إلى اقتراح هدية لـ %s، الذي يحب %s، من أجل الصديق السري %s.</string>
+    <string name="ai_prompt" formatted="false">مرحبًا، أحتاج إلى اقتراح هدية لـ %s، الذي يحب %s، من أجل الصديق السري %s.</string>
 
     <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">إضافة عضو جديد</string>
@@ -49,15 +49,7 @@
     <string name="group_details_action_preview_my_secret_friend">أسرار أصدقائي</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">
-        مرحبًا %1$s! 👋\n\n
-        لقد تمت دعوتك للمشاركة في لعبة خاصة! 🎉\n\n
-        قم بالدخول على الرابط لمعرفة من هو سانتا السري الخاص بك: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s \n\n
-        إذا لم تتمكن من الوصول إلى الرابط، قم بتنزيل تطبيق أسرار الأصدقاء الخاص بنا عبر هذا الرابط: https://play.google.com/store/apps/details?id=%4$s.\n\n
-        استخدم رمز المجموعة: %2$s للانضمام، ثم اضغط %5$s.\n\n
-        رمزك للوصول إلى سانتا السري هو: %3$s.\n\n
-        🚀 لا تضيع الوقت، وابدأ بالتخطيط لهديتك الآن!
-    </string>
+    <string name="group_details_share_member">مرحبًا %1$s! 👋\n\nلقد تمت دعوتك للمشاركة في لعبة خاصة! 🎉\n\nقم بالدخول على الرابط لمعرفة من هو سانتا السري الخاص بك: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nإذا لم تتمكن من الوصول إلى الرابط، قم بتنزيل تطبيق أسرار الأصدقاء الخاص بنا عبر هذا الرابط: https://play.google.com/store/apps/details?id=%4$s.\n\nاستخدم رمز المجموعة: %2$s للانضمام، ثم اضغط %5$s.\n\nرمزك للوصول إلى سانتا السري هو: %3$s.\n\n🚀 لا تضيع الوقت، وابدأ بالتخطيط لهديتك الآن!</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">افتح لاستخدام أسرار الأصدقاء</string>
