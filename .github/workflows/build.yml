@@ -115,6 +115,7 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICE_JSON }}" | base64 --decode > $GITHUB_WORKSPACE/temp-google-services.json
           # Agora, defina a variável de ambiente com o caminho do arquivo temporário
           echo "SERVICE_CREDENTIALS_FILE=$GITHUB_WORKSPACE/temp-google-services.json" >> $GITHUB_ENV
+        continue-on-error: true
     
       - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
