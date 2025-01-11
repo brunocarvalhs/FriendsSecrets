@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
@@ -9,12 +10,14 @@ class DrawRevelationUseCase(
     private val repository: GroupRepository,
     private val storage: StorageService,
     private val cryptoService: CryptoService,
+    private val performance: PerformanceManager,
 ) {
     suspend operator fun invoke(
         id: String,
         code: String? = null,
     ): Result<Pair<GroupEntities, Map<String, String>>?> =
         runCatching {
+            performance.start(DrawRevelationUseCase::class.java.simpleName)
             val secretKey = SECRET_KEY + id
             val secret: String? = if (code != null) {
                 storage.save(secretKey, code)
@@ -35,6 +38,8 @@ class DrawRevelationUseCase(
             } else {
                 null
             }
+        }.also {
+            performance.stop(DrawRevelationUseCase::class.java.simpleName)
         }
 
     companion object {

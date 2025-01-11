@@ -1,5 +1,7 @@
-package br.com.brunocarvalhs.friendssecrets.commons.crashlytics
+package br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics
 
+import android.content.Context
+import android.provider.Settings.Secure
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -18,17 +20,13 @@ object CrashlyticsProvider {
         crashlytics.log(message)
     }
 
-    fun setUserId(userId: String) {
-        crashlytics.setUserId(userId)
+    fun setUserId(context: Context) {
+        val deviceId =
+            Secure.getString(context.contentResolver, Secure.ANDROID_ID)
+        crashlytics.setUserId(deviceId)
     }
 
     private fun setCustomKey(key: String, value: String) {
         crashlytics.setCustomKey(key, value)
     }
-}
-
-fun Throwable?.report(params: Map<String, String>? = null): Throwable? {
-    if (this == null) return null
-    CrashlyticsProvider.report(throwable = this, params = params)
-    return this
 }

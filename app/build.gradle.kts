@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,22 +8,23 @@ plugins {
     alias(libs.plugins.google.firebase.firebase.perf)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 android {
     namespace = "br.com.brunocarvalhs.friendssecrets"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
+        buildConfigField("String", "apiKey", "\"${System.getenv("API_KEY")}\"")
     }
 
     signingConfigs {
@@ -88,15 +91,18 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.generativeai)
     implementation(libs.androidx.navigation.compose)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.firestore)
-    implementation(libs.gson)
+    implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
+    implementation(libs.gson)
     implementation(libs.timber)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.lottie.compose)
     implementation(libs.androidx.biometric)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)
@@ -107,4 +113,5 @@ dependencies {
     androidTestImplementation(libs.mockk)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    dokkaPlugin(libs.android.documentation.plugin)
 }

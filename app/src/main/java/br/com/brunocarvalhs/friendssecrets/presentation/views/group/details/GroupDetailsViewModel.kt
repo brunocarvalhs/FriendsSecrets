@@ -7,22 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.report
+import br.com.brunocarvalhs.friendssecrets.BuildConfig
+import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 class GroupDetailsViewModel(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
+    private val groupExitUseCase: GroupExitUseCase,
+    private val groupDeleteUseCase: GroupDeleteUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupDetailsUiState> =
@@ -35,6 +41,8 @@ class GroupDetailsViewModel(
         when (intent) {
             is GroupDetailsIntent.FetchGroup -> fetchGroup(intent.groupId)
             is GroupDetailsIntent.DrawMembers -> drawMembers(intent.group)
+            is GroupDetailsIntent.ExitGroup -> exitGroup(intent.groupId)
+            is GroupDetailsIntent.DeleteGroup -> deleteGroup(intent.groupId)
             is GroupDetailsIntent.ShareMember -> shareMember(
                 context = intent.context,
                 member = intent.member,
@@ -44,12 +52,41 @@ class GroupDetailsViewModel(
         }
     }
 
+    private fun deleteGroup(groupId: String) {
+        _uiState.value = GroupDetailsUiState.Loading
+        viewModelScope.launch {
+            groupDeleteUseCase.invoke(groupId).onSuccess {
+                _uiState.value = GroupDetailsUiState.Exit
+            }.onFailure {
+                _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+            }
+        }
+    }
+
+    private fun exitGroup(groupId: String) {
+        _uiState.value = GroupDetailsUiState.Loading
+        viewModelScope.launch {
+            groupExitUseCase.invoke(groupId).onSuccess {
+                _uiState.value = GroupDetailsUiState.Exit
+            }.onFailure {
+                _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+            }
+        }
+    }
+
     private fun shareMember(context: Context, member: String, secret: String, token: String) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
-                "Olá $member, baixando nosso aplicativo, código do grupo: $token e seu amigo secreto é: $secret"
+                context.getString(
+                    R.string.group_details_share_member,
+                    member,
+                    token,
+                    secret,
+                    BuildConfig.APPLICATION_ID,
+                    context.getString(R.string.home_drop_menu_item_text_join_a_group)
+                )
             )
             type = "text/plain"
         }
@@ -88,16 +125,31 @@ class GroupDetailsViewModel(
                 initializer {
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
+                    val performance = PerformanceManager()
                     val groupReadUseCase = GroupReadUseCase(
                         groupRepository = repository,
-                        storage = storage
+                        storage = storage,
+                        performance = performance
                     )
                     val groupDrawUseCase = GroupDrawUseCase(
-                        groupRepository = repository
+                        groupRepository = repository,
+                        performance = performance
+                    )
+                    val groupExitUseCase = GroupExitUseCase(
+                        groupRepository = repository,
+                        storage = storage,
+                        performance = performance
+                    )
+                    val groupDeleteUseCase = GroupDeleteUseCase(
+                        groupRepository = repository,
+                        storage = storage,
+                        performance = performance
                     )
                     GroupDetailsViewModel(
                         groupReadUseCase = groupReadUseCase,
-                        groupDrawUseCase = groupDrawUseCase
+                        groupDrawUseCase = groupDrawUseCase,
+                        groupExitUseCase = groupExitUseCase,
+                        groupDeleteUseCase = groupDeleteUseCase
                     )
                 }
             }

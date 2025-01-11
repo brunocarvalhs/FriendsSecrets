@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.data.service
 
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
+import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.MinimumsMembersOfDrawException
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import io.mockk.every
@@ -9,15 +10,23 @@ import io.mockk.mockkObject
 import io.mockk.spyk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
+import org.junit.Before
 import org.junit.Test
 
 class DrawServiceTest {
 
-    private val drawService = spyk(DrawService(), recordPrivateCalls = true)
+    private val cryptoService = mockk<CryptoService>(relaxed = true)
+    private val drawService = spyk(DrawService(cryptoService), recordPrivateCalls = true)
+
+    @Before
+    fun setUp() {
+        every { cryptoService.decrypt(any()) } answers { firstArg() }
+        every { cryptoService.encrypt(any()) } answers { firstArg() }
+    }
 
     @Test
     fun `test drawMembers method`() {
-        val group = mockk<GroupEntities>() {
+        val group = mockk<GroupEntities> {
             every { members } returns mapOf(
                 "Alice" to "123",
                 "Bob" to "456",

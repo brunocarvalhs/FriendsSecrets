@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.logger
 
 import android.util.Log
-import br.com.brunocarvalhs.friendssecrets.commons.crashlytics.CrashlyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
 import timber.log.Timber
 
 class CrashLoggerProvider(

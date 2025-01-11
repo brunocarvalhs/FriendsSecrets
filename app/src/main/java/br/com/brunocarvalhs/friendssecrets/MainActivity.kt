@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation
+package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -10,10 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 class MainActivity : FragmentActivity() {
+
+    private val toggleManager = ToggleManager(context = this)
+    private val themeRemoteProvider = ThemeRemoteProvider(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +31,10 @@ class MainActivity : FragmentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            FriendsSecretsTheme {
+            FriendsSecretsTheme(
+                isThemeRemote = toggleManager.isFeatureEnabled(ToggleKeys.APP_IS_THEME_REMOTE),
+                themeRemoteProvider = themeRemoteProvider
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
@@ -30,14 +42,14 @@ class MainActivity : FragmentActivity() {
                     val navController = rememberNavController().apply {
                         addOnDestinationChangedListener { _, destination, _ ->
                             AnalyticsProvider.track(
-                                event = AnalyticsProvider.Event.VISUALIZATION,
+                                event = AnalyticsEvents.VISUALIZATION,
                                 params = mapOf(
-                                    AnalyticsProvider.Param.SCREEN_NAME to destination.route.toString()
+                                    AnalyticsParams.SCREEN_NAME to destination.route.toString()
                                 )
                             )
                         }
                     }
-                    MainApp(navController)
+                    MainApp(navController = navController, toggleManager = toggleManager)
                 }
             }
         }

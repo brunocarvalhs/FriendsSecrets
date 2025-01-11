@@ -36,6 +36,8 @@ fun EmptyGroupComponent(
     message: String = "Nenhum grupo encontrado",
     onGroupToEnter: () -> Unit = {},
     onCreateGroup: () -> Unit = {},
+    isJoinGroupEnabled: Boolean = true,
+    isCreateGroupEnabled: Boolean = true,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_group))
 
@@ -79,16 +81,20 @@ fun EmptyGroupComponent(
             verticalArrangement = Arrangement.Center,
         ) {
             Spacer(Modifier.size(32.dp))
-            Button(
-                onClick = { onGroupToEnter.invoke() }
-            ) {
-                Text(text = "Entrar em um grupo")
+            if (isJoinGroupEnabled) {
+                Button(
+                    onClick = { onGroupToEnter.invoke() }
+                ) {
+                    Text(text = "Entrar em um grupo")
+                }
+                Spacer(Modifier.size(8.dp))
             }
-            Spacer(Modifier.size(8.dp))
-            TextButton(
-                onClick = { onCreateGroup.invoke() }
-            ) {
-                Text(text = "Criar um grupo")
+            if (isCreateGroupEnabled) {
+                TextButton(
+                    onClick = { onCreateGroup.invoke() }
+                ) {
+                    Text(text = "Criar um grupo")
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +23,7 @@ fun SettingsListItemNavigation(
 ) {
     ListItem(
         modifier = Modifier.clickable { navController.navigate(route = settings.route) },
-        headlineContent = { Text(settings.title) },
+        headlineContent = { Text(stringResource(settings.title)) },
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -32,7 +33,7 @@ fun SettingsListItemNavigation(
         leadingContent = {
             Icon(
                 imageVector = settings.icon,
-                contentDescription = settings.title,
+                contentDescription = stringResource(settings.title),
             )
         }
     )

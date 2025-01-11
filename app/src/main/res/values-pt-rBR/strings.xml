@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">FriendsSecrets</string>
+    <string name="app_name">Amigo Secreto</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Descrição do grupo</string>
@@ -11,7 +11,7 @@
     <!--  Group Details Screen  -->
     <string name="group_details_text_button_label_see_less">Ver menos</string>
     <string name="group_details_text_button_label_see_more">Ver mais</string>
-    <string name="group_details_drop_menu_item_text_send_feedback">Enviar feedback</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">Enviar Feedback</string>
     <string name="group_details_drop_menu_item_text_settings">Configurações</string>
     <string name="group_details_drop_menu_item_text_edit">Editar</string>
 
@@ -26,24 +26,57 @@
     <string name="group_details_action_draw_members">Sortear</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt">Olá, preciso de indicação de presente para %s, que gosta de %s, para o amigo secreto %s.</string>
+    <string name="ai_prompt" formatted="false" >Olá, preciso de uma sugestão de presente para %s, que gosta de %s, para o amigo secreto %s.</string>
 
-    <!-- Add Member Bottom Sheet -->
+    <!--  Add Member Bottom Sheet  -->
     <string name="add_member_bottom_sheet_title_label">Adicionar um novo membro</string>
-    <string name="add_member_bottom_sheet_input_new_member">Novo participante</string>
+    <string name="add_member_bottom_sheet_input_new_member">Novo membro</string>
     <string name="add_member_bottom_sheet_input_new_member_error_message">Nome inválido! Apenas letras e espaços são permitidos.</string>
     <string name="add_member_bottom_sheet_input_liker">Gostos</string>
     <string name="add_member_bottom_sheet_button_label">Adicionar membro</string>
-    <string name="add_member_bottom_sheet_text_button_label">Finalizar</string>
+    <string name="add_member_bottom_sheet_text_button_label">Concluir</string>
 
     <!--  Exceptions and Requirements  -->
-    <string name="exception_group_already_exist">O grupo já existe.</string>
-    <string name="exception_group_not_found">Grupo não encontrado.</string>
-    <string name="require_name_cannot_be_blank">O nome não pode estar em branco.</string>
-    <string name="require_name_cannot_be_longer_than_255_characters">O nome não pode ter mais de 255 caracteres.</string>
-    <string name="require_group_must_have_at_least_one_member">O grupo deve ter pelo menos um membro.</string>
-    <string name="require_group_cannot_have_more_than_2_members">O grupo não pode ter mais de 2 membros.</string>
-    <string name="require_draw_already_held">O sorteio já foi realizado.</string>
-    <string name="require_group_id_cannot_be_blank">O ID do grupo não pode estar em branco.</string>
-    <string name="exception_minimums_members_of_draw">Para realizar o sorteio, o grupo precisa ter pelo menos 3 participantes.</string>
+    <string name="exception_group_already_exist">O grupo já existe</string>
+    <string name="exception_group_not_found">Grupo não encontrado</string>
+    <string name="require_name_cannot_be_blank">O nome não pode estar em branco</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">O nome não pode ter mais de 255 caracteres</string>
+    <string name="require_group_must_have_at_least_one_member">O grupo deve ter pelo menos um membro</string>
+    <string name="require_group_cannot_have_more_than_2_members">O grupo não pode ter mais de 2 membros</string>
+    <string name="require_draw_already_held">O sorteio já foi realizado</string>
+    <string name="require_group_id_cannot_be_blank">O ID do grupo não pode estar em branco</string>
+    <string name="exception_minimums_members_of_draw">O grupo deve ter pelo menos 3 participantes para realizar o sorteio.</string>
+    <string name="group_details_action_preview_my_secret_friend">Segredos dos Meus Amigos</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">Olá %1$s! 👋\n\nVocê foi convidado para participar de um jogo especial! 🎉\n\nAcesse o link e descubra quem é o seu Amigo Secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nCaso não consiga acessar o link, baixe nosso app Amigos Secretos através deste link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse o código do grupo: %2$s para participar e clique em %5$s.\n\nSeu código para acessar o Amigo Secreto é: %3$s.\n\n🚀 Não perca tempo e comece a planejar seu presente agora mesmo!</string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">Desbloqueie para usar Amigos Secretos</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Faça login usando sua credencial biométrica</string>
+    <string name="biometric_screen_use_account_password">Usar senha da conta</string>
+    <string name="biometric_screen_biometric_authentication">Amigos Secretos bloqueado</string>
+    <string name="biometric_screen_unlock">Desbloquear</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Apagar o grupo</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_appearance">Aparência</string>
+    <string name="title_faq">Perguntas Frequentes</string>
+    <string name="title_report_an_issue">Relatar um problema</string>
+    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
+    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o app ajuste suas cores automaticamente com base no papel de parede do dispositivo.</string>
+    <string name="appearance_screen_title">A seleção de uma opção específica mudará a aparência (cores) do app de acordo com suas preferências.</string>
+    <string name="settings_screen_general">Geral</string>
+    <string name="settings_screen_security">Impressão Digital</string>
+    <string name="settings_screen_support">Suporte</string>
+    <string name="group_details_description">Descrição</string>
+    <string name="group_details_members">Membros</string>
+    <string name="draw_screen_title">Seu amigo secreto é...</string>
+    <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
+    <string name="draw_screen_action_generative">Dicas de presentes</string>
+    <string name="draw_screen_code_secret">Código secreto</string>
+    <string name="draw_screen_title_like">Gostos</string>
+    <string name="onboarding_screen_close">Fechar</string>
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_finish">Começar</string>
 </resources>
