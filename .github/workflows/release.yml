@@ -172,9 +172,9 @@ jobs:
     steps:
       - name: Get App Version
         run: |
-          VERSION=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\(.*\)"/\1/')
+          VERSION=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\(.*\)"/\1/') || VERSION="1.0.0"
           echo "version=$VERSION" >> $GITHUB_ENV
-
+          
       - name: Calculate module name
         id: module_name
         run: |
@@ -184,7 +184,7 @@ jobs:
       - name: Create Release
         uses: actions/create-release@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: ${{ env.version }}
           release_name: ${{ env.module_name }} v${{ env.version }}
