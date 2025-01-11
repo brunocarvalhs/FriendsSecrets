@@ -117,3 +117,17 @@ jobs:
         with:
           name: ${{ env.APP_NAME }}-aab-debug
           path: app/build/outputs/bundle/debug/*.aab
+
+      - name: Decode google-services.json and use as serviceCredentialsFileContent
+        run: |
+          export SERVICE_CREDENTIALS=$(cat app/google-services.json | base64)
+          echo "SERVICE_CREDENTIALS=$SERVICE_CREDENTIALS" >> $GITHUB_ENV
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          serviceCredentialsFileContent: ${{ env.SERVICE_CREDENTIALS }}
+          groups: "testers"
+          file: app/build/outputs/apk/debug/*.apk # Altere para .aab se quiser enviar o bundle
+        continue-on-error: true
+
