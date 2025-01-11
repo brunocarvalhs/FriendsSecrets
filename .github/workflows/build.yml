@@ -13,7 +13,7 @@ env:
 
 jobs:
   checkout-and-setup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Checkout and Setup Environment
     steps:
       - name: Checkout code
@@ -52,7 +52,7 @@ jobs:
           path: ./
 
   unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Run Unit Tests
     needs: checkout-and-setup
     steps:
@@ -70,7 +70,7 @@ jobs:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
   lint-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Run Lint Check
     needs: checkout-and-setup
     steps:
@@ -88,7 +88,7 @@ jobs:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
   build-debug:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Build APK and AAB Debug
     needs: [unit-tests, lint-check]
     steps:
@@ -130,8 +130,9 @@ jobs:
           groups: "testers"
           file: app/build/outputs/apk/debug/*.apk # Altere para .aab se quiser enviar o bundle
         continue-on-error: true
+        
   cleanup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Cleanup Artifacts
     needs: [checkout-and-setup, unit-tests, lint-check, build-debug]
     if: always() # Executa mesmo se jobs anteriores falharem
