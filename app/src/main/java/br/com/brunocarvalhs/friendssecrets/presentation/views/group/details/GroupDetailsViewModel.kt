@@ -85,7 +85,7 @@ class GroupDetailsViewModel(
                     token,
                     secret,
                     BuildConfig.APPLICATION_ID,
-                    R.string.home_drop_menu_item_text_join_a_group
+                    context.getString(R.string.home_drop_menu_item_text_join_a_group)
                 )
             )
             type = "text/plain"
