@@ -72,7 +72,7 @@ jobs:
   lint-check:
     runs-on: ubuntu-latest
     name: Run Lint Check
-    needs: unit-tests
+    needs: checkout-and-setup
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -90,7 +90,7 @@ jobs:
   build-debug:
     runs-on: ubuntu-latest
     name: Build APK and AAB Debug
-    needs: lint-check
+    needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3
@@ -130,4 +130,14 @@ jobs:
           groups: "testers"
           file: app/build/outputs/apk/debug/*.apk # Altere para .aab se quiser enviar o bundle
         continue-on-error: true
-
+  cleanup:
+    runs-on: ubuntu-latest
+    name: Cleanup Artifacts
+    needs: [checkout-and-setup, unit-tests, lint-check, build-debug]
+    if: always() # Executa mesmo se jobs anteriores falharem
+    steps:
+      - name: Cleanup sensitive files
+        run: |
+          echo "Removing sensitive files..."
+          rm -f app/google-services.json
+          echo "Cleanup complete."
