@@ -113,8 +113,9 @@ jobs:
           if [ -f "app/release.keystore" ]; then
             echo "Keystore exists"
           else
-            echo "Keystore does not exist"
+            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
             exit 1
+          fi
         
       - name: Build APK
         run: ./gradlew assembleRelease
@@ -151,8 +152,9 @@ jobs:
           if [ -f "app/release.keystore" ]; then
             echo "Keystore exists"
           else
-            echo "Keystore does not exist"
+            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
             exit 1
+          fi
 
       - name: Build AAB
         run: ./gradlew bundleRelease
