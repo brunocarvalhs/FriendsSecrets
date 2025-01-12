@@ -94,4 +94,6 @@
     <string name="empty_group_component_button_enter_grup">Entrar em um grupo</string>
     <string name="chat_generative_textfield_message">Digite uma mensagem...</string>
     <string name="chat_generative_button_send">Enviar</string>
+    <string name="empty_group_title">Ops!</string>
+    <string name="empty_group_message">Nenhum grupo encontrado</string>
 </resources>

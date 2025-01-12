@@ -34,7 +34,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 @Composable
 fun EmptyGroupComponent(
     modifier: Modifier = Modifier,
-    message: String = "Nenhum grupo encontrado",
+    message: String = stringResource(R.string.empty_group_message),
     onGroupToEnter: () -> Unit = {},
     onCreateGroup: () -> Unit = {},
     isJoinGroupEnabled: Boolean = true,
@@ -62,7 +62,7 @@ fun EmptyGroupComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Ops!",
+                text = stringResource(R.string.empty_group_title),
                 style = MaterialTheme.typography.headlineLarge,
             )
         }
