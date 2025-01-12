@@ -114,7 +114,7 @@ private fun OnboardingContent(
 
     Scaffold(
         topBar = {
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 IconButton(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier
@@ -212,7 +212,7 @@ private fun OnboardingPage(
                     model = imageUrl.url,
                     contentDescription = title,
                     modifier = Modifier.size(200.dp),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Inside,
                     loading = {
                         CircularProgressIndicator()
                     }

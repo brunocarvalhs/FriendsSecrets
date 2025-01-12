@@ -32,6 +32,10 @@ class GroupCreateViewModel(
                 intent.description,
                 intent.members
             )
+
+            GroupCreateIntent.Back -> {
+                _uiState.value = GroupCreateUiState.Idle
+            }
         }
     }
 

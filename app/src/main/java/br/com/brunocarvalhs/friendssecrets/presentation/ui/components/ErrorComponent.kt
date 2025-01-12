@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
@@ -75,7 +76,7 @@ fun ErrorComponent(
                 Button(
                     onClick = { refresh.invoke() }
                 ) {
-                    Text(text = "Tenta novamente")
+                    Text(text = stringResource(R.string.error_component_button_try_again))
                 }
             }
             onBack?.let { back ->
@@ -84,13 +85,13 @@ fun ErrorComponent(
                     Button(
                         onClick = { back.invoke() }
                     ) {
-                        Text(text = "Ir para home")
+                        Text(text = stringResource(R.string.error_component_button_to_home))
                     }
                 } else {
                     TextButton(
                         onClick = { back.invoke() }
                     ) {
-                        Text(text = "Ir para home")
+                        Text(text = stringResource(R.string.error_component_button_to_home))
                     }
                 }
             }

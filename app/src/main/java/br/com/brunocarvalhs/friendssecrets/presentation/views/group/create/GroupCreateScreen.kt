@@ -34,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -62,6 +61,12 @@ fun GroupCreateScreen(
     GroupCreateContent(
         navController = navController,
         uiState = uiState,
+        onHome = {
+            navController.popBackStack()
+        },
+        onBack = { viewModel.eventIntent(
+            intent = GroupCreateIntent.Back
+        ) },
         onSave = { name, description, members ->
             viewModel.eventIntent(
                 intent = GroupCreateIntent.CreateGroup(
@@ -79,6 +84,8 @@ fun GroupCreateScreen(
 private fun GroupCreateContent(
     navController: NavController,
     uiState: GroupCreateUiState,
+    onHome: () -> Unit,
+    onBack: () -> Unit,
     onSave: (String, String, Map<String, String>) -> Unit,
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
@@ -161,7 +168,7 @@ private fun GroupCreateContent(
                         MemberItem(
                             participant = member,
                             likes = members[member]?.split("|") ?: emptyList(),
-                            onRemove = { members.remove(member) }
+                            onRemove = { members.remove(member) },
                         )
                         HorizontalDivider()
                     }
@@ -195,14 +202,8 @@ private fun GroupCreateContent(
             ErrorComponent(
                 modifier = Modifier.fillMaxSize(),
                 message = uiState.message,
-                onBack = { navController.popBackStack() },
-                onRefresh = {
-                    onSave.invoke(
-                        name.text,
-                        description.text,
-                        members
-                    )
-                }
+                onBack = onHome,
+                onRefresh = onBack
             )
         }
     }
@@ -237,6 +238,8 @@ fun GroupCreateScreenPreview(
         GroupCreateContent(
             navController = rememberNavController(),
             uiState = state,
+            onBack = { },
+            onHome = { },
             onSave = { _, _, _ -> }
         )
     }

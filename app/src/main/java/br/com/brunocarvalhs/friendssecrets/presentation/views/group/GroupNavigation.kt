@@ -17,6 +17,8 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.Grou
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditScreen
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditViewModel
 
 sealed class GroupNavigation(
     override val route: String,
@@ -39,7 +41,7 @@ sealed class GroupNavigation(
         route = "group/{groupId}/edit",
         arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
     ) {
-        fun createRoute(groupId: String) = "group/$groupId"
+        fun createRoute(groupId: String) = "group/$groupId/edit"
     }
 
     data object Revelation : GroupNavigation(
@@ -91,9 +93,9 @@ fun NavGraphBuilder.groupGraph(
             deepLinks = GroupNavigation.Edit.deepLinks
         ) {
             val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: GroupDetailsViewModel =
-                viewModel(factory = GroupDetailsViewModel.Factory)
-            GroupDetailsScreen(
+            val viewModel: GroupEditViewModel =
+                viewModel(factory = GroupEditViewModel.Factory)
+            GroupEditScreen(
                 navController = navController,
                 viewModel = viewModel,
                 groupId = groupId

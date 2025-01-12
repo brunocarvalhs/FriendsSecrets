@@ -3,6 +3,10 @@
     <!--  App  -->
     <string name="app_name">Secret Santa</string>
 
+    <!--  Onboarding  -->
+    <string name="onboarding_screen_title">Welcome to Friends Secrets!</string>
+    <string name="onboarding_screen_description">The app that will help you organize your Secret Santa game.</string>
+
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Group description</string>
     <string name="group_create_input_name">Group name</string>
@@ -24,6 +28,7 @@
     <string name="draw_text_feedback">Success!</string>
     <string name="group_create_action_save_group">Save group</string>
     <string name="group_details_action_draw_members">Draw</string>
+    <string name="group_details_action_shared">Shared</string>
 
     <!--  Generative AI  -->
     <string name="ai_prompt">Hi, I need a gift suggestion for %s, who likes %s, for the secret friend %s.</string>
@@ -42,7 +47,7 @@
     <string name="require_name_cannot_be_blank">Name cannot be blank</string>
     <string name="require_name_cannot_be_longer_than_255_characters">Name cannot be longer than 255 characters</string>
     <string name="require_group_must_have_at_least_one_member">Group must have at least one member</string>
-    <string name="require_group_cannot_have_more_than_2_members">Group cannot have more than 2 members</string>
+    <string name="require_group_cannot_have_more_than_2_members">The group must have a minimum of 3 members</string>
     <string name="require_draw_already_held">Draw already held</string>
     <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
     <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
@@ -50,6 +55,7 @@
 
     <!-- Shared Link -->
     <string name="group_details_share_member">Hello %1$s! 👋\n\nYou have been invited to join an exciting game! 🎉\n\nClick the link to find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nIf you cannot access the link, download our Friends Secrets app using this link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse the group code: %2$s to join, then click on %5$s.\n\nYour Secret Santa code is: %3$s.\n\n🚀 Do not waste time, start planning your Secret Santa gift now!</string>
+    <string name="group_details_share_member_simple">Hello! 👋\n\nYou have been invited to join the Secret Santa group: %1$s 🎉\n\nUse the group code: %2$s to join.\n\nStart planning your Secret Santa gift now! 🚀</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
@@ -57,27 +63,38 @@
     <string name="biometric_screen_use_account_password">Use account password</string>
     <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
     <string name="biometric_screen_unlock">Unlock</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Apagar o grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Exit the group</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Delete the group</string>
     <string name="title_settings">Settings</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_faq">FAQ</string>
     <string name="title_report_an_issue">Report an issue</string>
-    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
-    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o aplicativo ajuste suas cores automaticamente com base no papel de parede do dispositivo.</string>
-    <string name="appearance_screen_title">A seleção de uma opção específica alterará a aparência (coloração) do aplicativo de acordo com suas preferências.</string>
+    <string name="appearance_screen_dynamic_title">Dynamic Theme</string>
+    <string name="appearance_screen_title_description">Enabling the Dynamic Theme will allow the app to automatically adjust its colors based on your devices wallpaper.</string>
+    <string name="appearance_screen_title">Selecting a specific option will change the appearance (color) of the app according to your preferences.</string>
     <string name="settings_screen_general">General</string>
     <string name="settings_screen_security">Fingerprint</string>
     <string name="settings_screen_support">Support</string>
-    <string name="group_details_description">Descrição</string>
-    <string name="group_details_members">Membros</string>
-    <string name="draw_screen_title">Seu amigo secreto é ...</string>
-    <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
-    <string name="draw_screen_action_generative">Dicas de presentes</string>
-    <string name="draw_screen_code_secret">Código secreto</string>
-    <string name="draw_screen_title_like">Gostos</string>
-    <string name="onboarding_screen_close">Fechar</string>
-    <string name="onboarding_next">Próximo</string>
-    <string name="onboarding_finish">Começar</string>
+    <string name="group_details_description">Description</string>
+    <string name="group_details_members">Members</string>
+    <string name="draw_screen_title">Your secret friend is...</string>
+    <string name="draw_screen_action_title">Reveal my secret friend</string>
+    <string name="draw_screen_action_generative">Gift suggestions</string>
+    <string name="draw_screen_code_secret">Secret code</string>
+    <string name="draw_screen_title_like">Likes</string>
+    <string name="onboarding_screen_close">Close</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Start</string>
+    <string name="group_to_enter_button_text">Validate</string>
+    <string name="group_to_enter_button_enter_to_group">Enter the group</string>
+    <string name="group_to_enter_textfield_token_to_grup">Group token</string>
+    <string name="error_component_button_try_again">Try again</string>
+    <string name="error_component_button_to_home">Go to home</string>
+    <string name="empty_group_component_button_create_grup">Create a group</string>
+    <string name="chat_generative_title_chat">Chat</string>
+    <string name="empty_group_component_button_enter_grup">Enter a group</string>
+    <string name="chat_generative_textfield_message">Type a message...</string>
+    <string name="chat_generative_button_send">Send</string>
+    <string name="empty_group_title">Uh-oh!</string>
+    <string name="empty_group_message">No group found</string>
 </resources>
-
