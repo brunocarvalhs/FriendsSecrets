@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
 import com.google.common.reflect.TypeToken
@@ -21,11 +22,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.reflect.Type
+import java.util.Locale
 
-class OnboardViewModel(
-    private val remoteProvider: RemoteProvider,
-) : ViewModel() {
-
+class OnboardViewModel : ViewModel() {
 
     private val _uiState: MutableStateFlow<OnboardUiState> =
         MutableStateFlow(OnboardUiState.Idle(default))
@@ -80,7 +79,8 @@ class OnboardViewModel(
                     .registerTypeAdapter(ImageSource::class.java, ImageSourceDeserializer())
                     .create()
 
-                val data: String = RemoteProvider().getAsyncString(ONBOARDING_PAGES)
+                val data: String =
+                    RemoteProvider().getAsyncString("${ONBOARDING_PAGES}_${getSystemLanguage()}")
 
                 val list: List<Onboarding> =
                     gson.fromJson(data, object : TypeToken<List<Onboarding>>() {}.type)
@@ -93,34 +93,27 @@ class OnboardViewModel(
         }
     }
 
+    private fun getSystemLanguage(): String {
+        val systemLocale = Locale.getDefault()
+        return systemLocale.language.takeIf { it.isNotEmpty() } ?: "en"
+    }
+
     companion object {
         const val ONBOARDING_PAGES = "onboarding_pages"
+        private val context = CustomApplication.getInstance()
 
         val default = listOf(
             Onboarding(
-                imageSource = ImageSource.Resource(R.drawable.ic_theme_light),
-                title = "Bem-vindo ao App!",
-                description = "Aqui você pode fazer X, Y, Z de maneira fácil e rápida."
-            ),
-            Onboarding(
-                imageSource = ImageSource.Resource(R.drawable.ic_theme_light),
-                title = "Funcionalidade A",
-                description = "Com o nosso app você pode utilizar a funcionalidade A para melhorar sua experiência."
-            ),
-            Onboarding(
-                imageSource = ImageSource.Resource(R.drawable.ic_theme_light),
-                title = "Funcionalidade B",
-                description = "Explore a funcionalidade B para alcançar resultados incríveis."
+                imageSource = ImageSource.Resource(R.drawable.ic_logo__friends_secrets),
+                title = context.getString(R.string.onboarding_screen_title),
+                description = context.getString(R.string.onboarding_screen_description)
             )
         )
 
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val remoteProvider = RemoteProvider()
-                    OnboardViewModel(
-                        remoteProvider = remoteProvider
-                    )
+                    OnboardViewModel()
                 }
             }
     }

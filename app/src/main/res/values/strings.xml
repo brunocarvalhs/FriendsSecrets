@@ -3,6 +3,10 @@
     <!--  App  -->
     <string name="app_name">Secret Santa</string>
 
+    <!--  Onboarding  -->
+    <string name="onboarding_screen_title">Welcome to Friends Secrets!</string>
+    <string name="onboarding_screen_description">The app that will help you organize your Secret Santa game.</string>
+
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">Group description</string>
     <string name="group_create_input_name">Group name</string>
@@ -59,27 +63,27 @@
     <string name="biometric_screen_use_account_password">Use account password</string>
     <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
     <string name="biometric_screen_unlock">Unlock</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Apagar o grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Exit the group</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Delete the group</string>
     <string name="title_settings">Settings</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_faq">FAQ</string>
     <string name="title_report_an_issue">Report an issue</string>
-    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
-    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o aplicativo ajuste suas cores automaticamente com base no papel de parede do dispositivo.</string>
-    <string name="appearance_screen_title">A seleção de uma opção específica alterará a aparência (coloração) do aplicativo de acordo com suas preferências.</string>
+    <string name="appearance_screen_dynamic_title">Dynamic Theme</string>
+    <string name="appearance_screen_title_description">Enabling the Dynamic Theme will allow the app to automatically adjust its colors based on your devices wallpaper.</string>
+    <string name="appearance_screen_title">Selecting a specific option will change the appearance (color) of the app according to your preferences.</string>
     <string name="settings_screen_general">General</string>
     <string name="settings_screen_security">Fingerprint</string>
     <string name="settings_screen_support">Support</string>
-    <string name="group_details_description">Descrição</string>
-    <string name="group_details_members">Membros</string>
-    <string name="draw_screen_title">Seu amigo secreto é ...</string>
-    <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
-    <string name="draw_screen_action_generative">Dicas de presentes</string>
-    <string name="draw_screen_code_secret">Código secreto</string>
-    <string name="draw_screen_title_like">Gostos</string>
-    <string name="onboarding_screen_close">Fechar</string>
-    <string name="onboarding_next">Próximo</string>
-    <string name="onboarding_finish">Começar</string>
+    <string name="group_details_description">Description</string>
+    <string name="group_details_members">Members</string>
+    <string name="draw_screen_title">Your secret friend is...</string>
+    <string name="draw_screen_action_title">Reveal my secret friend</string>
+    <string name="draw_screen_action_generative">Gift suggestions</string>
+    <string name="draw_screen_code_secret">Secret code</string>
+    <string name="draw_screen_title_like">Likes</string>
+    <string name="onboarding_screen_close">Close</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Start</string>
+    <string name="group_to_enter_button_text">Validate</string>
 </resources>
-

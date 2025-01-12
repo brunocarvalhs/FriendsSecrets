@@ -22,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +72,7 @@ fun GroupToEnterBottomSheet(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text("Validar")
+            Text(stringResource(R.string.group_to_enter_button_text))
         }
         Spacer(
             Modifier.windowInsetsBottomHeight(
