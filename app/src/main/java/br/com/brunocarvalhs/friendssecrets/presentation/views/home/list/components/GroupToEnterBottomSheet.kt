@@ -47,13 +47,13 @@ fun GroupToEnterBottomSheet(
         dragHandle = { BottomSheetDefaults.DragHandle() },
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Entrar no grupo")
+            Text(text = stringResource(R.string.group_to_enter_button_enter_to_group))
         }
         Row(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
                 value = token,
                 onValueChange = { value -> token = value },
-                label = { Text(text = "Token do grupo") },
+                label = { Text(text = stringResource(R.string.group_to_enter_textfield_token_to_grup)) },
                 modifier = Modifier.weight(1f)
             )
         }

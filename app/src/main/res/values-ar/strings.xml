@@ -1,88 +1,0 @@
-<resources>
-    <!--  App  -->
-    <string name="app_name">سانتا السري</string>
-
-    <!--  Onboarding  -->
-    <string name="onboarding_screen_title">مرحبًا بك في أسرار الأصدقاء!</string>
-    <string name="onboarding_screen_description">التطبيق الذي سيساعدك في تنظيم لعبة سانتا السري.</string>
-
-    <!--  Group Create Screen  -->
-    <string name="group_create_input_description">وصف المجموعة</string>
-    <string name="group_create_input_name">اسم المجموعة</string>
-    <string name="group_create_text_button_member">الأعضاء</string>
-
-    <!--  Group Details Screen  -->
-    <string name="group_details_text_button_label_see_less">عرض أقل</string>
-    <string name="group_details_text_button_label_see_more">عرض المزيد</string>
-    <string name="group_details_drop_menu_item_text_send_feedback">إرسال ملاحظات</string>
-    <string name="group_details_drop_menu_item_text_settings">الإعدادات</string>
-    <string name="group_details_drop_menu_item_text_edit">تعديل</string>
-
-    <!--  Home Screen  -->
-    <string name="home_drop_menu_item_text_join_a_group">انضم إلى مجموعة</string>
-    <string name="home_drop_menu_item_text_settings">الإعدادات</string>
-    <string name="home_action_create_group">إنشاء مجموعة جديدة</string>
-
-    <!--  Draw Component  -->
-    <string name="draw_text_feedback">نجاح!</string>
-    <string name="group_create_action_save_group">حفظ المجموعة</string>
-    <string name="group_details_action_draw_members">سحب</string>
-    <string name="group_details_action_shared">مشارك</string>
-
-    <!--  Generative AI  -->
-    <string name="ai_prompt">مرحبًا، أحتاج إلى اقتراح هدية لـ %s، الذي يحب %s، من أجل الصديق السري %s.</string>
-
-    <!--  Add Member Bottom Sheet  -->
-    <string name="add_member_bottom_sheet_title_label">إضافة عضو جديد</string>
-    <string name="add_member_bottom_sheet_input_new_member">عضو جديد</string>
-    <string name="add_member_bottom_sheet_input_new_member_error_message">اسم غير صالح! يسمح فقط بالحروف والمسافات.</string>
-    <string name="add_member_bottom_sheet_input_liker">يحب</string>
-    <string name="add_member_bottom_sheet_button_label">إضافة عضو</string>
-    <string name="add_member_bottom_sheet_text_button_label">إنهاء</string>
-
-    <!--  Exceptions and Requirements  -->
-    <string name="exception_group_already_exist">المجموعة موجودة بالفعل</string>
-    <string name="exception_group_not_found">لم يتم العثور على المجموعة</string>
-    <string name="require_name_cannot_be_blank">لا يمكن أن يكون الاسم فارغًا</string>
-    <string name="require_name_cannot_be_longer_than_255_characters">لا يمكن أن يكون الاسم أطول من 255 حرفًا</string>
-    <string name="require_group_must_have_at_least_one_member">يجب أن تحتوي المجموعة على عضو واحد على الأقل</string>
-    <string name="require_group_cannot_have_more_than_2_members">يجب أن تحتوي المجموعة على 3 أعضاء على الأقل</string>
-    <string name="require_draw_already_held">تم إجراء السحب بالفعل</string>
-    <string name="require_group_id_cannot_be_blank">معرف المجموعة لا يمكن أن يكون فارغًا</string>
-    <string name="exception_minimums_members_of_draw">يجب أن تحتوي المجموعة على 3 مشاركين على الأقل لإجراء السحب.</string>
-    <string name="group_details_action_preview_my_secret_friend">أسرار أصدقائي</string>
-
-    <!-- Shared Link -->
-    <string name="group_details_share_member">مرحبًا %1$s! 👋\n\nتم دعوتك للانضمام إلى لعبة مثيرة! 🎉\n\nانقر على الرابط لمعرفة من هو سانتا السري الخاص بك: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nإذا لم تتمكن من الوصول إلى الرابط، قم بتنزيل تطبيق أسرار الأصدقاء باستخدام هذا الرابط: https://play.google.com/store/apps/details?id=%4$s.\n\nاستخدم رمز المجموعة: %2$s للانضمام، ثم انقر على %5$s.\n\nرمز سانتا السري الخاص بك هو: %3$s.\n\n🚀 لا تضيع الوقت، ابدأ في تخطيط هديتك لسانتا السري الآن!</string>
-    <string name="group_details_share_member_simple">مرحبًا! 👋\n\nتم دعوتك للانضمام إلى مجموعة سانتا السري: %1$s 🎉\n\nاستخدم رمز المجموعة: %2$s للانضمام.\n\nابدأ في تخطيط هديتك لسانتا السري الآن! 🚀</string>
-
-    <!--  Biometric  -->
-    <string name="biometric_screen_title_authentication">افتح لاستخدام أسرار الأصدقاء</string>
-    <string name="biometric_screen_log_in_using_your_biometric_credential">قم بتسجيل الدخول باستخدام بيانات اعتمادك البيومترية</string>
-    <string name="biometric_screen_use_account_password">استخدام كلمة مرور الحساب</string>
-    <string name="biometric_screen_biometric_authentication">أسرار الأصدقاء مقفلة</string>
-    <string name="biometric_screen_unlock">افتح</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group">مغادرة المجموعة</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group_admin">حذف المجموعة</string>
-    <string name="title_settings">الإعدادات</string>
-    <string name="title_appearance">المظهر</string>
-    <string name="title_faq">الأسئلة المتداولة</string>
-    <string name="title_report_an_issue">الإبلاغ عن مشكلة</string>
-    <string name="appearance_screen_dynamic_title">السمة الديناميكية</string>
-    <string name="appearance_screen_title_description">تمكين السمة الديناميكية سيسمح للتطبيق بضبط ألوانه تلقائيًا بناءً على خلفية جهازك.</string>
-    <string name="appearance_screen_title">اختيار خيار معين سيغير مظهر (لون) التطبيق وفقًا لتفضيلاتك.</string>
-    <string name="settings_screen_general">عام</string>
-    <string name="settings_screen_security">بصمة الإصبع</string>
-    <string name="settings_screen_support">الدعم</string>
-    <string name="group_details_description">الوصف</string>
-    <string name="group_details_members">الأعضاء</string>
-    <string name="draw_screen_title">صديقك السري هو...</string>
-    <string name="draw_screen_action_title">كشف صديقي السري</string>
-    <string name="draw_screen_action_generative">اقتراحات هدايا</string>
-    <string name="draw_screen_code_secret">رمز سري</string>
-    <string name="draw_screen_title_like">الإعجابات</string>
-    <string name="onboarding_screen_close">إغلاق</string>
-    <string name="onboarding_next">التالي</string>
-    <string name="onboarding_finish">ابدأ</string>
-    <string name="group_to_enter_button_text">التحقق</string>
-</resources>

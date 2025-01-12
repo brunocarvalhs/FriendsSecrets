@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
@@ -85,7 +86,7 @@ fun EmptyGroupComponent(
                 Button(
                     onClick = { onGroupToEnter.invoke() }
                 ) {
-                    Text(text = "Entrar em um grupo")
+                    Text(text = stringResource(R.string.empty_group_component_button_enter_grup))
                 }
                 Spacer(Modifier.size(8.dp))
             }
@@ -93,7 +94,7 @@ fun EmptyGroupComponent(
                 TextButton(
                     onClick = { onCreateGroup.invoke() }
                 ) {
-                    Text(text = "Criar um grupo")
+                    Text(text = stringResource(R.string.empty_group_component_button_create_grup))
                 }
             }
         }

@@ -85,4 +85,13 @@
     <string name="onboarding_next">Siguiente</string>
     <string name="onboarding_finish">Comenzar</string>
     <string name="group_to_enter_button_text">Verificar</string>
+    <string name="group_to_enter_button_enter_to_group">Entrar al grupo</string>
+    <string name="group_to_enter_textfield_token_to_grup">Token del grupo</string>
+    <string name="error_component_button_try_again">Intentar de nuevo</string>
+    <string name="error_component_button_to_home">Ir a inicio</string>
+    <string name="empty_group_component_button_create_grup">Crear un grupo</string>
+    <string name="chat_generative_title_chat">Chat</string>
+    <string name="empty_group_component_button_enter_grup">Entrar en un grupo</string>
+    <string name="chat_generative_textfield_message">Escribe un mensaje...</string>
+    <string name="chat_generative_button_send">Enviar</string>
 </resources>
