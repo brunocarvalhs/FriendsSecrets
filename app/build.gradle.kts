@@ -109,5 +109,6 @@ dependencies {
     androidTestImplementation(libs.mockk)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.leakcanary.android)
     dokkaPlugin(libs.android.documentation.plugin)
 }

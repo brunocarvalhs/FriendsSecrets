@@ -161,7 +161,7 @@ private fun GroupCreateContent(
                         MemberItem(
                             participant = member,
                             likes = members[member]?.split("|") ?: emptyList(),
-                            onRemove = { members.remove(member) }
+                            onRemove = { members.remove(member) },
                         )
                         HorizontalDivider()
                     }

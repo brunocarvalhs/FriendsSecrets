@@ -42,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -53,6 +55,7 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.textWithFormatting
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.EditMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
@@ -61,6 +64,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessCom
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import kotlinx.coroutines.delay
+import kotlin.collections.set
 
 @Composable
 fun GroupDetailsScreen(
@@ -107,9 +111,13 @@ private fun GroupDetailsContent(
 ) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+    var name by remember { mutableStateOf("") }
+    var likes by remember { mutableStateOf(listOf<String>()) }
 
     fun onDraw(group: GroupEntities) {
         onEvent.invoke(GroupDetailsIntent.DrawMembers(group = group))
@@ -133,6 +141,20 @@ private fun GroupDetailsContent(
                 context = context, member = participant, secret = secret, token = token
             )
         )
+    }
+
+    fun onEdit(group: GroupEntities, participant: String, likes: List<String>) {
+        onEvent.invoke(
+            GroupDetailsIntent.EditMember(
+                group = group,
+                participant = participant,
+                likes = likes
+            )
+        )
+    }
+
+    fun onRemove(group: GroupEntities, participant: String) {
+        onEvent.invoke(GroupDetailsIntent.RemoveMember(group = group, participant = participant))
     }
 
     Scaffold(topBar = {
@@ -290,12 +312,27 @@ private fun GroupDetailsContent(
                                 participant = participant,
                                 group = uiState.group,
                                 isAdministrator = uiState.group.isOwner,
-                                onShare = { member, secret, token ->
-                                    onShare(
-                                        participant = member, secret = secret, token = token
+                                onRemove = {
+                                    onRemove(
+                                        group = uiState.group,
+                                        participant = participant
                                     )
                                 },
-                                likes = uiState.group.members[participant]?.split("|").orEmpty()
+                                onEdit = {
+                                    showBottomSheet = !showBottomSheet
+                                    name = participant
+                                    likes = uiState.group.members[participant]?.split("|")
+                                        .orEmpty()
+                                },
+                                onShare = { member, secret, token ->
+                                    onShare(
+                                        participant = member,
+                                        secret = secret,
+                                        token = token
+                                    )
+                                },
+                                likes = uiState.group.members[participant]?.split("|")
+                                    .orEmpty()
                             )
                             HorizontalDivider()
                         }
@@ -305,7 +342,13 @@ private fun GroupDetailsContent(
                                 participant = member,
                                 group = uiState.group,
                                 isAdministrator = uiState.group.isOwner,
-                                likes = uiState.group.members[member]?.split("|").orEmpty()
+                                likes = uiState.group.members[member]?.split("|").orEmpty(),
+                                onEdit = {
+                                    showBottomSheet = !showBottomSheet
+                                    name = member
+                                    likes = uiState.group.members[member]?.split("|")
+                                        .orEmpty()
+                                },
                             )
                             HorizontalDivider()
                         }
@@ -313,6 +356,20 @@ private fun GroupDetailsContent(
                 }
             }
         }
+    }
+    if (showBottomSheet && uiState is GroupDetailsUiState.Success) {
+        EditMemberBottomSheet(
+            onDismiss = { showBottomSheet = false },
+            member = name,
+            likes = likes,
+            onMemberAdded = { member, likes ->
+                onEdit(
+                    group = uiState.group,
+                    participant = member,
+                    likes = likes
+                )
+            }
+        )
     }
     when (uiState) {
         is GroupDetailsUiState.Draw -> {
@@ -423,8 +480,11 @@ fun GroupDetailsScreenPreview(
     @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState,
 ) {
     FriendsSecretsTheme {
-        GroupDetailsContent(navController = rememberNavController(), uiState = state, onEvent = {
+        GroupDetailsContent(
+            navController = rememberNavController(),
+            uiState = state,
+            onEvent = {
 
-        })
+            })
     }
 }

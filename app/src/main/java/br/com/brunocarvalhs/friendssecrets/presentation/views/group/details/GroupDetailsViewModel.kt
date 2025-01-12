@@ -16,6 +16,7 @@ import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
 import kotlinx.coroutines.delay
@@ -23,9 +24,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.collections.set
 
 class GroupDetailsViewModel(
     private val groupReadUseCase: GroupReadUseCase,
+    private val groupEditUseCase: GroupEditUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
     private val groupExitUseCase: GroupExitUseCase,
     private val groupDeleteUseCase: GroupDeleteUseCase,
@@ -39,16 +42,62 @@ class GroupDetailsViewModel(
 
     fun eventIntent(intent: GroupDetailsIntent) {
         when (intent) {
-            is GroupDetailsIntent.FetchGroup -> fetchGroup(intent.groupId)
-            is GroupDetailsIntent.DrawMembers -> drawMembers(intent.group)
-            is GroupDetailsIntent.ExitGroup -> exitGroup(intent.groupId)
-            is GroupDetailsIntent.DeleteGroup -> deleteGroup(intent.groupId)
+            is GroupDetailsIntent.FetchGroup -> fetchGroup(groupId = intent.groupId)
+            is GroupDetailsIntent.DrawMembers -> drawMembers(group = intent.group)
+            is GroupDetailsIntent.ExitGroup -> exitGroup(groupId = intent.groupId)
+            is GroupDetailsIntent.DeleteGroup -> deleteGroup(groupId = intent.groupId)
             is GroupDetailsIntent.ShareMember -> shareMember(
                 context = intent.context,
                 member = intent.member,
                 secret = intent.secret,
                 token = intent.token
             )
+            is GroupDetailsIntent.EditMember -> editMember(
+                entities = intent.group,
+                member = intent.participant,
+                likes = intent.likes
+            )
+            is GroupDetailsIntent.RemoveMember -> removeMember(
+                entities = intent.group,
+                member = intent.participant
+            )
+        }
+    }
+
+    private fun removeMember(
+        entities: GroupEntities,
+        member: String
+    ) {
+        viewModelScope.launch {
+            val group = entities.toCopy(
+                members = entities.members.filter { !it.equals(member) }
+            )
+            groupEditUseCase.invoke(group)
+                .onSuccess {
+                    _uiState.value = GroupDetailsUiState.Success(it)
+                }.onFailure {
+                    _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+                }
+        }
+    }
+
+    private fun editMember(
+        entities: GroupEntities,
+        member: String,
+        likes: List<String>
+    ) {
+        viewModelScope.launch {
+            groupEditUseCase.invoke(
+                entities.toCopy(
+                    members = HashMap(entities.members).apply {
+                        put(member, likes.joinToString(separator = "|"))
+                    }
+                )
+            ).onSuccess {
+                _uiState.value = GroupDetailsUiState.Success(it)
+            }.onFailure {
+                _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
+            }
         }
     }
 
@@ -145,8 +194,13 @@ class GroupDetailsViewModel(
                         storage = storage,
                         performance = performance
                     )
+                    val groupEditUseCase = GroupEditUseCase(
+                        groupRepository = repository,
+                        performance = performance
+                    )
                     GroupDetailsViewModel(
                         groupReadUseCase = groupReadUseCase,
+                        groupEditUseCase = groupEditUseCase,
                         groupDrawUseCase = groupDrawUseCase,
                         groupExitUseCase = groupExitUseCase,
                         groupDeleteUseCase = groupDeleteUseCase

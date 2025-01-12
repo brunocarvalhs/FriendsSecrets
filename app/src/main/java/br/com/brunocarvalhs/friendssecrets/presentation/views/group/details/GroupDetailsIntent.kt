@@ -14,4 +14,13 @@ sealed interface GroupDetailsIntent {
         val secret: String,
         val token: String,
     ) : GroupDetailsIntent
+    data class RemoveMember(
+        val group: GroupEntities,
+        val participant: String
+    ): GroupDetailsIntent
+    data class EditMember(
+        val group: GroupEntities,
+        val participant: String,
+        val likes: List<String>
+    ): GroupDetailsIntent
 }
