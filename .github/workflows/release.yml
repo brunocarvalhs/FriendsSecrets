@@ -174,23 +174,20 @@ jobs:
           echo "module_name=$MODULE_NAME" >> $GITHUB_ENV
           
       - name: Create Release
+        id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: ${{ env.version }}
           release_name: ${{ env.module_name }} v${{ env.version }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
           draft: false
           prerelease: false
 
       - name: Upload Release APK
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/release/*.apk
           asset_name: ${{ env.module_name }}-apk-release.apk
           asset_content_type: application/vnd.android.package-archive
@@ -198,7 +195,7 @@ jobs:
       - name: Upload Release AAB
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/bundle/release/*.aab
           asset_name: ${{ env.module_name }}-release.aab
           asset_content_type: application/octet-stream
