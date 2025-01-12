@@ -164,7 +164,7 @@ jobs:
     steps:
       - name: Get App Version Based on Date
         run: |
-          VERSION=$(date + "%Y.%m%d")
+          VERSION=$(date +%Y.%m%d)
           echo "version=$VERSION" >> $GITHUB_ENV
           
       - name: Calculate module name
@@ -172,7 +172,7 @@ jobs:
         run: |
           MODULE_NAME=$(echo "${{ github.repository }}" | awk -F'/' '{print $2}')
           echo "module_name=$MODULE_NAME" >> $GITHUB_ENV
-
+          
       - name: Create Release
         uses: actions/create-release@latest
         env:
