@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,6 +118,7 @@ private fun HomeContent(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -162,7 +164,7 @@ private fun HomeContent(
                         }
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior // Associar comportamento de rolagem
             )
         },
         floatingActionButton = {
@@ -202,7 +204,8 @@ private fun HomeContent(
                     LazyColumn(
                         modifier = Modifier
                             .padding(it)
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         items(uiState.list) { item ->
