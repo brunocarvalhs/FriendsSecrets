@@ -42,7 +42,7 @@
     <string name="require_name_cannot_be_blank">Name cannot be blank</string>
     <string name="require_name_cannot_be_longer_than_255_characters">Name cannot be longer than 255 characters</string>
     <string name="require_group_must_have_at_least_one_member">Group must have at least one member</string>
-    <string name="require_group_cannot_have_more_than_2_members">Group cannot have more than 2 members</string>
+    <string name="require_group_cannot_have_more_than_2_members">The group must have a minimum of 3 members</string>
     <string name="require_draw_already_held">Draw already held</string>
     <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
     <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>

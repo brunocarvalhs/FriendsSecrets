@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
@@ -70,7 +71,7 @@ fun MemberItem(
 
             SwipeToDismissBoxValue.Settled -> false
         }
-    }, positionalThreshold = { it * 0.25f })
+    }, positionalThreshold = { it * 0.5f })
 
 
 
@@ -132,19 +133,28 @@ private fun DismissBackground(
     onRemove: (() -> Unit)? = null
 ) {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                when {
+                    dismissState.progress > 0 -> Color(0xFF4CAF50)
+                    dismissState.progress < 0 -> Color(0xFFF44336)
+                    else -> Color.Transparent
+                }
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         onEdit?.let {
             AnimatedVisibility(
                 modifier = Modifier.padding(16.dp),
-                visible = dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd,
+                visible = dismissState.progress > 0,
                 enter = fadeIn()
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Read"
+                    contentDescription = "Edit",
+                    tint = Color.White
                 )
             }
         }
@@ -152,17 +162,19 @@ private fun DismissBackground(
         onRemove?.let {
             AnimatedVisibility(
                 modifier = Modifier.padding(16.dp),
-                visible = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart,
+                visible = dismissState.progress < 0,
                 enter = fadeIn()
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete"
+                    contentDescription = "Delete",
+                    tint = Color.White
                 )
             }
         }
     }
 }
+
 
 @Composable
 @Preview
