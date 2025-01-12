@@ -24,6 +24,7 @@
     <string name="draw_text_feedback">Success!</string>
     <string name="group_create_action_save_group">Save group</string>
     <string name="group_details_action_draw_members">Draw</string>
+    <string name="group_details_action_shared">Shared</string>
 
     <!--  Generative AI  -->
     <string name="ai_prompt">Hi, I need a gift suggestion for %s, who likes %s, for the secret friend %s.</string>
@@ -50,6 +51,7 @@
 
     <!-- Shared Link -->
     <string name="group_details_share_member">Hello %1$s! 👋\n\nYou have been invited to join an exciting game! 🎉\n\nClick the link to find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nIf you cannot access the link, download our Friends Secrets app using this link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse the group code: %2$s to join, then click on %5$s.\n\nYour Secret Santa code is: %3$s.\n\n🚀 Do not waste time, start planning your Secret Santa gift now!</string>
+    <string name="group_details_share_member_simple">Hello! 👋\n\nYou have been invited to join the Secret Santa group: %1$s 🎉\n\nUse the group code: %2$s to join.\n\nStart planning your Secret Santa gift now! 🚀</string>
 
     <!--  Biometric  -->
     <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>

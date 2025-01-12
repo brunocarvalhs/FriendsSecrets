@@ -61,7 +61,27 @@ class GroupDetailsViewModel(
                 entities = intent.group,
                 member = intent.participant
             )
+
+            is GroupDetailsIntent.ShareGroup -> shareGroup(intent.context, intent.group)
         }
+    }
+
+    private fun shareGroup(context: Context, group: GroupEntities) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                context.getString(
+                    R.string.group_details_share_member_simple,
+                    group.name,
+                    group.token,
+                )
+            )
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
     }
 
     private fun removeMember(

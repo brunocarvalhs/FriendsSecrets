@@ -23,4 +23,8 @@ sealed interface GroupDetailsIntent {
         val participant: String,
         val likes: List<String>
     ): GroupDetailsIntent
+    data class ShareGroup(
+        val context: Context,
+        val group: GroupEntities
+    ): GroupDetailsIntent
 }

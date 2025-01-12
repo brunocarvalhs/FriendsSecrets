@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -42,8 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -157,6 +156,10 @@ private fun GroupDetailsContent(
         onEvent.invoke(GroupDetailsIntent.RemoveMember(group = group, participant = participant))
     }
 
+    fun onShareGroup(group: GroupEntities) {
+        onEvent.invoke(GroupDetailsIntent.ShareGroup(context = context, group = group))
+    }
+
     Scaffold(topBar = {
         LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -221,6 +224,16 @@ private fun GroupDetailsContent(
                             },
                         )
                     }
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(R.string.group_details_action_shared)) },
+                        onClick = { onShareGroup(group = uiState.group) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = stringResource(R.string.group_details_action_shared)
+                            )
+                        },
+                    )
                 }
             }
 
