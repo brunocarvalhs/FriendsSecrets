@@ -176,19 +176,17 @@ private fun GroupDetailsContent(
                     )
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    if (uiState.group.isOwner) {
-                        DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
-                            onClick = {
-                                navController.navigate(
-                                    route = GroupNavigation.Edit.createRoute(uiState.group.id)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Edit, contentDescription = null
-                                )
-                            })
-                    }
+                    DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
+                        onClick = {
+                            navController.navigate(
+                                route = GroupNavigation.Edit.createRoute(uiState.group.id)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Edit, contentDescription = null
+                            )
+                        })
                     DropdownMenuItem(text = {
                         if (uiState.group.isOwner) {
                             Text(stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin))
