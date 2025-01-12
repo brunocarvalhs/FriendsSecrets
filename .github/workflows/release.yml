@@ -162,17 +162,25 @@ jobs:
     name: Create and Upload Release
     needs: [build-apk, build-aab]
     steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+        continue-on-error: true
+        
       - name: Get App Version Based on Date
         run: |
-          VERSION=$(date +%Y.%m%d)
+          VERSION=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\(.*\)"/\1/')
           echo "version=$VERSION" >> $GITHUB_ENV
-          
+        continue-on-error: true
+        
       - name: Calculate module name
         id: module_name
         run: |
           MODULE_NAME=$(echo "${{ github.repository }}" | awk -F'/' '{print $2}')
           echo "module_name=$MODULE_NAME" >> $GITHUB_ENV
-          
+        continue-on-error: true
+        
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -180,6 +188,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: ${{ env.version }}
-          release_name: ${{ env.module_name }} v${{ env.version }}
+          release_name: v${{ env.version }}
           draft: false
           prerelease: false
+        continue-on-error: true
