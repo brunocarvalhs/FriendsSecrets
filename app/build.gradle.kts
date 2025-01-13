@@ -19,7 +19,7 @@ android {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -109,5 +109,6 @@ dependencies {
     androidTestImplementation(libs.mockk)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.leakcanary.android)
     dokkaPlugin(libs.android.documentation.plugin)
 }

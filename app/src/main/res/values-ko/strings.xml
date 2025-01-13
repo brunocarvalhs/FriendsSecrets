@@ -1,15 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  App  -->
-    <string name="app_name">비밀 친구</string>
+    <string name="app_name">시크릿 산타</string>
+
+    <!--  Onboarding  -->
+    <string name="onboarding_screen_title">Friends Secrets에 오신 것을 환영합니다!</string>
+    <string name="onboarding_screen_description">이 앱은 Secret Santa 게임을 정리하는 데 도움을 줄 것입니다.</string>
 
     <!--  Group Create Screen  -->
     <string name="group_create_input_description">그룹 설명</string>
     <string name="group_create_input_name">그룹 이름</string>
-    <string name="group_create_text_button_member">멤버</string>
+    <string name="group_create_text_button_member">회원</string>
 
     <!--  Group Details Screen  -->
-    <string name="group_details_text_button_label_see_less">간단히 보기</string>
+    <string name="group_details_text_button_label_see_less">적게 보기</string>
     <string name="group_details_text_button_label_see_more">더 보기</string>
     <string name="group_details_drop_menu_item_text_send_feedback">피드백 보내기</string>
     <string name="group_details_drop_menu_item_text_settings">설정</string>
@@ -24,59 +27,73 @@
     <string name="draw_text_feedback">성공!</string>
     <string name="group_create_action_save_group">그룹 저장</string>
     <string name="group_details_action_draw_members">추첨</string>
+    <string name="group_details_action_shared">공유됨</string>
 
     <!--  Generative AI  -->
-    <string name="ai_prompt" formatted="false">%s를 위한 선물 제안이 필요합니다. %s를 좋아하는 시크릿 프렌드 %s를 위해서요.</string>
+    <string name="ai_prompt">안녕하세요, %s를 위한 선물 제안이 필요합니다. %s를 좋아하는 Secret Santa %s를 위한 것입니다.</string>
 
     <!--  Add Member Bottom Sheet  -->
-    <string name="add_member_bottom_sheet_title_label">새 멤버 추가</string>
-    <string name="add_member_bottom_sheet_input_new_member">새 멤버</string>
-    <string name="add_member_bottom_sheet_input_new_member_error_message">잘못된 이름입니다! 문자와 공백만 허용됩니다.</string>
+    <string name="add_member_bottom_sheet_title_label">새 회원 추가</string>
+    <string name="add_member_bottom_sheet_input_new_member">새 회원</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">잘못된 이름! 문자와 공백만 허용됩니다.</string>
     <string name="add_member_bottom_sheet_input_liker">좋아하는 것</string>
-    <string name="add_member_bottom_sheet_button_label">멤버 추가</string>
+    <string name="add_member_bottom_sheet_button_label">회원 추가</string>
     <string name="add_member_bottom_sheet_text_button_label">완료</string>
 
     <!--  Exceptions and Requirements  -->
     <string name="exception_group_already_exist">그룹이 이미 존재합니다</string>
     <string name="exception_group_not_found">그룹을 찾을 수 없습니다</string>
-    <string name="require_name_cannot_be_blank">이름은 비워둘 수 없습니다</string>
-    <string name="require_name_cannot_be_longer_than_255_characters">이름은 255자를 초과할 수 없습니다</string>
-    <string name="require_group_must_have_at_least_one_member">그룹에는 최소한 한 명의 멤버가 있어야 합니다</string>
-    <string name="require_group_cannot_have_more_than_2_members">그룹은 2명 이상의 멤버를 가질 수 없습니다</string>
-    <string name="require_draw_already_held">추첨이 이미 완료되었습니다</string>
-    <string name="require_group_id_cannot_be_blank">그룹 ID는 비워둘 수 없습니다</string>
-    <string name="exception_minimums_members_of_draw">추첨을 하려면 그룹에 최소 3명의 참가자가 있어야 합니다.</string>
-    <string name="group_details_action_preview_my_secret_friend">내 친구들의 비밀</string>
+    <string name="require_name_cannot_be_blank">이름은 비울 수 없습니다</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">이름은 255자를 넘을 수 없습니다</string>
+    <string name="require_group_must_have_at_least_one_member">그룹에는 최소한 한 명의 회원이 있어야 합니다</string>
+    <string name="require_group_cannot_have_more_than_2_members">그룹에는 최소 3명의 회원이 있어야 합니다</string>
+    <string name="require_draw_already_held">추첨이 이미 진행되었습니다</string>
+    <string name="require_group_id_cannot_be_blank">그룹 ID는 비울 수 없습니다</string>
+    <string name="exception_minimums_members_of_draw">추첨을 진행하려면 그룹에 최소 3명이 있어야 합니다.</string>
+    <string name="group_details_action_preview_my_secret_friend">내 시크릿 친구들</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">안녕하세요 %1$s! 👋\n\n특별한 게임에 초대되었습니다! 🎉\n\n링크를 열어 당신의 시크릿 산타가 누구인지 확인하세요: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\n링크에 접근할 수 없다면, 이 링크를 통해 프렌즈 시크릿 앱을 다운로드하세요: https://play.google.com/store/apps/details?id=%4$s.\n\n그룹 코드를 사용하세요: %2$s 가입 후 %5$s를 클릭하세요.\n\n시크릿 산타에 접근하기 위한 코드: %3$s.\n\n🚀 시간을 낭비하지 말고 지금 바로 선물을 준비하세요!</string>
+    <string name="group_details_share_member">안녕하세요 %1$s! 👋\n\n신나는 게임에 초대되었습니다! 🎉\n\nSecret Santa가 누구인지 알아보려면 이 링크를 클릭하세요: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\n링크에 접속할 수 없다면, 아래 링크를 사용하여 Friends Secrets 앱을 다운로드하세요: https://play.google.com/store/apps/details?id=%4$s.\n\n그룹 코드: %2$s를 사용하여 참여한 후, %5$s를 클릭하세요.\n\n당신의 Secret Santa 코드는: %3$s입니다.\n\n🚀 시간을 낭비하지 말고, 지금 바로 Secret Santa 선물을 준비하세요!</string>
+    <string name="group_details_share_member_simple">안녕하세요! 👋\n\nSecret Santa 그룹 %1$s에 초대되었습니다! 🎉\n\n그룹 코드: %2$s를 사용하여 참여하세요.\n\n지금 바로 Secret Santa 선물을 준비하세요! 🚀</string>
 
     <!--  Biometric  -->
-    <string name="biometric_screen_title_authentication">프렌즈 시크릿을 사용하려면 잠금 해제</string>
-    <string name="biometric_screen_log_in_using_your_biometric_credential">생체 인증으로 로그인</string>
+    <string name="biometric_screen_title_authentication">Friends Secrets 사용을 위해 잠금 해제</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">생체 인증 자격 증명을 사용하여 로그인</string>
     <string name="biometric_screen_use_account_password">계정 비밀번호 사용</string>
-    <string name="biometric_screen_biometric_authentication">프렌즈 시크릿이 잠겨 있습니다</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets 잠금</string>
     <string name="biometric_screen_unlock">잠금 해제</string>
     <string name="group_details_drop_menu_item_text_exit_to_group">그룹 나가기</string>
     <string name="group_details_drop_menu_item_text_exit_to_group_admin">그룹 삭제</string>
     <string name="title_settings">설정</string>
-    <string name="title_appearance">외형</string>
-    <string name="title_faq">자주 묻는 질문</string>
-    <string name="title_report_an_issue">문제 보고</string>
+    <string name="title_appearance">외관</string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_report_an_issue">문제 신고</string>
     <string name="appearance_screen_dynamic_title">다이내믹 테마</string>
-    <string name="appearance_screen_title_description">다이내믹 테마를 활성화하면 디바이스의 배경화면에 따라 앱의 색상이 자동으로 조정됩니다.</string>
-    <string name="appearance_screen_title">특정 옵션을 선택하면 선호도에 따라 앱의 외형(색상)이 변경됩니다.</string>
+    <string name="appearance_screen_title_description">다이내믹 테마를 활성화하면 앱이 자동으로 기기의 배경화면을 기준으로 색상을 조정합니다.</string>
+    <string name="appearance_screen_title">특정 옵션을 선택하여 앱의 외관(색상)을 사용자 맞춤으로 변경할 수 있습니다.</string>
     <string name="settings_screen_general">일반</string>
     <string name="settings_screen_security">지문 인증</string>
     <string name="settings_screen_support">지원</string>
     <string name="group_details_description">설명</string>
-    <string name="group_details_members">멤버</string>
-    <string name="draw_screen_title">당신의 시크릿 프렌드는...</string>
-    <string name="draw_screen_action_title">내 시크릿 프렌드 공개</string>
+    <string name="group_details_members">회원</string>
+    <string name="draw_screen_title">당신의 시크릿 친구는...</string>
+    <string name="draw_screen_action_title">내 시크릿 친구 공개</string>
     <string name="draw_screen_action_generative">선물 아이디어</string>
-    <string name="draw_screen_code_secret">비밀 코드</string>
+    <string name="draw_screen_code_secret">시크릿 코드</string>
     <string name="draw_screen_title_like">좋아하는 것</string>
     <string name="onboarding_screen_close">닫기</string>
     <string name="onboarding_next">다음</string>
     <string name="onboarding_finish">시작</string>
+    <string name="group_to_enter_button_text">확인</string>
+    <string name="group_to_enter_button_enter_to_group">그룹에 들어가기</string>
+    <string name="group_to_enter_textfield_token_to_grup">그룹 토큰</string>
+    <string name="error_component_button_try_again">다시 시도</string>
+    <string name="error_component_button_to_home">홈으로 가기</string>
+    <string name="empty_group_component_button_create_grup">그룹 만들기</string>
+    <string name="chat_generative_title_chat">채팅</string>
+    <string name="empty_group_component_button_enter_grup">그룹에 들어가기</string>
+    <string name="chat_generative_textfield_message">메시지를 입력하세요...</string>
+    <string name="chat_generative_button_send">보내기</string>
+    <string name="empty_group_title">어이구</string>
+    <string name="empty_group_message">그룹을 찾을 수 없습니다</string>
 </resources>

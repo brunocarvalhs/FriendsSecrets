@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
@@ -33,7 +34,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 @Composable
 fun EmptyGroupComponent(
     modifier: Modifier = Modifier,
-    message: String = "Nenhum grupo encontrado",
+    message: String = stringResource(R.string.empty_group_message),
     onGroupToEnter: () -> Unit = {},
     onCreateGroup: () -> Unit = {},
     isJoinGroupEnabled: Boolean = true,
@@ -61,7 +62,7 @@ fun EmptyGroupComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Ops!",
+                text = stringResource(R.string.empty_group_title),
                 style = MaterialTheme.typography.headlineLarge,
             )
         }
@@ -85,7 +86,7 @@ fun EmptyGroupComponent(
                 Button(
                     onClick = { onGroupToEnter.invoke() }
                 ) {
-                    Text(text = "Entrar em um grupo")
+                    Text(text = stringResource(R.string.empty_group_component_button_enter_grup))
                 }
                 Spacer(Modifier.size(8.dp))
             }
@@ -93,7 +94,7 @@ fun EmptyGroupComponent(
                 TextButton(
                     onClick = { onCreateGroup.invoke() }
                 ) {
-                    Text(text = "Criar um grupo")
+                    Text(text = stringResource(R.string.empty_group_component_button_create_grup))
                 }
             }
         }

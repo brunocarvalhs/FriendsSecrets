@@ -45,7 +45,7 @@ class GroupCreateUseCase(
 
     private fun validationMembers(members: Map<String, String>) {
         require(value = members.isNotEmpty()) { context.getString(R.string.require_group_must_have_at_least_one_member) }
-        require(value = members.size > 3) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
+        require(value = members.size >= 3) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
     }
 
     private suspend fun validationTokenIsUnique(token: String): Boolean {
