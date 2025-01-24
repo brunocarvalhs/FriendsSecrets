@@ -10,4 +10,8 @@ data class UserModel(
     @SerializedName(UserEntities.EMAIL) override val email: String?,
     @SerializedName(UserEntities.PHONE) override val phone: String?,
     @SerializedName(UserEntities.LIKES) override val likes: List<String> = emptyList(),
-) : UserEntities
+) : UserEntities {
+    override fun toMap(): Map<String, Any> {
+        return mapOf()
+    }
+}
