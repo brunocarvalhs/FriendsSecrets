@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.login.components
+package br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -20,12 +20,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun EmailSignInButton(
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
     isCompact: Boolean = false,
     onEmailSignInClick: () -> Unit
 ) {
     Button(
+        enabled = enabled,
         onClick = onEmailSignInClick,
-        modifier = Modifier
+        modifier = modifier
             .apply {
                 if (!isCompact) {
                     width(300.dp)

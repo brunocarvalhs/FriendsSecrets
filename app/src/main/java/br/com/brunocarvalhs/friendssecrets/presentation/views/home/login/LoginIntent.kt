@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.login
+package br.com.brunocarvalhs.friendssecrets.presentation.views.home.login
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher

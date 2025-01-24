@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.login
+package br.com.brunocarvalhs.friendssecrets.presentation.views.home.login
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,15 +30,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.presentation.views.login.components.EmailSignInButton
-import br.com.brunocarvalhs.friendssecrets.presentation.views.login.components.FacebookSignInButton
-import br.com.brunocarvalhs.friendssecrets.presentation.views.login.components.GoogleSignInButton
-import br.com.brunocarvalhs.friendssecrets.presentation.views.login.components.PhoneSignInButton
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.EmailSignInButton
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.FacebookSignInButton
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.GoogleSignInButton
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.PhoneSignInButton
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     viewModel: LoginViewModel
 ) {
     val uiState: LoginUiState by viewModel.uiState.collectAsState()
@@ -49,7 +50,7 @@ fun LoginScreen(
         rememberLauncherForActivityResult(FirebaseAuthUIActivityResultContract()) { result ->
             if (result.resultCode == RESULT_OK) {
                 viewModel.onEvent(LoginIntent.Success(event = {
-
+                    navController.navigate(HomeNavigation.Home.route)
                 }))
             } else {
                 viewModel.onEvent(LoginIntent.Error(result.idpResponse?.error?.message.orEmpty()))
@@ -112,13 +113,17 @@ private fun LoginContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            EmailSignInButton {
+            EmailSignInButton(
+                enabled = state != LoginUiState.Loading
+            ) {
                 launcher?.let {
                     onLogin.invoke(LoginIntent.EmailAuth(launcher))
                 }
             }
             Spacer(modifier = Modifier.size(8.dp))
-            PhoneSignInButton {
+            PhoneSignInButton(
+                enabled = state != LoginUiState.Loading
+            ) {
                 launcher?.let {
                     onLogin.invoke(LoginIntent.PhoneAuth(launcher))
                 }
@@ -132,19 +137,21 @@ private fun LoginContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            GoogleSignInButton(isCompact = true) {
+            GoogleSignInButton(
+                enabled = state != LoginUiState.Loading,
+                isCompact = true
+            ) {
                 launcher?.let {
                     onLogin.invoke(LoginIntent.GoogleAuth(launcher))
                 }
             }
             Spacer(modifier = Modifier.size(8.dp))
-            FacebookSignInButton(isCompact = true) {
+            FacebookSignInButton(
+                enabled = state != LoginUiState.Loading,
+                isCompact = true
+            ) {
                 launcher?.let {
-                    onLogin.invoke(
-                        LoginIntent.FacebookAuth(
-                            launcher
-                        )
-                    )
+                    onLogin.invoke(LoginIntent.FacebookAuth(launcher))
                 }
             }
         }

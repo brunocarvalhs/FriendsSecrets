@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.login
+package br.com.brunocarvalhs.friendssecrets.presentation.views.home.login
 
 sealed interface LoginUiState {
     object Idle : LoginUiState

@@ -10,9 +10,12 @@ import androidx.navigation.compose.navigation
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
+import br.com.brunocarvalhs.friendssecrets.data.service.SessionManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric.BiometricScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.HomeViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.LoginScreen
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.LoginViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardingScreen
 
@@ -23,12 +26,17 @@ sealed class HomeNavigation(
 ) : NavigationBase {
 
     data object Home : HomeNavigation("list")
-    data object Onboarding : HomeNavigation("onboarding}")
+    data object Onboarding : HomeNavigation("onboarding")
     data object Biometric : HomeNavigation("biometric")
+    data object Login : HomeNavigation("login")
 
     companion object {
         val START_DESTINATION =
-            if (BiometricManager.isBiometricPromptEnabled()) Biometric.route else Home.route
+            if (SessionManager().isLoggedIn())
+                if (BiometricManager.isBiometricPromptEnabled()) Biometric.route
+                else Home.route
+            else
+                Login.route
     }
 }
 
@@ -47,7 +55,8 @@ fun NavGraphBuilder.homeGraph(
             )
         }
         composable(HomeNavigation.Onboarding.route) {
-            val onboardingViewModel: OnboardViewModel = viewModel(factory = OnboardViewModel.Factory)
+            val onboardingViewModel: OnboardViewModel =
+                viewModel(factory = OnboardViewModel.Factory)
             OnboardingScreen(
                 navController = navController,
                 viewModel = onboardingViewModel
@@ -55,6 +64,13 @@ fun NavGraphBuilder.homeGraph(
         }
         composable(HomeNavigation.Biometric.route) {
             BiometricScreen(navController = navController)
+        }
+        composable(HomeNavigation.Login.route) {
+            val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+            LoginScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 }

@@ -8,6 +8,7 @@ interface UserEntities {
     val email: String?
     val likes: List<String>
 
+    fun toMap(): Map<String, Any>
 
     companion object {
         const val COLLECTION = "users"
