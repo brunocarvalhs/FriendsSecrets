@@ -3,6 +3,7 @@ agp = "8.7.3"
 androidDocumentationPlugin = "1.9.20"
 biometric = "1.1.0"
 coilCompose = "2.7.0"
+firebaseUiAuth = "8.0.2"
 gson = "2.11.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -28,6 +29,7 @@ googleFirebaseCrashlytics = "3.0.2"
 timber = "5.0.1"
 uiTextGoogleFonts = "1.7.6"
 firebaseBom = "33.7.0"
+firebaseAuth = "23.1.0"
 
 [libraries]
 android-documentation-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "androidDocumentationPlugin" }
@@ -35,6 +37,7 @@ androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "b
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -64,6 +67,7 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

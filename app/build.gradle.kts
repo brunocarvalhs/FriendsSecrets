@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -99,6 +97,7 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.biometric)
     implementation(libs.coil.compose)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)
@@ -111,4 +110,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.leakcanary.android)
     dokkaPlugin(libs.android.documentation.plugin)
+    implementation(libs.firebase.ui.auth)
 }
