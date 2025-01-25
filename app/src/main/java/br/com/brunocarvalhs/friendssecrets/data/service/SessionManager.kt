@@ -2,12 +2,15 @@ package br.com.brunocarvalhs.friendssecrets.data.service
 
 import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.runBlocking
 import kotlin.let
 import kotlin.text.isEmpty
 
@@ -23,7 +26,8 @@ interface SessionService<T> {
 }
 
 class SessionManager(
-    private val auth: FirebaseAuth = Firebase.auth
+    private val auth: FirebaseAuth = Firebase.auth,
+    private val repository: UserRepository = UserRepositoryImpl()
 ) : SessionService<UserEntities> {
 
     override fun isLoggedIn(): Boolean {
@@ -40,9 +44,9 @@ class SessionManager(
     }
 
     override fun getCurrentUser(): UserEntities? {
-        return session ?: run {
+        val data = runBlocking { repository.read(session?.id.orEmpty()) }
+        return data?.also { setCurrentUser(it) } ?: session?.also {
             session = auth.currentUser?.toUserModel()
-            return session
         }
     }
 

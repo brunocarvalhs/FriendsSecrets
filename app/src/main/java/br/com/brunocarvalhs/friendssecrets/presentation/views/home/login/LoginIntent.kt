@@ -8,7 +8,4 @@ sealed interface LoginIntent {
     data class FacebookAuth(val launcher: ActivityResultLauncher<Intent>) : LoginIntent
     data class PhoneAuth(val launcher: ActivityResultLauncher<Intent>) : LoginIntent
     data class EmailAuth(val launcher: ActivityResultLauncher<Intent>) : LoginIntent
-
-    data class Success(val event: () -> Unit) : LoginIntent
-    data class Error(val message: String) : LoginIntent
 }

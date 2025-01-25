@@ -88,11 +88,13 @@ fun MemberItem(
                 },
                 trailingContent = {
                     Row {
-                        IconButton(onClick = { isLiked = !isLiked }) {
-                            Icon(
-                                imageVector = if (isVisibleLiked || isLiked) Icons.Sharp.KeyboardArrowUp
-                                else Icons.Sharp.KeyboardArrowDown, contentDescription = "bottom"
-                            )
+                        if (likes.isNotEmpty() && likes.any { it.isNotBlank() }) {
+                            IconButton(onClick = { isLiked = !isLiked }) {
+                                Icon(
+                                    imageVector = if (isVisibleLiked || isLiked) Icons.Sharp.KeyboardArrowUp
+                                    else Icons.Sharp.KeyboardArrowDown, contentDescription = "bottom"
+                                )
+                            }
                         }
                         if (isAdministrator && group?.draws?.isNotEmpty() == true) {
                             IconButton(onClick = {
@@ -186,6 +188,22 @@ private fun MemberItemPreview() {
             isAdministrator = false,
             isVisibleLiked = false,
             likes = listOf("Like 1", "Like 2", "Like 3", "Like 4", "Like 5", "Like 6"),
+            onEdit = {},
+            onRemove = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun MemberItemNotEmptyPreview() {
+    FriendsSecretsTheme {
+        MemberItem(
+            participant = "Member 1",
+            group = GroupModel(),
+            isAdministrator = false,
+            isVisibleLiked = false,
+            likes = emptyList(),
             onEdit = {},
             onRemove = {}
         )

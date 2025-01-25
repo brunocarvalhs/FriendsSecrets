@@ -11,8 +11,11 @@ class LoginUserUseCase(
     suspend fun invoke(): Result<UserEntities?> = runCatching {
         service.logIn()
         service.getCurrentUser()?.let { user ->
-            repository.create(user)
-            val data = repository.read(user.id) ?: throw Exception()
+            val data = repository.read(user.id) ?: run {
+                repository.create(user)
+                repository.read(user.id) ?: throw Exception("Failed to fetch user after save")
+            }
+            service.setCurrentUser(data)
             data
         }
     }

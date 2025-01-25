@@ -32,8 +32,6 @@ class LoginViewModel(
             is LoginIntent.GoogleAuth -> loginGoogle(intent.launcher)
             is LoginIntent.PhoneAuth -> loginPhone(intent.launcher)
             is LoginIntent.EmailAuth -> loginEmail(intent.launcher)
-            is LoginIntent.Error -> errorMessage(intent.message)
-            is LoginIntent.Success -> redirect(intent.event)
             is LoginIntent.FacebookAuth -> loginFacebook(intent.launcher)
         }
     }
@@ -42,14 +40,13 @@ class LoginViewModel(
         _uiState.value = LoginUiState.Error(message)
     }
 
-    private fun redirect(event: () -> Unit) {
+    fun redirect(event: () -> Unit) {
         viewModelScope.launch {
-            useCase.invoke()
-                .onSuccess {
-                    _uiState.value = LoginUiState.Success
-                }.onFailure {
-                    errorMessage(it.message.orEmpty())
-                }
+            useCase.invoke().onSuccess {
+                event.invoke()
+            }.onFailure {
+                errorMessage(it.message.orEmpty())
+            }
         }
     }
 

@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.EmailSignInButton
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.login.components.FacebookSignInButton
@@ -44,18 +47,21 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
+    val context = LocalContext.current
     val uiState: LoginUiState by viewModel.uiState.collectAsState()
 
     val launcher =
         rememberLauncherForActivityResult(FirebaseAuthUIActivityResultContract()) { result ->
             if (result.resultCode == RESULT_OK) {
-                viewModel.onEvent(LoginIntent.Success(event = {
+                viewModel.redirect {
                     navController.navigate(HomeNavigation.Home.route)
-                }))
-            } else {
-                viewModel.onEvent(LoginIntent.Error(result.idpResponse?.error?.message.orEmpty()))
+                }
             }
         }
+
+    LaunchedEffect(Unit) {
+        if (context.isFistAppOpen()) navController.navigate(HomeNavigation.Onboarding.route)
+    }
 
     LoginContent(
         launcher = launcher,

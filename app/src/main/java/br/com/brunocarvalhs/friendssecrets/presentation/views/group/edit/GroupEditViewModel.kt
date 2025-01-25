@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.service.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
@@ -70,6 +71,7 @@ class GroupEditViewModel(
                     val repository = GroupRepositoryImpl()
                     val performance = PerformanceManager()
                     val storage = StorageService()
+                    val session = SessionManager()
                     val groupEditUseCase = GroupEditUseCase(
                         groupRepository = repository,
                         performance = performance
@@ -77,7 +79,8 @@ class GroupEditViewModel(
                     val groupReadUseCase = GroupReadUseCase(
                         groupRepository = repository,
                         storage = storage,
-                        performance = performance
+                        performance = performance,
+                        session = session
                     )
                     GroupEditViewModel(
                         groupEditUseCase = groupEditUseCase,
