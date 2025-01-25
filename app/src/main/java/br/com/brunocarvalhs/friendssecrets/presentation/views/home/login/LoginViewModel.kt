@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class LoginViewModel(
     private val useCase: LoginUserUseCase,
@@ -53,39 +54,55 @@ class LoginViewModel(
     }
 
     private fun loginFacebook(launcher: ActivityResultLauncher<Intent>) {
-        val providers = arrayListOf(AuthUI.IdpConfig.FacebookBuilder().build())
-        val signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-        launcher.launch(signInIntent)
+        runCatching {
+            val providers = arrayListOf(AuthUI.IdpConfig.FacebookBuilder().build())
+            val signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+            launcher.launch(signInIntent)
+        }.onFailure {
+            Timber.e(it)
+        }
     }
 
     private fun loginGoogle(launcher: ActivityResultLauncher<Intent>) {
-        val providers = arrayListOf(AuthUI.IdpConfig.GoogleBuilder().build())
-        val signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-        launcher.launch(signInIntent)
+        runCatching {
+            val providers = arrayListOf(AuthUI.IdpConfig.GoogleBuilder().build())
+            val signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+            launcher.launch(signInIntent)
+        }.onFailure {
+            Timber.e(it)
+        }
     }
 
     private fun loginPhone(launcher: ActivityResultLauncher<Intent>) {
-        val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
-        val signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-        launcher.launch(signInIntent)
+        runCatching {
+            val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
+            val signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+            launcher.launch(signInIntent)
+        }.onFailure {
+            Timber.e(it)
+        }
     }
 
     private fun loginEmail(launcher: ActivityResultLauncher<Intent>) {
-        val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
-        val signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-        launcher.launch(signInIntent)
+        runCatching {
+            val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
+            val signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+            launcher.launch(signInIntent)
+        }.onFailure {
+            Timber.e(it)
+        }
     }
 
     companion object {
