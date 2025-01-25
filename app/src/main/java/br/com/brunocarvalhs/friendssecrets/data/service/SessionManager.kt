@@ -26,7 +26,9 @@ class SessionManager(
     private val auth: FirebaseAuth = Firebase.auth
 ) : SessionService<UserEntities> {
 
-    override fun isLoggedIn(): Boolean = session == null
+    override fun isLoggedIn(): Boolean {
+        return session != null
+    }
 
     override suspend fun logOut() {
         auth.signOut()
@@ -38,7 +40,10 @@ class SessionManager(
     }
 
     override fun getCurrentUser(): UserEntities? {
-        return session ?: auth.currentUser?.toUserModel()
+        return session ?: run {
+            session = auth.currentUser?.toUserModel()
+            return session
+        }
     }
 
     override fun setCurrentUser(user: UserEntities) {
