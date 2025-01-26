@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.BottomSheetDefaults
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddMemberBottomSheet(
     onDismiss: () -> Unit,
+    onSearch: ((String) -> Unit)? = null,
     onMemberAdded: (String, List<String>) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -68,7 +70,8 @@ fun AddMemberBottomSheet(
         AddMemberContent(
             sheetState = sheetState,
             onDismiss = onDismiss,
-            onMemberAdded = onMemberAdded
+            onMemberAdded = onMemberAdded,
+            onSearch = onSearch
         )
     }
 }
@@ -78,6 +81,7 @@ fun AddMemberBottomSheet(
 private fun AddMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
+    onSearch: ((String) -> Unit)? = null,
     onMemberAdded: (String, List<String>) -> Unit,
 ) {
     val context = LocalContext.current
@@ -161,6 +165,20 @@ private fun AddMemberContent(
                 supportingText = {
                     if (isErrorName) {
                         Text(text = errorMessageName)
+                    }
+                },
+                trailingIcon = {
+                    onSearch?.let {
+                        IconButton(
+                            onClick = {
+                                onSearch.invoke(name.text)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(R.string.search_icon_description)
+                            )
+                        }
                     }
                 },
                 keyboardActions = KeyboardActions(
@@ -248,9 +266,8 @@ private fun AddMemberBottomSheetPreview() {
         AddMemberContent(
             sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
-            onMemberAdded = { _, _ ->
-
-            }
+            onSearch = {},
+            onMemberAdded = { _, _ -> }
         )
     }
 }

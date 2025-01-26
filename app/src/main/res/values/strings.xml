@@ -97,4 +97,6 @@
     <string name="chat_generative_button_send">Send</string>
     <string name="empty_group_title">Uh-oh!</string>
     <string name="empty_group_message">No group found</string>
+    <string name="search_icon_description" />
+    <string name="add_member_bottom_sheet_user_not_found" />
 </resources>

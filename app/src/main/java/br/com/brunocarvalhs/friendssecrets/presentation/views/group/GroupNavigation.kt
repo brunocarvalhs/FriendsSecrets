@@ -19,6 +19,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawScr
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.findBy.FindByScreen
 
 sealed class GroupNavigation(
     override val route: String,
@@ -29,6 +30,13 @@ sealed class GroupNavigation(
     data object Create : GroupNavigation(
         route = "group/create",
     )
+
+    data object FindBy : GroupNavigation(
+        route = "group/create?user={value}",
+        arguments = listOf(navArgument(name = "value") { type = NavType.StringType })
+    ) {
+        fun createRoute(value: String) = "group/create?user=${value}"
+    }
 
     data object Read : GroupNavigation(
         route = "group/{groupId}",
@@ -113,6 +121,16 @@ fun NavGraphBuilder.groupGraph(
                 viewModel = viewModel,
                 groupId = groupId,
                 toggleManager = toggleManager
+            )
+        }
+        composable(
+            route = GroupNavigation.FindBy.route,
+            arguments = GroupNavigation.FindBy.arguments,
+            deepLinks = GroupNavigation.FindBy.deepLinks
+        ) {
+            val groupId = it.arguments?.getString("value") ?: ""
+            FindByScreen(
+                navController = navController
             )
         }
     }
