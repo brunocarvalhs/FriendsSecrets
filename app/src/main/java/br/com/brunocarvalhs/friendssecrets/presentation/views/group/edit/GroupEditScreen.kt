@@ -47,6 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -54,6 +55,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 
 @Composable
@@ -83,6 +85,9 @@ fun GroupEditScreen(
         onBack = {
             navController.popBackStack()
         },
+        onSearch = {
+            navController.navigate(GroupNavigation.FindBy.createRoute(it))
+        },
         onEdit = { group ->
             viewModel.eventIntent(
                 intent = GroupEditIntent.EditGroup(group)
@@ -99,6 +104,7 @@ private fun GroupEditContent(
     onHome: () -> Unit,
     onBack: () -> Unit,
     onEdit: (GroupEntities) -> Unit,
+    onSearch: ((String) -> Unit)? = null,
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
@@ -120,11 +126,13 @@ private fun GroupEditContent(
     }, floatingActionButton = {
         if (uiState is GroupEditUiState.Idle) {
             ExtendedFloatingActionButton(onClick = {
-                onEdit.invoke(uiState.group.toCopy(
-                    name = name.text,
-                    description = description.text,
-                    members = members.toMap()
-                ))
+                onEdit.invoke(
+                    uiState.group.toCopy(
+                        name = name.text,
+                        description = description.text,
+                        members = members.toMap()
+                    )
+                )
             }) {
                 Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
                 Text(stringResource(R.string.group_create_action_save_group))
@@ -141,10 +149,11 @@ private fun GroupEditContent(
                     description = description,
                     onDescriptionChange = { description = it },
                     members = members,
+                    onSearch = onSearch,
                     onMembersChange = {
                         members.clear()
                         members.putAll(it)
-                    }
+                    },
                 )
             }
 
@@ -186,7 +195,8 @@ private fun GroupEditForm(
     description: TextFieldValue,
     onDescriptionChange: (TextFieldValue) -> Unit = {},
     members: SnapshotStateMap<String, String>,
-    onMembersChange: (Map<String, String>) -> Unit = { _ -> }
+    onMembersChange: (Map<String, String>) -> Unit = { _ -> },
+    onSearch: ((String) -> Unit)? = null,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -254,7 +264,8 @@ private fun GroupEditForm(
     if (showBottomSheet) {
         AddMemberBottomSheet(
             onDismiss = { showBottomSheet = false },
-            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") }
+            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") },
+            onSearch = onSearch
         )
     }
 }

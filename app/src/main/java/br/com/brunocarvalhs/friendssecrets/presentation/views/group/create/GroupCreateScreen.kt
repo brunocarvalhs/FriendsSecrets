@@ -50,6 +50,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 
 @Composable
 fun GroupCreateScreen(
@@ -64,9 +65,11 @@ fun GroupCreateScreen(
         onHome = {
             navController.popBackStack()
         },
-        onBack = { viewModel.eventIntent(
-            intent = GroupCreateIntent.Back
-        ) },
+        onBack = {
+            viewModel.eventIntent(
+                intent = GroupCreateIntent.Back
+            )
+        },
         onSave = { name, description, members ->
             viewModel.eventIntent(
                 intent = GroupCreateIntent.CreateGroup(
@@ -75,6 +78,9 @@ fun GroupCreateScreen(
                     members = members
                 )
             )
+        },
+        onSearch = {
+            navController.navigate(GroupNavigation.FindBy.createRoute(it))
         }
     )
 }
@@ -87,6 +93,7 @@ private fun GroupCreateContent(
     onHome: () -> Unit,
     onBack: () -> Unit,
     onSave: (String, String, Map<String, String>) -> Unit,
+    onSearch: ((String) -> Unit)? = null,
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
@@ -160,7 +167,10 @@ private fun GroupCreateContent(
                                 Text(text = stringResource(R.string.group_create_text_button_member))
                             }
                             IconButton(onClick = { showBottomSheet = true }) {
-                                Icon(Icons.Filled.Add, stringResource(R.string.group_create_text_button_member))
+                                Icon(
+                                    Icons.Filled.Add,
+                                    stringResource(R.string.group_create_text_button_member)
+                                )
                             }
                         }
                     }
@@ -187,7 +197,8 @@ private fun GroupCreateContent(
     if (showBottomSheet && uiState is GroupCreateUiState.Idle) {
         AddMemberBottomSheet(
             onDismiss = { showBottomSheet = false },
-            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") }
+            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") },
+            onSearch = onSearch
         )
     }
     when (uiState) {
@@ -240,7 +251,8 @@ fun GroupCreateScreenPreview(
             uiState = state,
             onBack = { },
             onHome = { },
-            onSave = { _, _, _ -> }
+            onSave = { _, _, _ -> },
+            onSearch = { }
         )
     }
 }

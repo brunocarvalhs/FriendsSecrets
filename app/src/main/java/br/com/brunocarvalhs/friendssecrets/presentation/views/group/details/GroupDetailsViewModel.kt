@@ -12,6 +12,7 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.service.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
@@ -195,10 +196,12 @@ class GroupDetailsViewModel(
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
                     val performance = PerformanceManager()
+                    val session = SessionManager()
                     val groupReadUseCase = GroupReadUseCase(
                         groupRepository = repository,
                         storage = storage,
-                        performance = performance
+                        performance = performance,
+                        session = session
                     )
                     val groupDrawUseCase = GroupDrawUseCase(
                         groupRepository = repository,

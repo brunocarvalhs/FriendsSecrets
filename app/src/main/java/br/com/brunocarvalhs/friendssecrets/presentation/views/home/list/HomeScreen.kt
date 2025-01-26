@@ -53,6 +53,8 @@ import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.service.SessionManager
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -89,6 +91,7 @@ fun HomeScreen(
     }
 
     HomeContent(
+        user = SessionManager().getCurrentUser(),
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
@@ -105,6 +108,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     navController: NavController,
+    user: UserEntities? = null,
     uiState: HomeUiState,
     onEvent: (HomeIntent) -> Unit = {},
     isSettingsEnabled: Boolean = true,
@@ -126,7 +130,7 @@ private fun HomeContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-
+                    user?.let { Text(text = "Olá ${it.firstName()}") }
                 },
                 actions = {
                     if (isSettingsEnabled || isJoinGroupEnabled) {

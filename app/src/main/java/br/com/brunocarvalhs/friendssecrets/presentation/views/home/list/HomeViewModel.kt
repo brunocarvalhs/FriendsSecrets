@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.service.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
@@ -47,7 +48,6 @@ class HomeViewModel(
     private fun fetchGroups() {
         _uiState.value = HomeUiState.Loading
         viewModelScope.launch {
-            delay(timeMillis = 1500)
             groupListUseCase.invoke().onSuccess {
                 _uiState.value = HomeUiState.Success(list = it)
             }.onFailure {
@@ -63,10 +63,12 @@ class HomeViewModel(
                     val repository = GroupRepositoryImpl()
                     val storage = StorageService()
                     val performance = PerformanceManager()
+                    val session = SessionManager()
                     val groupListUseCase = GroupListUseCase(
                         groupRepository = repository,
                         storage = storage,
-                        performance = performance
+                        performance = performance,
+                        session = session
                     )
                     val groupByTokenUseCase = GroupByTokenUseCase(
                         groupRepository = repository,

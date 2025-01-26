@@ -8,8 +8,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.UserByNameOrPhoneUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class GroupCreateViewModel(
     private val useCase: GroupCreateUseCase,
+    private val readUseCase: UserByNameOrPhoneUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupCreateUiState> =
@@ -55,19 +59,26 @@ class GroupCreateViewModel(
         }
     }
 
+    fun search(string: String): UserEntities? {
+        return null
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val repository = GroupRepositoryImpl()
-                    val storage = StorageService()
-                    val performance = PerformanceManager()
                     val useCase = GroupCreateUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
+                        groupRepository = GroupRepositoryImpl(),
+                        storage = StorageService(),
+                        performance = PerformanceManager()
                     )
-                    GroupCreateViewModel(useCase = useCase)
+                    val readUseCase = UserByNameOrPhoneUseCase(
+                        repository = UserRepositoryImpl()
+                    )
+                    GroupCreateViewModel(
+                        useCase = useCase,
+                        readUseCase = readUseCase
+                    )
                 }
             }
     }
