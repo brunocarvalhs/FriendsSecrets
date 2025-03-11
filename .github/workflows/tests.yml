@@ -46,7 +46,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Upload Workspace
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: workspace
           path: ./
@@ -57,7 +57,7 @@ jobs:
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -91,7 +91,7 @@ jobs:
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -125,7 +125,7 @@ jobs:
     needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -136,7 +136,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk

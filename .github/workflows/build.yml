@@ -10,6 +10,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
   BUILD_TOOLS_VERSION: "34.0.0"
   APP_NAME: "FriendsSecrets"
+  FIREBASE_APP_ID: "1:212108336384:android:e74d22bacd5f156e2427e5"
 
 jobs:
   checkout-and-setup:
@@ -43,7 +44,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Upload Workspace
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: workspace
           path: ./
@@ -54,7 +55,7 @@ jobs:
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -72,7 +73,7 @@ jobs:
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -90,7 +91,7 @@ jobs:
     needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -101,7 +102,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk
@@ -112,7 +113,7 @@ jobs:
     needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
   
@@ -123,7 +124,29 @@ jobs:
         run: ./gradlew bundleDebug
   
       - name: Upload Debug AAB
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-aab-debug
           path: app/build/outputs/bundle/debug/*.aab
+
+  deploy-firebase:
+    runs-on: ubuntu-24.04
+    name: Deploy to Firebase App Distribution
+    needs: build-apk
+    steps:
+      - name: Download APK Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-apk-debug
+          path: app/build/outputs/apk/release/
+
+      - name: Install Firebase CLI
+        run: curl -sL https://firebase.tools | bash
+
+      - name: Upload APK to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+            --app "${{ env.FIREBASE_APP_ID }}" \
+            --groups "testers" \
+            --release-notes "Nova versão automática" \
+            --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
