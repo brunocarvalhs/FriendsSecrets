@@ -2,9 +2,10 @@ name: Danger
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]  # Aciona o Danger em várias ações no PR
+    types: [opened, edited, reopened, synchronize]
     branches:
-      - develop  # Define a branch para a qual o PR será criado
+      - develop
+      - master
 
 jobs:
   danger:
