@@ -121,10 +121,23 @@ jobs:
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
+      - name: List Firebase Tester Groups
+        run: |
+          GROUPS=$(firebase appdistribution:testers:list --app "${{ env.FIREBASE_APP_ID }}" | awk 'NR>1 {print $1}' | paste -sd "," -)
+          echo "GROUPS=$GROUPS" >> $GITHUB_ENV
+      
+      - name: Generate Release Notes
+        run: |
+          RELEASE_NOTES=$(git log --merges --pretty=format:"%h - %s" $(git describe --tags --abbrev=0)..HEAD)
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
       - name: Upload APK to Firebase App Distribution
         run: |
           firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --groups "testers" \
-            --release-notes "Nova versão automática" \
+            --groups "${{ env.GROUPS }}" \
+            --release-notes "${{ env.RELEASE_NOTES }}" \
             --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
+
