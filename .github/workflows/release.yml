@@ -177,3 +177,4 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: production
           status: completed
+          changesNotSentForReview: true
