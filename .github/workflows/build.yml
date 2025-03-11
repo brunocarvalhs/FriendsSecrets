@@ -120,18 +120,11 @@ jobs:
 
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
-
-      - name: Generate Release Notes
-        run: |
-          RELEASE_NOTES=$(git log --merges --pretty=format:"%h - %s" $(git describe --tags --abbrev=0)..HEAD)
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          echo "$RELEASE_NOTES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
       
       - name: Upload APK to Firebase App Distribution
         run: |
           firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes "${{ env.RELEASE_NOTES }}" \
+            --release-notes "release automatica" \
             --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
 
