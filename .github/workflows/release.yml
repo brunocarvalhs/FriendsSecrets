@@ -87,44 +87,9 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-  build-apk:
+  build:
     runs-on: ubuntu-24.04
-    name: Build APK
-    needs: [unit-tests, lint-check]
-    env:
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-    steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v3
-        with:
-          name: workspace
-
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
-      - name: Check if keystore exists
-        run: |
-          if [ -f "app/release.keystore" ]; then
-            echo "Keystore exists"
-          else
-            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
-            exit 1
-          fi
-        
-      - name: Build APK
-        run: ./gradlew assembleRelease
-            
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.APP_NAME }}-apk
-          path: app/build/outputs/apk/release/*.apk
-
-  build-aab:
-    runs-on: ubuntu-24.04
-    name: Build AAB
+    name: Build
     needs: [unit-tests, lint-check]
     env:
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -160,7 +125,7 @@ jobs:
   release:
     runs-on: ubuntu-24.04
     name: Create and Upload Release
-    needs: [build-apk, build-aab]
+    needs: [build]
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v3

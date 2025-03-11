@@ -119,9 +119,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "+1"
           
-  build-apk:
+  build:
     runs-on: ubuntu-24.04
-    name: Build APK
+    name: Build
     needs: [unit-tests, lint-check]
     steps:
       - name: Download Workspace
