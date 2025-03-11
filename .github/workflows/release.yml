@@ -176,4 +176,4 @@ jobs:
           packageName: "br.com.brunocarvalhs.friendssecrets"
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: production
-          status: inProgress
+          status: completed
