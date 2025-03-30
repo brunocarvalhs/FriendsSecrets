@@ -14,7 +14,7 @@ class MinimumsMembersOfDrawExceptionTest {
     @Before
     fun setUp() {
         val customApplication = mockk<CustomApplication>()
-        every { customApplication.getString(R.string.exception_minimums_members_of_draw) } returns "Group already exists"
+        every { customApplication.getString(R.string.exception_minimums_members_of_draw) } returns "The group must have at least 3 participants to hold the draw."
 
         mockkObject(CustomApplication.Companion)
         every { CustomApplication.getInstance() } returns customApplication

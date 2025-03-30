@@ -14,7 +14,7 @@ class GroupNotFoundExceptionTest {
     @Before
     fun setUp() {
         val customApplication = mockk<CustomApplication>()
-        every { customApplication.getString(R.string.exception_group_not_found) } returns "Group already exists"
+        every { customApplication.getString(R.string.exception_group_not_found) } returns "Group not found"
 
         mockkObject(CustomApplication.Companion)
         every { CustomApplication.getInstance() } returns customApplication
