@@ -48,6 +48,14 @@ class SessionManager(
         return auth.currentUser?.uid
     }
 
+    fun getUserName(): String? {
+        return auth.currentUser?.displayName
+    }
+
+    fun getUserPhotoUrl(): String? {
+        return auth.currentUser?.photoUrl?.toString()
+    }
+
     suspend fun updateUserProfile(
         name: String,
         photoUrl: String

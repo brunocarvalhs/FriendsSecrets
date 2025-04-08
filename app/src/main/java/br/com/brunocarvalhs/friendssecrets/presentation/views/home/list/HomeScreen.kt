@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -60,11 +61,14 @@ import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupCard
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupToEnterBottomSheet
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.MenuHome
+import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.MenuItem
 
 @Composable
 fun HomeScreen(
@@ -147,32 +151,16 @@ private fun HomeContent(
                                 contentDescription = "More"
                             )
                         }
-                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            if (isJoinGroupEnabled) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.home_drop_menu_item_text_join_a_group)) },
-                                    onClick = { showBottomSheet = true },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.Edit,
-                                            contentDescription = null
-                                        )
-                                    }
-                                )
-                            }
-                            if (isSettingsEnabled) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.home_drop_menu_item_text_settings)) },
-                                    onClick = { navController.navigate(route = Screen.Settings.route) },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.Settings,
-                                            contentDescription = null
-                                        )
-                                    }
-                                )
-                            }
-                        }
+                        MenuHome(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            onClick = {
+                                when (val menu = it) {
+                                    MenuItem.JoinGroup -> showBottomSheet = true
+                                    else -> navController.navigate(menu.route.orEmpty())
+                                }
+                            },
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior // Associar comportamento de rolagem

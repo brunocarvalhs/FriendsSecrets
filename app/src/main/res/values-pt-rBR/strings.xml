@@ -19,6 +19,7 @@
     <string name="group_details_drop_menu_item_text_edit">Editar</string>
 
     <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_profile">Perfil</string>
     <string name="home_drop_menu_item_text_join_a_group">Entrar em um grupo</string>
     <string name="home_drop_menu_item_text_settings">Configurações</string>
     <string name="home_action_create_group">Criar novo grupo</string>
@@ -96,4 +97,5 @@
     <string name="chat_generative_button_send">Enviar</string>
     <string name="empty_group_title">Ops!</string>
     <string name="empty_group_message">Nenhum grupo encontrado</string>
+    <string name="home_title">E aí</string>
 </resources>

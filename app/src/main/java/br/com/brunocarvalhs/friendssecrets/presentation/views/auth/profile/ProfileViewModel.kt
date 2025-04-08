@@ -13,10 +13,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val createProfileUseCase: CreateProfileUseCase
+    private val createProfileUseCase: CreateProfileUseCase,
+    private val sessionManager: SessionManager = SessionManager.getInstance()
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Idle)
+    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Idle(
+        name = sessionManager.getUserName(),
+        photoUrl = sessionManager.getUserPhotoUrl()
+    ))
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     fun handleIntent(intent: ProfileIntent) = when (intent) {

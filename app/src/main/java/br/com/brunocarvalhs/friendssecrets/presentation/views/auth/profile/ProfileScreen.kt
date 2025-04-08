@@ -36,13 +36,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import coil.compose.AsyncImage
+import com.yalantis.ucrop.UCrop
+import java.io.File
 
 @Composable
 fun ProfileScreen(
@@ -72,16 +76,42 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileContent(
-    uiState: ProfileUiState,
+    uiState: ProfileUiState = ProfileUiState.Idle(),
     handleIntent: (ProfileIntent) -> Unit = {},
 ) {
-    var name by remember { mutableStateOf("") }
-    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val cacheDir = context.cacheDir
 
-    val launcher = rememberLauncherForActivityResult(
+    var name by remember { mutableStateOf((uiState as ProfileUiState.Idle).name.orEmpty()) }
+    var profileImageUri by remember {
+        mutableStateOf((uiState as ProfileUiState.Idle).photoUrl?.let {
+            Uri.parse(it)
+        })
+    }
+
+    val cropLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            val uri = UCrop.getOutput(result.data ?: return@rememberLauncherForActivityResult)
+            if (uri != null) {
+                profileImageUri = uri
+            }
+        }
+    )
+
+    val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            profileImageUri = uri
+            uri?.let {
+                val destinationUri = Uri.fromFile(
+                    File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg")
+                )
+                val uCrop = UCrop.of(it, destinationUri)
+                    .withAspectRatio(1f, 1f) // 1:1 for profile
+                    .withMaxResultSize(500, 500)
+
+                cropLauncher.launch(uCrop.getIntent(context))
+            }
         }
     )
 
@@ -98,7 +128,7 @@ private fun ProfileContent(
             Box(
                 modifier = Modifier
                     .size(120.dp)
-                    .clickable { launcher.launch("image/*") },
+                    .clickable { galleryLauncher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
                 if (profileImageUri != null) {
@@ -132,10 +162,14 @@ private fun ProfileContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { handleIntent(ProfileIntent.SaveProfile(
-                    name = name,
-                    photoUrl = profileImageUri.toString()
-                )) },
+                onClick = {
+                    handleIntent(
+                        ProfileIntent.SaveProfile(
+                            name = name,
+                            photoUrl = profileImageUri.toString()
+                        )
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = name.isNotBlank() && uiState !is ProfileUiState.Loading
             ) {
@@ -181,7 +215,7 @@ private fun ProfileContent(
 @Preview
 private fun ProfileScreenPreview() {
     ProfileContent(
-        uiState = ProfileUiState.Idle,
+        uiState = ProfileUiState.Idle(),
         handleIntent = {}
     )
 }
