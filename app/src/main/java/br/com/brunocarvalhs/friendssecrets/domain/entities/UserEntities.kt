@@ -6,7 +6,6 @@ interface UserEntities {
     val photoUrl: String?
     val phoneNumber: String
     val isPhoneNumberVerified: Boolean
-    val groups: List<GroupEntities>
 
     companion object {
         const val ID = "id"

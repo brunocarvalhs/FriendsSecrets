@@ -52,7 +52,10 @@ import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
+import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -73,6 +76,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+    val session = SessionManager.getInstance()
 
     LaunchedEffect(Unit) {
         AnalyticsProvider.track(
@@ -89,6 +93,7 @@ fun HomeScreen(
     }
 
     HomeContent(
+        session = session.getCurrentUserModel(),
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
@@ -104,6 +109,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeContent(
+    session: UserEntities? = null,
     navController: NavController,
     uiState: HomeUiState,
     onEvent: (HomeIntent) -> Unit = {},
@@ -126,7 +132,12 @@ private fun HomeContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-
+                    session?.let {
+                        Text(
+                            text = "${stringResource(R.string.home_title)} ${it.name}",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                 },
                 actions = {
                     if (isSettingsEnabled || isJoinGroupEnabled) {
@@ -279,3 +290,33 @@ fun HomeContentPreview(
         )
     }
 }
+
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO
+)
+@Composable
+fun HomeContentSessionPreview(
+    @PreviewParameter(HomePreviewProvider::class) state: HomeUiState,
+) {
+    FriendsSecretsTheme {
+        HomeContent(
+            session = UserModel(
+                id = "1",
+                name = "John Doe",
+                photoUrl = null,
+                phoneNumber = "+5511999999999",
+                isPhoneNumberVerified = true
+            ),
+            navController = rememberNavController(),
+            uiState = state
+        )
+    }
+}
+
