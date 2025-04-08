@@ -6,7 +6,7 @@ interface UserEntities {
     val photoUrl: String?
     val phoneNumber: String
     val isPhoneNumberVerified: Boolean
-    val likes: List<String>?
+    val likes: List<String>
 
     fun toMap(): Map<String, Any>
 
@@ -16,7 +16,7 @@ interface UserEntities {
         photoUrl: String? = this.photoUrl,
         phoneNumber: String = this.phoneNumber,
         isPhoneNumberVerified: Boolean = this.isPhoneNumberVerified,
-        likes: List<String>? = this.likes
+        likes: List<String> = this.likes
     ): UserEntities
 
     companion object {

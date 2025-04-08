@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -112,11 +113,13 @@ private fun EditMemberContent(
 
     fun dismiss() {
         scope.launch {
-            sheetState.hide()
-            if (name.text.isNotBlank()) onMemberAdded.invoke(name.text, likes)
+            if (name.text.isNotBlank()) {
+                addLike()
+                onMemberAdded.invoke(name.text, likes)
+            }
             name = TextFieldValue("", TextRange(0, 0))
-            addLike()
             likes.clear()
+            sheetState.hide()
         }.invokeOnCompletion {
             if (!sheetState.isVisible) {
                 onDismiss.invoke()
@@ -193,11 +196,15 @@ private fun EditMemberContent(
                     }
                 )
             }
-            LazyRow {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 item {
                     Spacer(modifier = Modifier.padding(start = 16.dp))
                 }
-                items(likes) { like ->
+                items(likes.filter { it.isNotBlank() }) { like ->
                     AssistChip(
                         onClick = { },
                         label = {

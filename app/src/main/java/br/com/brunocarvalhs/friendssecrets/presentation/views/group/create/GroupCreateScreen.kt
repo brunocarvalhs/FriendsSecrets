@@ -2,19 +2,24 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.group.create
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +57,6 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberB
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -194,14 +198,18 @@ private fun GroupCreateContent(
                                 likes = members[member]?.split("|") ?: emptyList(),
                             ),
                             isSelected = true,
-                            onAdd = { contact ->
-                                members[contact.name] = contact.likes?.joinToString("|") ?: ""
-                            },
-                            onRemove = { contact ->
-                                members.remove(contact.name)
-                            },
-                            isCheckboxVisible = false,
-                            isDeleteVisible = true,
+                            action = { _, _ ->
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete contact",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clickable {
+                                            members.remove(member)
+                                        }
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                            }
                         )
                     }
                     if (uiState.contacts.isNotEmpty()) {
@@ -211,12 +219,17 @@ private fun GroupCreateContent(
                             ContactItem(
                                 contact = contact,
                                 isSelected = contacts.contains(contact),
-                                onAdd = {
-                                    contacts.add(contact)
-                                },
-                                onRemove = {
-                                    contacts.remove(contact)
-                                },
+                                action = { _, _ ->
+                                    Checkbox(
+                                        checked = contacts.contains(contact),
+                                        onCheckedChange = { isChecked ->
+                                            if (isChecked)
+                                                contacts.add(contact)
+                                            else
+                                                contacts.remove(contact)
+                                        }
+                                    )
+                                }
                             )
                         }
                     }

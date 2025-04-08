@@ -18,9 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -47,11 +45,10 @@ import coil.compose.AsyncImage
 fun ContactItem(
     contact: UserEntities,
     isSelected: Boolean = false,
-    onAdd: (UserEntities) -> Unit,
-    onRemove: (UserEntities) -> Unit,
-    isCheckboxVisible: Boolean = true,
-    isDeleteVisible: Boolean = false
+    action: @Composable ((UserEntities, Boolean) -> Unit)? = null,
 ) {
+    val filteredLikes = contact.likes.filter { it.isNotBlank() }
+
     var isLiked by remember { mutableStateOf(false) }
 
     val backgroundColor = if (isSelected) {
@@ -64,7 +61,7 @@ fun ContactItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clickable(enabled = contact.likes?.isNotEmpty() == true) {
+            .clickable(enabled = filteredLikes.isNotEmpty()) {
                 isLiked = !isLiked
             },
         tonalElevation = if (isSelected) 4.dp else 2.dp,
@@ -118,29 +115,11 @@ fun ContactItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (isCheckboxVisible && !isDeleteVisible) {
-                        Checkbox(
-                            checked = isSelected,
-                            onCheckedChange = {
-                                if (it) onAdd(contact) else onRemove(contact)
-                            }
-                        )
-                    }
-
-                    if (isDeleteVisible) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete contact",
-                            modifier = Modifier
-                                .size(24.dp)
-                                .clickable { onRemove(contact) }
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                    }
+                    action?.invoke(contact, isLiked)
                 }
             }
 
-            if (contact.likes?.isNotEmpty() == true) {
+            if (filteredLikes.isNotEmpty()) {
                 AnimatedVisibility(visible = isLiked) {
                     LazyRow(
                         modifier = Modifier
@@ -148,7 +127,7 @@ fun ContactItem(
                             .padding(start = 16.dp, bottom = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(contact.likes.orEmpty()) { like ->
+                        items(filteredLikes) { like ->
                             AssistChip(onClick = {}, label = { Text(like) })
                         }
                     }
@@ -179,8 +158,6 @@ private fun ContactItemPreview() {
             isPhoneNumberVerified = false,
             likes = listOf("Like 1", "Like 2", "Like 3")
         ),
-        onAdd = {},
-        onRemove = {}
     )
 }
 
@@ -207,39 +184,6 @@ private fun ContactItemSelectedPreview() {
                 likes = listOf("Like 1", "Like 2", "Like 3")
             ),
             isSelected = true,
-            onAdd = {},
-            onRemove = {}
-        )
-    }
-}
-
-@Composable
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
-)
-private fun ContactItemDeletePreview() {
-    FriendsSecretsTheme {
-        ContactItem(
-            contact = UserModel(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf("Like 1", "Like 2", "Like 3")
-            ),
-            isSelected = true,
-            onAdd = {},
-            onRemove = {},
-            isCheckboxVisible = false,
-            isDeleteVisible = true
         )
     }
 }
