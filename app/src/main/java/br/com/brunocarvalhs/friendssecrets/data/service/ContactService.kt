@@ -35,8 +35,7 @@ class ContactService {
         cursor?.use {
             val numberIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
             while (it.moveToNext()) {
-                var number = it.getString(numberIndex)
-                number = normalizePhoneNumber(number)
+                val number = it.getString(numberIndex)
                 if (number.isNotBlank()) {
                     numbers.add(number)
                 }
@@ -71,10 +70,9 @@ class ContactService {
 
             while (it.moveToNext()) {
                 val name = it.getString(nameIndex) ?: ""
-                var number = it.getString(numberIndex) ?: ""
+                val number = it.getString(numberIndex) ?: ""
                 val photoUri = it.getString(photoIndex)?.let { uri -> Uri.parse(uri) }
 
-                number = normalizePhoneNumber(number)
                 if (number.isNotBlank()) {
                     contactList.add(
                         UserModel(
@@ -91,10 +89,4 @@ class ContactService {
         return contactList.distinctBy { it.name }.sortedBy { it.name }
     }
 
-    private fun normalizePhoneNumber(phone: String): String {
-        return phone
-            .replace("[^\\d+]".toRegex(), "")
-            .replace("^\\+?55".toRegex(), "")
-            .trim()
-    }
 }
