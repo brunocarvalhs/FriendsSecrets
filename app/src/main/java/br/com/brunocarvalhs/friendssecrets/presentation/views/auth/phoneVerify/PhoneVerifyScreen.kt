@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendUiState
 import kotlinx.coroutines.delay
@@ -75,6 +77,7 @@ fun PhoneVerifyScreen(
     }
 
     PhoneVerifyContent(
+        navController = navController,
         uiState = uiState,
         phoneNumber = phoneNumber,
         handleIntent = viewModel::handleIntent
@@ -84,6 +87,7 @@ fun PhoneVerifyScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PhoneVerifyContent(
+    navController: NavController = rememberNavController(),
     uiState: PhoneVerifyUiState = PhoneVerifyUiState.Idle,
     phoneNumber: String = "",
     handleIntent: (PhoneVerifyIntent) -> Unit = {}
@@ -106,13 +110,7 @@ private fun PhoneVerifyContent(
 
                 },
                 navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier.clickable {
-                            // Voltar
-                        }
-                    )
+                    NavigationBackIconButton(navController = navController)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
@@ -208,15 +206,7 @@ private fun PhoneVerifyContent(
                         )
                     )
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(bottom = 24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(28.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
             ) {
                 Text("Verify")
             }

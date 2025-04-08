@@ -25,6 +25,10 @@ class LoginViewModel : ViewModel() {
         is LoginIntent.TermsOfUse -> {
             _uiState.value = LoginUiState.TermsOfUse
         }
+
+        LoginIntent.AcceptNotRegister -> {
+            _uiState.value = LoginUiState.AcceptNotRegister
+        }
     }
 
     companion object {

@@ -25,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,14 +45,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberBottomSheet
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GroupCreateScreen(
     navController: NavController = rememberNavController(),
@@ -58,15 +67,31 @@ fun GroupCreateScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    val context = LocalContext.current
+
+    val contactPermissionState = rememberPermissionState(
+        android.Manifest.permission.READ_CONTACTS
+    )
+
+    LaunchedEffect(Unit) {
+        if (!contactPermissionState.status.isGranted) {
+            contactPermissionState.launchPermissionRequest()
+        } else {
+            viewModel.eventIntent(GroupCreateIntent.FetchContacts(context))
+        }
+    }
+
     GroupCreateContent(
         navController = navController,
         uiState = uiState,
         onHome = {
             navController.popBackStack()
         },
-        onBack = { viewModel.eventIntent(
-            intent = GroupCreateIntent.Back
-        ) },
+        onBack = {
+            viewModel.eventIntent(
+                intent = GroupCreateIntent.Back
+            )
+        },
         onSave = { name, description, members ->
             viewModel.eventIntent(
                 intent = GroupCreateIntent.CreateGroup(
@@ -121,7 +146,7 @@ private fun GroupCreateContent(
         }
     }) {
         when (uiState) {
-            GroupCreateUiState.Idle -> {
+            is GroupCreateUiState.Idle -> {
                 LazyColumn(
                     modifier = Modifier
                         .padding(it)
@@ -160,7 +185,10 @@ private fun GroupCreateContent(
                                 Text(text = stringResource(R.string.group_create_text_button_member))
                             }
                             IconButton(onClick = { showBottomSheet = true }) {
-                                Icon(Icons.Filled.Add, stringResource(R.string.group_create_text_button_member))
+                                Icon(
+                                    Icons.Filled.Add,
+                                    stringResource(R.string.group_create_text_button_member)
+                                )
                             }
                         }
                     }
@@ -171,6 +199,24 @@ private fun GroupCreateContent(
                             onRemove = { members.remove(member) },
                         )
                         HorizontalDivider()
+                    }
+                    if (uiState.contacts.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "contatos",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                        items(uiState.contacts) { contact ->
+                            ContactItem(
+                                contact = contact,
+                                onAdd = {
+                                    members[contact.name] = contact.likes?.joinToString("|") ?: ""
+                                },
+                                onRemove = { members.remove(contact.name) },
+                            )
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
@@ -212,10 +258,37 @@ private fun GroupCreateContent(
 
 private class GroupCreatePreviewProvider : PreviewParameterProvider<GroupCreateUiState> {
     override val values = sequenceOf(
-        GroupCreateUiState.Idle,
+        GroupCreateUiState.Idle(
+            contacts = listOf<UserEntities>(
+                UserModel(
+                    name = "Produto de Teste",
+                    id = "1",
+                    phoneNumber = "123456789",
+                    photoUrl = "",
+                    isPhoneNumberVerified = false,
+                    likes = listOf("Produto 1", "Produto 2")
+                ),
+                UserModel(
+                    name = "Produto de Teste",
+                    id = "1",
+                    phoneNumber = "123456789",
+                    photoUrl = "",
+                    isPhoneNumberVerified = false,
+                    likes = listOf("Produto 1", "Produto 2")
+                ),
+                UserModel(
+                    name = "Produto de Teste",
+                    id = "1",
+                    phoneNumber = "123456789",
+                    photoUrl = "",
+                    isPhoneNumberVerified = false,
+                    likes = listOf("Produto 1", "Produto 2")
+                ),
+            )
+        ),
         GroupCreateUiState.Loading,
         GroupCreateUiState.Success,
-        GroupCreateUiState.Error(message = "Error")
+        GroupCreateUiState.Error(message = "Error"),
     )
 }
 

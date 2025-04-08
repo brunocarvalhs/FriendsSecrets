@@ -21,10 +21,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 
 @Composable
@@ -76,14 +81,17 @@ fun PhoneSendScreen(
     }
 
     PhoneSendContent(
+        navController = navController,
         handleIntent = viewModel::handleIntent,
         uiState = uiState
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PhoneSendContent(
     modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
     uiState: PhoneSendUiState = PhoneSendUiState.Idle,
     handleIntent: (PhoneSendIntent) -> Unit = {},
 ) {
@@ -91,122 +99,133 @@ private fun PhoneSendContent(
 
     val countryCode = "+55"
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "Enter your phone number",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "WhatsApp will need to verify your phone number.",
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
-        )
-
-        ClickableText(
-            text = AnnotatedString("What’s my number?"),
-            onClick = {
-
-            },
-            style = TextStyle(
-                color = Color.Blue,
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp
-            )
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.Gray, RectangleShape)
-                .padding(8.dp)
-        ) {
-            Text(
-                text = countryCode,
-                modifier = Modifier.padding(end = 8.dp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            HorizontalDivider(
-                modifier = Modifier
-                    .width(1.dp)
-                    .height(24.dp)
-                    .background(Color.Gray)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            TextField(
-                value = phoneNumber,
-                onValueChange = { phoneNumber = it },
-                placeholder = { Text("Phone number") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier.weight(1f),
-                singleLine = true,
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    NavigationBackIconButton(navController = navController)
+                }
             )
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Carrier charges may apply",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Button(
-            onClick = {
-                handleIntent(
-                    PhoneSendIntent.SendCode(
-                        phone = phoneNumber,
-                        countryCode = countryCode
-                    )
-                )
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("NEXT")
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-
-    if (uiState is PhoneSendUiState.Loading) {
-        Box(
+    ) { paddingValue ->
+        Column(
             modifier = Modifier
+                .padding(paddingValue)
                 .fillMaxSize()
-                .background(Color(0x88000000)) // fundo escurecido
-                .clickable(enabled = false) {}, // bloqueia cliques
-            contentAlignment = Alignment.Center
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                modifier = Modifier.size(100.dp)
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Text(
+                text = "Enter your phone number",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "WhatsApp will need to verify your phone number.",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+
+            ClickableText(
+                text = AnnotatedString("What’s my number?"),
+                onClick = {
+
+                },
+                style = TextStyle(
+                    color = Color.Blue,
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp
+                )
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color.Gray, RectangleShape)
+                    .padding(8.dp)
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
+                Text(
+                    text = countryCode,
+                    modifier = Modifier.padding(end = 8.dp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(24.dp)
+                        .background(Color.Gray)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                TextField(
+                    value = phoneNumber,
+                    onValueChange = { phoneNumber = it },
+                    placeholder = { Text("Phone number") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Carrier charges may apply",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    handleIntent(
+                        PhoneSendIntent.SendCode(
+                            phone = phoneNumber,
+                            countryCode = countryCode
+                        )
+                    )
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("NEXT")
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        if (uiState is PhoneSendUiState.Loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x88000000)) // fundo escurecido
+                    .clickable(enabled = false) {}, // bloqueia cliques
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    modifier = Modifier.size(100.dp)
                 ) {
-                    CircularProgressIndicator()
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
     }
-
 }
 
 @Preview(showBackground = true)

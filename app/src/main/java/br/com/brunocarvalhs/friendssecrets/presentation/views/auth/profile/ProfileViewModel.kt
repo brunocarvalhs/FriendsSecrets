@@ -6,7 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
+import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,17 +17,26 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val createProfileUseCase: CreateProfileUseCase,
-    private val sessionManager: SessionManager = SessionManager.getInstance()
+    private val getLikesProfileUseCase: GetLikesProfileUseCase,
+    sessionManager: SessionManager = SessionManager.getInstance()
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Idle(
-        name = sessionManager.getUserName(),
-        photoUrl = sessionManager.getUserPhotoUrl()
-    ))
+    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(
+        ProfileUiState.Idle(
+            name = sessionManager.getUserName(),
+            photoUrl = sessionManager.getUserPhotoUrl(),
+            phoneNumber = sessionManager.getUserPhoneNumber(),
+            likes = emptyList()
+        )
+    )
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     fun handleIntent(intent: ProfileIntent) = when (intent) {
         is ProfileIntent.SaveProfile -> saveProfile(intent.name, intent.photoUrl)
+    }
+
+    init {
+        fetchLikes(user = sessionManager.getCurrentUserModel())
     }
 
     private fun saveProfile(name: String, photoUrl: String) {
@@ -38,14 +50,38 @@ class ProfileViewModel(
         }
     }
 
+    private fun fetchLikes(user: UserEntities?) {
+        viewModelScope.launch {
+            getLikesProfileUseCase.invoke().onSuccess { likes ->
+                _uiState.value = ProfileUiState.Idle(
+                    name = user?.name,
+                    photoUrl = user?.photoUrl,
+                    phoneNumber = user?.phoneNumber,
+                    likes = likes
+                )
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val createProfileUseCase = CreateProfileUseCase(
-                        sessionManager = SessionManager.getInstance()
+                    val sessionManager = SessionManager.getInstance()
+                    val userRepository = UserRepositoryImpl()
+                    val getLikesProfileUseCase = GetLikesProfileUseCase(
+                        sessionManager = sessionManager,
+                        userRepository = userRepository
                     )
-                    ProfileViewModel(createProfileUseCase = createProfileUseCase)
+                    val createProfileUseCase = CreateProfileUseCase(
+                        sessionManager = sessionManager,
+                        userRepository = userRepository
+                    )
+                    ProfileViewModel(
+                        sessionManager = sessionManager,
+                        createProfileUseCase = createProfileUseCase,
+                        getLikesProfileUseCase = getLikesProfileUseCase
+                    )
                 }
             }
     }

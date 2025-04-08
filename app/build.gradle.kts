@@ -117,5 +117,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.leakcanary.android)
     dokkaPlugin(libs.android.documentation.plugin)
-    implementation("com.github.yalantis:ucrop:2.2.8")
+    implementation(libs.ucrop)
+    implementation(libs.accompanist.permissions)
 }

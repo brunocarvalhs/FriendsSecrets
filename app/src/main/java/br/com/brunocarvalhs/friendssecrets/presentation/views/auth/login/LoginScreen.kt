@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 
 @Composable
 fun LoginScreen(
@@ -56,6 +58,11 @@ fun LoginScreen(
 
             LoginUiState.Register -> {
                 navController.navigate("phone_send")
+            }
+
+            LoginUiState.AcceptNotRegister -> {
+                SessionManager.getInstance().setUserAnonymous()
+                navController.navigate("home")
             }
 
             else -> {}
@@ -148,6 +155,15 @@ private fun LoginContent(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 shape = RoundedCornerShape(50)
+            ) {
+                Text("Aceitar e Cadastrar")
+            }
+
+            TextButton(
+                onClick = { handleIntent(LoginIntent.AcceptNotRegister) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
             ) {
                 Text("Aceitar e Continuar")
             }

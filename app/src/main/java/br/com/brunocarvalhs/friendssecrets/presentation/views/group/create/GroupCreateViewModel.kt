@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.group.create
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -8,7 +9,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.data.service.ContactService
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetListUsersByContactUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,13 +22,19 @@ import kotlinx.coroutines.launch
 
 class GroupCreateViewModel(
     private val useCase: GroupCreateUseCase,
+    private val getListUsersByContactUseCase: GetListUsersByContactUseCase
 ) : ViewModel() {
 
+    private var contacts: List<UserEntities> = emptyList()
+
     private val _uiState: MutableStateFlow<GroupCreateUiState> =
-        MutableStateFlow(GroupCreateUiState.Idle)
+        MutableStateFlow(GroupCreateUiState.Idle(
+            contacts = contacts
+        ))
 
     val uiState: StateFlow<GroupCreateUiState> =
         _uiState.asStateFlow()
+
 
     fun eventIntent(intent: GroupCreateIntent) {
         when (intent) {
@@ -34,7 +45,24 @@ class GroupCreateViewModel(
             )
 
             GroupCreateIntent.Back -> {
-                _uiState.value = GroupCreateUiState.Idle
+                _uiState.value = GroupCreateUiState.Idle(
+                    contacts = contacts
+                )
+            }
+
+            is GroupCreateIntent.FetchContacts -> fetchContacts(
+                intent.context
+            )
+        }
+    }
+
+    private fun fetchContacts(context: Context) {
+        viewModelScope.launch {
+            getListUsersByContactUseCase.invoke(context).onSuccess {
+                contacts = it
+                _uiState.value = GroupCreateUiState.Idle(contacts = it)
+            }.onFailure {
+                _uiState.value = GroupCreateUiState.Error(it.report()?.message.orEmpty())
             }
         }
     }
@@ -67,7 +95,16 @@ class GroupCreateViewModel(
                         storage = storage,
                         performance = performance
                     )
-                    GroupCreateViewModel(useCase = useCase)
+                    val contactService = ContactService()
+                    val userRepository = UserRepositoryImpl()
+                    val getListUsersByContactUseCase = GetListUsersByContactUseCase(
+                        userRepository = userRepository,
+                        contactService = contactService
+                    )
+                    GroupCreateViewModel(
+                        useCase = useCase,
+                        getListUsersByContactUseCase = getListUsersByContactUseCase
+                    )
                 }
             }
     }

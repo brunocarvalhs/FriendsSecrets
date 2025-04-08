@@ -29,7 +29,7 @@ class SessionManager(
     }
 
     fun isUserLoggedIn(): Boolean {
-        return auth.currentUser != null
+        return auth.currentUser != null || auth.currentUser?.isAnonymous == true
     }
 
     fun isProfileComplete(): Boolean {
@@ -54,6 +54,14 @@ class SessionManager(
 
     fun getUserPhotoUrl(): String? {
         return auth.currentUser?.photoUrl?.toString()
+    }
+
+    fun getUserPhoneNumber(): String? {
+        return auth.currentUser?.phoneNumber
+    }
+
+    fun setUserAnonymous() {
+        auth.signInAnonymously()
     }
 
     suspend fun updateUserProfile(
