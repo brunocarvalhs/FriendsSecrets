@@ -1,7 +1,9 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -38,14 +43,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import br.com.brunocarvalhs.friendssecrets.presentation.Screen
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendUiState
 import kotlinx.coroutines.delay
 
 @Composable
@@ -65,15 +70,12 @@ fun PhoneVerifyScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is PhoneVerifyUiState.Success) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Auth.route) {
-                    inclusive = true
-                }
-            }
+            navController.navigate(LoginNavigation.Profile.route)
         }
     }
 
     PhoneVerifyContent(
+        uiState = uiState,
         phoneNumber = phoneNumber,
         handleIntent = viewModel::handleIntent
     )
@@ -82,6 +84,7 @@ fun PhoneVerifyScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PhoneVerifyContent(
+    uiState: PhoneVerifyUiState = PhoneVerifyUiState.Idle,
     phoneNumber: String = "",
     handleIntent: (PhoneVerifyIntent) -> Unit = {}
 ) {
@@ -219,7 +222,28 @@ private fun PhoneVerifyContent(
             }
         }
     }
-
+    if (uiState is PhoneVerifyUiState.Loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x88000000)) // fundo escurecido
+                .clickable(enabled = false) {}, // bloqueia cliques
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                modifier = Modifier.size(100.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
 }
 
 fun String.toMaskedPhoneNumber(): String {

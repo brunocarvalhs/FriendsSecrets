@@ -19,6 +19,8 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.Pho
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify.PhoneVerifyScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify.PhoneVerifyViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile.ProfileScreen
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile.ProfileViewModel
 
 sealed class LoginNavigation(
     override val route: String,
@@ -38,19 +40,19 @@ sealed class LoginNavigation(
         fun createRoute(phoneNumber: String) = "phone_verification?phoneNumber=$phoneNumber"
     }
 
+    data object Profile : LoginNavigation("profile")
+
     companion object {
         val START_DESTINATION = Login.route
     }
 }
 
-@SuppressLint("ContextCastToActivity")
 fun NavGraphBuilder.loginGraph(
     activity: ComponentActivity,
     navController: NavHostController,
     route: String,
     toggleManager: ToggleManager
 ) {
-
     navigation(startDestination = LoginNavigation.START_DESTINATION, route = route) {
         composable(LoginNavigation.Login.route) {
             val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
@@ -71,6 +73,13 @@ fun NavGraphBuilder.loginGraph(
             PhoneVerifyScreen(
                 phoneNumber = it.arguments?.getString(LoginNavigation.PhoneVerification.phoneNumber)
                     ?: "",
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable(LoginNavigation.Profile.route) {
+            val viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+            ProfileScreen(
                 navController = navController,
                 viewModel = viewModel
             )
