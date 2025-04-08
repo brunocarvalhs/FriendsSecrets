@@ -99,4 +99,7 @@
     <string name="empty_group_title">Uh-oh!</string>
     <string name="empty_group_message">No group found</string>
     <string name="home_title">Hey</string>
+    <string name="home_drop_menu_item_text_logout">Logout</string>
+    <string name="group_create_phone_contacts">Contatos do telefone</string>
+    <string name="group_create_app_users">Usuários do app</string>
 </resources>

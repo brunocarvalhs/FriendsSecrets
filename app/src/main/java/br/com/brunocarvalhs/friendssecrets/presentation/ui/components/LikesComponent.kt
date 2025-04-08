@@ -20,8 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -34,17 +32,11 @@ import br.com.brunocarvalhs.friendssecrets.R
 fun LikesComponent(
     modifier: Modifier = Modifier,
     name: TextFieldValue = TextFieldValue(""),
-    list: List<String> = emptyList(),
+    likes: List<String> = emptyList(),
     onNameChange: (TextFieldValue) -> Unit = {},
     onAddLike: (String) -> Unit = {},
     onRemoveLike: (String) -> Unit = {},
 ) {
-    val likes = remember { mutableStateListOf<String>() }
-
-    list.forEach { like ->
-        likes.add(like)
-    }
-
     Column {
         Row(modifier = modifier) {
             OutlinedTextField(
@@ -114,6 +106,17 @@ private fun LikesComponentPreview() {
 @Preview(showBackground = true)
 private fun LikesComponentListPreview() {
     LikesComponent(
-        list = listOf("Like 1", "Like 2", "Like 3", "Like 4", "Like 5", "Like 6", "Like 7", "Like 8", "Like 9", "Like 10")
+        likes = listOf(
+            "Like 1",
+            "Like 2",
+            "Like 3",
+            "Like 4",
+            "Like 5",
+            "Like 6",
+            "Like 7",
+            "Like 8",
+            "Like 9",
+            "Like 10"
+        )
     )
 }

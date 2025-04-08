@@ -22,19 +22,19 @@ import kotlinx.coroutines.launch
 
 class GroupCreateViewModel(
     private val useCase: GroupCreateUseCase,
-    private val getListUsersByContactUseCase: GetListUsersByContactUseCase
+    private val getListUsersByContactUseCase: GetListUsersByContactUseCase,
 ) : ViewModel() {
 
     private var contacts: List<UserEntities> = emptyList()
+    private var users: List<UserEntities> = emptyList()
 
     private val _uiState: MutableStateFlow<GroupCreateUiState> =
         MutableStateFlow(GroupCreateUiState.Idle(
-            contacts = contacts
+            contacts = contacts,
         ))
 
     val uiState: StateFlow<GroupCreateUiState> =
         _uiState.asStateFlow()
-
 
     fun eventIntent(intent: GroupCreateIntent) {
         when (intent) {
@@ -46,7 +46,7 @@ class GroupCreateViewModel(
 
             GroupCreateIntent.Back -> {
                 _uiState.value = GroupCreateUiState.Idle(
-                    contacts = contacts
+                    contacts = contacts,
                 )
             }
 
@@ -58,12 +58,10 @@ class GroupCreateViewModel(
 
     private fun fetchContacts(context: Context) {
         viewModelScope.launch {
-            getListUsersByContactUseCase.invoke(context).onSuccess {
-                contacts = it
-                _uiState.value = GroupCreateUiState.Idle(contacts = it)
-            }.onFailure {
-                _uiState.value = GroupCreateUiState.Error(it.report()?.message.orEmpty())
-            }
+            contacts = getListUsersByContactUseCase.invoke(context).getOrNull().orEmpty()
+            _uiState.value = GroupCreateUiState.Idle(
+                contacts = contacts,
+            )
         }
     }
 
@@ -103,7 +101,7 @@ class GroupCreateViewModel(
                     )
                     GroupCreateViewModel(
                         useCase = useCase,
-                        getListUsersByContactUseCase = getListUsersByContactUseCase
+                        getListUsersByContactUseCase = getListUsersByContactUseCase,
                     )
                 }
             }

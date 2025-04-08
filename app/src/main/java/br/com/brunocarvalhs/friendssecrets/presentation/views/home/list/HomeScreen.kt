@@ -12,11 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -50,18 +45,16 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.EmptyGroupComponent
@@ -157,6 +150,14 @@ private fun HomeContent(
                             onClick = {
                                 when (val menu = it) {
                                     MenuItem.JoinGroup -> showBottomSheet = true
+                                    MenuItem.Logout -> {
+                                        onEvent(HomeIntent.Logout)
+                                        navController.navigate(HomeNavigation.Home.route) {
+                                            popUpTo(HomeNavigation.Home.route) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
                                     else -> navController.navigate(menu.route.orEmpty())
                                 }
                             },
@@ -242,7 +243,7 @@ private class HomePreviewProvider : PreviewParameterProvider<HomeUiState> {
     override val values = sequenceOf(
         HomeUiState.Loading,
         HomeUiState.Success(list = listOf()),
-        HomeUiState.Success(list = (1..10).map {
+        HomeUiState.Success(list = (1..10).map { it ->
             GroupModel(
                 name = "Group $it",
                 description = "Description $it",

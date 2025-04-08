@@ -1,12 +1,15 @@
 package br.com.brunocarvalhs.friendssecrets.data.service
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
-import android.Manifest
-import android.content.pm.PackageManager
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 
-class ContactService() {
+class ContactService {
 
     private fun hasPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -19,7 +22,7 @@ class ContactService() {
         if (!hasPermission(context)) return emptyList()
 
         val contentResolver = context.contentResolver
-        val contactList = mutableListOf<String>()
+        val numbers = mutableListOf<String>()
 
         val cursor = contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -35,18 +38,63 @@ class ContactService() {
                 var number = it.getString(numberIndex)
                 number = normalizePhoneNumber(number)
                 if (number.isNotBlank()) {
-                    contactList.add(number)
+                    numbers.add(number)
                 }
             }
         }
 
-        return contactList.distinct()
+        return numbers.distinct()
+    }
+
+    fun getContacts(context: Context): List<UserEntities> {
+        if (!hasPermission(context)) return emptyList()
+
+        val contactList = mutableListOf<UserEntities>()
+        val contentResolver = context.contentResolver
+
+        val cursor = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.PHOTO_URI
+            ),
+            null,
+            null,
+            null
+        )
+
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val numberIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val photoIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI)
+
+            while (it.moveToNext()) {
+                val name = it.getString(nameIndex) ?: ""
+                var number = it.getString(numberIndex) ?: ""
+                val photoUri = it.getString(photoIndex)?.let { uri -> Uri.parse(uri) }
+
+                number = normalizePhoneNumber(number)
+                if (number.isNotBlank()) {
+                    contactList.add(
+                        UserModel(
+                            name = name,
+                            phoneNumber = number,
+                            photoUrl = photoUri.toString(),
+                            isPhoneNumberVerified = false
+                        )
+                    )
+                }
+            }
+        }
+
+        return contactList.distinctBy { it.name }.sortedBy { it.name }
     }
 
     private fun normalizePhoneNumber(phone: String): String {
         return phone
-            .replace("[^\\d+]".toRegex(), "") // Remove tudo que não for número ou +
-            .replace("^\\+?55".toRegex(), "") // Remove DDI do Brasil, se tiver
+            .replace("[^\\d+]".toRegex(), "")
+            .replace("^\\+?55".toRegex(), "")
             .trim()
     }
 }

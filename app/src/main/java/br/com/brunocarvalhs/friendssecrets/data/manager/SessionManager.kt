@@ -44,10 +44,6 @@ class SessionManager(
         return user.phoneNumber != null
     }
 
-    fun getUserId(): String? {
-        return auth.currentUser?.uid
-    }
-
     fun getUserName(): String? {
         return auth.currentUser?.displayName
     }
@@ -76,6 +72,21 @@ class SessionManager(
         }
 
         user?.updateProfile(profileUpdates)?.await()
+    }
+
+    fun signOut() {
+        auth.signOut()
+    }
+
+    fun deleteAccount() {
+        val user = auth.currentUser ?: return
+
+        user.delete()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    auth.signOut()
+                }
+            }
     }
 
     companion object {

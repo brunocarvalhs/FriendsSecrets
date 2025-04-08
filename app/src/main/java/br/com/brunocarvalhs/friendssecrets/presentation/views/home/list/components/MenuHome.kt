@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
@@ -42,11 +43,18 @@ sealed class MenuItem(
         isEnabled = true
     )
 
+    data object Logout : MenuItem(
+        title = { stringResource(id = R.string.home_drop_menu_item_text_logout) },
+        icon = Icons.AutoMirrored.Outlined.Logout,
+        isEnabled = true
+    )
+
     companion object {
         val values = listOf(
             Profile,
             JoinGroup,
-            Settings
+            Settings,
+            Logout
         )
     }
 }

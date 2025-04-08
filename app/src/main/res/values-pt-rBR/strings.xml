@@ -98,4 +98,7 @@
     <string name="empty_group_title">Ops!</string>
     <string name="empty_group_message">Nenhum grupo encontrado</string>
     <string name="home_title">E aí</string>
+    <string name="home_drop_menu_item_text_logout">Logout</string>
+    <string name="group_create_phone_contacts" />
+    <string name="group_create_app_users" />
 </resources>

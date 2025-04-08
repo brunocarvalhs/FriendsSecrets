@@ -99,11 +99,13 @@ private fun AddMemberContent(
 
     fun dismiss() {
         scope.launch {
-            sheetState.hide()
-            if (name.text.isNotBlank()) onMemberAdded.invoke(name.text, likes)
+            if (name.text.isNotBlank()) {
+                addLike() // <- Adiciona antes de limpar
+                onMemberAdded.invoke(name.text, likes)
+            }
             name = TextFieldValue("", TextRange(0, 0))
-            addLike()
             likes.clear()
+            sheetState.hide()
         }.invokeOnCompletion {
             if (!sheetState.isVisible) {
                 onDismiss.invoke()
@@ -157,7 +159,7 @@ private fun AddMemberContent(
             modifier = Modifier.padding(16.dp),
             name = likeName,
             onNameChange = { value -> likeName = value },
-            list = likes,
+            likes = likes,
             onAddLike = { _ ->
                 addLike()
             },

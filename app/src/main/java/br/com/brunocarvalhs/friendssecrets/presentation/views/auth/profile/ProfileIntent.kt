@@ -5,4 +5,7 @@ sealed class ProfileIntent {
         val name: String,
         val photoUrl: String
     ) : ProfileIntent()
+
+    data object DeleteAccount : ProfileIntent()
+    data object DownloadData : ProfileIntent()
 }

@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,27 +82,19 @@ fun GroupCreateScreen(
         }
     }
 
-    GroupCreateContent(
-        navController = navController,
-        uiState = uiState,
-        onHome = {
-            navController.popBackStack()
-        },
-        onBack = {
-            viewModel.eventIntent(
-                intent = GroupCreateIntent.Back
+    GroupCreateContent(navController = navController, uiState = uiState, onHome = {
+        navController.popBackStack()
+    }, onBack = {
+        viewModel.eventIntent(
+            intent = GroupCreateIntent.Back
+        )
+    }, onSave = { name, description, members ->
+        viewModel.eventIntent(
+            intent = GroupCreateIntent.CreateGroup(
+                name = name, description = description, members = members
             )
-        },
-        onSave = { name, description, members ->
-            viewModel.eventIntent(
-                intent = GroupCreateIntent.CreateGroup(
-                    name = name,
-                    description = description,
-                    members = members
-                )
-            )
-        }
-    )
+        )
+    })
 }
 
 @Composable
@@ -116,6 +109,7 @@ private fun GroupCreateContent(
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
     val members = remember { mutableStateMapOf<String, String>() }
+    val contacts = remember { mutableStateListOf<UserEntities>() }
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
@@ -135,9 +129,10 @@ private fun GroupCreateContent(
         if (uiState is GroupCreateUiState.Idle) {
             ExtendedFloatingActionButton(onClick = {
                 onSave.invoke(
-                    name.text,
-                    description.text,
-                    members
+                    name.text, description.text,
+                    // mesclas os membros selecionados com os contatos selecionados
+                    members.toMap() + contacts.associateBy({ it.name },
+                        { it.likes.orEmpty().joinToString("|") })
                 )
             }) {
                 Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
@@ -193,29 +188,36 @@ private fun GroupCreateContent(
                         }
                     }
                     items(members.keys.toList()) { member ->
-                        MemberItem(
-                            participant = member,
-                            likes = members[member]?.split("|") ?: emptyList(),
-                            onRemove = { members.remove(member) },
+                        ContactItem(
+                            contact = UserModel(
+                                name = member,
+                                likes = members[member]?.split("|") ?: emptyList(),
+                            ),
+                            isSelected = true,
+                            onAdd = { contact ->
+                                members[contact.name] = contact.likes?.joinToString("|") ?: ""
+                            },
+                            onRemove = { contact ->
+                                members.remove(contact.name)
+                            },
+                            isCheckboxVisible = false,
+                            isDeleteVisible = true,
                         )
-                        HorizontalDivider()
                     }
                     if (uiState.contacts.isNotEmpty()) {
-                        item {
-                            Text(
-                                text = "contatos",
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
-                        items(uiState.contacts) { contact ->
+                        items(uiState.contacts
+                            .filterNot { contact -> members.containsKey(contact.name) }
+                        ) { contact ->
                             ContactItem(
                                 contact = contact,
+                                isSelected = contacts.contains(contact),
                                 onAdd = {
-                                    members[contact.name] = contact.likes?.joinToString("|") ?: ""
+                                    contacts.add(contact)
                                 },
-                                onRemove = { members.remove(contact.name) },
+                                onRemove = {
+                                    contacts.remove(contact)
+                                },
                             )
-                            HorizontalDivider()
                         }
                     }
                 }
@@ -231,17 +233,13 @@ private fun GroupCreateContent(
         }
     }
     if (showBottomSheet && uiState is GroupCreateUiState.Idle) {
-        AddMemberBottomSheet(
-            onDismiss = { showBottomSheet = false },
-            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") }
-        )
+        AddMemberBottomSheet(onDismiss = { showBottomSheet = false },
+            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") })
     }
     when (uiState) {
         is GroupCreateUiState.Success -> {
-            SuccessComponent(
-                modifier = Modifier.fillMaxSize(),
-                redirectTo = { navController.popBackStack() }
-            )
+            SuccessComponent(modifier = Modifier.fillMaxSize(),
+                redirectTo = { navController.popBackStack() })
         }
 
         is GroupCreateUiState.Error -> {
@@ -294,26 +292,20 @@ private class GroupCreatePreviewProvider : PreviewParameterProvider<GroupCreateU
 
 @Composable
 @Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
+    name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES
 )
 @Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
+    name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO
 )
 @Preview(showBackground = true)
 fun GroupCreateScreenPreview(
     @PreviewParameter(GroupCreatePreviewProvider::class) state: GroupCreateUiState,
 ) {
     FriendsSecretsTheme {
-        GroupCreateContent(
-            navController = rememberNavController(),
+        GroupCreateContent(navController = rememberNavController(),
             uiState = state,
             onBack = { },
             onHome = { },
-            onSave = { _, _, _ -> }
-        )
+            onSave = { _, _, _ -> })
     }
 }

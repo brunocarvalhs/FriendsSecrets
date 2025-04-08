@@ -21,6 +21,10 @@ class ProfileViewModel(
     sessionManager: SessionManager = SessionManager.getInstance()
 ) : ViewModel() {
 
+    init {
+        fetchLikes(user = sessionManager.getCurrentUserModel())
+    }
+
     private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(
         ProfileUiState.Idle(
             name = sessionManager.getUserName(),
@@ -33,10 +37,8 @@ class ProfileViewModel(
 
     fun handleIntent(intent: ProfileIntent) = when (intent) {
         is ProfileIntent.SaveProfile -> saveProfile(intent.name, intent.photoUrl)
-    }
-
-    init {
-        fetchLikes(user = sessionManager.getCurrentUserModel())
+        ProfileIntent.DeleteAccount -> deleteAccount()
+        ProfileIntent.DownloadData -> downloadData()
     }
 
     private fun saveProfile(name: String, photoUrl: String) {
@@ -61,6 +63,14 @@ class ProfileViewModel(
                 )
             }
         }
+    }
+
+    private fun deleteAccount() {
+        // Implementar lógica para deletar conta
+    }
+
+    private fun downloadData() {
+        // Implementar lógica para baixar dados
     }
 
     companion object {

@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -44,7 +45,6 @@ import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemberItem(
     participant: String,
@@ -73,54 +73,65 @@ fun MemberItem(
         }
     }, positionalThreshold = { it * 0.5f })
 
-
-
     SwipeToDismissBox(
         state = dismissState,
-        backgroundContent = { DismissBackground(dismissState, onEdit = onEdit, onRemove = onRemove) },
+        backgroundContent = {
+            DismissBackground(dismissState, onEdit = onEdit, onRemove = onRemove)
+        }
     ) {
         Column(
-            modifier = Modifier.background(ListItemDefaults.colors().containerColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
         ) {
-            ListItem(modifier = Modifier.clickable(onClick = { isLiked = !isLiked }),
-                headlineContent = {
-                    Text(text = participant)
-                },
-                trailingContent = {
-                    Row {
-                        if (likes.any { it.isNotBlank() }) {
-                            IconButton(onClick = { isLiked = !isLiked }) {
-                                Icon(
-                                    imageVector = if (isVisibleLiked || isLiked) Icons.Sharp.KeyboardArrowUp
-                                    else Icons.Sharp.KeyboardArrowDown,
-                                    contentDescription = "bottom"
-                                )
-                            }
-                        }
-                        if (isAdministrator && group?.draws?.isNotEmpty() == true) {
-                            IconButton(onClick = {
-                                group.draws[participant]?.let { secret ->
-                                    onShare.invoke(
-                                        participant, secret, group.token
-                                    )
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Share, contentDescription = "share"
-                                )
-                            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { isLiked = !isLiked }
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = participant,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (likes.any { it.isNotBlank() }) {
+                        IconButton(onClick = { isLiked = !isLiked }) {
+                            Icon(
+                                imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+                                contentDescription = "Toggle Likes"
+                            )
                         }
                     }
-                })
-            AnimatedVisibility(isLiked, modifier = Modifier.fillMaxWidth()) {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(likes) { like ->
-                        if (like.isNotBlank()) {
-                            AssistChip(onClick = {}, label = { Text(like) })
-                            Spacer(modifier = Modifier.padding(4.dp))
+
+                    if (isAdministrator && group?.draws?.isNotEmpty() == true) {
+                        IconButton(onClick = {
+                            group.draws[participant]?.let { secret ->
+                                onShare(participant, secret, group.token)
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = "Share"
+                            )
                         }
+                    }
+                }
+            }
+
+            AnimatedVisibility(visible = isLiked) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(likes.filter { it.isNotBlank() }) { like ->
+                        AssistChip(onClick = {}, label = { Text(like) })
                     }
                 }
             }
@@ -128,7 +139,6 @@ fun MemberItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DismissBackground(
     dismissState: SwipeToDismissBoxState,
