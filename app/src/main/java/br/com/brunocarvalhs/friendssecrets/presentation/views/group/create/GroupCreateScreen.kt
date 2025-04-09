@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.sharp.KeyboardArrowDown
+import androidx.compose.material.icons.sharp.KeyboardArrowUp
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -219,7 +221,12 @@ private fun GroupCreateContent(
                             ContactItem(
                                 contact = contact,
                                 isSelected = contacts.contains(contact),
-                                action = { _, _ ->
+                                action = { _, isLiked ->
+                                    Icon(
+                                        imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+                                        contentDescription = "Toggle Likes"
+                                    )
+
                                     Checkbox(
                                         checked = contacts.contains(contact),
                                         onCheckedChange = { isChecked ->
