@@ -20,8 +20,8 @@ android {
         minSdk = 24
         targetSdk = 35
 
-        versionCode = 3
-        versionName = "1.1.2"
+        versionCode = 4
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -119,5 +119,5 @@ dependencies {
     dokkaPlugin(libs.android.documentation.plugin)
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
-    implementation("com.github.arpitkatiyar1999:Country-Picker:2.1.1")
+    implementation(libs.country.picker)
 }
