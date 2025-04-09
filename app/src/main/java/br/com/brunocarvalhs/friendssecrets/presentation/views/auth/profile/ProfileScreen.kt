@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,6 +63,7 @@ import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 import coil.compose.AsyncImage
 import com.yalantis.ucrop.UCrop
@@ -77,13 +80,14 @@ fun ProfileScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-       if (SessionManager.getInstance().isProfileComplete().not()) {
+        viewModel.handleIntent(ProfileIntent.FetchData)
+        if (SessionManager.getInstance().isProfileComplete().not()) {
             navController.navigate(LoginNavigation.PhoneSend.route) {
                 popUpTo(LoginNavigation.Profile.route) {
                     inclusive = true
                 }
             }
-       }
+        }
     }
 
     LaunchedEffect(uiState) {
@@ -129,6 +133,7 @@ private fun ProfileContent(
                 username = (uiState as? ProfileUiState.Idle)?.name.orEmpty(),
                 userPhoneNumber = (uiState as? ProfileUiState.Idle)?.phoneNumber.orEmpty(),
                 userPhotoUrl = (uiState as? ProfileUiState.Idle)?.photoUrl?.toUri().toString(),
+                userLikes = (uiState as? ProfileUiState.Idle)?.likes.orEmpty(),
                 handleIntent = handleIntent
             )
         }
@@ -163,6 +168,7 @@ private fun ProfileForm(
     username: String = "",
     userPhoneNumber: String = "",
     userPhotoUrl: String? = null,
+    userLikes: List<String> = emptyList(),
     handleIntent: (ProfileIntent) -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -174,6 +180,10 @@ private fun ProfileForm(
 
     var likeName by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
     val likes = remember { mutableStateListOf<String>() }
+
+    LaunchedEffect(Unit) {
+        likes.addAll(userLikes)
+    }
 
     val cropLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -263,7 +273,7 @@ private fun ProfileForm(
                     tint = Color.Gray
                 )
             },
-            onValueChange = {  },
+            onValueChange = { },
             label = { Text("Phone number") },
             singleLine = true,
             enabled = false,
@@ -273,11 +283,12 @@ private fun ProfileForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         LikesComponent(
+            modifier = Modifier.fillMaxWidth(),
             name = likeName,
             onNameChange = { value -> likeName = value },
             likes = likes,
             onAddLike = { _ ->
-                if (likeName.text.isNotBlank()) {
+                if (likeName.text.isNotEmpty()) {
                     likes.add(likeName.text)
                     likeName = TextFieldValue("", TextRange(0, 0))
                 }
@@ -294,7 +305,8 @@ private fun ProfileForm(
                 handleIntent(
                     ProfileIntent.SaveProfile(
                         name = name,
-                        photoUrl = profileImageUri?.toBase64(context = context).orEmpty()
+                        photoUrl = profileImageUri.toString(),
+                        likes = likes
                     )
                 )
             },
@@ -344,10 +356,21 @@ private fun ProfileForm(
 }
 
 @Composable
-@Preview
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO
+)
 private fun ProfileScreenPreview() {
-    ProfileContent(
-        uiState = ProfileUiState.Idle(),
-        handleIntent = {}
-    )
+    FriendsSecretsTheme {
+        ProfileContent(
+            uiState = ProfileUiState.Idle(),
+            handleIntent = {}
+        )
+    }
 }

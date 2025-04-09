@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +52,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.toMaskedPhoneNumber
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendUiState
 import kotlinx.coroutines.delay
@@ -206,7 +210,9 @@ private fun PhoneVerifyContent(
                         )
                     )
                 },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
             ) {
                 Text("Verify")
             }
@@ -236,20 +242,20 @@ private fun PhoneVerifyContent(
     }
 }
 
-fun String.toMaskedPhoneNumber(): String {
-    return if (this.length >= 10) {
-        val areaCode = this.substring(2, 4)
-        val masked = "******"
-        val lastTwo = this.takeLast(2)
-        "$areaCode$masked$lastTwo"
-    } else {
-        this
-    }
-}
 
-
-@Preview(showBackground = true)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO
+)
 @Composable
 private fun PhoneVerifyScreenPreview() {
-    PhoneVerifyContent()
+    FriendsSecretsTheme {
+        PhoneVerifyContent()
+    }
 }

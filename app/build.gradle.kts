@@ -119,4 +119,5 @@ dependencies {
     dokkaPlugin(libs.android.documentation.plugin)
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
+    implementation("com.github.arpitkatiyar1999:Country-Picker:2.1.1")
 }

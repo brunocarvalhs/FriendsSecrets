@@ -102,4 +102,16 @@
     <string name="home_drop_menu_item_text_logout">Logout</string>
     <string name="group_create_phone_contacts">Contatos do telefone</string>
     <string name="group_create_app_users">Usuários do app</string>
+    <string name="login_screen_welcome">Bem-vindo ao %1$s</string>
+    <string name="login_screen_description">Leia nossa Política de Privacidade. Toque em \'Aceitar e Cadastrar\' para criar sua conta ou em \'Aceitar e Continuar\' para seguir sem cadastro. Ambas opções implicam na aceitação dos Termos de Serviço.</string>
+    <string name="login_screen_privacy">Política de Privacidade</string>
+    <string name="login_screen_terms">Termos de Serviço</string>
+    <string name="login_screen_and">" e "</string>
+    <string name="login_screen_button_register">Aceitar e Cadastrar</string>
+    <string name="login_screen_button_anonymation">Aceitar e Continuar</string>
+    <string name="phone_send_title">Insira seu número de telefone</string>
+    <string name="phone_send_description">O %1$s precisará verificar seu número de telefone.</string>
+    <string name="phone_send_textfield_label">Número de telefone</string>
+    <string name="phone_send_textfield_description">Podem ser aplicadas tarifas da operadora.</string>
+    <string name="phone_send_button">Próximo</string>
 </resources>

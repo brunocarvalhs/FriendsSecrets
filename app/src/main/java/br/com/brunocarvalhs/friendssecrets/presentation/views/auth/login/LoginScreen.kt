@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.login
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -35,7 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.openUrl
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun LoginScreen(
@@ -44,16 +49,17 @@ fun LoginScreen(
         factory = LoginViewModel.Factory
     )
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState) {
         when (uiState) {
             LoginUiState.PrivacyPolicy -> {
-                navController.navigate("privacy_policy")
+                context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
             }
 
             LoginUiState.TermsOfUse -> {
-                navController.navigate("terms_of_use")
+                context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
             }
 
             LoginUiState.Register -> {
@@ -92,41 +98,48 @@ private fun LoginContent(
 
             Image(
                 painter = painterResource(id = R.drawable.ic_logo__friends_secrets),
-                contentDescription = "App Logo",
+                contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier.size(150.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Text(
-                text = "Bem-vindo ao ${stringResource(R.string.app_name)}",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                text = stringResource(
+                    R.string.login_screen_welcome,
+                    stringResource(R.string.app_name)
+                ),
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Leia nossa Política de Privacidade. Toque em 'Aceitar e Continuar' para aceitar os Termos de Serviço.",
+                text = stringResource(R.string.login_screen_description),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            val linkColor = MaterialTheme.colorScheme.primary
+            val bodyStyle = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center)
+
             val annotatedString = buildAnnotatedString {
-                append("Leia nossa ")
                 pushStringAnnotation(tag = "PRIVACY", annotation = "privacy")
-                withStyle(SpanStyle(color = Color(0xFF128C7E), fontWeight = FontWeight.Bold)) {
-                    append("Política de Privacidade")
+                withStyle(SpanStyle(color = linkColor, fontWeight = FontWeight.Bold)) {
+                    append(stringResource(R.string.login_screen_privacy))
                 }
                 pop()
 
-                append(" e ")
+                append(stringResource(R.string.login_screen_and))
 
                 pushStringAnnotation(tag = "TERMS", annotation = "terms")
-                withStyle(SpanStyle(color = Color(0xFF128C7E), fontWeight = FontWeight.Bold)) {
-                    append("Termos de Serviço")
+                withStyle(SpanStyle(color = linkColor, fontWeight = FontWeight.Bold)) {
+                    append(stringResource(R.string.login_screen_terms))
                 }
                 pop()
                 append(".")
@@ -135,16 +148,15 @@ private fun LoginContent(
             ClickableText(
                 text = annotatedString,
                 onClick = { offset ->
-                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()
-                        ?.let { annotation ->
-                            when (annotation.tag) {
-                                "PRIVACY" -> handleIntent(LoginIntent.PrivacyPolicy)
-                                "TERMS" -> handleIntent(LoginIntent.TermsOfUse)
-                            }
+                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { annotation ->
+                        when (annotation.tag) {
+                            "PRIVACY" -> handleIntent(LoginIntent.PrivacyPolicy)
+                            "TERMS" -> handleIntent(LoginIntent.TermsOfUse)
                         }
+                    }
                 },
                 modifier = Modifier.padding(top = 8.dp),
-                style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center)
+                style = bodyStyle
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -156,7 +168,7 @@ private fun LoginContent(
                     .padding(vertical = 16.dp),
                 shape = RoundedCornerShape(50)
             ) {
-                Text("Aceitar e Cadastrar")
+                Text(stringResource(R.string.login_screen_button_register))
             }
 
             TextButton(
@@ -165,15 +177,26 @@ private fun LoginContent(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
             ) {
-                Text("Aceitar e Continuar")
+                Text(stringResource(R.string.login_screen_button_anonymation))
             }
         }
     }
 }
 
 
-@Preview
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_NO
+)
 @Composable
 private fun LoginContentPreview() {
-    LoginContent()
+    FriendsSecretsTheme {
+        LoginContent()
+    }
 }

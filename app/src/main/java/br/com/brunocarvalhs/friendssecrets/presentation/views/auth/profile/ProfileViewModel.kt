@@ -9,6 +9,8 @@ import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.DownloadDataUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,33 +20,28 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val createProfileUseCase: CreateProfileUseCase,
     private val getLikesProfileUseCase: GetLikesProfileUseCase,
-    sessionManager: SessionManager = SessionManager.getInstance()
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val downloadDataUseCase: DownloadDataUseCase,
 ) : ViewModel() {
 
-    init {
-        fetchLikes(user = sessionManager.getCurrentUserModel())
-    }
-
-    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(
-        ProfileUiState.Idle(
-            name = sessionManager.getUserName(),
-            photoUrl = sessionManager.getUserPhotoUrl(),
-            phoneNumber = sessionManager.getUserPhoneNumber(),
-            likes = emptyList()
-        )
-    )
+    private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Idle())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     fun handleIntent(intent: ProfileIntent) = when (intent) {
-        is ProfileIntent.SaveProfile -> saveProfile(intent.name, intent.photoUrl)
+        is ProfileIntent.FetchData -> fetchLikes()
+        is ProfileIntent.SaveProfile -> saveProfile(
+            name = intent.name,
+            photoUrl = intent.photoUrl,
+            likes = intent.likes
+        )
         ProfileIntent.DeleteAccount -> deleteAccount()
         ProfileIntent.DownloadData -> downloadData()
     }
 
-    private fun saveProfile(name: String, photoUrl: String) {
+    private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
         _uiState.value = ProfileUiState.Loading
         viewModelScope.launch {
-            createProfileUseCase.invoke(name, photoUrl).onSuccess {
+            createProfileUseCase.invoke(name, photoUrl, likes).onSuccess {
                 _uiState.value = ProfileUiState.Success
             }.onFailure {
                 _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
@@ -52,25 +49,42 @@ class ProfileViewModel(
         }
     }
 
-    private fun fetchLikes(user: UserEntities?) {
+    private fun fetchLikes() {
+        _uiState.value = ProfileUiState.Loading
         viewModelScope.launch {
-            getLikesProfileUseCase.invoke().onSuccess { likes ->
+            getLikesProfileUseCase.invoke().onSuccess { user ->
                 _uiState.value = ProfileUiState.Idle(
-                    name = user?.name,
-                    photoUrl = user?.photoUrl,
-                    phoneNumber = user?.phoneNumber,
-                    likes = likes
+                    name = user.name,
+                    photoUrl = user.photoUrl,
+                    phoneNumber = user.phoneNumber,
+                    likes = user.likes,
                 )
+            }.onFailure {
+                _uiState.value = ProfileUiState.Idle()
             }
         }
     }
 
     private fun deleteAccount() {
-        // Implementar lógica para deletar conta
+        _uiState.value = ProfileUiState.Loading
+        viewModelScope.launch {
+            deleteAccountUseCase.invoke().onSuccess {
+                _uiState.value = ProfileUiState.Success
+            }.onFailure {
+                _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
+            }
+        }
     }
 
     private fun downloadData() {
-        // Implementar lógica para baixar dados
+        _uiState.value = ProfileUiState.Loading
+        viewModelScope.launch {
+            downloadDataUseCase.invoke().onSuccess {
+                _uiState.value = ProfileUiState.Success
+            }.onFailure {
+                _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
+            }
+        }
     }
 
     companion object {
@@ -87,10 +101,16 @@ class ProfileViewModel(
                         sessionManager = sessionManager,
                         userRepository = userRepository
                     )
-                    ProfileViewModel(
+                    val deleteAccountUseCase = DeleteAccountUseCase(
                         sessionManager = sessionManager,
+                        userRepository = userRepository
+                    )
+                    val downloadDataUseCase = DownloadDataUseCase()
+                    ProfileViewModel(
                         createProfileUseCase = createProfileUseCase,
-                        getLikesProfileUseCase = getLikesProfileUseCase
+                        getLikesProfileUseCase = getLikesProfileUseCase,
+                        deleteAccountUseCase = deleteAccountUseCase,
+                        downloadDataUseCase = downloadDataUseCase
                     )
                 }
             }

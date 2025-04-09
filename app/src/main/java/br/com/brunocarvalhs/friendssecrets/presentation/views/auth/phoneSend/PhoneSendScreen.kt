@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,12 +19,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +60,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
+import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
+import com.arpitkatiyarprojects.countrypicker.models.CountriesListDialogDisplayProperties
+import com.arpitkatiyarprojects.countrypicker.models.CountryDetails
+import com.arpitkatiyarprojects.countrypicker.models.SelectedCountryDisplayProperties
+import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 
 @Composable
 fun PhoneSendScreen(
@@ -64,10 +81,6 @@ fun PhoneSendScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is PhoneSendUiState.Error -> {
-
-            }
-
             is PhoneSendUiState.Success -> {
                 navController.navigate(
                     route = LoginNavigation.PhoneVerification.createRoute(
@@ -95,141 +108,147 @@ private fun PhoneSendContent(
     uiState: PhoneSendUiState = PhoneSendUiState.Idle,
     handleIntent: (PhoneSendIntent) -> Unit = {},
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var phoneNumber by remember { mutableStateOf("") }
 
-    val countryCode = "+55"
+    val selectedCountryDisplayProperties by remember {
+        mutableStateOf(SelectedCountryDisplayProperties())
+    }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    NavigationBackIconButton(navController = navController)
-                }
-            )
-        }
-    ) { paddingValue ->
+    val countriesListDialogDisplayProperties by remember {
+        mutableStateOf(CountriesListDialogDisplayProperties())
+    }
+
+    var selectedCountryState by remember {
+        mutableStateOf<CountryDetails?>(null)
+    }
+
+    var isMobileNumberValidationError by remember {
+        mutableStateOf(false)
+    }
+
+    Scaffold(topBar = {
+        TopAppBar(title = {}, navigationIcon = {
+            NavigationBackIconButton(navController = navController)
+        })
+    }) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValue)
+            modifier = modifier
+                .padding(paddingValues)
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Top,
+                .padding(24.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = "Enter your phone number",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "WhatsApp will need to verify your phone number.",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
-
-            ClickableText(
-                text = AnnotatedString("What’s my number?"),
-                onClick = {
-
-                },
-                style = TextStyle(
-                    color = Color.Blue,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp
-                )
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color.Gray, RectangleShape)
-                    .padding(8.dp)
-            ) {
                 Text(
-                    text = countryCode,
-                    modifier = Modifier.padding(end = 8.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    text = stringResource(R.string.phone_send_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
-                HorizontalDivider(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(24.dp)
-                        .background(Color.Gray)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(
+                        R.string.phone_send_description,
+                        stringResource(R.string.app_name)
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                TextField(
-                    value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
-                    placeholder = { Text("Phone number") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    modifier = Modifier.weight(1f),
-                    singleLine = true,
-                )
-            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = "Carrier charges may apply",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(
-                onClick = {
-                    handleIntent(
-                        PhoneSendIntent.SendCode(
-                            phone = phoneNumber,
-                            countryCode = countryCode
+                CountryPickerOutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(R.string.phone_send_textfield_label)) },
+                    mobileNumber = CountryPickerUtils.getFormattedMobileNumber(
+                        phoneNumber, selectedCountryState?.countryCode ?: "IN",
+                    ),
+                    onMobileNumberChange = {
+                        phoneNumber = it
+                        isMobileNumberValidationError = !CountryPickerUtils.isMobileNumberValid(
+                            phoneNumber,
+                            selectedCountryState?.countryCode ?: "IN"
                         )
-                    )
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("NEXT")
+                    },
+                    onCountrySelected = {
+                        selectedCountryState = it
+                    },
+                    selectedCountryDisplayProperties = selectedCountryDisplayProperties,
+                    countriesListDialogDisplayProperties = countriesListDialogDisplayProperties,
+                    isError = isMobileNumberValidationError,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(R.string.phone_send_textfield_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+            Column {
+                Button(
+                    onClick = {
+                        keyboardController?.hide()
 
-        if (uiState is PhoneSendUiState.Loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0x88000000)) // fundo escurecido
-                    .clickable(enabled = false) {}, // bloqueia cliques
-                contentAlignment = Alignment.Center
-            ) {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp),
-                    modifier = Modifier.size(100.dp)
+                        handleIntent(
+                            PhoneSendIntent.SendCode(
+                                phone = phoneNumber,
+                                countryCode = selectedCountryState?.countryPhoneNumberCode.orEmpty()
+                            )
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    shape = RoundedCornerShape(50)
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    Text(stringResource(R.string.phone_send_button))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+    }
+    if (uiState is PhoneSendUiState.Loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x88000000))
+                .clickable(enabled = false) {}, contentAlignment = Alignment.Center
+        ) {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                modifier = Modifier.size(100.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO
+)
 @Composable
 private fun PhoneSendScreenPreview() {
-    PhoneSendContent()
+    FriendsSecretsTheme {
+        PhoneSendContent()
+    }
 }
