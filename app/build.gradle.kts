@@ -73,6 +73,11 @@ android {
             excludes += "/META-INF/LICENSE-notice.md"
         }
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -101,9 +106,11 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.biometric)
     implementation(libs.coil.compose)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)
+    testImplementation(libs.robolectric)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
