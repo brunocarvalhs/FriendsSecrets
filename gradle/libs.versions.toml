@@ -37,6 +37,7 @@ credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 accompanist = "0.36.0"
 coreKtxVersion = "1.6.1"
+uiTestJunit4Android = "1.7.8"
 
 [libraries]
 android-documentation-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "androidDocumentationPlugin" }
@@ -82,6 +83,7 @@ androidx-credentials-play-services-auth = { group = "androidx.credentials", name
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
