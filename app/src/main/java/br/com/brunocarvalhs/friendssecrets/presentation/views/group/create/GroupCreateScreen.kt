@@ -222,10 +222,13 @@ private fun GroupCreateContent(
                                 contact = contact,
                                 isSelected = contacts.contains(contact),
                                 action = { _, isLiked ->
+
+                                    if (contact.likes.filter { it.isNotBlank() }.isNotEmpty()) {
                                     Icon(
                                         imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
                                         contentDescription = "Toggle Likes"
                                     )
+                                    }
 
                                     Checkbox(
                                         checked = contacts.contains(contact),
