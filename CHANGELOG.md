@@ -1,5 +1,8 @@
 ## [CHANGELOG]
 
+## [1.2.2]
+- Incluindo tratamento de botão não usado para evitar report da google
+
 ## [1.2.1]
 - Melhorias no fluxo de edição de perfil
 - Adicionada funcionalidade de recorte de imagem para foto de perfil
