@@ -11,6 +11,7 @@ import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> =
@@ -32,7 +34,12 @@ class HomeViewModel(
         when (intent) {
             HomeIntent.FetchGroups -> fetchGroups()
             is HomeIntent.GroupToEnter -> groupToEnter(intent.token)
+            HomeIntent.Logout -> logout()
         }
+    }
+
+    private fun logout() {
+        logoutUseCase.invoke()
     }
 
     private fun groupToEnter(token: String) {
@@ -73,9 +80,11 @@ class HomeViewModel(
                         storage = storage,
                         performance = performance
                     )
+                    val logoutUseCase = LogoutUseCase()
                     HomeViewModel(
                         groupListUseCase = groupListUseCase,
-                        groupByTokenUseCase = groupByTokenUseCase
+                        groupByTokenUseCase = groupByTokenUseCase,
+                        logoutUseCase = logoutUseCase
                     )
                 }
             }

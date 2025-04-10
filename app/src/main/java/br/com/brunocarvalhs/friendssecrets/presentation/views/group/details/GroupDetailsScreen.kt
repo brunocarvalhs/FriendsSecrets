@@ -345,7 +345,6 @@ private fun GroupDetailsContent(
                                 likes = uiState.group.members[participant]?.split("|")
                                     .orEmpty()
                             )
-                            HorizontalDivider()
                         }
                     } else if (uiState.group.members.isNotEmpty()) {
                         items(uiState.group.members.keys.toList()) { member ->
@@ -361,7 +360,6 @@ private fun GroupDetailsContent(
                                         .orEmpty()
                                 },
                             )
-                            HorizontalDivider()
                         }
                     }
                 }
