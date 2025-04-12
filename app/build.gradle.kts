@@ -45,7 +45,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            resValue("String", "app_name", "Friends Secrets - (Debug)")
         }
         create("homolog") {
             isDebuggable = false
@@ -54,7 +53,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            resValue("String", "app_name", "Friends Secrets - (Homolog)")
         }
         release {
             signingConfig = signingConfigs.getByName("release")
