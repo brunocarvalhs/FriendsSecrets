@@ -82,7 +82,11 @@ fun GroupCreateScreen(
 
     LaunchedEffect(Unit) {
         if (!contactPermissionState.status.isGranted) {
-            contactPermissionState.launchPermissionRequest()
+            contactPermissionState.launchPermissionRequest().apply {
+                navController.navigate(navController.currentDestination?.route.orEmpty()) {
+                    popUpTo(navController.currentDestination?.route.orEmpty()) { inclusive = true }
+                }
+            }
         } else {
             viewModel.eventIntent(GroupCreateIntent.FetchContacts(context))
         }
