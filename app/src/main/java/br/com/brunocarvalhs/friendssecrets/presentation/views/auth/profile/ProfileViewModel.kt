@@ -7,10 +7,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.DownloadDataUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +19,6 @@ class ProfileViewModel(
     private val createProfileUseCase: CreateProfileUseCase,
     private val getLikesProfileUseCase: GetLikesProfileUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val downloadDataUseCase: DownloadDataUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Idle())
@@ -35,7 +32,6 @@ class ProfileViewModel(
             likes = intent.likes
         )
         ProfileIntent.DeleteAccount -> deleteAccount()
-        ProfileIntent.DownloadData -> downloadData()
     }
 
     private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
@@ -76,17 +72,6 @@ class ProfileViewModel(
         }
     }
 
-    private fun downloadData() {
-        _uiState.value = ProfileUiState.Loading
-        viewModelScope.launch {
-            downloadDataUseCase.invoke().onSuccess {
-                _uiState.value = ProfileUiState.Success
-            }.onFailure {
-                _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
-            }
-        }
-    }
-
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
@@ -105,12 +90,10 @@ class ProfileViewModel(
                         sessionManager = sessionManager,
                         userRepository = userRepository
                     )
-                    val downloadDataUseCase = DownloadDataUseCase()
                     ProfileViewModel(
                         createProfileUseCase = createProfileUseCase,
                         getLikesProfileUseCase = getLikesProfileUseCase,
                         deleteAccountUseCase = deleteAccountUseCase,
-                        downloadDataUseCase = downloadDataUseCase
                     )
                 }
             }

@@ -9,5 +9,4 @@ sealed class ProfileIntent {
     ) : ProfileIntent()
 
     data object DeleteAccount : ProfileIntent()
-    data object DownloadData : ProfileIntent()
 }
