@@ -7,29 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:212108336384:android:8718f34e68637d382427e5",
+        "mobilesdk_app_id": "1:212108336384:android:574d5dc5421fb4b72427e5",
         "android_client_info": {
-          "package_name": "br.brunocarvalhs.friends_secrets"
+          "package_name": "br.brunocarvalhs.friends_secrets.debug"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "212108336384-8ljmeq71q9qa0j1d4im48th1ot0f8c0v.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "br.brunocarvalhs.friends_secrets",
-            "certificate_hash": "567091933f8c25188d587d177f8e2a53ba6cfc71"
-          }
-        },
-        {
-          "client_id": "212108336384-gjtq59fc3shp6et9ddi1rhju2skqbfa5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "br.brunocarvalhs.friends_secrets",
-            "certificate_hash": "3867f1571653d4e8da2627893ee06e292793e3cc"
-          }
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyC71iYHYtO59pimrCQy65nqL8PpjXc_OHc"
@@ -60,7 +43,16 @@
           "package_name": "br.com.brunocarvalhs.friendssecrets"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "212108336384-1pal5i0mp4q1e662m1p66fc9is36t4ji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.brunocarvalhs.friendssecrets",
+            "certificate_hash": "abf4a6c2d4104837d53c5cb17904dc430b4ea962"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC71iYHYtO59pimrCQy65nqL8PpjXc_OHc"
