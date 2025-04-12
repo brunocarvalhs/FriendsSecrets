@@ -25,11 +25,11 @@ class GroupDeleteUseCase(
         performance.stop(GroupDeleteUseCase::class.java.simpleName)
     }
 
-    private fun validationGroupId(groupId: String) {
+    fun validationGroupId(groupId: String) {
         require(groupId.isNotBlank()) { context.getString(R.string.require_group_id_cannot_be_blank) }
     }
 
-    private fun clearGroup(group: GroupEntities) {
+    fun clearGroup(group: GroupEntities) {
         val list = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME)
             ?: emptyList()
 
@@ -40,7 +40,7 @@ class GroupDeleteUseCase(
         }
     }
 
-    private fun clearAdmin(group: GroupEntities) {
+    fun clearAdmin(group: GroupEntities) {
         val adminList = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME_ADMINS)
             ?: emptyList()
         if (adminList.contains(group.token)) {
