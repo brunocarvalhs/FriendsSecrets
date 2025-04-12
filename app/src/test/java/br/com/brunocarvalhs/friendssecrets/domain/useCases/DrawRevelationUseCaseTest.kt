@@ -134,9 +134,10 @@ class DrawRevelationUseCaseTest {
         val id = "test_id"
         val exception = RuntimeException("Test exception")
 
+        every { storage.load<String>(any()) } returns "key_value"
         coEvery { repository.read(id) } throws exception
 
-        val result = useCase(id)
+        val result = useCase.invoke(id)
 
         assert(result.isFailure)
         assertEquals(exception, result.exceptionOrNull())
