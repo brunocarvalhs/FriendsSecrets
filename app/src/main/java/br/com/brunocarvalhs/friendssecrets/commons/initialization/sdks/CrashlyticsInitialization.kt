@@ -1,9 +1,9 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 
 import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
