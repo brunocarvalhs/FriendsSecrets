@@ -8,8 +8,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
-class RemoteProvider {
-
+class RemoteProvider(
     private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
         setConfigSettingsAsync(
             FirebaseRemoteConfigSettings.Builder()
@@ -17,10 +16,7 @@ class RemoteProvider {
                 .build()
         )
     }
-
-    init {
-        fetchAndActivate()
-    }
+) {
 
     fun fetchAndActivate() {
         remoteConfig.fetchAndActivate()

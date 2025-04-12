@@ -334,23 +334,6 @@ private fun ProfileForm(
                     Text("Delete account")
                 }
             }
-
-            TextButton(
-                onClick = {
-                    handleIntent(ProfileIntent.DownloadData)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Row {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Download data of account")
-                }
-            }
         }
     }
 }

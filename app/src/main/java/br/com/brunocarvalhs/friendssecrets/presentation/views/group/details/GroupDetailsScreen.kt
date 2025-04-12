@@ -323,18 +323,6 @@ private fun GroupDetailsContent(
                                 participant = participant,
                                 group = uiState.group,
                                 isAdministrator = uiState.group.isOwner,
-                                onRemove = {
-                                    onRemove(
-                                        group = uiState.group,
-                                        participant = participant
-                                    )
-                                },
-                                onEdit = {
-                                    showBottomSheet = !showBottomSheet
-                                    name = participant
-                                    likes = uiState.group.members[participant]?.split("|")
-                                        .orEmpty()
-                                },
                                 onShare = { member, secret, token ->
                                     onShare(
                                         participant = member,
@@ -358,6 +346,12 @@ private fun GroupDetailsContent(
                                     name = member
                                     likes = uiState.group.members[member]?.split("|")
                                         .orEmpty()
+                                },
+                                onRemove = {
+                                    onRemove(
+                                        group = uiState.group,
+                                        participant = member
+                                    )
                                 },
                             )
                         }

@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
           echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
-      
+
       - name: Create google-services.json
         run: |
           echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json

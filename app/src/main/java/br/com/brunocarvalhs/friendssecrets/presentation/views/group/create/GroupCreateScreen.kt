@@ -82,7 +82,11 @@ fun GroupCreateScreen(
 
     LaunchedEffect(Unit) {
         if (!contactPermissionState.status.isGranted) {
-            contactPermissionState.launchPermissionRequest()
+            contactPermissionState.launchPermissionRequest().apply {
+                navController.navigate(navController.currentDestination?.route.orEmpty()) {
+                    popUpTo(navController.currentDestination?.route.orEmpty()) { inclusive = true }
+                }
+            }
         } else {
             viewModel.eventIntent(GroupCreateIntent.FetchContacts(context))
         }
@@ -145,12 +149,12 @@ private fun GroupCreateContent(
                 Text(stringResource(R.string.group_create_action_save_group))
             }
         }
-    }) {
+    }) { paddingValue ->
         when (uiState) {
             is GroupCreateUiState.Idle -> {
                 LazyColumn(
                     modifier = Modifier
-                        .padding(it)
+                        .padding(paddingValue)
                         .fillMaxSize()
                 ) {
                     item {
@@ -223,11 +227,11 @@ private fun GroupCreateContent(
                                 isSelected = contacts.contains(contact),
                                 action = { _, isLiked ->
 
-                                    if (contact.likes.filter { it.isNotBlank() }.isNotEmpty()) {
-                                    Icon(
-                                        imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
-                                        contentDescription = "Toggle Likes"
-                                    )
+                                    if (contact.likes.any { it.isNotBlank() }) {
+                                        Icon(
+                                            imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+                                            contentDescription = "Toggle Likes"
+                                        )
                                     }
 
                                     Checkbox(
@@ -249,7 +253,7 @@ private fun GroupCreateContent(
             GroupCreateUiState.Loading -> {
                 LoadingProgress(
                     modifier = Modifier
-                        .padding(it)
+                        .padding(paddingValue)
                         .fillMaxSize()
                 )
             }
