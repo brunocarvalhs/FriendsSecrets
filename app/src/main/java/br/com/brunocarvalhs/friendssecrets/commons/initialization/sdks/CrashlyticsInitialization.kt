@@ -14,6 +14,5 @@ class CrashlyticsInitialization(private val context: Context) : AppInitializatio
     override fun execute() {
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
         CrashlyticsProvider.setUserId(context)
-        AnalyticsProvider.setUserId(context)
     }
 }
