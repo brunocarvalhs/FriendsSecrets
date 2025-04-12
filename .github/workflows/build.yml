@@ -99,7 +99,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK Debug
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleHomolog
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4

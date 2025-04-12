@@ -46,6 +46,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("homolog") {
+            isDebuggable = false
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
