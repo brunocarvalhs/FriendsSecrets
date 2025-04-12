@@ -1,6 +1,6 @@
-package br.com.brunocarvalhs.compracerta.commons.initialization
+package br.com.brunocarvalhs.friendssecrets.commons.initialization
 
-import br.com.brunocarvalhs.compracerta.commons.performance.PerformanceManager
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import timber.log.Timber
 
 abstract class AppInitialization {

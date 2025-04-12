@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization
 
 import android.content.Context
-import br.com.brunocarvalhs.compracerta.commons.initialization.AppInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.CrashlyticsInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.TimberInitialization
 
