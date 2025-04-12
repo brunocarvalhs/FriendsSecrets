@@ -107,8 +107,8 @@ jobs:
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apk-debug
-          path: app/build/outputs/apk/debug/*.apk
+          name: ${{ env.APP_NAME }}-apk-homolog
+          path: app/build/outputs/apk/homolog/*.apk
 
   deploy-firebase:
     runs-on: ubuntu-24.04
@@ -118,7 +118,7 @@ jobs:
       - name: Download APK Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apk-debug
+          name: ${{ env.APP_NAME }}-apk-homolog
           path: app/build/outputs/apk/release/
 
       - name: Install Firebase CLI
