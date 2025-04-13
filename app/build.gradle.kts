@@ -46,14 +46,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-        create("homolog") {
-            isDebuggable = false
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
@@ -132,7 +124,6 @@ dependencies {
     androidTestImplementation(libs.mockk)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    debugImplementation(libs.leakcanary.android)
     dokkaPlugin(libs.android.documentation.plugin)
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
