@@ -1,10 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class AppInitializationManager @Inject constructor(
+/**
+ * Gerenciador de inicialização do aplicativo.
+ * Responsável por inicializar todos os componentes necessários na inicialização do app.
+ */
+class AppInitializationManager(
     private val initializations: List<AppInitialization>
 ) {
     fun initialize() {

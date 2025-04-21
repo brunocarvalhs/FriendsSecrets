@@ -3,32 +3,29 @@ package br.com.brunocarvalhs.friendssecrets.domain.base
 import br.com.brunocarvalhs.friendssecrets.commons.coroutines.CoroutineDispatcherProvider
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 /**
- * Base class for all use cases.
- * Provides performance tracking and coroutine dispatcher management.
+ * Classe base para todos os casos de uso.
+ * Fornece rastreamento de desempenho e gerenciamento de dispatchers de coroutine.
  */
 abstract class BaseUseCase<in P, R> {
 
-    @Inject
+    // Estas propriedades serão injetadas pelo ServiceLocator
     lateinit var dispatchers: CoroutineDispatcherProvider
-
-    @Inject
     lateinit var performanceManager: PerformanceManager
 
     /**
-     * Override this to set the unique trace name for performance tracking
+     * Sobrescreva isso para definir o nome único do trace para rastreamento de desempenho
      */
     abstract val traceName: String
 
     /**
-     * Executes the use case with performance tracking
+     * Executa o caso de uso com rastreamento de desempenho
      */
     protected abstract suspend fun execute(parameters: P): Result<R>
 
     /**
-     * Invokes the use case with performance tracking
+     * Invoca o caso de uso com rastreamento de desempenho
      */
     suspend operator fun invoke(parameters: P): Result<R> {
         return withContext(dispatchers.io) {
@@ -46,28 +43,26 @@ abstract class BaseUseCase<in P, R> {
 }
 
 /**
- * Base class for use cases that don't require parameters
+ * Classe base para casos de uso que não requerem parâmetros
  */
 abstract class BaseUseCaseNoParams<R> {
 
-    @Inject
+    // Estas propriedades serão injetadas pelo ServiceLocator
     lateinit var dispatchers: CoroutineDispatcherProvider
-
-    @Inject
     lateinit var performanceManager: PerformanceManager
 
     /**
-     * Override this to set the unique trace name for performance tracking
+     * Sobrescreva isso para definir o nome único do trace para rastreamento de desempenho
      */
     abstract val traceName: String
 
     /**
-     * Executes the use case with performance tracking
+     * Executa o caso de uso com rastreamento de desempenho
      */
     protected abstract suspend fun execute(): Result<R>
 
     /**
-     * Invokes the use case with performance tracking
+     * Invoca o caso de uso com rastreamento de desempenho
      */
     suspend operator fun invoke(): Result<R> {
         return withContext(dispatchers.io) {

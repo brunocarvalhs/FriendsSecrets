@@ -3,22 +3,22 @@ package br.com.brunocarvalhs.friendssecrets.presentation.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.commons.coroutines.CoroutineDispatcherProvider
+import br.com.brunocarvalhs.friendssecrets.di.ServiceLocator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 /**
- * Base ViewModel class that provides common functionality for all ViewModels.
- * It includes coroutine helpers with appropriate dispatchers.
+ * ViewModel base que fornece funcionalidades comuns para todos os ViewModels.
+ * Inclui helpers para coroutines com dispatchers apropriados.
  */
 abstract class BaseViewModel : ViewModel() {
 
-    @Inject
-    lateinit var dispatchers: CoroutineDispatcherProvider
+    // Obtém o CoroutineDispatcherProvider do ServiceLocator
+    private val dispatchers: CoroutineDispatcherProvider = ServiceLocator.getCoroutineDispatcherProvider()
 
     /**
-     * Launch a coroutine in the IO dispatcher and switch to Main when complete
+     * Lança uma coroutine no dispatcher IO e muda para Main quando completa
      */
     protected fun launchIO(
         onError: (Throwable) -> Unit = { throw it },
@@ -36,7 +36,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     /**
-     * Launch a coroutine in the Main dispatcher
+     * Lança uma coroutine no dispatcher Main
      */
     protected fun launchMain(
         onError: (Throwable) -> Unit = { throw it },

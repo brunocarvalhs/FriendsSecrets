@@ -6,11 +6,11 @@ import android.provider.Settings.Secure
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AnalyticsProvider @Inject constructor() {
+/**
+ * Provedor de analytics para rastrear eventos no aplicativo.
+ */
+class AnalyticsProvider {
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     fun track(event: AnalyticsEvents, params: Map<AnalyticsParams, String> = emptyMap()) {
@@ -26,7 +26,7 @@ class AnalyticsProvider @Inject constructor() {
     }
     
     companion object {
-        // For backward compatibility during migration
+        // Para compatibilidade com código existente
         private val instance = AnalyticsProvider()
         
         fun track(event: AnalyticsEvents, params: Map<AnalyticsParams, String> = emptyMap()) {

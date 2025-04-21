@@ -38,19 +38,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.di.ServiceLocator
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -66,13 +66,15 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.componen
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel(),
-    toggleManager: ToggleManager = hiltViewModel(),
-    analyticsProvider: AnalyticsProvider = hiltViewModel()
+    viewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.Factory
+    ),
+    toggleManager: ToggleManager = ServiceLocator.getToggleManager()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val session = SessionManager.getInstance()
+    val analyticsProvider = ServiceLocator.getAnalyticsProvider()
 
     LaunchedEffect(Unit) {
         analyticsProvider.track(
@@ -119,7 +121,7 @@ private fun HomeContent(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -127,183 +129,231 @@ private fun HomeContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    session?.let {
-                        Text(
-                            text = "${stringResource(R.string.home_title)} ${it.name}",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
                 },
                 actions = {
-                    if (isSettingsEnabled || isJoinGroupEnabled) {
-                        IconButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "More"
-                            )
-                        }
-                        MenuHome(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            onClick = {
-                                when (val menu = it) {
-                                    MenuItem.JoinGroup -> showBottomSheet = true
-                                    MenuItem.Logout -> {
-                                        onEvent(HomeIntent.Logout)
-                                        navController.navigate(HomeNavigation.Home.route) {
-                                            popUpTo(HomeNavigation.Home.route) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    }
-                                    else -> navController.navigate(menu.route.orEmpty())
-                                }
-                            },
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = stringResource(id = R.string.menu)
                         )
                     }
+                    MenuHome(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        items = listOf(
+                            MenuItem(
+                                title = stringResource(id = R.string.settings),
+                                onClick = {
+                                    expanded = false
+                                    navController.navigate(HomeNavigation.Settings.route)
+                                },
+                                isVisible = isSettingsEnabled
+                            ),
+                            MenuItem(
+                                title = stringResource(id = R.string.logout),
+                                onClick = {
+                                    expanded = false
+                                    onEvent(HomeIntent.Logout)
+                                    navController.navigate(HomeNavigation.Login.route) {
+                                        popUpTo(HomeNavigation.Home.route) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        )
+                    )
                 },
-                scrollBehavior = scrollBehavior // Associar comportamento de rolagem
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
-            if (uiState is HomeUiState.Success) {
-                if (uiState.list.isEmpty()) return@Scaffold
-
-                if (isCreateGroupEnabled) {
-                    ExtendedFloatingActionButton(onClick = {
-                        navController.navigate(GroupNavigation.Create.route)
-                    }) {
-                        Icon(Icons.Filled.Add, "Add")
-                        Text(stringResource(R.string.home_action_create_group))
-                    }
-                }
+            if (isCreateGroupEnabled) {
+                ExtendedFloatingActionButton(
+                    onClick = { navController.navigate(GroupNavigation.Create.route) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = stringResource(id = R.string.create_group)
+                        )
+                    },
+                    text = { Text(text = stringResource(id = R.string.create_group)) },
+                )
             }
         }
-    ) {
+    ) { innerPadding ->
         when (uiState) {
-            is HomeUiState.Error -> {
-                ErrorComponent(
-                    modifier = Modifier.padding(it),
-                    message = uiState.errorMessage,
-                    onRefresh = { onEvent(HomeIntent.FetchGroups) }
+            is HomeUiState.Loading -> {
+                LoadingProgress(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
                 )
             }
 
             is HomeUiState.Success -> {
                 if (uiState.list.isEmpty()) {
                     EmptyGroupComponent(
-                        modifier = Modifier.padding(it),
-                        onGroupToEnter = { showBottomSheet = true },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                         onCreateGroup = { navController.navigate(GroupNavigation.Create.route) },
+                        onJoinGroup = { showBottomSheet = true },
                         isJoinGroupEnabled = isJoinGroupEnabled,
                         isCreateGroupEnabled = isCreateGroupEnabled
                     )
                 } else {
                     LazyColumn(
                         modifier = Modifier
-                            .padding(it)
                             .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
+                            .padding(innerPadding)
+                            .padding(horizontal = 16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(uiState.list) { item ->
+                        item {
+                            Spacer(modifier = Modifier.size(16.dp))
+                        }
+                        items(uiState.list) { group ->
                             GroupCard(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                group = item,
+                                group = group,
                                 onClick = {
                                     navController.navigate(
-                                        route = GroupNavigation.Read.createRoute(item.id)
+                                        GroupNavigation.Details.createRoute(
+                                            group.id
+                                        )
                                     )
-                                }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
                             )
                         }
                         item {
-                            Spacer(modifier = Modifier.size(200.dp))
+                            Spacer(modifier = Modifier.size(16.dp))
                         }
                     }
                 }
             }
 
-            HomeUiState.Loading -> LoadingProgress(modifier = Modifier.fillMaxSize())
+            is HomeUiState.Error -> {
+                ErrorComponent(
+                    message = uiState.errorMessage,
+                    onRetry = { onEvent(HomeIntent.FetchGroups) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+            }
         }
-    }
-    if (showBottomSheet) {
-        GroupToEnterBottomSheet(
-            onDismiss = { showBottomSheet = false },
-            onToEnter = { onEvent(HomeIntent.GroupToEnter(it)) }
-        )
-    }
-}
 
-private class HomePreviewProvider : PreviewParameterProvider<HomeUiState> {
-    override val values = sequenceOf(
-        HomeUiState.Loading,
-        HomeUiState.Success(list = listOf()),
-        HomeUiState.Success(list = (1..10).map { it ->
-            GroupModel(
-                name = "Group $it",
-                description = "Description $it",
-                members = mutableMapOf<String, String>().apply {
-                    repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
-                    }
+        if (showBottomSheet && isJoinGroupEnabled) {
+            GroupToEnterBottomSheet(
+                onDismiss = { showBottomSheet = false },
+                onConfirm = { token ->
+                    showBottomSheet = false
+                    onEvent(HomeIntent.GroupToEnter(token))
                 }
             )
-        }),
-        HomeUiState.Error(errorMessage = "Error")
-    )
-}
-
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
-)
-@Composable
-fun HomeContentPreview(
-    @PreviewParameter(HomePreviewProvider::class) state: HomeUiState,
-) {
-    FriendsSecretsTheme {
-        HomeContent(
-            navController = rememberNavController(),
-            uiState = state
-        )
+        }
     }
 }
 
 @Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
     name = "Light Mode",
     showBackground = true,
     uiMode = UI_MODE_NIGHT_NO
 )
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
 @Composable
-fun HomeContentSessionPreview(
-    @PreviewParameter(HomePreviewProvider::class) state: HomeUiState,
+private fun HomeScreenPreview(
+    @PreviewParameter(HomeUiStatePreviewParameterProvider::class) uiState: HomeUiState
 ) {
     FriendsSecretsTheme {
         HomeContent(
             session = UserModel(
                 id = "1",
                 name = "John Doe",
-                photoUrl = null,
-                phoneNumber = "+5511999999999",
-                isPhoneNumberVerified = true
+                email = "john@example.com",
+                phone = "+1234567890",
+                photo = null,
+                likes = emptyList()
             ),
             navController = rememberNavController(),
-            uiState = state
+            uiState = uiState
         )
     }
 }
 
+private class HomeUiStatePreviewParameterProvider : PreviewParameterProvider<HomeUiState> {
+    override val values: Sequence<HomeUiState> = sequenceOf(
+        HomeUiState.Loading,
+        HomeUiState.Success(
+            list = listOf(
+                GroupModel(
+                    id = "1",
+                    name = "Amigo Secreto da Família",
+                    description = "Amigo secreto para a reunião de família",
+                    date = "25/12/2023",
+                    value = "R$ 50,00",
+                    members = listOf(
+                        UserModel(
+                            id = "1",
+                            name = "John Doe",
+                            email = "john@example.com",
+                            phone = "+1234567890",
+                            photo = null,
+                            likes = emptyList()
+                        ),
+                        UserModel(
+                            id = "2",
+                            name = "Jane Doe",
+                            email = "jane@example.com",
+                            phone = "+1234567891",
+                            photo = null,
+                            likes = emptyList()
+                        )
+                    ),
+                    token = "ABC123",
+                    draws = emptyMap()
+                ),
+                GroupModel(
+                    id = "2",
+                    name = "Amigo Secreto do Trabalho",
+                    description = "Amigo secreto para a confraternização do trabalho",
+                    date = "20/12/2023",
+                    value = "R$ 100,00",
+                    members = listOf(
+                        UserModel(
+                            id = "1",
+                            name = "John Doe",
+                            email = "john@example.com",
+                            phone = "+1234567890",
+                            photo = null,
+                            likes = emptyList()
+                        ),
+                        UserModel(
+                            id = "3",
+                            name = "Bob Smith",
+                            email = "bob@example.com",
+                            phone = "+1234567892",
+                            photo = null,
+                            likes = emptyList()
+                        )
+                    ),
+                    token = "DEF456",
+                    draws = emptyMap()
+                )
+            )
+        ),
+        HomeUiState.Success(list = emptyList()),
+        HomeUiState.Error(errorMessage = "Ocorreu um erro ao carregar os grupos")
+    )
+}

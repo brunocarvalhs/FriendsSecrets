@@ -1,15 +1,9 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitializationManager
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import br.com.brunocarvalhs.friendssecrets.di.ServiceLocator
 
-@HiltAndroidApp
 class CustomApplication : Application() {
-
-    @Inject
-    lateinit var initializationManager: AppInitializationManager
 
     override fun onCreate() {
         super.onCreate()
@@ -18,7 +12,11 @@ class CustomApplication : Application() {
     }
 
     private fun setup() {
-        initializationManager.initialize()
+        // Inicializa o ServiceLocator com o contexto da aplicação
+        ServiceLocator.initialize(this)
+        
+        // Inicializa os componentes da aplicação
+        ServiceLocator.appInitializationManager.initialize()
     }
 
     companion object {

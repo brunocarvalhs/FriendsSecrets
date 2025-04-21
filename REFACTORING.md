@@ -1,131 +1,126 @@
 # FriendsSecrets Refactoring Documentation
 
-This document outlines the refactoring changes made to improve the maintainability of the FriendsSecrets application.
+Este documento descreve as mudanças de refatoração feitas para melhorar a manutenção do aplicativo FriendsSecrets.
 
-## Table of Contents
-1. [Dependency Injection with Hilt](#dependency-injection-with-hilt)
-2. [Architecture Improvements](#architecture-improvements)
-3. [Coroutine Handling](#coroutine-handling)
-4. [Error Handling](#error-handling)
-5. [Base Classes](#base-classes)
-6. [UI Component System](#ui-component-system)
-7. [Testing Improvements](#testing-improvements)
+## Índice
+1. [Service Locator para Gerenciamento de Dependências](#service-locator-para-gerenciamento-de-dependências)
+2. [Melhorias na Arquitetura](#melhorias-na-arquitetura)
+3. [Gerenciamento de Coroutines](#gerenciamento-de-coroutines)
+4. [Tratamento de Erros](#tratamento-de-erros)
+5. [Classes Base](#classes-base)
+6. [Sistema de Componentes UI](#sistema-de-componentes-ui)
+7. [Melhorias para Testes](#melhorias-para-testes)
 
-## Dependency Injection with Hilt
+## Service Locator para Gerenciamento de Dependências
 
-We've implemented Hilt for dependency injection to improve the maintainability and testability of the codebase:
+Implementamos um padrão Service Locator para gerenciar dependências de forma manual, dando controle total sobre as instâncias:
 
-- Added Hilt dependencies to the project
-- Created Hilt modules for different components:
-  - `AppModule`: Provides application-level dependencies
-  - `RepositoryModule`: Provides repository implementations
-  - `ServiceModule`: Provides service implementations
-  - `UseCaseModule`: Provides use case implementations
-- Updated the `CustomApplication` class to use Hilt
-- Updated ViewModels to use Hilt for dependency injection
-- Updated Activities and Fragments to use Hilt for dependency injection
+- Criado `ServiceLocator` como ponto central para obter instâncias
+- Todas as dependências são inicializadas sob demanda (lazy loading)
+- Controle manual sobre o ciclo de vida das instâncias
+- Fácil acesso a serviços e componentes em toda a aplicação
 
-Benefits:
-- Reduced boilerplate code
-- Improved testability through dependency injection
-- Clearer dependency graph
-- Easier to maintain and extend
+Benefícios:
+- Controle total sobre a criação e gerenciamento de instâncias
+- Sem dependência de frameworks externos
+- Código mais fácil de entender e manter
+- Facilidade para substituir implementações para testes
 
-## Architecture Improvements
+## Melhorias na Arquitetura
 
-We've improved the architecture to better follow clean architecture principles:
+Melhoramos a arquitetura para seguir melhor os princípios de arquitetura limpa:
 
-- Created a more consistent structure for the codebase
-- Improved separation of concerns between layers
-- Added base classes for common functionality
-- Standardized the approach to data handling with `NetworkBoundResource`
+- Criada uma estrutura mais consistente para o código
+- Melhorada a separação de responsabilidades entre camadas
+- Adicionadas classes base para funcionalidades comuns
+- Padronizada a abordagem para manipulação de dados com `NetworkBoundResource`
 
-Benefits:
-- More maintainable codebase
-- Easier to understand and extend
-- Better separation of concerns
-- More consistent code structure
+Benefícios:
+- Código mais fácil de manter
+- Mais fácil de entender e estender
+- Melhor separação de responsabilidades
+- Estrutura de código mais consistente
 
-## Coroutine Handling
+## Gerenciamento de Coroutines
 
-We've improved the handling of coroutines in the application:
+Melhoramos o gerenciamento de coroutines na aplicação:
 
-- Added a `CoroutineDispatcherProvider` to centralize dispatcher management
-- Created helper methods for launching coroutines in ViewModels
-- Standardized error handling in coroutines
-- Improved the use of dispatchers for better performance
+- Adicionado `CoroutineDispatcherProvider` para centralizar o gerenciamento de dispatchers
+- Criados métodos auxiliares para lançar coroutines em ViewModels
+- Padronizado o tratamento de erros em coroutines
+- Melhorado o uso de dispatchers para melhor desempenho
 
-Benefits:
-- More consistent coroutine usage
-- Better error handling
-- Improved testability of coroutine code
-- Better performance through appropriate dispatcher usage
+Benefícios:
+- Uso mais consistente de coroutines
+- Melhor tratamento de erros
+- Melhor testabilidade do código de coroutines
+- Melhor desempenho através do uso apropriado de dispatchers
 
-## Error Handling
+## Tratamento de Erros
 
-We've improved error handling throughout the application:
+Melhoramos o tratamento de erros em toda a aplicação:
 
-- Created a `ResultWrapper` class for standardized error handling
-- Improved error reporting and logging
-- Added better error handling in ViewModels
-- Standardized error handling in use cases
+- Criada a classe `ResultWrapper` para padronizar o tratamento de erros
+- Melhorado o relatório de erros e logging
+- Adicionado melhor tratamento de erros em ViewModels
+- Padronizado o tratamento de erros em casos de uso
 
-Benefits:
-- More consistent error handling
-- Better error reporting for debugging
-- Improved user experience with better error messages
-- Easier to maintain and extend
+Benefícios:
+- Tratamento de erros mais consistente
+- Melhor relatório de erros para depuração
+- Melhor experiência do usuário com mensagens de erro mais claras
+- Mais fácil de manter e estender
 
-## Base Classes
+## Classes Base
 
-We've created base classes to reduce code duplication and improve consistency:
+Criamos classes base para reduzir a duplicação de código e melhorar a consistência:
 
-- `BaseViewModel`: Common functionality for all ViewModels
-- `BaseUseCase`: Common functionality for all use cases
-- `NetworkBoundResource`: Common functionality for repository implementations
+- `BaseViewModel`: Funcionalidade comum para todos os ViewModels
+- `BaseUseCase`: Funcionalidade comum para todos os casos de uso
+- `NetworkBoundResource`: Funcionalidade comum para implementações de repositório
 
-Benefits:
-- Reduced code duplication
-- More consistent code structure
-- Easier to maintain and extend
-- Better separation of concerns
+Benefícios:
+- Redução da duplicação de código
+- Estrutura de código mais consistente
+- Mais fácil de manter e estender
+- Melhor separação de responsabilidades
 
-## UI Component System
+## Sistema de Componentes UI
 
-We've created a comprehensive UI component system to improve layout maintainability:
+Criamos um sistema abrangente de componentes UI para melhorar a manutenção dos layouts:
 
-- Created standardized dimensions in `Dimensions.kt`
-- Implemented reusable UI components with consistent styling
-- Added previews for all components
-- Created a screen layout system for consistent UI structure
-- Added detailed documentation for the component system
+- Criadas dimensões padronizadas em `Dimensions.kt`
+- Implementados componentes UI reutilizáveis com estilo consistente
+- Adicionados previews para todos os componentes
+- Criado um sistema de layout de tela para estrutura de UI consistente
+- Adicionada documentação detalhada para o sistema de componentes
 
-Components created:
-- `FriendsButton` and `FriendsOutlinedButton`
-- `FriendsTextField` and `FriendsOutlinedTextField`
-- `FriendsCard` and `FriendsOutlinedCard`
-- `FriendsScreenLayout` for consistent screen structure
+Componentes criados:
+- `FriendsButton` e `FriendsOutlinedButton`
+- `FriendsTextField` e `FriendsOutlinedTextField`
+- `FriendsCard` e `FriendsOutlinedCard`
+- `FriendsScreenLayout` para estrutura de tela consistente
 
-Benefits:
-- Improved visual consistency across the app
-- Reduced code duplication
-- Easier maintenance of UI components
-- Simplified updates to design system
-- Better developer productivity
+Benefícios:
+- Melhor consistência visual em todo o aplicativo
+- Redução da duplicação de código
+- Manutenção mais fácil dos componentes UI
+- Atualizações simplificadas do sistema de design
+- Melhor produtividade do desenvolvedor
 
-## Testing Improvements
+## Melhorias para Testes
 
-We've improved the testability of the codebase:
+Melhoramos a testabilidade do código:
 
-- Added dependency injection for easier mocking
-- Created base classes with better testability
-- Improved separation of concerns for easier testing
-- Added better error handling for more robust tests
-- Added previews for UI components to visually test them
+- Criado Service Locator para facilitar a substituição de implementações em testes
+- Criadas classes base com melhor testabilidade
+- Melhorada a separação de responsabilidades para facilitar os testes
+- Adicionado melhor tratamento de erros para testes mais robustos
+- Adicionados previews para componentes UI para testá-los visualmente
 
-Benefits:
-- Easier to write tests
-- More robust tests
-- Better test coverage
-- Easier to maintain and extend tests
-- Visual testing through previews
+Benefícios:
+- Mais fácil de escrever testes
+- Testes mais robustos
+- Melhor cobertura de testes
+- Mais fácil de manter e estender testes
+- Testes visuais através de previews

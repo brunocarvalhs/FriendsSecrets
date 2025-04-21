@@ -1,19 +1,23 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home.list
 
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.di.ServiceLocator
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
 import br.com.brunocarvalhs.friendssecrets.presentation.base.BaseViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+/**
+ * ViewModel para a tela de listagem de grupos.
+ */
+class HomeViewModel(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
     private val logoutUseCase: LogoutUseCase
@@ -70,5 +74,18 @@ class HomeViewModel @Inject constructor(
                 _uiState.value = HomeUiState.Error(errorMessage = error.report()?.message.orEmpty())
             }
         }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    HomeViewModel(
+                        groupListUseCase = ServiceLocator.groupListUseCase,
+                        groupByTokenUseCase = ServiceLocator.groupByTokenUseCase,
+                        logoutUseCase = ServiceLocator.logoutUseCase
+                    )
+                }
+            }
     }
 }

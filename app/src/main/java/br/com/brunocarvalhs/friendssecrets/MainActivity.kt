@@ -14,26 +14,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.di.ServiceLocator
 import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    @Inject
-    lateinit var toggleManager: ToggleManager
-    
-    @Inject
-    lateinit var themeRemoteProvider: ThemeRemoteProvider
-    
-    @Inject
-    lateinit var analyticsProvider: AnalyticsProvider
+    // Obtém as dependências do ServiceLocator
+    private val toggleManager = ServiceLocator.getToggleManager()
+    private val themeRemoteProvider = ServiceLocator.getThemeRemoteProvider()
+    private val analyticsProvider = ServiceLocator.getAnalyticsProvider()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
