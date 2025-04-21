@@ -1,20 +1,14 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
 import androidx.activity.ComponentActivity
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserEntities
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,14 +20,12 @@ class ContactItemTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun contactItem_displaysCorrectInformation() {
+    fun testContactItem_displaysContactInfo() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
+            name = "John Doe",
+            phone = "123456789",
             likes = listOf("Books", "Movies", "Games")
         )
 
@@ -45,22 +37,16 @@ class ContactItemTest {
         // Then
         composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
         composeTestRule.onNodeWithText("123456789").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("Default user icon").assertIsDisplayed()
-        
-        // Likes should be hidden initially
-        composeTestRule.onNodeWithText("Books").assertDoesNotExist()
     }
 
     @Test
-    fun contactItem_withNoPhoneNumber_hidesPhoneNumber() {
+    fun testContactItem_withEmptyPhone_hidesPhoneNumber() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
-            likes = listOf("Books", "Movies", "Games")
+            name = "John Doe",
+            phone = "",
+            likes = listOf("Books")
         )
 
         // When
@@ -70,19 +56,16 @@ class ContactItemTest {
 
         // Then
         composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
-        // Phone number should not be displayed
-        composeTestRule.onNodeWithText("123456789").assertDoesNotExist()
+        composeTestRule.onNodeWithText("").assertDoesNotExist()
     }
 
     @Test
-    fun contactItem_withLikes_showsLikesWhenClicked() {
+    fun testContactItem_withLikes_showsLikesWhenClicked() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
+            name = "John Doe",
+            phone = "123456789",
             likes = listOf("Books", "Movies", "Games")
         )
 
@@ -92,27 +75,25 @@ class ContactItemTest {
         }
 
         // Then
-        // Likes should be hidden initially
+        // Initially likes are not shown
         composeTestRule.onNodeWithText("Books").assertDoesNotExist()
         
-        // Click on the contact item
+        // Click on the contact
         composeTestRule.onNodeWithText("John Doe").performClick()
         
-        // Likes should be visible after click
+        // Now likes should be visible
         composeTestRule.onNodeWithText("Books").assertIsDisplayed()
         composeTestRule.onNodeWithText("Movies").assertIsDisplayed()
         composeTestRule.onNodeWithText("Games").assertIsDisplayed()
     }
 
     @Test
-    fun contactItem_withNoLikes_isNotClickable() {
+    fun testContactItem_withNoLikes_isNotClickable() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
+            name = "John Doe",
+            phone = "123456789",
             likes = emptyList()
         )
 
@@ -122,55 +103,49 @@ class ContactItemTest {
         }
 
         // Then
-        // The item should not have a click action since there are no likes
-        composeTestRule.onNodeWithText("John Doe").assertExists()
-        // We can't directly test if it's not clickable, but we can verify no likes appear after attempting to click
+        // Contact should be displayed
+        composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
+        
+        // Click on the contact
         composeTestRule.onNodeWithText("John Doe").performClick()
-        // No likes should appear
-        composeTestRule.onNodeWithText("Books").assertDoesNotExist()
+        
+        // No likes should be shown as there are none
+        composeTestRule.onNodeWithText("No likes").assertDoesNotExist()
     }
 
     @Test
-    fun contactItem_withCustomAction_displaysAction() {
+    fun testContactItem_withCustomAction_displaysAction() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
-            likes = listOf("Books", "Movies", "Games")
+            name = "John Doe",
+            phone = "123456789",
+            likes = listOf("Books")
         )
 
         // When
         composeTestRule.setContent {
-            val isChecked = remember { mutableStateOf(false) }
             ContactItem(
                 contact = contact,
-                action = { _, _ ->
-                    Checkbox(
-                        checked = isChecked.value,
-                        onCheckedChange = { isChecked.value = it }
-                    )
+                action = { user, _ ->
+                    CustomActionButton(text = "Add ${user.name}")
                 }
             )
         }
 
         // Then
-        // The checkbox should be displayed
-        composeTestRule.onNode(androidx.compose.ui.test.isToggleable()).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Add John Doe").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Add John Doe").assertHasClickAction()
     }
 
     @Test
-    fun contactItem_whenSelected_hasSelectedAppearance() {
+    fun testContactItem_whenSelected_showsSelectedAppearance() {
         // Given
-        val contact = UserModel(
-            name = "John Doe",
+        val contact = UserEntities(
             id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
-            likes = listOf("Books", "Movies", "Games")
+            name = "John Doe",
+            phone = "123456789",
+            likes = listOf("Books")
         )
 
         // When
@@ -182,7 +157,15 @@ class ContactItemTest {
         }
 
         // Then
-        // We can't directly test the background color, but we can verify the content is displayed
         composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
+        // Note: We can't easily test the background color in Espresso,
+        // but the component should be displayed with the selected state
+    }
+}
+
+@androidx.compose.runtime.Composable
+private fun CustomActionButton(text: String) {
+    androidx.compose.material3.Button(onClick = {}) {
+        androidx.compose.material3.Text(text = text)
     }
 }

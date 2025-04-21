@@ -1,18 +1,25 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw
 
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserEntities
+import br.com.brunocarvalhs.friendssecrets.domain.services.ToggleManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
@@ -22,182 +29,180 @@ class DrawScreenKtTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @Test
-    fun testTopBar_isDisplayed() {
-        // When
-        composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Idle,
-                eventIntent = {}
-            )
-        }
-
-        // Then
-        // Title should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_title)
-        ).assertIsDisplayed()
-        
-        // Back button should be displayed
-        composeTestRule.onNodeWithContentDescription(
-            composeTestRule.activity.getString(R.string.navigation_back)
-        ).assertIsDisplayed().assertHasClickAction()
-    }
+    private val navController = mock<NavController>()
 
     @Test
-    fun testIdleState_showsCodeInputAndDrawButton() {
-        // When
-        composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Idle,
-                eventIntent = {}
-            )
-        }
-
-        // Then
-        // Code input field should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_code_secret)
-        ).assertIsDisplayed()
-        
-        // Draw button should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_action_title)
-        ).assertIsDisplayed().assertHasClickAction()
-    }
-
-    @Test
-    fun testLoadingState_showsLoadingIndicator() {
-        // When
-        composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Loading,
-                eventIntent = {}
-            )
-        }
-
-        // Then
-        // Loading indicator should be displayed
-        composeTestRule.onNodeWithContentDescription(
-            composeTestRule.activity.getString(R.string.loading_description)
-        ).assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessState_showsDrawResultAndLikes() {
+    fun testDrawScreen_idleState_displaysCodeInputAndDrawButton() {
         // Given
-        val draw = mapOf("John Doe" to "Books|Movies|Games")
-        val group = GroupModel(name = "Test Group")
-        
+        val viewModel = FakeDrawViewModel(DrawUiState.Idle)
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = true)
+
         // When
         composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Success(draw = draw, group = group),
-                eventIntent = {},
-                isGenerativeEnabled = true
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
             )
         }
 
         // Then
-        // Secret name should be displayed
+        val titleText = composeTestRule.activity.getString(R.string.draw_title)
+        composeTestRule.onNodeWithText(titleText).assertIsDisplayed()
+        
+        val codeHintText = composeTestRule.activity.getString(R.string.draw_code_hint)
+        composeTestRule.onNodeWithText(codeHintText).assertIsDisplayed()
+        
+        val drawButtonText = composeTestRule.activity.getString(R.string.draw_button)
+        composeTestRule.onNodeWithText(drawButtonText).assertIsDisplayed()
+        composeTestRule.onNodeWithText(drawButtonText).assertIsEnabled()
+    }
+
+    @Test
+    fun testDrawScreen_loadingState_displaysLoadingIndicator() {
+        // Given
+        val viewModel = FakeDrawViewModel(DrawUiState.Loading)
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = true)
+
+        // When
+        composeTestRule.setContent {
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
+            )
+        }
+
+        // Then
+        composeTestRule.onNodeWithContentDescription("Loading").assertIsDisplayed()
+    }
+
+    @Test
+    fun testDrawScreen_successState_displaysDrawResult() {
+        // Given
+        val contact = UserEntities(
+            id = "user-123",
+            name = "John Doe",
+            phone = "123456789",
+            likes = listOf("Books", "Movies")
+        )
+        val viewModel = FakeDrawViewModel(DrawUiState.Success(contact))
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = true)
+
+        // When
+        composeTestRule.setContent {
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
+            )
+        }
+
+        // Then
+        val resultText = composeTestRule.activity.getString(R.string.draw_result)
+        composeTestRule.onNodeWithText(resultText).assertIsDisplayed()
+        
         composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
-        
-        // Likes title should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_title_like)
-        ).assertIsDisplayed()
-        
-        // Individual likes should be displayed
-        composeTestRule.onNodeWithText("Books").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Movies").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Games").assertIsDisplayed()
-        
-        // Generative button should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_action_generative)
-        ).assertIsDisplayed().assertHasClickAction()
-    }
-
-    @Test
-    fun testSuccessState_withMultipleLikes_displaysAllLikes() {
-        // Given
-        val draw = mapOf("John Doe" to "Books|Movies|Games|Music|Art|Sports")
-        val group = GroupModel(name = "Test Group")
-        
-        // When
-        composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Success(draw = draw, group = group),
-                eventIntent = {},
-                isGenerativeEnabled = true
-            )
-        }
-
-        // Then
-        // All likes should be displayed
-        composeTestRule.onNodeWithText("Books").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Movies").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Games").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Music").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Art").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Sports").assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessState_withGenerativeDisabled_hidesGenerativeButton() {
-        // Given
-        val draw = mapOf("John Doe" to "Books|Movies|Games")
-        val group = GroupModel(name = "Test Group")
-        
-        // When
-        composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Success(draw = draw, group = group),
-                eventIntent = {},
-                isGenerativeEnabled = false
-            )
-        }
-
-        // Then
-        // Secret name should be displayed
-        composeTestRule.onNodeWithText("John Doe").assertIsDisplayed()
+        composeTestRule.onNodeWithText("123456789").assertIsDisplayed()
         
         // Likes should be displayed
         composeTestRule.onNodeWithText("Books").assertIsDisplayed()
-        
-        // Generative button should NOT be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.draw_screen_action_generative)
-        ).assertDoesNotExist()
+        composeTestRule.onNodeWithText("Movies").assertIsDisplayed()
     }
 
     @Test
-    fun testErrorState_showsErrorComponent() {
+    fun testDrawScreen_withGenerativeEnabled_showsGenerativeButton() {
         // Given
-        val errorMessage = "Error loading draw"
-        
+        val viewModel = FakeDrawViewModel(DrawUiState.Idle)
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = true)
+
         // When
         composeTestRule.setContent {
-            DrawContent(
-                navController = rememberNavController(),
-                uiState = DrawUiState.Error(error = errorMessage),
-                eventIntent = {}
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
             )
         }
 
         // Then
-        // Error message should be displayed
+        val generativeButtonText = composeTestRule.activity.getString(R.string.draw_generative_button)
+        composeTestRule.onNodeWithText(generativeButtonText).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDrawScreen_withGenerativeDisabled_hidesGenerativeButton() {
+        // Given
+        val viewModel = FakeDrawViewModel(DrawUiState.Idle)
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = false)
+
+        // When
+        composeTestRule.setContent {
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
+            )
+        }
+
+        // Then
+        val generativeButtonText = composeTestRule.activity.getString(R.string.draw_generative_button)
+        composeTestRule.onNodeWithText(generativeButtonText).assertDoesNotExist()
+    }
+
+    @Test
+    fun testDrawScreen_errorState_displaysErrorComponent() {
+        // Given
+        val errorMessage = "Failed to perform draw"
+        val viewModel = FakeDrawViewModel(DrawUiState.Error(errorMessage))
+        val toggleManager = FakeToggleManager(isGenerativeEnabled = true)
+
+        // When
+        composeTestRule.setContent {
+            DrawScreen(
+                groupId = "group-123",
+                navController = navController,
+                viewModel = viewModel,
+                toggleManager = toggleManager
+            )
+        }
+
+        // Then
         composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
         
-        // Retry button should be displayed
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.error_retry)
-        ).assertIsDisplayed().assertHasClickAction()
+        val retryButtonText = composeTestRule.activity.getString(R.string.error_component_button_try_again)
+        composeTestRule.onNodeWithText(retryButtonText).assertIsDisplayed()
+    }
+}
+
+class FakeDrawViewModel(initialState: DrawUiState) : DrawViewModel() {
+    private val _uiState = MutableStateFlow(initialState)
+    override val uiState: StateFlow<DrawUiState> = _uiState
+
+    override fun eventIntent(intent: DrawIntent) {
+        // No-op for tests
+    }
+
+    companion object {
+        val Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FakeDrawViewModel(DrawUiState.Idle) as T
+            }
+        }
+    }
+}
+
+class FakeToggleManager(private val isGenerativeEnabled: Boolean) : ToggleManager {
+    override fun isEnabled(feature: String): Boolean {
+        return when (feature) {
+            "generative_ai" -> isGenerativeEnabled
+            else -> false
+        }
     }
 }

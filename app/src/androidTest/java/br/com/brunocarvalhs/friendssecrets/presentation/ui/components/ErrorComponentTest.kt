@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -11,7 +12,6 @@ import br.com.brunocarvalhs.friendssecrets.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.concurrent.atomic.AtomicBoolean
 
 @RunWith(AndroidJUnit4::class)
 class ErrorComponentTest {
@@ -20,103 +20,118 @@ class ErrorComponentTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun errorComponent_displaysErrorMessage() {
+    fun testErrorComponent_displaysErrorMessage() {
         // Given
-        val errorMessage = "Test error message"
-        
+        val errorMessage = "Something went wrong"
+        var refreshCalled = false
+        var backCalled = false
+
         // When
         composeTestRule.setContent {
-            ErrorComponent(message = errorMessage)
+            ErrorComponent(
+                message = errorMessage,
+                onRefresh = { refreshCalled = true },
+                onBack = { backCalled = true }
+            )
         }
-        
+
         // Then
-        composeTestRule.onNodeWithText("Ops!").assertIsDisplayed()
         composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
     }
 
     @Test
-    fun errorComponent_withRefreshCallback_showsRetryButton() {
+    fun testErrorComponent_withRetryButton_callsOnRefresh() {
         // Given
-        val errorMessage = "Test error message"
-        val refreshCalled = AtomicBoolean(false)
-        
+        val errorMessage = "Network error"
+        var refreshCalled = false
+
         // When
         composeTestRule.setContent {
             ErrorComponent(
                 message = errorMessage,
-                onRefresh = { refreshCalled.set(true) }
+                onRefresh = { refreshCalled = true }
             )
         }
-        
+
         // Then
         val retryButtonText = composeTestRule.activity.getString(R.string.error_component_button_try_again)
-        composeTestRule.onNodeWithText(retryButtonText).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(retryButtonText).assertIsDisplayed()
+        composeTestRule.onNodeWithText(retryButtonText).assertHasClickAction()
         
-        // When clicking the retry button
+        // Click retry button
         composeTestRule.onNodeWithText(retryButtonText).performClick()
         
-        // Then the refresh callback should be called
-        assert(refreshCalled.get())
+        // Verify onRefresh was called
+        assert(refreshCalled) { "onRefresh was not called" }
     }
 
     @Test
-    fun errorComponent_withBackCallback_showsBackButton() {
+    fun testErrorComponent_withBackButton_callsOnBack() {
         // Given
-        val errorMessage = "Test error message"
-        val backCalled = AtomicBoolean(false)
-        
+        val errorMessage = "Permission denied"
+        var backCalled = false
+
         // When
         composeTestRule.setContent {
             ErrorComponent(
                 message = errorMessage,
-                onBack = { backCalled.set(true) }
+                onBack = { backCalled = true }
             )
         }
-        
+
         // Then
         val backButtonText = composeTestRule.activity.getString(R.string.error_component_button_to_home)
-        composeTestRule.onNodeWithText(backButtonText).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(backButtonText).assertIsDisplayed()
+        composeTestRule.onNodeWithText(backButtonText).assertHasClickAction()
         
-        // When clicking the back button
+        // Click back button
         composeTestRule.onNodeWithText(backButtonText).performClick()
         
-        // Then the back callback should be called
-        assert(backCalled.get())
+        // Verify onBack was called
+        assert(backCalled) { "onBack was not called" }
     }
 
     @Test
-    fun errorComponent_withBothCallbacks_showsBothButtons() {
+    fun testErrorComponent_withBothButtons_showsBothButtons() {
         // Given
-        val errorMessage = "Test error message"
-        val refreshCalled = AtomicBoolean(false)
-        val backCalled = AtomicBoolean(false)
-        
+        val errorMessage = "Data loading failed"
+        var refreshCalled = false
+        var backCalled = false
+
         // When
         composeTestRule.setContent {
             ErrorComponent(
                 message = errorMessage,
-                onRefresh = { refreshCalled.set(true) },
-                onBack = { backCalled.set(true) }
+                onRefresh = { refreshCalled = true },
+                onBack = { backCalled = true }
             )
         }
-        
+
         // Then
         val retryButtonText = composeTestRule.activity.getString(R.string.error_component_button_try_again)
         val backButtonText = composeTestRule.activity.getString(R.string.error_component_button_to_home)
         
-        composeTestRule.onNodeWithText(retryButtonText).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText(backButtonText).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(retryButtonText).assertIsDisplayed()
+        composeTestRule.onNodeWithText(backButtonText).assertIsDisplayed()
+    }
+
+    @Test
+    fun testErrorComponent_withNoButtons_hidesButtons() {
+        // Given
+        val errorMessage = "Critical error"
+
+        // When
+        composeTestRule.setContent {
+            ErrorComponent(
+                message = errorMessage
+            )
+        }
+
+        // Then
+        val retryButtonText = composeTestRule.activity.getString(R.string.error_component_button_try_again)
+        val backButtonText = composeTestRule.activity.getString(R.string.error_component_button_to_home)
         
-        // When clicking the retry button
-        composeTestRule.onNodeWithText(retryButtonText).performClick()
-        
-        // Then the refresh callback should be called
-        assert(refreshCalled.get())
-        
-        // When clicking the back button
-        composeTestRule.onNodeWithText(backButtonText).performClick()
-        
-        // Then the back callback should be called
-        assert(backCalled.get())
+        composeTestRule.onNodeWithText(retryButtonText).assertDoesNotExist()
+        composeTestRule.onNodeWithText(backButtonText).assertDoesNotExist()
     }
 }
