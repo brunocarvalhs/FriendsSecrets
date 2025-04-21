@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
@@ -56,14 +56,11 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun OnboardingScreen(
     navController: NavHostController,
     initialPage: Int = 0,
-    viewModel: OnboardViewModel = viewModel(
-        factory = OnboardViewModel.Factory
-    ),
+    viewModel: OnboardViewModel = hiltViewModel(),
 ) {
     val uiState: OnboardUiState by viewModel.uiState.collectAsState()
 

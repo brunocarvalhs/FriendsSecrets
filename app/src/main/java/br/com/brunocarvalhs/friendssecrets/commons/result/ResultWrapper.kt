@@ -101,7 +101,7 @@ sealed class ResultWrapper<out T> {
      * @param defaultValue The function to execute if this is not a [Success]
      * @return The success data or the result of the given function
      */
-    inline fun getOrElse(defaultValue: () -> T): T {
+    inline fun getOrElse(defaultValue: () -> @UnsafeVariance T): T {
         return when (this) {
             is Success -> data
             else -> defaultValue()

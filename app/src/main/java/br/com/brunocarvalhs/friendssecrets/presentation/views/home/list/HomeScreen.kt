@@ -44,10 +44,8 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
 import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
@@ -67,15 +65,13 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.componen
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
-    toggleManager: ToggleManager = hiltViewModel(),
-    analyticsProvider: AnalyticsProvider = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val session = SessionManager.getInstance()
 
     LaunchedEffect(Unit) {
-        analyticsProvider.track(
+        viewModel.analyticsProvider.track(
             event = AnalyticsEvents.VISUALIZATION,
             params = mapOf(
                 AnalyticsParams.SCREEN_NAME to HomeNavigation.Home.route
@@ -92,11 +88,11 @@ fun HomeScreen(
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
-        isSettingsEnabled = toggleManager
+        isSettingsEnabled = viewModel.toggleManager
             .isFeatureEnabled(ToggleKeys.SETTINGS_IS_ENABLED),
-        isJoinGroupEnabled = toggleManager
+        isJoinGroupEnabled = viewModel.toggleManager
             .isFeatureEnabled(ToggleKeys.HOME_IS_JOIN_GROUP_ENABLED),
-        isCreateGroupEnabled = toggleManager
+        isCreateGroupEnabled = viewModel.toggleManager
             .isFeatureEnabled(ToggleKeys.HOME_IS_CREATE_GROUP_ENABLED),
     )
 }

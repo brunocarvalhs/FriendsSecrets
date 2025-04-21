@@ -20,7 +20,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDrawService(cryptoService: CryptoService): DrawService {
-        return DrawService(cryptoService)
+        return DrawService(cryptoService = cryptoService)
     }
 
     @Provides
@@ -30,7 +30,11 @@ object RepositoryModule {
         cryptoService: CryptoService,
         drawService: DrawService
     ): GroupRepository {
-        return GroupRepositoryImpl(firestore, cryptoService, drawService)
+        return GroupRepositoryImpl(
+            firestore = firestore,
+            cryptoService = cryptoService,
+            drawService = drawService
+        )
     }
 
     @Provides
@@ -39,7 +43,7 @@ object RepositoryModule {
         firestore: FirebaseFirestore,
         cryptoService: CryptoService
     ): UserRepository {
-        return UserRepositoryImpl(firestore, cryptoService)
+        return UserRepositoryImpl(firestore = firestore, cryptoService = cryptoService)
     }
 
     @Provides

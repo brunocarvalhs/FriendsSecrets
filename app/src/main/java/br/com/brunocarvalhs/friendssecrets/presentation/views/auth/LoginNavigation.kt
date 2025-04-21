@@ -1,9 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -15,6 +13,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.login.LoginScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.login.LoginViewModel
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.multLogin.MultiLoginViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify.PhoneVerifyScreen
@@ -55,30 +54,32 @@ fun NavGraphBuilder.loginGraph(
 ) {
     navigation(startDestination = LoginNavigation.START_DESTINATION, route = route) {
         composable(LoginNavigation.Login.route) {
-            val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+            val viewModel: LoginViewModel = hiltViewModel()
+            val multiLoginViewModel: MultiLoginViewModel = hiltViewModel()
             LoginScreen(
                 navController = navController,
-                viewModel = viewModel
+                viewModel = viewModel,
+                multiLoginViewModel = multiLoginViewModel
             )
         }
         composable(LoginNavigation.PhoneSend.route) {
-            val viewModel: PhoneSendViewModel = viewModel(factory = PhoneSendViewModel.Factory(activity))
+            val viewModel: PhoneSendViewModel = hiltViewModel()
             PhoneSendScreen(
                 navController = navController,
                 viewModel = viewModel
             )
         }
         composable(LoginNavigation.PhoneVerification.route) {
-            val viewModel: PhoneVerifyViewModel = viewModel(factory = PhoneVerifyViewModel.Factory)
+            val viewModel: PhoneVerifyViewModel = hiltViewModel()
             PhoneVerifyScreen(
                 phoneNumber = it.arguments?.getString(LoginNavigation.PhoneVerification.phoneNumber)
-                    ?: "",
+                    .orEmpty(),
                 navController = navController,
                 viewModel = viewModel
             )
         }
         composable(LoginNavigation.Profile.route) {
-            val viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
+            val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(
                 navController = navController,
                 viewModel = viewModel

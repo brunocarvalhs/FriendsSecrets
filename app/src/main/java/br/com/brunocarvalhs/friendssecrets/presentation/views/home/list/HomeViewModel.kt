@@ -1,6 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home.list
 
+import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
@@ -16,7 +18,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    val toggleManager: ToggleManager,
+    val analyticsProvider: AnalyticsProvider
 ) : BaseViewModel() {
 
     private val _uiState: MutableStateFlow<HomeUiState> =

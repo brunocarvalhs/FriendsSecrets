@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
@@ -9,7 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 
 class GroupDeleteUseCase(
-    private val context: Context = CustomApplication.getInstance(),
+    private val context: Context,
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
     private val performance: PerformanceManager

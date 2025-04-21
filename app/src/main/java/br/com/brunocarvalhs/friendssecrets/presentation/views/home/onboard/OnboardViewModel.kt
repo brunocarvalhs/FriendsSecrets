@@ -1,10 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
@@ -16,6 +13,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,8 +21,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.reflect.Type
 import java.util.Locale
+import javax.inject.Inject
 
-class OnboardViewModel : ViewModel() {
+@HiltViewModel
+class OnboardViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState: MutableStateFlow<OnboardUiState> =
         MutableStateFlow(OnboardUiState.Idle(default))
@@ -109,12 +109,5 @@ class OnboardViewModel : ViewModel() {
                 description = context.getString(R.string.onboarding_screen_description)
             )
         )
-
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    OnboardViewModel()
-                }
-            }
     }
 }

@@ -90,7 +90,6 @@ fun FriendsScreenLayout(
                     ) {
                         ErrorComponent(
                             message = error,
-                            onRetry = onRetry
                         )
                     }
                 }

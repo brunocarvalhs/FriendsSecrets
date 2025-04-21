@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class GroupByTokenUseCase @Inject constructor(
     private val groupRepository: GroupRepository,
-    private val storage: StorageService
+    private val storage: StorageService,
 ) : BaseUseCase<String, GroupEntities>() {
 
     override val traceName: String = "GroupByTokenUseCase"

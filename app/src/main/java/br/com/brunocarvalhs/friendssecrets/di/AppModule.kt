@@ -8,7 +8,6 @@ import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.Crashlyti
 import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.RemoteInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.TimberInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
-import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
@@ -16,6 +15,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,13 +43,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAnalyticsProvider(): AnalyticsProvider {
-        return AnalyticsProvider
+        return AnalyticsProvider()
     }
 
     @Provides
     @Singleton
     fun provideCrashLoggerProvider(): CrashLoggerProvider {
-        return CrashlyticsProvider()
+        return CrashLoggerProvider()
     }
 
     @Provides
@@ -60,14 +60,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideThemeRemoteProvider(@ApplicationContext context: Context): ThemeRemoteProvider {
-        return ThemeRemoteProvider(context)
+    fun provideThemeRemoteProvider(
+        remoteProvider: RemoteProvider,
+    ): ThemeRemoteProvider {
+        return ThemeRemoteProvider(
+            remoteProvider = remoteProvider,
+        )
     }
 
     @Provides
     @Singleton
-    fun provideToggleManager(@ApplicationContext context: Context): ToggleManager {
-        return ToggleManager(context)
+    fun provideToggleManager(
+        remoteProvider: RemoteProvider
+    ): ToggleManager {
+        return ToggleManager(remoteProvider = remoteProvider)
     }
 
     @Provides
@@ -78,14 +84,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideBiometricManager(@ApplicationContext context: Context): BiometricManager {
-        return BiometricManager(context)
+    fun provideBiometricManager(): BiometricManager {
+        return BiometricManager
     }
 
     @Provides
     @Singleton
-    fun provideThemeManager(@ApplicationContext context: Context): ThemeManager {
-        return ThemeManager(context)
+    fun provideThemeManager(): ThemeManager {
+        return ThemeManager
     }
 
     @Provides

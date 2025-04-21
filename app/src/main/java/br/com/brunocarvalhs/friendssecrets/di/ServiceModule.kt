@@ -24,8 +24,8 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideContactService(@ApplicationContext context: Context): ContactService {
-        return ContactService(context)
+    fun provideContactService(): ContactService {
+        return ContactService()
     }
 
     @Provides

@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -25,6 +23,7 @@ android {
         versionCode = 6
         versionName = "1.2.3"
 
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
@@ -114,13 +113,13 @@ dependencies {
     implementation(libs.core.ktx)
     
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    ksp("com.google.dagger:hilt-android-compiler:2.50")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
     
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
     
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -140,4 +139,5 @@ dependencies {
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
     implementation(libs.country.picker)
+    implementation(libs.firebase.ui.auth)
 }

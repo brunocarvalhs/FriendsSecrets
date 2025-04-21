@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.analytics
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings.Secure
@@ -19,6 +20,7 @@ class AnalyticsProvider @Inject constructor() {
         })
     }
 
+    @SuppressLint("HardwareIds")
     fun setUserId(context: Context) {
         val deviceId =
             Secure.getString(context.contentResolver, Secure.ANDROID_ID)

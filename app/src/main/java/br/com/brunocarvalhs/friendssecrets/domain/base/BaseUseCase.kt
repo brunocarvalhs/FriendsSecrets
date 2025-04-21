@@ -32,13 +32,13 @@ abstract class BaseUseCase<in P, R> {
      */
     suspend operator fun invoke(parameters: P): Result<R> {
         return withContext(dispatchers.io) {
-            performanceManager.startTrace(traceName)
+            performanceManager.start(traceName)
             try {
                 execute(parameters).also {
-                    performanceManager.stopTrace(traceName)
+                    performanceManager.stop(traceName)
                 }
             } catch (e: Exception) {
-                performanceManager.stopTrace(traceName)
+                performanceManager.stop(traceName)
                 Result.failure(e)
             }
         }
@@ -71,13 +71,13 @@ abstract class BaseUseCaseNoParams<R> {
      */
     suspend operator fun invoke(): Result<R> {
         return withContext(dispatchers.io) {
-            performanceManager.startTrace(traceName)
+            performanceManager.start(traceName)
             try {
                 execute().also {
-                    performanceManager.stopTrace(traceName)
+                    performanceManager.stop(traceName)
                 }
             } catch (e: Exception) {
-                performanceManager.stopTrace(traceName)
+                performanceManager.stop(traceName)
                 Result.failure(e)
             }
         }

@@ -4,6 +4,7 @@ interface UserEntities {
     val id: String
     val name: String
     val photoUrl: String?
+    val email: String?
     val phoneNumber: String
     val isPhoneNumberVerified: Boolean
     val likes: List<String>
@@ -26,6 +27,7 @@ interface UserEntities {
         const val NAME = "name"
         const val PHOTO_URL = "photoUrl"
         const val PHONE_NUMBER = "phoneNumber"
+        const val EMAIL = "email"
         const val IS_PHONE_NUMBER_VERIFIED = "isPhoneNumberVerified"
         const val LIKES = "likes"
     }
