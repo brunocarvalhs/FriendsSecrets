@@ -8,7 +8,8 @@ This document outlines the refactoring changes made to improve the maintainabili
 3. [Coroutine Handling](#coroutine-handling)
 4. [Error Handling](#error-handling)
 5. [Base Classes](#base-classes)
-6. [Testing Improvements](#testing-improvements)
+6. [UI Component System](#ui-component-system)
+7. [Testing Improvements](#testing-improvements)
 
 ## Dependency Injection with Hilt
 
@@ -89,6 +90,29 @@ Benefits:
 - Easier to maintain and extend
 - Better separation of concerns
 
+## UI Component System
+
+We've created a comprehensive UI component system to improve layout maintainability:
+
+- Created standardized dimensions in `Dimensions.kt`
+- Implemented reusable UI components with consistent styling
+- Added previews for all components
+- Created a screen layout system for consistent UI structure
+- Added detailed documentation for the component system
+
+Components created:
+- `FriendsButton` and `FriendsOutlinedButton`
+- `FriendsTextField` and `FriendsOutlinedTextField`
+- `FriendsCard` and `FriendsOutlinedCard`
+- `FriendsScreenLayout` for consistent screen structure
+
+Benefits:
+- Improved visual consistency across the app
+- Reduced code duplication
+- Easier maintenance of UI components
+- Simplified updates to design system
+- Better developer productivity
+
 ## Testing Improvements
 
 We've improved the testability of the codebase:
@@ -97,9 +121,11 @@ We've improved the testability of the codebase:
 - Created base classes with better testability
 - Improved separation of concerns for easier testing
 - Added better error handling for more robust tests
+- Added previews for UI components to visually test them
 
 Benefits:
 - Easier to write tests
 - More robust tests
 - Better test coverage
 - Easier to maintain and extend tests
+- Visual testing through previews
