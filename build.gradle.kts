@@ -7,4 +7,6 @@ plugins {
     alias(libs.plugins.google.firebase.firebase.perf) apply false
     alias(libs.plugins.google.gms.google.services) apply false
     alias(libs.plugins.google.firebase.crashlytics) apply false
+    id("com.google.dagger.hilt.android") version "2.50" apply false
+    id("com.google.devtools.ksp") version "1.9.22-1.0.17" apply false
 }

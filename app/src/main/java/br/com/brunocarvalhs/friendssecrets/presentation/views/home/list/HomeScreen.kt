@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
@@ -66,17 +66,16 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.componen
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.Factory
-    ),
-    toggleManager: ToggleManager,
+    viewModel: HomeViewModel = hiltViewModel(),
+    toggleManager: ToggleManager = hiltViewModel(),
+    analyticsProvider: AnalyticsProvider = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val session = SessionManager.getInstance()
 
     LaunchedEffect(Unit) {
-        AnalyticsProvider.track(
+        analyticsProvider.track(
             event = AnalyticsEvents.VISUALIZATION,
             params = mapOf(
                 AnalyticsParams.SCREEN_NAME to HomeNavigation.Home.route
@@ -86,7 +85,6 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         if (context.isFistAppOpen()) navController.navigate(HomeNavigation.Onboarding.route)
-        viewModel.event(HomeIntent.FetchGroups)
     }
 
     HomeContent(
