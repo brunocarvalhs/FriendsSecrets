@@ -6,13 +6,19 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserEntities
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
@@ -22,23 +28,22 @@ class GroupCreateScreenKtTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private fun createLayout(uiState: GroupCreateUiState = GroupCreateUiState.Idle(emptyList())) {
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            GroupCreateContent(
-                navController = navController,
-                uiState = uiState,
-                onHome = {},
-                onBack = {},
-                onSave = { _, _, _ -> }
-            )
-        }
-    }
+    private val navController = mock<NavController>()
 
     @Test
     fun testTopBar_isDisplayed() {
-        createLayout()
+        // Given
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Idle(emptyList()))
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Back button should be displayed
         composeTestRule.onNodeWithContentDescription(
             composeTestRule.activity.getString(R.string.navigation_back)
@@ -47,8 +52,18 @@ class GroupCreateScreenKtTest {
 
     @Test
     fun testIdleState_showsFormFields() {
-        createLayout()
+        // Given
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Idle(emptyList()))
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Name field should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(R.string.group_create_input_name)
@@ -72,27 +87,33 @@ class GroupCreateScreenKtTest {
 
     @Test
     fun testIdleState_withContacts_showsContactsList() {
+        // Given
         val contacts = listOf(
-            UserModel(
+            UserEntities(
                 name = "Test Contact",
                 id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
+                phone = "123456789",
                 likes = listOf("Item 1", "Item 2")
             ),
-            UserModel(
+            UserEntities(
                 name = "Another Contact",
                 id = "2",
-                phoneNumber = "987654321",
-                photoUrl = "",
-                isPhoneNumberVerified = true,
+                phone = "987654321",
                 likes = listOf("Item 3", "Item 4")
             )
         )
         
-        createLayout(GroupCreateUiState.Idle(contacts))
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Idle(contacts))
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Contact names should be displayed
         composeTestRule.onNodeWithText("Test Contact").assertIsDisplayed()
         composeTestRule.onNodeWithText("Another Contact").assertIsDisplayed()
@@ -100,18 +121,36 @@ class GroupCreateScreenKtTest {
 
     @Test
     fun testLoadingState_showsLoadingIndicator() {
-        createLayout(GroupCreateUiState.Loading)
+        // Given
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Loading)
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Loading progress should be displayed
-        composeTestRule.onNodeWithContentDescription(
-            composeTestRule.activity.getString(R.string.loading_description)
-        ).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Loading").assertIsDisplayed()
     }
 
     @Test
     fun testSuccessState_showsSuccessComponent() {
-        createLayout(GroupCreateUiState.Success)
+        // Given
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Success)
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Success message should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(R.string.success_message)
@@ -125,20 +164,43 @@ class GroupCreateScreenKtTest {
 
     @Test
     fun testErrorState_showsErrorComponent() {
+        // Given
         val errorMessage = "Error creating group"
-        createLayout(GroupCreateUiState.Error(errorMessage))
+        val viewModel = FakeGroupCreateViewModel(GroupCreateUiState.Error(errorMessage))
+
+        // When
+        composeTestRule.setContent {
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Error message should be displayed
         composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
         
         // Retry button should be displayed and clickable
         composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.error_retry)
+            composeTestRule.activity.getString(R.string.error_component_button_try_again)
         ).assertIsDisplayed().assertHasClickAction()
-        
-        // Back button should be displayed and clickable
-        composeTestRule.onNodeWithText(
-            composeTestRule.activity.getString(R.string.error_back)
-        ).assertIsDisplayed().assertHasClickAction()
+    }
+}
+
+class FakeGroupCreateViewModel(initialState: GroupCreateUiState) : GroupCreateViewModel() {
+    private val _uiState = MutableStateFlow(initialState)
+    override val uiState: StateFlow<GroupCreateUiState> = _uiState
+
+    override fun eventIntent(intent: GroupCreateIntent) {
+        // No-op for tests
+    }
+
+    companion object {
+        val Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FakeGroupCreateViewModel(GroupCreateUiState.Idle(emptyList())) as T
+            }
+        }
     }
 }

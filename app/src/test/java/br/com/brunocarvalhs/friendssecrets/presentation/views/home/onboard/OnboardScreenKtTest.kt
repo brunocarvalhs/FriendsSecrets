@@ -6,13 +6,17 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.brunocarvalhs.friendssecrets.R
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
@@ -22,24 +26,22 @@ class OnboardScreenKtTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private fun createLayout(
-        pages: List<OnboardViewModel.Onboarding> = OnboardViewModel.default,
-        initialPage: Int = 0
-    ) {
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            OnboardingContent(
-                navController = navController,
-                initialPage = initialPage,
-                pages = pages
-            )
-        }
-    }
+    private val navController = mock<NavHostController>()
 
     @Test
     fun testTopBar_isDisplayed() {
-        createLayout()
+        // Given
+        val viewModel = FakeOnboardViewModel()
+
+        // When
+        composeTestRule.setContent {
+            OnboardScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Close button should be displayed
         composeTestRule.onNodeWithContentDescription(
             composeTestRule.activity.getString(R.string.onboarding_screen_close)
@@ -48,8 +50,18 @@ class OnboardScreenKtTest {
 
     @Test
     fun testFirstPage_showsCorrectContent() {
-        createLayout(initialPage = 0)
+        // Given
+        val viewModel = FakeOnboardViewModel(initialPage = 0)
+
+        // When
+        composeTestRule.setContent {
+            OnboardScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // First page title should be displayed
         composeTestRule.onNodeWithText(OnboardViewModel.default[0].title)
             .assertIsDisplayed()
@@ -66,9 +78,19 @@ class OnboardScreenKtTest {
 
     @Test
     fun testMiddlePage_showsCorrectContent() {
+        // Given
         val middlePageIndex = OnboardViewModel.default.size / 2
-        createLayout(initialPage = middlePageIndex)
+        val viewModel = FakeOnboardViewModel(initialPage = middlePageIndex)
+
+        // When
+        composeTestRule.setContent {
+            OnboardScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Middle page title should be displayed
         composeTestRule.onNodeWithText(OnboardViewModel.default[middlePageIndex].title)
             .assertIsDisplayed()
@@ -85,9 +107,19 @@ class OnboardScreenKtTest {
 
     @Test
     fun testLastPage_showsFinishButton() {
+        // Given
         val lastPageIndex = OnboardViewModel.default.size - 1
-        createLayout(initialPage = lastPageIndex)
+        val viewModel = FakeOnboardViewModel(initialPage = lastPageIndex)
+
+        // When
+        composeTestRule.setContent {
+            OnboardScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Last page title should be displayed
         composeTestRule.onNodeWithText(OnboardViewModel.default[lastPageIndex].title)
             .assertIsDisplayed()
@@ -104,6 +136,7 @@ class OnboardScreenKtTest {
 
     @Test
     fun testCustomPages_showsCorrectContent() {
+        // Given
         val customPages = listOf(
             OnboardViewModel.Onboarding(
                 title = "Custom Title 1",
@@ -117,8 +150,17 @@ class OnboardScreenKtTest {
             )
         )
         
-        createLayout(pages = customPages, initialPage = 0)
+        val viewModel = FakeOnboardViewModel(pages = customPages)
+
+        // When
+        composeTestRule.setContent {
+            OnboardScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         
+        // Then
         // Custom page title should be displayed
         composeTestRule.onNodeWithText("Custom Title 1")
             .assertIsDisplayed()
@@ -129,10 +171,23 @@ class OnboardScreenKtTest {
     }
 }
 
-class FakeOnboardViewModel(private val state: OnboardUiState) : OnboardViewModel() {
-    override val uiState = MutableStateFlow(state)
-    
-    override fun onEvent(event: OnboardViewIntent) {
-        // Do nothing
+class FakeOnboardViewModel(
+    private val initialPage: Int = 0,
+    private val pages: List<OnboardViewModel.Onboarding> = OnboardViewModel.default
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(OnboardUiState(initialPage = initialPage, pages = pages))
+    val uiState: StateFlow<OnboardUiState> = _uiState
+
+    fun onEvent(event: OnboardViewIntent) {
+        // No-op for tests
+    }
+
+    companion object {
+        val Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FakeOnboardViewModel() as T
+            }
+        }
     }
 }

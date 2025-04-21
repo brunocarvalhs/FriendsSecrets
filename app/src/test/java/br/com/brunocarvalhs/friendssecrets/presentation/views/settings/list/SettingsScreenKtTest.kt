@@ -3,16 +3,19 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.domain.services.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
@@ -22,28 +25,27 @@ class SettingsScreenKtTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private fun createLayout(
-        isFingerprintEnabled: Boolean = true,
-        isAppearanceEnabled: Boolean = true,
-        isReportIssueEnabled: Boolean = true,
-        isFAQEnabled: Boolean = true
-    ) {
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            SettingsContent(
-                navController = navController,
-                isFingerprintEnabled = isFingerprintEnabled,
-                isAppearanceEnabled = isAppearanceEnabled,
-                isReportIssueEnabled = isReportIssueEnabled,
-                isFAQEnabled = isFAQEnabled
-            )
-        }
-    }
+    private val navController = mock<NavHostController>()
 
     @Test
     fun testTopBar_isDisplayed() {
-        createLayout()
+        // Given
+        val toggleManager = FakeToggleManager(
+            isFingerprintEnabled = true,
+            isAppearanceEnabled = true,
+            isReportIssueEnabled = true,
+            isFAQEnabled = true
+        )
+
+        // When
+        composeTestRule.setContent {
+            SettingsScreen(
+                navController = navController,
+                toggleManager = toggleManager
+            )
+        }
         
+        // Then
         // Title should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(SettingsNavigation.Settings.title)
@@ -57,8 +59,23 @@ class SettingsScreenKtTest {
 
     @Test
     fun testGeneralSection_isDisplayed() {
-        createLayout()
+        // Given
+        val toggleManager = FakeToggleManager(
+            isFingerprintEnabled = true,
+            isAppearanceEnabled = true,
+            isReportIssueEnabled = true,
+            isFAQEnabled = true
+        )
+
+        // When
+        composeTestRule.setContent {
+            SettingsScreen(
+                navController = navController,
+                toggleManager = toggleManager
+            )
+        }
         
+        // Then
         // General section title should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(R.string.settings_screen_general)
@@ -77,8 +94,23 @@ class SettingsScreenKtTest {
 
     @Test
     fun testSupportSection_isDisplayed() {
-        createLayout()
+        // Given
+        val toggleManager = FakeToggleManager(
+            isFingerprintEnabled = true,
+            isAppearanceEnabled = true,
+            isReportIssueEnabled = true,
+            isFAQEnabled = true
+        )
+
+        // When
+        composeTestRule.setContent {
+            SettingsScreen(
+                navController = navController,
+                toggleManager = toggleManager
+            )
+        }
         
+        // Then
         // Support section title should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(R.string.settings_screen_support)
@@ -97,13 +129,23 @@ class SettingsScreenKtTest {
 
     @Test
     fun testPartiallyDisabledFeatures() {
-        createLayout(
+        // Given
+        val toggleManager = FakeToggleManager(
             isFingerprintEnabled = false,
             isAppearanceEnabled = true,
             isReportIssueEnabled = false,
             isFAQEnabled = true
         )
+
+        // When
+        composeTestRule.setContent {
+            SettingsScreen(
+                navController = navController,
+                toggleManager = toggleManager
+            )
+        }
         
+        // Then
         // General section title should be displayed
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(R.string.settings_screen_general)
@@ -133,5 +175,22 @@ class SettingsScreenKtTest {
         composeTestRule.onNodeWithText(
             composeTestRule.activity.getString(SettingsNavigation.FAQ.title)
         ).assertIsDisplayed().assertHasClickAction()
+    }
+}
+
+class FakeToggleManager(
+    private val isFingerprintEnabled: Boolean = false,
+    private val isAppearanceEnabled: Boolean = false,
+    private val isReportIssueEnabled: Boolean = false,
+    private val isFAQEnabled: Boolean = false
+) : ToggleManager {
+    override fun isEnabled(feature: String): Boolean {
+        return when (feature) {
+            "fingerprint" -> isFingerprintEnabled
+            "appearance" -> isAppearanceEnabled
+            "report_issue" -> isReportIssueEnabled
+            "faq" -> isFAQEnabled
+            else -> false
+        }
     }
 }
