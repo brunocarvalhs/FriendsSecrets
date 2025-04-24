@@ -5,11 +5,13 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [1.2.3] - Em desenvolvimento
+## [1.2.3] - 2025-04-24
 
 ### Adicionado
 - Melhorias de desempenho e estabilidade
 - Otimização do uso de recursos
+- Incluindo login no processo de identificação do cliente
+- Leitura de contato para facilitar o processo de criação de amigo secreto
 
 ## [1.2.2] - 2025-03-11
 
