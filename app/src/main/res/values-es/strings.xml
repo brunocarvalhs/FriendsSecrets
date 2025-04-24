@@ -19,6 +19,7 @@
     <string name="group_details_drop_menu_item_text_edit">Editar</string>
 
     <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_profile">Perfil</string>
     <string name="home_drop_menu_item_text_join_a_group">Unirse a un grupo</string>
     <string name="home_drop_menu_item_text_settings">Configuración</string>
     <string name="home_action_create_group">Crear un grupo nuevo</string>
@@ -96,4 +97,20 @@
     <string name="chat_generative_button_send">Enviar</string>
     <string name="empty_group_title">¡Ups!</string>
     <string name="empty_group_message">No se encontró ningún grupo</string>
+    <string name="home_title">"Hola "</string>
+    <string name="home_drop_menu_item_text_logout">Logout</string>
+    <string name="group_create_phone_contacts" />
+    <string name="group_create_app_users" />
+    <string name="login_screen_welcome">Bienvenido a %1$s</string>
+    <string name="login_screen_description">Lee nuestra Política de Privacidad. Toca \'Aceptar y Registrarse\' para crear tu cuenta o \'Aceptar y Continuar\' para proceder sin registro. Ambas opciones implican la aceptación de los Términos de Servicio.</string>
+    <string name="login_screen_privacy">Política de Privacidad</string>
+    <string name="login_screen_terms">Términos de Servicio</string>
+    <string name="login_screen_and">" y "</string>
+    <string name="login_screen_button_register">Aceptar y Registrarse</string>
+    <string name="login_screen_button_anonymation">Aceptar y Continuar</string>
+    <string name="phone_send_title">Introduce tu número de teléfono</string>
+    <string name="phone_send_description">%1$s necesitará verificar tu número de teléfono.</string>
+    <string name="phone_send_textfield_label">Número de teléfono</string>
+    <string name="phone_send_textfield_description">Pueden aplicarse cargos del operador.</string>
+    <string name="phone_send_button">Siguiente</string>
 </resources>

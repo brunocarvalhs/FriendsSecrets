@@ -1,6 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.commons.extensions
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 
 fun Context.isFistAppOpen(): Boolean {
@@ -16,4 +18,16 @@ fun Context.isFistAppOpen(): Boolean {
         return true
     }
     return false
+}
+
+fun Context.openUrl(url: String) {
+    var intent = packageManager.getLaunchIntentForPackage("com.android.chrome")
+    if (intent != null) {
+        intent.action = Intent.ACTION_VIEW
+        intent.data = Uri.parse(url)
+    } else {
+        intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
+
+    startActivity(intent)
 }

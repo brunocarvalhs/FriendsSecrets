@@ -2,26 +2,14 @@ package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
@@ -42,7 +30,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -100,10 +87,6 @@ private fun AddMemberContent(
         }
     }
 
-    fun removeLike(like: String) {
-        likes.remove(like)
-    }
-
     fun addMember() {
         scope.launch {
             onMemberAdded.invoke(name.text, likes)
@@ -116,11 +99,13 @@ private fun AddMemberContent(
 
     fun dismiss() {
         scope.launch {
-            sheetState.hide()
-            if (name.text.isNotBlank()) onMemberAdded.invoke(name.text, likes)
+            if (name.text.isNotBlank()) {
+                addLike() // <- Adiciona antes de limpar
+                onMemberAdded.invoke(name.text, likes)
+            }
             name = TextFieldValue("", TextRange(0, 0))
-            addLike()
             likes.clear()
+            sheetState.hide()
         }.invokeOnCompletion {
             if (!sheetState.isVisible) {
                 onDismiss.invoke()
@@ -170,61 +155,18 @@ private fun AddMemberContent(
                 )
             )
         }
-        Column {
-            Row(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
-                    value = likeName,
-                    onValueChange = { value -> likeName = value },
-                    label = { Text(text = stringResource(R.string.add_member_bottom_sheet_input_liker)) },
-                    singleLine = true,
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { addLike() }
-                    ),
-                    suffix = {
-                        IconButton(
-                            modifier = Modifier.size(AssistChipDefaults.IconSize),
-                            onClick = { addLike() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "add"
-                            )
-                        }
-                    }
-                )
+        LikesComponent(
+            modifier = Modifier.padding(16.dp),
+            name = likeName,
+            onNameChange = { value -> likeName = value },
+            likes = likes,
+            onAddLike = { _ ->
+                addLike()
+            },
+            onRemoveLike = { like ->
+                likes.remove(like)
             }
-            LazyRow {
-                item {
-                    Spacer(modifier = Modifier.padding(start = 16.dp))
-                }
-                items(likes) { like ->
-                    AssistChip(
-                        onClick = { },
-                        label = {
-                            Text(text = like)
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                modifier = Modifier
-                                    .size(AssistChipDefaults.IconSize)
-                                    .padding(end = 4.dp),
-                                onClick = { removeLike(like) }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "remove"
-                                )
-                            }
-                        },
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-            }
-        }
+        )
         Column(modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)) {
             Button(
                 onClick = { addMember() }, modifier = Modifier.fillMaxWidth()

@@ -1,9 +1,12 @@
 package br.com.brunocarvalhs.friendssecrets
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -27,7 +30,9 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        }
 
         enableEdgeToEdge()
         setContent {
@@ -36,7 +41,7 @@ class MainActivity : FragmentActivity() {
                 themeRemoteProvider = themeRemoteProvider
             ) {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.imePadding().fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController().apply {
@@ -49,7 +54,11 @@ class MainActivity : FragmentActivity() {
                             )
                         }
                     }
-                    MainApp(navController = navController, toggleManager = toggleManager)
+                    MainApp(
+                        activity = this,
+                        navController = navController,
+                        toggleManager = toggleManager
+                    )
                 }
             }
         }

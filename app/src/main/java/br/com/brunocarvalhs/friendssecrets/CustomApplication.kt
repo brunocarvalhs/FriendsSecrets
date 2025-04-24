@@ -1,13 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
-import android.content.Context
-import android.provider.Settings
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import timber.log.Timber
+import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitializationManager
 
 class CustomApplication : Application() {
 
@@ -18,21 +12,7 @@ class CustomApplication : Application() {
     }
 
     private fun setup() {
-        setupFirebase()
-        setupTimber()
-    }
-
-    private fun setupTimber() {
-        val type = if (BuildConfig.DEBUG) Timber.DebugTree()
-        else CrashLoggerProvider()
-
-        Timber.plant(type)
-    }
-
-    private fun setupFirebase() {
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
-        CrashlyticsProvider.setUserId(this)
-        AnalyticsProvider.setUserId(this)
+        AppInitializationManager(this.applicationContext).initialize()
     }
 
     companion object {

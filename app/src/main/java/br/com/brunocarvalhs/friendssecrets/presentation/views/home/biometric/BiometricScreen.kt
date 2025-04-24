@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home.biometric
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -8,7 +9,6 @@ import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -36,6 +36,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import timber.log.Timber
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun BiometricScreen(
     navController: NavHostController,
