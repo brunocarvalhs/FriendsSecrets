@@ -1,0 +1,22 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Login Flow
+---
+- launchApp
+- assertVisible: "Bem-vindo ao FriendsSecrets"
+- assertVisible: "Política de Privacidade"
+- assertVisible: "Termos de Uso"
+- tapOn: "Cadastrar"
+- assertVisible: "Verificação de telefone"
+- assertVisible: "Insira seu número de telefone"
+- tapOn: "Número de telefone"
+- inputText: "123456789"
+- tapOn: "Enviar código"
+- assertVisible: "Code has been send to"
+- repeat:
+    times: 6
+    commands:
+      - tapOn:
+          id: ".*OutlinedTextField.*"
+          index: 0
+      - inputText: "1"
+- tapOn: "Verify"
