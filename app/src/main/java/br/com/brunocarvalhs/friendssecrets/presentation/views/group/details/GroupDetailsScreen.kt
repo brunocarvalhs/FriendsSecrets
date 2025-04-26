@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -68,9 +69,7 @@ import kotlin.collections.set
 @Composable
 fun GroupDetailsScreen(
     navController: NavController = rememberNavController(),
-    viewModel: GroupDetailsViewModel = viewModel(
-        factory = GroupDetailsViewModel.Factory
-    ),
+    viewModel: GroupDetailsViewModel = hiltViewModel(),
     groupId: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -365,7 +364,7 @@ private fun GroupDetailsContent(
             onDismiss = { showBottomSheet = false },
             member = name,
             likes = likes,
-            onMemberAdded = { member, likes ->
+            onMemberAdded = { member, _ ->
                 onEdit(
                     group = uiState.group,
                     participant = member,

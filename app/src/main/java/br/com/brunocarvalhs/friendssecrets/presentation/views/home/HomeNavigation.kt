@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.home
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -39,15 +39,14 @@ fun NavGraphBuilder.homeGraph(
 ) {
     navigation(startDestination = HomeNavigation.START_DESTINATION, route = route) {
         composable(HomeNavigation.Home.route) {
-            val homeViewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+            val homeViewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 navController = navController,
                 viewModel = homeViewModel,
-                toggleManager = toggleManager
             )
         }
         composable(HomeNavigation.Onboarding.route) {
-            val onboardingViewModel: OnboardViewModel = viewModel(factory = OnboardViewModel.Factory)
+            val onboardingViewModel: OnboardViewModel = hiltViewModel()
             OnboardingScreen(
                 navController = navController,
                 viewModel = onboardingViewModel

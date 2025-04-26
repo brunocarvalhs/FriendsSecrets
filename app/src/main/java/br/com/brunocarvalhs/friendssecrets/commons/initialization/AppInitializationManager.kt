@@ -1,20 +1,12 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization
 
-import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.AnalyticsInitialization
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.CrashlyticsInitialization
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.RemoteInitialization
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.TimberInitialization
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppInitializationManager(private val context: Context) {
-
-    private val initializations: List<AppInitialization> = listOf(
-        RemoteInitialization(),
-        TimberInitialization(),
-        CrashlyticsInitialization(context),
-        AnalyticsInitialization(context)
-    )
-
+@Singleton
+class AppInitializationManager @Inject constructor(
+    private val initializations: List<AppInitialization>
+) {
     fun initialize() {
         initializations.forEach { initialization ->
             initialization.start()

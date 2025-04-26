@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -25,7 +24,11 @@ class GetLikesProfileUseCaseTest {
     fun setUp() {
         sessionManager = mockk()
         userRepository = mockk()
-        getLikesProfileUseCase = GetLikesProfileUseCase(sessionManager, userRepository)
+        getLikesProfileUseCase = GetLikesProfileUseCase(
+            sessionManager,
+            userRepository,
+            performanceManager
+        )
     }
 
     @Test

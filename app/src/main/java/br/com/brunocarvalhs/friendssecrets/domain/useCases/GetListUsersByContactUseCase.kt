@@ -1,15 +1,18 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import android.content.Context
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.service.ContactService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.UserRepository
 
 class GetListUsersByContactUseCase(
     private val userRepository: UserRepository,
-    private val contactService: ContactService
+    private val contactService: ContactService,
+    private val performanceManager: PerformanceManager
 ) {
     suspend operator fun invoke(context: Context): Result<List<UserEntities>> = runCatching {
+        performanceManager.start(TAG)
         // Get the phone numbers from the contacts
         val phoneNumbers = contactService.getPhoneNumbers(context).map { it.replace("[^\\d+]".toRegex(), "") }.distinct()
         // Fetch the users from the repository using the phone numbers
@@ -28,7 +31,12 @@ class GetListUsersByContactUseCase(
         }
         // prioritize the users over the contacts
         mergedList.sortByDescending { users.contains(it) }
+        performanceManager.stop(TAG)
         // Return the merged list
         mergedList
+    }
+
+    companion object {
+        private const val TAG = "GetListUsersByContactUseCase"
     }
 }

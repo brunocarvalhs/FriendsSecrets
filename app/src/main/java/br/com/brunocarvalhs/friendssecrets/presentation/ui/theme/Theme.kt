@@ -8,6 +8,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
@@ -107,9 +108,14 @@ fun FriendsSecretsTheme(
         else -> if (isThemeRemote) themeRemoteProvider?.getLightColorScheme() ?: lightScheme else lightScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
+    // Fornece as dimensões padronizadas para toda a aplicação
+    CompositionLocalProvider(
+        LocalDimensions provides Dimensions()
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }

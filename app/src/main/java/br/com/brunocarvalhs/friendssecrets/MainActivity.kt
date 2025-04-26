@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,11 +20,20 @@ import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    private val toggleManager = ToggleManager(context = this)
-    private val themeRemoteProvider = ThemeRemoteProvider(context = this)
+    @Inject
+    lateinit var toggleManager: ToggleManager
+    
+    @Inject
+    lateinit var themeRemoteProvider: ThemeRemoteProvider
+    
+    @Inject
+    lateinit var analyticsProvider: AnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +54,7 @@ class MainActivity : FragmentActivity() {
                 ) {
                     val navController = rememberNavController().apply {
                         addOnDestinationChangedListener { _, destination, _ ->
-                            AnalyticsProvider.track(
+                            analyticsProvider.track(
                                 event = AnalyticsEvents.VISUALIZATION,
                                 params = mapOf(
                                     AnalyticsParams.SCREEN_NAME to destination.route.toString()

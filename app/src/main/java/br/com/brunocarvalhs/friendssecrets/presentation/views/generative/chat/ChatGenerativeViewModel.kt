@@ -1,18 +1,18 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.generative.chat
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.data.service.GenerativeService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatGenerativeViewModel(
-    private val service: GenerativeService = GenerativeService()
+@HiltViewModel
+class ChatGenerativeViewModel @Inject constructor(
+    private val service: GenerativeService
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<ChatGenerativeUiState> =
@@ -43,10 +43,14 @@ class ChatGenerativeViewModel(
     }
 
     // Função que adiciona a nova mensagem à lista de mensagens no estado
-    private fun addMessageToChat(type: ChatGenerativeType, message: String): ChatGenerativeUiState.Chat {
+    private fun addMessageToChat(
+        type: ChatGenerativeType,
+        message: String
+    ): ChatGenerativeUiState.Chat {
         val currentState = _uiState.value
         if (currentState is ChatGenerativeUiState.Chat) {
-            val updatedMessages = currentState.messages + (type to message) // Adiciona a nova mensagem à lista
+            val updatedMessages =
+                currentState.messages + (type to message) // Adiciona a nova mensagem à lista
             return ChatGenerativeUiState.Chat(updatedMessages)
         }
         return ChatGenerativeUiState.Chat(listOf(type to message))
@@ -56,14 +60,6 @@ class ChatGenerativeViewModel(
     fun eventIntent(event: ChatGenerativeIntent) {
         when (event) {
             is ChatGenerativeIntent.SendMessage -> sendMessage(event.message)
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                ChatGenerativeViewModel()
-            }
         }
     }
 }

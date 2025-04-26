@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -53,9 +54,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 fun DrawScreen(
     groupId: String,
     navController: NavController,
-    viewModel: DrawViewModel = viewModel(
-        factory = DrawViewModel.Factory
-    ),
+    viewModel: DrawViewModel = hiltViewModel(),
     toggleManager: ToggleManager,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()

@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -42,9 +43,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.Navigation
 fun ChatGenerativeScreen(
     data: String? = null,
     navController: NavHostController,
-    viewModel: ChatGenerativeViewModel = viewModel(
-        factory = ChatGenerativeViewModel.Factory
-    )
+    viewModel: ChatGenerativeViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

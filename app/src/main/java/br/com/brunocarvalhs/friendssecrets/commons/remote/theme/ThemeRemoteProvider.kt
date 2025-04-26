@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.commons.remote.theme
 
-import android.content.Context
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -8,11 +7,13 @@ import androidx.compose.ui.graphics.Color
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
 import com.google.gson.Gson
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ThemeRemoteProvider(
-    private val context: Context,
-    private val remoteProvider: RemoteProvider = RemoteProvider(),
-    private val gson: Gson = Gson(),
+@Singleton
+class ThemeRemoteProvider @Inject constructor(
+    private val remoteProvider: RemoteProvider,
+    private val gson: Gson = Gson()
 ) {
 
     init {

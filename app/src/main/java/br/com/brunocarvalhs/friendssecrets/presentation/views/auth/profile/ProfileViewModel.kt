@@ -7,15 +7,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
     private val createProfileUseCase: CreateProfileUseCase,
     private val getLikesProfileUseCase: GetLikesProfileUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
@@ -26,18 +30,14 @@ class ProfileViewModel(
 
     fun handleIntent(intent: ProfileIntent) = when (intent) {
         is ProfileIntent.FetchData -> fetchLikes()
-        is ProfileIntent.SaveProfile -> saveProfile(
-            name = intent.name,
-            photoUrl = intent.photoUrl,
-            likes = intent.likes
-        )
+        is ProfileIntent.SaveProfile -> saveProfile(user = intent.user)
         ProfileIntent.DeleteAccount -> deleteAccount()
     }
 
-    private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
+    private fun saveProfile(user: UserEntities) {
         _uiState.value = ProfileUiState.Loading
         viewModelScope.launch {
-            createProfileUseCase.invoke(name, photoUrl, likes).onSuccess {
+            createProfileUseCase.invoke(data = user).onSuccess {
                 _uiState.value = ProfileUiState.Success
             }.onFailure {
                 _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
@@ -49,12 +49,7 @@ class ProfileViewModel(
         _uiState.value = ProfileUiState.Loading
         viewModelScope.launch {
             getLikesProfileUseCase.invoke().onSuccess { user ->
-                _uiState.value = ProfileUiState.Idle(
-                    name = user.name,
-                    photoUrl = user.photoUrl,
-                    phoneNumber = user.phoneNumber,
-                    likes = user.likes,
-                )
+                _uiState.value = ProfileUiState.Idle(user = user)
             }.onFailure {
                 _uiState.value = ProfileUiState.Idle()
             }
@@ -70,32 +65,5 @@ class ProfileViewModel(
                 _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
             }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val sessionManager = SessionManager.getInstance()
-                    val userRepository = UserRepositoryImpl()
-                    val getLikesProfileUseCase = GetLikesProfileUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository
-                    )
-                    val createProfileUseCase = CreateProfileUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository
-                    )
-                    val deleteAccountUseCase = DeleteAccountUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository
-                    )
-                    ProfileViewModel(
-                        createProfileUseCase = createProfileUseCase,
-                        getLikesProfileUseCase = getLikesProfileUseCase,
-                        deleteAccountUseCase = deleteAccountUseCase,
-                    )
-                }
-            }
     }
 }

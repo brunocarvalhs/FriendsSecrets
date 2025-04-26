@@ -1,11 +1,12 @@
 package br.com.brunocarvalhs.friendssecrets.commons.remote.toggle
 
-import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ToggleManager(
-    private val context: Context,
-    private val remoteProvider: RemoteProvider = RemoteProvider()
+@Singleton
+class ToggleManager @Inject constructor(
+    private val remoteProvider: RemoteProvider
 ) {
 
     init {

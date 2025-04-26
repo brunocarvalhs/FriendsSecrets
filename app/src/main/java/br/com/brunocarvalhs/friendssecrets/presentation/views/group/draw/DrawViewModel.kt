@@ -2,26 +2,22 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
-import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
-import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
-import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
-import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DrawRevelationUseCase
 import br.com.brunocarvalhs.friendssecrets.presentation.views.generative.GenerativeNavigation
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DrawViewModel(
+@HiltViewModel
+class DrawViewModel @Inject constructor(
     private val drawRevelationUseCase: DrawRevelationUseCase,
 ) : ViewModel() {
 
@@ -56,7 +52,7 @@ class DrawViewModel(
         likes: List<String> = emptyList(),
     ) {
         val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name)
-        
+
         navigation.navigate(
             route = GenerativeNavigation.Chat.createRoute(prompt)
         )
@@ -73,26 +69,6 @@ class DrawViewModel(
                 }
             }.onFailure {
                 _uiState.value = DrawUiState.Error(it.report()?.message.orEmpty())
-            }
-        }
-    }
-
-    companion object {
-
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val repository = GroupRepositoryImpl()
-                val storage = StorageService()
-                val cryptoService = CryptoService()
-                val performance = PerformanceManager()
-                val drawRevelationUseCase = DrawRevelationUseCase(
-                    repository = repository,
-                    storage = storage,
-                    cryptoService = cryptoService,
-                    performance = performance
-                )
-                DrawViewModel(drawRevelationUseCase = drawRevelationUseCase)
             }
         }
     }

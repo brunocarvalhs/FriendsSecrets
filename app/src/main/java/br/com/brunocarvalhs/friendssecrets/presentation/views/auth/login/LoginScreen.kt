@@ -22,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,22 +37,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.openUrl
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.multLogin.MultiLoginBottomSheet
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.multLogin.MultiLoginViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory
-    )
+    viewModel: LoginViewModel = hiltViewModel(),
+    multiLoginViewModel: MultiLoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+
+    var showSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState) {
         when (uiState) {
@@ -63,7 +69,7 @@ fun LoginScreen(
             }
 
             LoginUiState.Register -> {
-                navController.navigate("phone_send")
+                showSheet = true
             }
 
             LoginUiState.AcceptNotRegister -> {
@@ -78,6 +84,12 @@ fun LoginScreen(
     LoginContent(
         handleIntent = viewModel::handleIntent
     )
+
+    if (showSheet) {
+        MultiLoginBottomSheet(viewModel = multiLoginViewModel, onDismiss = { showSheet = false }) {
+            navController.navigate(LoginNavigation.Profile.route)
+        }
+    }
 }
 
 @Composable
@@ -148,12 +160,13 @@ private fun LoginContent(
             ClickableText(
                 text = annotatedString,
                 onClick = { offset ->
-                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { annotation ->
-                        when (annotation.tag) {
-                            "PRIVACY" -> handleIntent(LoginIntent.PrivacyPolicy)
-                            "TERMS" -> handleIntent(LoginIntent.TermsOfUse)
+                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()
+                        ?.let { annotation ->
+                            when (annotation.tag) {
+                                "PRIVACY" -> handleIntent(LoginIntent.PrivacyPolicy)
+                                "TERMS" -> handleIntent(LoginIntent.TermsOfUse)
+                            }
                         }
-                    }
                 },
                 modifier = Modifier.padding(top = 8.dp),
                 style = bodyStyle

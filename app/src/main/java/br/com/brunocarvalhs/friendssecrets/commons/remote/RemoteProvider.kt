@@ -7,8 +7,11 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RemoteProvider(
+@Singleton
+class RemoteProvider @Inject constructor() {
     private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
         setConfigSettingsAsync(
             FirebaseRemoteConfigSettings.Builder()
@@ -16,7 +19,6 @@ class RemoteProvider(
                 .build()
         )
     }
-) {
 
     fun fetchAndActivate() {
         remoteConfig.fetchAndActivate()

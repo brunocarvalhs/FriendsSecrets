@@ -23,7 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
@@ -53,13 +53,12 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.toBase64
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
@@ -71,18 +70,15 @@ import java.io.File
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ProfileViewModel = viewModel(
-        factory = ProfileViewModel.Factory
-    ),
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.handleIntent(ProfileIntent.FetchData)
         if (SessionManager.getInstance().isProfileComplete().not()) {
-            navController.navigate(LoginNavigation.PhoneSend.route) {
+            navController.navigate(LoginNavigation.Login.route) {
                 popUpTo(LoginNavigation.Profile.route) {
                     inclusive = true
                 }
@@ -130,10 +126,7 @@ private fun ProfileContent(
         if (uiState is ProfileUiState.Idle) {
             ProfileForm(
                 modifier = Modifier.padding(paddingValue),
-                username = (uiState as? ProfileUiState.Idle)?.name.orEmpty(),
-                userPhoneNumber = (uiState as? ProfileUiState.Idle)?.phoneNumber.orEmpty(),
-                userPhotoUrl = (uiState as? ProfileUiState.Idle)?.photoUrl?.toUri().toString(),
-                userLikes = (uiState as? ProfileUiState.Idle)?.likes.orEmpty(),
+                user = (uiState as? ProfileUiState.Idle)?.user,
                 handleIntent = handleIntent
             )
         }
@@ -165,24 +158,29 @@ private fun ProfileContent(
 @Composable
 private fun ProfileForm(
     modifier: Modifier = Modifier,
-    username: String = "",
-    userPhoneNumber: String = "",
-    userPhotoUrl: String? = null,
-    userLikes: List<String> = emptyList(),
+    user: UserEntities? = null,
     handleIntent: (ProfileIntent) -> Unit = {},
 ) {
     val context = LocalContext.current
     val cacheDir = context.cacheDir
 
-    var name by remember { mutableStateOf(username) }
-    val phoneNumber by remember { mutableStateOf(userPhoneNumber) }
-    var profileImageUri by remember { mutableStateOf(userPhotoUrl?.let { Uri.parse(it) }) }
+    var name by remember { mutableStateOf(user?.name.orEmpty()) }
+    var phoneNumber by remember {
+        mutableStateOf(
+            TextFieldValue(
+                user?.phoneNumber.orEmpty(),
+                TextRange(0, 0)
+            )
+        )
+    }
+    var email by remember { mutableStateOf(TextFieldValue(user?.email.orEmpty(), TextRange(0, 0))) }
+    var profileImageUri by remember { mutableStateOf(user?.photoUrl?.let { Uri.parse(it) }) }
 
     var likeName by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
     val likes = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(Unit) {
-        likes.addAll(userLikes)
+        likes.addAll(user?.likes.orEmpty())
     }
 
     val cropLauncher = rememberLauncherForActivityResult(
@@ -263,22 +261,41 @@ private fun ProfileForm(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = phoneNumber,
-            prefix = {
-                Icon(
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Gray
-                )
-            },
-            onValueChange = { },
-            label = { Text("Phone number") },
-            singleLine = true,
-            enabled = false,
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (user?.email?.isNotBlank() == true) {
+            OutlinedTextField(
+                value = email,
+                prefix = {
+                    Icon(
+                        imageVector = Icons.Default.Mail,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+                },
+                onValueChange = { email = it },
+                label = { Text("E-mail") },
+                singleLine = true,
+                enabled = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            OutlinedTextField(
+                value = phoneNumber,
+                prefix = {
+                    Icon(
+                        imageVector = Icons.Default.Phone,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Gray
+                    )
+                },
+                onValueChange = { phoneNumber = it },
+                label = { Text("Phone number") },
+                singleLine = true,
+                enabled = user?.isPhoneNumberVerified == false,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -302,13 +319,19 @@ private fun ProfileForm(
 
         Button(
             onClick = {
-                handleIntent(
-                    ProfileIntent.SaveProfile(
-                        name = name,
-                        photoUrl = profileImageUri.toString(),
-                        likes = likes
+                user?.let {
+                    handleIntent(
+                        ProfileIntent.SaveProfile(
+                            user.toCopy(
+                                name = name,
+                                photoUrl = profileImageUri.toString(),
+                                phoneNumber = phoneNumber.text,
+                                likes = likes
+                            )
+                        )
                     )
-                )
+                }
+
             },
             modifier = Modifier.fillMaxWidth(),
         ) {

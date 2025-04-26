@@ -8,7 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 
 class GroupDrawUseCase(
-    private val context: Context = CustomApplication.getInstance(),
+    private val context: Context,
     private val groupRepository: GroupRepository,
     private val performance: PerformanceManager
 ) {

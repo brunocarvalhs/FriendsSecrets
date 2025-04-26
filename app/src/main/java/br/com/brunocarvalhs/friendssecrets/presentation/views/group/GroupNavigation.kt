@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.group
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLink
@@ -70,7 +70,7 @@ fun NavGraphBuilder.groupGraph(
             arguments = GroupNavigation.Create.arguments,
             deepLinks = GroupNavigation.Create.deepLinks
         ) {
-            val viewModel: GroupCreateViewModel = viewModel(factory = GroupCreateViewModel.Factory)
+            val viewModel: GroupCreateViewModel = hiltViewModel()
             GroupCreateScreen(navController = navController, viewModel = viewModel)
         }
         composable(
@@ -79,8 +79,7 @@ fun NavGraphBuilder.groupGraph(
             deepLinks = GroupNavigation.Read.deepLinks
         ) {
             val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: GroupDetailsViewModel =
-                viewModel(factory = GroupDetailsViewModel.Factory)
+            val viewModel: GroupDetailsViewModel = hiltViewModel()
             GroupDetailsScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -93,8 +92,7 @@ fun NavGraphBuilder.groupGraph(
             deepLinks = GroupNavigation.Edit.deepLinks
         ) {
             val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: GroupEditViewModel =
-                viewModel(factory = GroupEditViewModel.Factory)
+            val viewModel: GroupEditViewModel = hiltViewModel()
             GroupEditScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -107,7 +105,7 @@ fun NavGraphBuilder.groupGraph(
             deepLinks = GroupNavigation.Revelation.deepLinks
         ) {
             val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: DrawViewModel = viewModel(factory = DrawViewModel.Factory)
+            val viewModel: DrawViewModel = hiltViewModel()
             DrawScreen(
                 navController = navController,
                 viewModel = viewModel,
