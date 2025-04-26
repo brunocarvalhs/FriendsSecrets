@@ -75,7 +75,7 @@ jobs:
     needs: checkout-and-setup
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -97,7 +97,7 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
 
@@ -117,7 +117,7 @@ jobs:
         run: ./gradlew bundleRelease
             
       - name: Upload AAB Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-aab
           path: app/build/outputs/bundle/release/*.aab
@@ -128,7 +128,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download Workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
         continue-on-error: true
@@ -164,7 +164,7 @@ jobs:
     needs: release
     steps:
       - name: Download AAB Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-aab
           path: app/build/outputs/bundle/release/
@@ -176,4 +176,4 @@ jobs:
           packageName: "br.com.brunocarvalhs.friendssecrets"
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: production
-          status: inProgress
+          status: completed
