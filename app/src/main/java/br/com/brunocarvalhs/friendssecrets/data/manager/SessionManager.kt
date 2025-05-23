@@ -6,7 +6,6 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
-import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.tasks.await
 
 class SessionManager(
@@ -17,7 +16,6 @@ class SessionManager(
         instance = this
     }
 
-    @AddTrace(name = "SessionManager.getCurrentUserModel")
     fun getCurrentUserModel(): UserEntities? {
         val user = auth.currentUser ?: return null
 
@@ -30,46 +28,38 @@ class SessionManager(
         )
     }
 
-    @AddTrace(name = "SessionManager.isUserLoggedIn")
     fun isUserLoggedIn(): Boolean {
         return auth.currentUser != null || auth.currentUser?.isAnonymous == true
     }
 
-    @AddTrace(name = "SessionManager.isProfileComplete")
     fun isProfileComplete(): Boolean {
         val user = auth.currentUser ?: return false
 
         return user.displayName != null && user.photoUrl != null
     }
 
-    @AddTrace(name = "SessionManager.isPhoneNumberVerified")
     fun isPhoneNumberVerified(): Boolean {
         val user = auth.currentUser ?: return false
 
         return user.phoneNumber != null
     }
 
-    @AddTrace(name = "SessionManager.getUserName")
     fun getUserName(): String? {
         return auth.currentUser?.displayName
     }
 
-    @AddTrace(name = "SessionManager.getUserPhotoUrl")
     fun getUserPhotoUrl(): String? {
         return auth.currentUser?.photoUrl?.toString()
     }
 
-    @AddTrace(name = "SessionManager.getUserPhoneNumber")
     fun getUserPhoneNumber(): String? {
         return auth.currentUser?.phoneNumber
     }
 
-    @AddTrace(name = "SessionManager.setUserAnonymous")
     fun setUserAnonymous() {
         auth.signInAnonymously()
     }
 
-    @AddTrace(name = "SessionManager.updateUserProfile")
     suspend fun updateUserProfile(
         name: String,
         photoUrl: String
@@ -84,12 +74,10 @@ class SessionManager(
         user?.updateProfile(profileUpdates)?.await()
     }
 
-    @AddTrace(name = "SessionManager.signOut")
     fun signOut() {
         auth.signOut()
     }
 
-    @AddTrace(name = "SessionManager.deleteAccount")
     fun deleteAccount() {
         val user = auth.currentUser ?: return
 
@@ -105,9 +93,6 @@ class SessionManager(
         private lateinit var instance: SessionManager
             private set
 
-        @JvmStatic
-        @Synchronized
-        @AddTrace(name = "SessionManager.getInstance")
         fun getInstance(): SessionManager {
             synchronized(this) {
                 if (!::instance.isInitialized) {

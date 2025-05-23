@@ -7,15 +7,12 @@ import br.com.brunocarvalhs.friendssecrets.domain.repository.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(
     private val firestore: FirebaseFirestore = Firebase.firestore,
     private val cryptoService: CryptoService = CryptoService(),
 ) : UserRepository {
-
-    @AddTrace(name = "UserRepository.listUsersByPhoneNumber")
     override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities> {
         val phoneNumberEncrypted = cryptoService.encrypt(phoneNumber)
 
@@ -31,7 +28,6 @@ class UserRepositoryImpl(
         }
     }
 
-    @AddTrace(name = "UserRepository.listUsersByPhoneNumber")
     override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities> {
         val phoneNumbersEncrypted = list.map { cryptoService.encrypt(it) }
 
@@ -56,7 +52,6 @@ class UserRepositoryImpl(
         return allResults
     }
 
-    @AddTrace(name = "UserRepository.createUser")
     override suspend fun createUser(user: UserEntities) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
@@ -66,7 +61,6 @@ class UserRepositoryImpl(
             .await()
     }
 
-    @AddTrace(name = "UserRepository.updateUser")
     override suspend fun updateUser(user: UserEntities) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
@@ -76,7 +70,6 @@ class UserRepositoryImpl(
             .await()
     }
 
-    @AddTrace(name = "UserRepository.getUserById")
     override suspend fun getUserById(userId: String): UserEntities? {
         val documentSnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)
@@ -90,7 +83,6 @@ class UserRepositoryImpl(
         return UserModel.fromMap(decryptedData)
     }
 
-    @AddTrace(name = "UserRepository.getUserByPhoneNumber")
     override suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities? {
         val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .whereEqualTo(UserEntities.PHONE_NUMBER, phoneNumber)
@@ -105,7 +97,6 @@ class UserRepositoryImpl(
         return UserModel.fromMap(decryptedData)
     }
 
-    @AddTrace(name = "UserRepository.deleteUser")
     override suspend fun deleteUser(userId: String) {
         firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)

@@ -9,7 +9,6 @@ import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.tasks.await
 
 internal class GroupRepositoryImpl(
@@ -20,7 +19,6 @@ internal class GroupRepositoryImpl(
     )
 ) : GroupRepository {
 
-    @AddTrace(name = "GroupRepository.create")
     override suspend fun create(group: GroupEntities) {
         val data = cryptoService.encryptMap(group.toMap(), setOf(GroupEntities.TOKEN, GroupEntities.ID))
 
@@ -30,7 +28,6 @@ internal class GroupRepositoryImpl(
             .await()
     }
 
-    @AddTrace(name = "GroupRepository.read")
     override suspend fun read(groupId: String): GroupEntities {
         val documentSnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .document(groupId)
@@ -42,7 +39,6 @@ internal class GroupRepositoryImpl(
         return GroupModel.fromMap(decryptedData)
     }
 
-    @AddTrace(name = "GroupRepository.update")
     override suspend fun update(group: GroupEntities) {
         val data = cryptoService.encryptMap(group.toMap(), setOf(GroupEntities.TOKEN, GroupEntities.ID))
 
@@ -52,12 +48,10 @@ internal class GroupRepositoryImpl(
             .await()
     }
 
-    @AddTrace(name = "GroupRepository.delete")
     override suspend fun delete(groupId: String) {
         firestore.collection(GroupEntities.COLLECTION_NAME).document(groupId).delete().await()
     }
 
-    @AddTrace(name = "GroupRepository.list")
     override suspend fun list(list: List<String>): List<GroupEntities> {
         val querySnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .whereIn(GroupEntities.TOKEN, list)
@@ -71,7 +65,6 @@ internal class GroupRepositoryImpl(
         }
     }
 
-    @AddTrace(name = "GroupRepository.searchByToken")
     override suspend fun searchByToken(token: String): GroupEntities? {
         val querySnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .whereEqualTo(GroupEntities.TOKEN, token)
@@ -88,7 +81,6 @@ internal class GroupRepositoryImpl(
         return GroupModel.fromMap(decryptedData)
     }
 
-    @AddTrace(name = "GroupRepository.drawMembers")
     override suspend fun drawMembers(group: GroupEntities) {
         val secretSantaMap = drawService.drawMembers(group)
 

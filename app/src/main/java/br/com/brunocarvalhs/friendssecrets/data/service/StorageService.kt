@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
-import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import timber.log.Timber
 
@@ -18,7 +17,6 @@ class StorageService(
         context.getSharedPreferences(storageName, Context.MODE_PRIVATE)
     }
 
-    @AddTrace(name = "StorageService.save")
     fun <T> save(key: String, value: T) {
         try {
             sharedPreferences.edit().putString(key, gson.toJson(value)).apply()
@@ -27,7 +25,6 @@ class StorageService(
         }
     }
 
-    @AddTrace(name = "StorageService.load")
     inline fun <reified T> load(key: String): T? {
         return try {
             val json = this.sharedPreferences.getString(key, null)
@@ -38,7 +35,6 @@ class StorageService(
         }
     }
 
-    @AddTrace(name = "StorageService.remove")
     fun remove(key: String) {
         try {
             sharedPreferences.edit().remove(key).apply()
@@ -47,7 +43,6 @@ class StorageService(
         }
     }
 
-    @AddTrace(name = "StorageService.clear")
     fun clear() {
         try {
             sharedPreferences.edit().clear().apply()
@@ -56,7 +51,6 @@ class StorageService(
         }
     }
 
-    @AddTrace(name = "StorageService.contains")
     fun contains(key: String): Boolean {
         return try {
             sharedPreferences.contains(key)

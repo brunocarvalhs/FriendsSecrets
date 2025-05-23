@@ -3,13 +3,11 @@ package br.com.brunocarvalhs.friendssecrets.data.service
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.MinimumsMembersOfDrawException
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import com.google.firebase.perf.metrics.AddTrace
 
 class DrawService(
     private val cryptoService: CryptoService = CryptoService()
 ) {
 
-    @AddTrace(name = "DrawService.drawMembers")
     fun drawMembers(group: GroupEntities): Map<String, String> {
         val participants = group.members.keys.toMutableList()
 
@@ -33,7 +31,6 @@ class DrawService(
         return secretSantaMap
     }
 
-    @AddTrace(name = "DrawService.revelation")
     fun revelation(code: String): String {
         return cryptoService.decrypt(code)
     }
