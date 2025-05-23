@@ -3,19 +3,12 @@ package br.com.brunocarvalhs.friendssecrets.commons.remote
 import androidx.annotation.XmlRes
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class RemoteProvider(
-    private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig.apply {
-        setConfigSettingsAsync(
-            FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(3600)
-                .build()
-        )
-    }
+    private val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig,
 ) {
 
     fun fetchAndActivate() {

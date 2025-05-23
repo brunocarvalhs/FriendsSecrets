@@ -128,4 +128,5 @@ dependencies {
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
     implementation(libs.country.picker)
+    implementation(libs.androidx.startup.runtime)
 }

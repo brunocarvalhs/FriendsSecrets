@@ -27,6 +27,7 @@ googleFirebaseFirebasePerf = "1.4.2"
 googleGmsGoogleServices = "4.4.2"
 googleFirebaseCrashlytics = "3.0.3"
 robolectric = "4.14"
+startupRuntime = "1.2.0"
 timber = "5.0.1"
 ucrop = "2.2.8"
 uiTextGoogleFonts = "1.7.8"
@@ -44,6 +45,7 @@ android-documentation-plugin = { module = "org.jetbrains.dokka:android-documenta
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startupRuntime" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 country-picker = { module = "com.github.arpitkatiyar1999:Country-Picker", version.ref = "countryPicker" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

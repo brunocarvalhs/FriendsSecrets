@@ -1,13 +1,27 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
+import android.content.Context
+import androidx.startup.Initializer
 import br.com.brunocarvalhs.friendssecrets.commons.remote.RemoteProvider
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
-class RemoteInitialization : AppInitialization() {
+class RemoteInitialization : Initializer<FirebaseRemoteConfig> {
 
-    override fun tag(): String = "RemoteInitialization"
+    override fun create(context: Context): FirebaseRemoteConfig {
+        return FirebaseRemoteConfig.getInstance().apply {
+            setConfigSettingsAsync(
+                FirebaseRemoteConfigSettings.Builder()
+                    .setMinimumFetchIntervalInSeconds(3600)
+                    .build()
+            )
 
-    override fun execute() {
-        RemoteProvider().fetchAndActivate()
+
+            RemoteProvider(remoteConfig = this).fetchAndActivate()
+        }
+    }
+
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf(FirebaseAppInitialization::class.java)
     }
 }

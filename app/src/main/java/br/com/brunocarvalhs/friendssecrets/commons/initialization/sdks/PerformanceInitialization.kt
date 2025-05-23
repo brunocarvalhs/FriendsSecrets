@@ -3,13 +3,13 @@ package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 import android.content.Context
 import androidx.startup.Initializer
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.getId
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.perf.FirebasePerformance
 
-class AnalyticsInitialization : Initializer<FirebaseAnalytics> {
+class PerformanceInitialization: Initializer<FirebasePerformance> {
 
-    override fun create(context: Context): FirebaseAnalytics {
-        return FirebaseAnalytics.getInstance(context).apply {
-            setUserId(context.getId())
+    override fun create(context: Context): FirebasePerformance {
+        return FirebasePerformance.getInstance().apply {
+            putAttribute("deviceId", context.getId())
         }
     }
 

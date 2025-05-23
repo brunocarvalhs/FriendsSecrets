@@ -1,8 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.commons.extensions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings.Secure
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 
 fun Context.isFistAppOpen(): Boolean {
@@ -30,4 +32,9 @@ fun Context.openUrl(url: String) {
     }
 
     startActivity(intent)
+}
+
+@SuppressLint("HardwareIds")
+fun Context.getId(): String {
+    return Secure.getString(this.contentResolver, Secure.ANDROID_ID)
 }
