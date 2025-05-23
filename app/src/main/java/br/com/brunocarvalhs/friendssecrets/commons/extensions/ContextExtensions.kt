@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
-import com.google.firebase.perf.metrics.AddTrace
 
-@AddTrace(name = "Context.isFistAppOpen")
 fun Context.isFistAppOpen(): Boolean {
     val firstAppOpen = getSharedPreferences(
         BuildConfig.APPLICATION_ID,
@@ -22,7 +20,6 @@ fun Context.isFistAppOpen(): Boolean {
     return false
 }
 
-@AddTrace(name = "Context.openUrl")
 fun Context.openUrl(url: String) {
     var intent = packageManager.getLaunchIntentForPackage("com.android.chrome")
     if (intent != null) {
