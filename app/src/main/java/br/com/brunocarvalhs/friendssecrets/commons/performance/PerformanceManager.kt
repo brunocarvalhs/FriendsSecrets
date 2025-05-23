@@ -12,14 +12,12 @@ class PerformanceManager(
 
     private val traces = mutableMapOf<String, Trace>()
 
-    @AddTrace(name = "PerformanceManager.start")
     fun start(name: String) {
         val trace = firebasePerformance.newTrace(name)
         trace.start()
         traces[name] = trace
     }
 
-    @AddTrace(name = "PerformanceManager.stop")
     fun stop(name: String) {
         traces[name]?.run {
             this.stop()
