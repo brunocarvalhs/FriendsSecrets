@@ -3,7 +3,9 @@ package br.com.brunocarvalhs.friendssecrets.commons.extensions
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import com.google.firebase.perf.metrics.AddTrace
 
+@AddTrace(name = "String.textWithFormatting")
 fun String?.textWithFormatting(): String? {
     if (this == null) return null
     return buildAnnotatedString {
@@ -26,6 +28,7 @@ fun String?.textWithFormatting(): String? {
     }.text
 }
 
+@AddTrace(name = "String.toMaskedPhoneNumber")
 fun String.toMaskedPhoneNumber(): String {
     // Remove tudo que não for número
     val cleaned = this.filter { it.isDigit() }
