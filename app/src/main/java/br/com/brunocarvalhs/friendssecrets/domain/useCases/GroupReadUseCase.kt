@@ -14,13 +14,18 @@ class GroupReadUseCase(
     private val storage: StorageService,
     private val performance: PerformanceManager
 ) {
-    suspend fun invoke(groupId: String): Result<GroupEntities> = runCatching {
+    suspend fun invoke(groupId: String): Result<GroupEntities> {
         performance.start(GroupReadUseCase::class.java.simpleName)
-        validationGroupId(groupId)
-        val group = groupRepository.read(groupId)
-        defineAdmin(group)
-    }.also {
-        performance.stop(GroupReadUseCase::class.java.simpleName)
+        return try {
+            runCatching {
+
+                validationGroupId(groupId)
+                val group = groupRepository.read(groupId)
+                defineAdmin(group)
+            }
+        } finally {
+            performance.stop(GroupReadUseCase::class.java.simpleName)
+        }
     }
 
     private fun validationGroupId(groupId: String) {

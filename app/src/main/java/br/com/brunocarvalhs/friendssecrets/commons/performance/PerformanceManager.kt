@@ -19,9 +19,16 @@ class PerformanceManager(
     }
 
     fun stop(name: String) {
-        traces[name]?.run {
-            this.stop()
-            traces.remove(name)
+        traces.remove(name)?.stop()
+    }
+
+    internal inline fun <T> trace(name: String, block: (Trace) -> T): T {
+        val trace = this.firebasePerformance.newTrace(name)
+        trace.start()
+        try {
+            return block(trace)
+        } finally {
+            trace.stop()
         }
     }
 }
