@@ -8,6 +8,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.metrics.AddTrace
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
@@ -17,6 +18,7 @@ class AuthService(
     private val firebaseAuth: FirebaseAuth = Firebase.auth
 ) {
 
+    @AddTrace(name = "AuthService.sendVerificationCode")
     suspend fun sendVerificationCode(
         phoneNumber: String,
         activity: Activity
@@ -56,6 +58,7 @@ class AuthService(
         }
     }
 
+    @AddTrace(name = "AuthService.signInWithCode")
     suspend fun signInWithCode(code: String): Result<Unit> {
         val id = PhoneVerificationManager.get()
             ?: return Result.failure(IllegalStateException("Verification ID is missing"))
@@ -70,11 +73,13 @@ class AuthService(
         }
     }
 
+    @AddTrace(name = "AuthService.signOut")
     fun signOut() {
         firebaseAuth.signOut()
         PhoneVerificationManager.clear()
     }
 
+    @AddTrace(name = "AuthService.isUserLoggedIn")
     fun isUserLoggedIn(): Boolean {
         return firebaseAuth.currentUser != null
     }

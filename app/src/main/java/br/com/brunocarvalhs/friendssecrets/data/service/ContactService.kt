@@ -8,9 +8,11 @@ import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 
 class ContactService {
 
+    @AddTrace(name = "ContactService.hasPermission")
     private fun hasPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -18,6 +20,7 @@ class ContactService {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    @AddTrace(name = "ContactService.getPhoneNumbers")
     fun getPhoneNumbers(context: Context): List<String> {
         if (!hasPermission(context)) return emptyList()
 
@@ -45,6 +48,7 @@ class ContactService {
         return numbers.distinct()
     }
 
+    @AddTrace(name = "ContactService.getContacts")
     fun getContacts(context: Context): List<UserEntities> {
         if (!hasPermission(context)) return emptyList()
 

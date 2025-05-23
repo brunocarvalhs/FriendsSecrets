@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
@@ -14,6 +15,7 @@ data class UserModel(
     @SerializedName(UserEntities.LIKES) override val likes: List<String> = emptyList(),
 ): UserEntities {
 
+    @AddTrace(name = "UserModel.toMap")
     override fun toMap(): Map<String, Any> {
         return mapOf(
             UserEntities.ID to id,
@@ -21,10 +23,11 @@ data class UserModel(
             UserEntities.PHOTO_URL to photoUrl.orEmpty(),
             UserEntities.PHONE_NUMBER to phoneNumber,
             UserEntities.IS_PHONE_NUMBER_VERIFIED to isPhoneNumberVerified,
-            UserEntities.LIKES to (likes ?: emptyList())
+            UserEntities.LIKES to likes
         )
     }
 
+    @AddTrace(name = "UserModel.toCopy")
     override fun toCopy(
         id: String,
         name: String,

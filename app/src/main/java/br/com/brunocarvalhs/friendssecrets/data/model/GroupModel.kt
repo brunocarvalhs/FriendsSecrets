@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.data.model
 
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.token
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
@@ -18,6 +19,7 @@ internal data class GroupModel(
     @SerializedName(GroupEntities.IS_OWNER) override val isOwner: Boolean = false,
 ) : GroupEntities {
 
+    @AddTrace(name = "GroupModel.toMap")
     override fun toMap(): Map<String, Any> {
         return mapOf(
             GroupEntities.ID to id,
@@ -29,6 +31,7 @@ internal data class GroupModel(
         )
     }
 
+    @AddTrace(name = "GroupModel.toCopy")
     override fun toCopy(
         token: String,
         name: String,
