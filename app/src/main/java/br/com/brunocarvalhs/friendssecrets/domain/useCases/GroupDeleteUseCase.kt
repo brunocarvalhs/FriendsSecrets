@@ -55,7 +55,7 @@ class GroupDeleteUseCase(
      */
     @Throws(Exception::class)
     @AddTrace(name = "GroupDeleteUseCase.clearGroup")
-    private fun clearGroup(group: GroupEntities) {
+    fun clearGroup(group: GroupEntities) {
         val list = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME)
             ?: emptyList()
 
@@ -74,7 +74,7 @@ class GroupDeleteUseCase(
      */
     @Throws(Exception::class)
     @AddTrace(name = "GroupDeleteUseCase.clearAdmin")
-    private fun clearAdmin(group: GroupEntities) {
+    fun clearAdmin(group: GroupEntities) {
         val adminList = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME_ADMINS)
             ?: emptyList()
         if (adminList.contains(group.token)) {
