@@ -1,9 +1,11 @@
 package br.com.brunocarvalhs.friendssecrets.data.repository
 
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.data.repository.dto.UserDTO
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.UserRepository
+import br.com.brunocarvalhs.friendssecrets.domain.repository.request.UserRequest
+import br.com.brunocarvalhs.friendssecrets.domain.repository.response.UserResponse
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -13,7 +15,7 @@ class UserRepositoryImpl(
     private val firestore: FirebaseFirestore = Firebase.firestore,
     private val cryptoService: CryptoService = CryptoService(),
 ) : UserRepository {
-    override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities> {
+    override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserResponse> {
         val phoneNumberEncrypted = cryptoService.encrypt(phoneNumber)
 
         val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
@@ -24,15 +26,15 @@ class UserRepositoryImpl(
         return querySnapshot.documents.map { document ->
             val encryptedData = document.data ?: emptyMap()
             val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-            UserModel.fromMap(decryptedData)
+            UserDTO.fromMap(decryptedData)
         }
     }
 
-    override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities> {
+    override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserResponse> {
         val phoneNumbersEncrypted = list.map { cryptoService.encrypt(it) }
 
         val chunks = phoneNumbersEncrypted.chunked(10)
-        val allResults = mutableListOf<UserEntities>()
+        val allResults = mutableListOf<UserDTO>()
 
         for (chunk in chunks) {
             val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
@@ -43,7 +45,7 @@ class UserRepositoryImpl(
             val users = querySnapshot.documents.map { document ->
                 val encryptedData = document.data ?: emptyMap()
                 val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-                UserModel.fromMap(decryptedData)
+                UserDTO.fromMap(decryptedData)
             }
 
             allResults.addAll(users)
@@ -70,7 +72,7 @@ class UserRepositoryImpl(
             .await()
     }
 
-    override suspend fun getUserById(userId: String): UserEntities? {
+    override suspend fun getUserById(userId: String): UserResponse? {
         val documentSnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)
             .get()
@@ -80,10 +82,10 @@ class UserRepositoryImpl(
 
         val encryptedData = documentSnapshot.data ?: emptyMap()
         val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-        return UserModel.fromMap(decryptedData)
+        return UserDTO.fromMap(decryptedData)
     }
 
-    override suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities? {
+    override suspend fun getUserByPhoneNumber(phoneNumber: String): UserResponse? {
         val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .whereEqualTo(UserEntities.PHONE_NUMBER, phoneNumber)
             .get()
@@ -94,7 +96,7 @@ class UserRepositoryImpl(
         val document = querySnapshot.documents.first()
         val encryptedData = document.data ?: emptyMap()
         val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-        return UserModel.fromMap(decryptedData)
+        return UserDTO.fromMap(decryptedData)
     }
 
     override suspend fun deleteUser(userId: String) {
