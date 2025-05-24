@@ -148,7 +148,7 @@ class GroupDetailsViewModel(
                 Intent.EXTRA_TEXT,
                 context.getString(
                     R.string.group_details_share_member,
-                    member,
+                    member.name,
                     token,
                     secret,
                     BuildConfig.APPLICATION_ID,
