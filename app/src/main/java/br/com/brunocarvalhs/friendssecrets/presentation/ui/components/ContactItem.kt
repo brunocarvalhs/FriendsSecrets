@@ -119,7 +119,7 @@ fun ContactItem(
                 }
             }
 
-            if (filteredLikes.isNotEmpty()) {
+            if (filteredLikes.isEmpty().not()) {
                 AnimatedVisibility(visible = isLiked) {
                     LazyRow(
                         modifier = Modifier
@@ -128,7 +128,9 @@ fun ContactItem(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(filteredLikes) { like ->
-                            AssistChip(onClick = {}, label = { Text(like) })
+                            if (like.isNotBlank()) {
+                                AssistChip(onClick = {}, label = { Text(like) })
+                            }
                         }
                     }
                 }

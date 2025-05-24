@@ -10,17 +10,26 @@ interface GroupResponse {
     val token: String
     val name: String
     val description: String?
-    val members: Map<String, Map<String, String>>
+    val members: Map<String, Map<String, Any>>
     val draws: Map<String, String>
     val isOwner: Boolean
 }
 
 internal fun GroupResponse.toModel(): GroupEntities {
     val membersList = members.map { (key, valueMap) ->
+        val rawPhotoUrl = valueMap[UserEntities.PHOTO_URL] as String?
+
+        val cleanedPhotoUrl = rawPhotoUrl
+            ?.takeIf { it.isNotEmpty() && !it.startsWith("content://com.android.contacts") }
+
         UserModel(
-            name = valueMap[UserEntities.NAME] ?: key,
-            likes = valueMap[UserEntities.LIKES]?.split("|")?.map { it.trim() }.orEmpty(),
-            photoUrl = valueMap[UserEntities.PHOTO_URL]?.takeIf { it.isNotEmpty() }
+            name = (valueMap[UserEntities.NAME] ?: key) as String,
+            likes = when (val likesValue = valueMap[UserEntities.LIKES]) {
+                is String -> likesValue.split("|").map { it.trim() }
+                is List<*> -> likesValue.filterIsInstance<String>()
+                else -> emptyList()
+            },
+            photoUrl = cleanedPhotoUrl
         )
     }
 

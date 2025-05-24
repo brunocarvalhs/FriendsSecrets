@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.security
 
 import android.util.Base64
+import com.google.gson.Gson
 
 interface Base64Encoder {
     fun encodeToString(input: ByteArray, flags: Int): String
@@ -15,6 +16,7 @@ class CryptoService(
         override fun decode(input: String, flags: Int): ByteArray = Base64.decode(input, flags)
     }
 ) {
+    val gson = Gson()
 
     fun encryptMap(
         inputMap: Map<String, Any>,
@@ -24,10 +26,18 @@ class CryptoService(
             if (key in excludedKeys) {
                 value
             } else {
-                if (value is String) {
-                    encrypt(value)
-                } else {
+                if (key in excludedKeys) {
                     value
+                } else {
+                    val stringToEncrypt = when (value) {
+                        is String,
+                        is Number,
+                        is Boolean -> value.toString()
+                        is List<*>,
+                        is Map<*, *> -> gson.toJson(value)
+                        else -> gson.toJson(value)
+                    }
+                    encrypt(stringToEncrypt)
                 }
             }
         }
@@ -42,7 +52,12 @@ class CryptoService(
                 value
             } else {
                 if (value is String) {
-                    decrypt(value)
+                    val decrypted = decrypt(value)
+                    try {
+                        gson.fromJson(decrypted, Any::class.java) ?: decrypted
+                    } catch (e: Exception) {
+                        decrypted
+                    }
                 } else {
                     value
                 }

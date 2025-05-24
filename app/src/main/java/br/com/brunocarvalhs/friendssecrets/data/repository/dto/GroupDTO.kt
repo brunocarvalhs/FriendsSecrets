@@ -1,8 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.data.repository.dto
 
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.token
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.request.GroupRequest
@@ -17,7 +15,7 @@ data class GroupDTO(
     @SerializedName(GroupEntities.TOKEN) override val token: String = Random.token(size = 8),
     @SerializedName(GroupEntities.NAME) override val name: String = "",
     @SerializedName(GroupEntities.DESCRIPTION) override val description: String? = null,
-    @SerializedName(GroupEntities.MEMBERS) override val members: Map<String, Map<String, String>> = emptyMap(),
+    @SerializedName(GroupEntities.MEMBERS) override val members: Map<String, Map<String, Any>> = emptyMap(),
     @SerializedName(GroupEntities.DRAWS) override val draws: Map<String, String> = emptyMap(),
     @SerializedName(GroupEntities.IS_OWNER) override val isOwner: Boolean = false,
 ) : GroupResponse, GroupRequest {
@@ -47,7 +45,7 @@ internal fun GroupEntities.toDTO(): GroupDTO {
     val membersMap = this.members.associate { user ->
         user.name to mapOf(
             GroupEntities.NAME to user.name,
-            UserEntities.LIKES to user.likes.toString(),
+            UserEntities.LIKES to user.likes,
             UserEntities.PHOTO_URL to (user.photoUrl ?: "")
         )
     }
