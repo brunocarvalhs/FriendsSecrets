@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.commons.security
 
 import android.util.Base64
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 interface Base64Encoder {
     fun encodeToString(input: ByteArray, flags: Int): String
@@ -33,8 +34,10 @@ class CryptoService(
                         is String,
                         is Number,
                         is Boolean -> value.toString()
+
                         is List<*>,
                         is Map<*, *> -> gson.toJson(value)
+
                         else -> gson.toJson(value)
                     }
                     encrypt(stringToEncrypt)
@@ -48,21 +51,62 @@ class CryptoService(
         excludedKeys: Set<String> = emptySet()
     ): Map<String, Any> {
         return encodedMap.mapValues { (key, value) ->
-            if (key in excludedKeys) {
-                value
-            } else {
-                if (value is String) {
-                    val decrypted = decrypt(value)
-                    try {
-                        gson.fromJson(decrypted, Any::class.java) ?: decrypted
-                    } catch (e: Exception) {
-                        decrypted
+            if (key in excludedKeys || value !is String) return@mapValues value
+
+            val decrypted = try {
+                decrypt(value)
+            } catch (e: Exception) {
+                return@mapValues value
+            }
+
+            try {
+                when {
+                    decrypted.equals("true", ignoreCase = true) -> true
+                    decrypted.equals("false", ignoreCase = true) -> false
+                    decrypted.toIntOrNull() != null -> decrypted.toInt()
+                    decrypted.toDoubleOrNull() != null -> decrypted.toDouble()
+                    decrypted.startsWith("{") -> {
+                        val mapType = object : TypeToken<Map<String, Any>>() {}.type
+                        val rawMap: Map<String, Any> = gson.fromJson(decrypted, mapType)
+                        convertMap(rawMap)
                     }
-                } else {
-                    value
+                    decrypted.startsWith("[") -> {
+                        val listType = object : TypeToken<List<Any>>() {}.type
+                        val rawList: List<Any> = gson.fromJson(decrypted, listType)
+                        convertList(rawList)
+                    }
+                    else -> decrypted
                 }
+            } catch (e: Exception) {
+                decrypted
             }
         }
+    }
+
+    private fun convertMap(input: Map<String, Any?>): Map<String, Any?> {
+        val result = HashMap<String, Any?>()
+        input.forEach { (key, value) ->
+            result[key] = when (value) {
+                is Map<*, *> -> convertMap(value as Map<String, Any?>)
+                is List<*> -> convertList(value)
+                else -> value
+            }
+        }
+        return result
+    }
+
+    private fun convertList(input: List<Any?>): List<Any?> {
+        val result = ArrayList<Any?>()
+        input.forEach { item ->
+            result.add(
+                when (item) {
+                    is Map<*, *> -> convertMap(item as Map<String, Any?>)
+                    is List<*> -> convertList(item)
+                    else -> item
+                }
+            )
+        }
+        return result
     }
 
     fun encrypt(input: String): String {

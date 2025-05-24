@@ -165,7 +165,6 @@ class GroupDetailsViewModel(
     private fun drawMembers(group: GroupEntities) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {
-            delay(timeMillis = 3000)
             groupDrawUseCase.invoke(group).onSuccess {
                 _uiState.value = GroupDetailsUiState.Draw
             }.onFailure {

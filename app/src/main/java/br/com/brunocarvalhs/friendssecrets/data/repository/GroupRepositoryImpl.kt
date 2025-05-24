@@ -101,13 +101,11 @@ internal class GroupRepositoryImpl(
         firestore.runTransaction { transaction ->
             val groupDocRef = firestore.collection(GroupEntities.COLLECTION_NAME).document(group.id)
             val snapshot = transaction.get(groupDocRef)
-            val currentGroupData = snapshot.data
-            val currentGroup = GroupModel.fromMap(
-                cryptoService.decryptMap(
-                    currentGroupData ?: mapOf(),
-                    setOf(GroupEntities.TOKEN, GroupEntities.ID)
-                )
+            val currentGroupData = cryptoService.decryptMap(
+                snapshot.data ?: mapOf(),
+                setOf(GroupEntities.TOKEN, GroupEntities.ID)
             )
+            val currentGroup = GroupModel.fromMap(currentGroupData)
 
             val secretSantaMap = drawService.drawMembers(currentGroup)
 
