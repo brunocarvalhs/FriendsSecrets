@@ -45,10 +45,23 @@ sealed class GroupNavigation(
     }
 
     data object Revelation : GroupNavigation(
-        route = "group/{groupId}/revelation",
-        arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
+        route = "group/{groupId}/revelation?code={code}",
+        arguments = listOf(
+            navArgument("groupId") { type = NavType.StringType },
+            navArgument("code") {
+                type = NavType.StringType
+                defaultValue = ""
+                nullable = true
+            }
+        )
     ) {
-        fun createRoute(groupId: String) = "group/$groupId/revelation"
+        fun createRoute(groupId: String, code: String? = null): String {
+            return if (!code.isNullOrBlank()) {
+                "group/$groupId/revelation?code=$code"
+            } else {
+                "group/$groupId/revelation"
+            }
+        }
     }
 
     companion object {
