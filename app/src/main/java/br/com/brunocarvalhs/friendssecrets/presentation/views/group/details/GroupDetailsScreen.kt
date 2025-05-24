@@ -30,7 +30,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.EditMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -240,9 +242,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
         GroupDetailsUiState.Success(
             group = GroupModel(name = "Group",
                 description = "Description",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 })
         ),
@@ -250,9 +255,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
             group = GroupModel(
                 name = "Group sorteado",
                 description = "Description",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
                 draws = mutableMapOf<String, String>().apply {
@@ -268,9 +276,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
             group = GroupModel(name = "Group admin",
                 isOwner = true,
                 description = "Description",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 }),
         ),
@@ -279,9 +290,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
                 name = "Group admin sorteado",
                 isOwner = true,
                 description = "Description",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
                 draws = mutableMapOf<String, String>().apply {

@@ -28,11 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,7 +45,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
@@ -102,7 +103,7 @@ private fun GroupEditContent(
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
-    val members = remember { mutableStateMapOf<String, String>() }
+    val members = remember { mutableListOf<UserEntities>() }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -120,11 +121,13 @@ private fun GroupEditContent(
     }, floatingActionButton = {
         if (uiState is GroupEditUiState.Idle) {
             ExtendedFloatingActionButton(onClick = {
-                onEdit.invoke(uiState.group.toCopy(
-                    name = name.text,
-                    description = description.text,
-                    members = members.toMap()
-                ))
+                onEdit.invoke(
+                    uiState.group.toCopy(
+                        name = name.text,
+                        description = description.text,
+                        members = members
+                    )
+                )
             }) {
                 Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
                 Text(stringResource(R.string.group_create_action_save_group))
@@ -141,9 +144,9 @@ private fun GroupEditContent(
                     description = description,
                     onDescriptionChange = { description = it },
                     members = members,
-                    onMembersChange = {
+                    onMembersChange = { list ->
                         members.clear()
-                        members.putAll(it)
+                        members.addAll(list)
                     }
                 )
             }
@@ -185,8 +188,8 @@ private fun GroupEditForm(
     onNameChange: (TextFieldValue) -> Unit = {},
     description: TextFieldValue,
     onDescriptionChange: (TextFieldValue) -> Unit = {},
-    members: SnapshotStateMap<String, String>,
-    onMembersChange: (Map<String, String>) -> Unit = { _ -> }
+    members: MutableList<UserEntities>,
+    onMembersChange: (List<UserEntities>) -> Unit = { _ -> }
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -239,13 +242,12 @@ private fun GroupEditForm(
                 }
             }
         }
-        items(members.keys.toList()) { member ->
+        items(members) { member ->
             MemberItem(
-                participant = member,
-                likes = members[member]?.split("|") ?: emptyList(),
+                participant = member.name,
+                likes = member.likes,
                 onRemove = {
-                    onMembersChange(
-                        members.toMap().toMutableMap().apply { remove(member) })
+                    onMembersChange(members.apply { remove(member) })
                 },
             )
             HorizontalDivider()
@@ -254,7 +256,7 @@ private fun GroupEditForm(
     if (showBottomSheet) {
         AddMemberBottomSheet(
             onDismiss = { showBottomSheet = false },
-            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") }
+            onMemberAdded = { member -> members.add(member) }
         )
     }
 }
@@ -267,8 +269,14 @@ private class GroupEditPreviewProvider : PreviewParameterProvider<GroupEditUiSta
                 id = "1",
                 name = "Group",
                 description = "Description",
-                members = mapOf(
-                    "1" to "Likes"
+                members = listOf(
+                    UserModel(
+                        name = "Member 1",
+                        likes = listOf(
+                            "Like 1",
+                            "Like 2"
+                        )
+                    )
                 )
             )
         ),

@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.data.repository
 
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoService
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupNotFoundException
+import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.toDTO
 import br.com.brunocarvalhs.friendssecrets.data.service.DrawService
@@ -97,13 +98,22 @@ internal class GroupRepositoryImpl(
     }
 
     override suspend fun drawMembers(group: GroupEntities) {
-        val groupModel = group.toDTO()
+        firestore.runTransaction { transaction ->
+            val groupDocRef = firestore.collection(GroupEntities.COLLECTION_NAME).document(group.id)
+            val snapshot = transaction.get(groupDocRef)
+            val currentGroupData = snapshot.data
+            val currentGroup = GroupModel.fromMap(
+                cryptoService.decryptMap(
+                    currentGroupData ?: mapOf(),
+                    setOf(GroupEntities.TOKEN, GroupEntities.ID)
+                )
+            )
 
-        val secretSantaMap = drawService.drawMembers(group)
+            val secretSantaMap = drawService.drawMembers(currentGroup)
 
-        firestore.collection(GroupEntities.COLLECTION_NAME)
-            .document(groupModel.id)
-            .update(mapOf(GroupEntities.DRAWS to secretSantaMap))
-            .await()
+            transaction.update(groupDocRef, GroupEntities.DRAWS, secretSantaMap)
+            null
+        }.await()
     }
+
 }

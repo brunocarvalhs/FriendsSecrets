@@ -247,9 +247,12 @@ private class HomePreviewProvider : PreviewParameterProvider<HomeUiState> {
             GroupModel(
                 name = "Group $it",
                 description = "Description $it",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 }
             )

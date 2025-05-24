@@ -51,11 +51,13 @@ class GroupDetailsViewModel(
                 secret = intent.secret,
                 token = intent.token
             )
+
             is GroupDetailsIntent.EditMember -> editMember(
                 entities = intent.group,
                 member = intent.participant,
                 likes = intent.likes
             )
+
             is GroupDetailsIntent.RemoveMember -> removeMember(
                 entities = intent.group,
                 member = intent.participant
@@ -108,8 +110,12 @@ class GroupDetailsViewModel(
         viewModelScope.launch {
             groupEditUseCase.invoke(
                 entities.toCopy(
-                    members = HashMap(entities.members).apply {
-                        put(member, likes.joinToString(separator = "|"))
+                    members = entities.members.map {
+                        if (it.name == member) {
+                            it.toCopy(likes = likes)
+                        } else {
+                            it
+                        }
                     }
                 )
             ).onSuccess {

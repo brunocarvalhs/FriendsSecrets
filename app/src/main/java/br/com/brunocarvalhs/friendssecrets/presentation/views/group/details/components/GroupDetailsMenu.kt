@@ -20,7 +20,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsUiState
 
@@ -109,11 +111,15 @@ private fun GroupDetailsMenuPreview() {
                 group = GroupModel(name = "Group admin",
                     isOwner = true,
                     description = "Description",
-                    members = mutableMapOf<String, String>().apply {
+                    members = listOf<UserEntities>().apply {
                         repeat(10) {
-                            this["Member $it"] = "Secret Santa $it"
+                            UserModel(
+                                name = "Member $it",
+                                likes = listOf("Like $it")
+                            )
                         }
-                    }),
+                    }
+                ),
             ),
             expanded = true,
             exitGroup = {},

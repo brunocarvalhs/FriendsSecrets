@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MembersAvatar
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import com.airbnb.lottie.compose.LottieAnimation
@@ -120,9 +122,12 @@ private fun GroupCardPreview() {
         GroupCard(
             group = GroupModel(
                 name = "Living Room",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
             ),
@@ -147,9 +152,12 @@ private fun GroupCardPreviewTwo() {
         GroupCard(
             group = GroupModel(
                 name = "Living Room",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
             ),

@@ -65,13 +65,13 @@ class GroupCreateViewModel(
         }
     }
 
-    private fun createGroup(name: String, description: String, members: Map<String, String>) {
+    private fun createGroup(name: String, description: String, members: List<UserEntities>) {
         _uiState.value = GroupCreateUiState.Loading
         viewModelScope.launch {
             useCase.invoke(
                 name = name,
                 description = description,
-                members = members.
+                members = members
             ).onSuccess {
                 _uiState.value = GroupCreateUiState.Success
             }.onFailure {

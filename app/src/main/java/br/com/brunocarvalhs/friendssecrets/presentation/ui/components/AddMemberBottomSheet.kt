@@ -34,6 +34,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
 
@@ -41,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddMemberBottomSheet(
     onDismiss: () -> Unit,
-    onMemberAdded: (String, List<String>) -> Unit,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -65,7 +67,7 @@ fun AddMemberBottomSheet(
 private fun AddMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onMemberAdded: (String, List<String>) -> Unit,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -89,7 +91,12 @@ private fun AddMemberContent(
 
     fun addMember() {
         scope.launch {
-            onMemberAdded.invoke(name.text, likes)
+            onMemberAdded.invoke(
+                UserModel(
+                    name = name.text,
+                    likes = likes
+                )
+            )
             name = TextFieldValue("", TextRange(0, 0))
             addLike()
             likes.clear()
@@ -101,7 +108,12 @@ private fun AddMemberContent(
         scope.launch {
             if (name.text.isNotBlank()) {
                 addLike() // <- Adiciona antes de limpar
-                onMemberAdded.invoke(name.text, likes)
+                onMemberAdded.invoke(
+                    UserModel(
+                        name = name.text,
+                        likes = likes
+                    )
+                )
             }
             name = TextFieldValue("", TextRange(0, 0))
             likes.clear()
@@ -190,9 +202,7 @@ private fun AddMemberBottomSheetPreview() {
         AddMemberContent(
             sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
-            onMemberAdded = { _, _ ->
-
-            }
+            onMemberAdded = {}
         )
     }
 }
