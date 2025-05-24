@@ -9,7 +9,7 @@ class DrawService(
 ) {
 
     fun drawMembers(group: GroupEntities): Map<String, String> {
-        val participants = group.members.keys.toMutableList()
+        val participants = group.members.map { it.name }.toMutableList()
 
         if (participants.size < 3) {
             throw MinimumsMembersOfDrawException()

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.textWithFormatting
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.byName
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.ExpandableText
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
@@ -92,23 +93,23 @@ fun GroupDetailsContentComponent(
                     onShare = { member, secret, token ->
                         onShare(member, secret, token)
                     },
-                    likes = uiState.group.members[participant]?.split("|").orEmpty()
+                    likes = uiState.group.members.byName(participant)?.likes.orEmpty()
                 )
             }
         } else if (uiState.group.members.isNotEmpty()) {
-            items(uiState.group.members.keys.toList()) { member ->
+            items(uiState.group.members.toList()) { member ->
                 MemberItem(
-                    participant = member,
+                    participant = member.name,
                     group = uiState.group,
                     isAdministrator = uiState.group.isOwner,
-                    likes = uiState.group.members[member]?.split("|").orEmpty(),
+                    likes = member.likes,
                     onEdit = {
                         setShowBottomSheet(!showBottomSheet)
-                        setName(member)
-                        setLikes(uiState.group.members[member]?.split("|").orEmpty())
+                        setName(member.name)
+                        setLikes(member.likes)
                     },
                     onRemove = {
-                        onRemove(uiState.group, member)
+                        onRemove(uiState.group, member.name)
                     },
                 )
             }

@@ -71,7 +71,7 @@ class GroupCreateViewModel(
             useCase.invoke(
                 name = name,
                 description = description,
-                members = members
+                members = members.
             ).onSuccess {
                 _uiState.value = GroupCreateUiState.Success
             }.onFailure {

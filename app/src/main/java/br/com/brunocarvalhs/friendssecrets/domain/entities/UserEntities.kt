@@ -30,3 +30,10 @@ interface UserEntities {
         const val LIKES = "likes"
     }
 }
+
+fun List<UserEntities>.byName(name: String): UserEntities? = find { it.name == name }
+
+fun List<UserEntities>.byPhoneNumber(phoneNumber: String): UserEntities? =
+    find { it.phoneNumber == phoneNumber }
+
+fun String.toLikes(): List<String> = split("|")

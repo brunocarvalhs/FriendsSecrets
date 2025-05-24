@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
@@ -78,17 +79,20 @@ class ProfileViewModel(
                 initializer {
                     val sessionManager = SessionManager.getInstance()
                     val userRepository = UserRepositoryImpl()
+                    val performanceManager = PerformanceManager()
                     val getLikesProfileUseCase = GetLikesProfileUseCase(
                         sessionManager = sessionManager,
                         userRepository = userRepository
                     )
                     val createProfileUseCase = CreateProfileUseCase(
                         sessionManager = sessionManager,
-                        userRepository = userRepository
+                        userRepository = userRepository,
+                        performanceManager = performanceManager
                     )
                     val deleteAccountUseCase = DeleteAccountUseCase(
                         sessionManager = sessionManager,
-                        userRepository = userRepository
+                        userRepository = userRepository,
+                        performanceManager = performanceManager
                     )
                     ProfileViewModel(
                         createProfileUseCase = createProfileUseCase,
