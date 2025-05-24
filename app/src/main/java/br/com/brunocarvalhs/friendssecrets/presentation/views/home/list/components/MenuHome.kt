@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
 
 sealed class MenuItem(
     val title: @Composable () -> String,
@@ -38,7 +37,7 @@ sealed class MenuItem(
 
     data object Profile : MenuItem(
         title = { stringResource(id = R.string.home_drop_menu_item_text_profile) },
-        route = LoginNavigation.Profile.route,
+        route = null,
         icon = Icons.Outlined.Person,
         isEnabled = true
     )

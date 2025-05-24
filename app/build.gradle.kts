@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +7,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
     id("org.jetbrains.dokka") version "1.9.20"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 android {
@@ -125,6 +124,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     dokkaPlugin(libs.android.documentation.plugin)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.ucrop)
     implementation(libs.accompanist.permissions)
     implementation(libs.country.picker)

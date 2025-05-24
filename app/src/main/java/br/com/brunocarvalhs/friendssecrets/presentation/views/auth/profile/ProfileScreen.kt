@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
@@ -58,13 +57,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.toBase64
+import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
 import br.com.brunocarvalhs.friendssecrets.presentation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.PhoneSendScreenRoute
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.ProfileScreenRoute
 import coil.compose.AsyncImage
 import com.yalantis.ucrop.UCrop
 import java.io.File
@@ -82,8 +82,8 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.handleIntent(ProfileIntent.FetchData)
         if (SessionManager.getInstance().isProfileComplete().not()) {
-            navController.navigate(LoginNavigation.PhoneSend.route) {
-                popUpTo(LoginNavigation.Profile.route) {
+            navController.navigate(PhoneSendScreenRoute) {
+                popUpTo(ProfileScreenRoute) {
                     inclusive = true
                 }
             }
@@ -120,7 +120,9 @@ private fun ProfileContent(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    if (navController.previousBackStackEntry?.destination?.route != LoginNavigation.PhoneVerification.route) {
+                    val currentRoute =
+                        navController.currentBackStackEntry?.toRoute<PhoneSendScreenRoute>()
+                    if (currentRoute != PhoneSendScreenRoute) {
                         NavigationBackIconButton(navController = navController)
                     }
                 }

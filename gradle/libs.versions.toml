@@ -10,6 +10,7 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxSerializationJson = "1.8.1"
 leakcanaryAndroid = "2.14"
 lifecycleRuntimeKtx = "2.9.0"
 lifecycleViewmodelCompose = "2.9.0"
@@ -72,6 +73,7 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }

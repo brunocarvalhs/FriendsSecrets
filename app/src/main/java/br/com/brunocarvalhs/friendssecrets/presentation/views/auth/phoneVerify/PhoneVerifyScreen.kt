@@ -16,15 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -55,8 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.toMaskedPhoneNumber
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.LoginNavigation
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend.PhoneSendUiState
+import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.ProfileScreenRoute
 import kotlinx.coroutines.delay
 
 @Composable
@@ -76,7 +71,7 @@ fun PhoneVerifyScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is PhoneVerifyUiState.Success) {
-            navController.navigate(LoginNavigation.Profile.route)
+            navController.navigate(ProfileScreenRoute)
         }
     }
 
