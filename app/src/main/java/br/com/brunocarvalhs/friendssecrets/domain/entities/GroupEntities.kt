@@ -5,17 +5,15 @@ interface GroupEntities {
     val token: String
     val name: String
     val description: String?
-    val members: Map<String, String>
+    val members: List<UserEntities>
     val draws: Map<String, String>
     val isOwner: Boolean
-
-    fun toMap(): Map<String, Any>
 
     fun toCopy(
         token: String = this.token,
         name: String = this.name,
         description: String? = this.description,
-        members: Map<String, String> = this.members,
+        members: List<UserEntities> = this.members,
         draws: Map<String, String> = this.draws,
         isOwner: Boolean = this.isOwner,
     ): GroupEntities

@@ -1,18 +1,21 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 
 import android.content.Context
+import androidx.startup.Initializer
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
-import br.com.brunocarvalhs.friendssecrets.commons.logger.crashlytics.CrashlyticsProvider
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.getId
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
-class CrashlyticsInitialization(private val context: Context) : AppInitialization() {
+class CrashlyticsInitialization : Initializer<FirebaseCrashlytics> {
 
-    override fun tag(): String  = "CrashlyticsInitialization"
+    override fun create(context: Context): FirebaseCrashlytics {
+        return FirebaseCrashlytics.getInstance().apply {
+            isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
+            setUserId(context.getId())
+        }
+    }
 
-    override fun execute() {
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
-        CrashlyticsProvider.setUserId(context)
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf(FirebaseAppInitialization::class.java)
     }
 }

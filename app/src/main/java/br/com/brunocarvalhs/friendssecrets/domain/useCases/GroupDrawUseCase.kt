@@ -5,6 +5,7 @@ import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 
 class GroupDrawUseCase(
@@ -12,20 +13,24 @@ class GroupDrawUseCase(
     private val groupRepository: GroupRepository,
     private val performance: PerformanceManager
 ) {
-    suspend fun invoke(group: GroupEntities) = runCatching {
+    suspend fun invoke(group: GroupEntities): Result<Unit> {
         performance.start(GroupDrawUseCase::class.java.simpleName)
-        validationMembers(group.members)
-        validationDraw(group.draws)
-        groupRepository.drawMembers(group)
-    }.also {
-        performance.stop(GroupDrawUseCase::class.java.simpleName)
+        return try {
+            runCatching {
+                validateMembers(group.members)
+                validateDraw(group.draws)
+                groupRepository.drawMembers(group)
+            }
+        } finally {
+            performance.stop(GroupDrawUseCase::class.java.simpleName)
+        }
     }
 
-    private fun validationMembers(members: Map<String, String>) {
-        require(value = members.size > 2) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
+    private fun validateMembers(members: List<UserEntities>) {
+        require(members.size > 2) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
     }
 
-    private fun validationDraw(draw: Map<String, String>) {
-        require(value = draw.isEmpty()) { context.getString(R.string.require_draw_already_held) }
+    private fun validateDraw(draw: Map<String, String>) {
+        require(draw.isEmpty()) { context.getString(R.string.require_draw_already_held) }
     }
 }

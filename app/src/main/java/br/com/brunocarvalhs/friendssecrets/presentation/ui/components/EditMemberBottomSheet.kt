@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +47,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
 
@@ -55,9 +56,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditMemberBottomSheet(
     onDismiss: () -> Unit,
-    member: String,
-    likes: List<String>,
-    onMemberAdded: (String, List<String>) -> Unit,
+    member: UserEntities,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -72,7 +72,6 @@ fun EditMemberBottomSheet(
             sheetState = sheetState,
             onDismiss = onDismiss,
             member = member,
-            list = likes,
             onMemberAdded = onMemberAdded
         )
     }
@@ -83,15 +82,14 @@ fun EditMemberBottomSheet(
 private fun EditMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    member: String,
-    list: List<String>,
-    onMemberAdded: (String, List<String>) -> Unit,
+    member: UserEntities,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
 
-    var name by remember { mutableStateOf(TextFieldValue(member, TextRange(0, 0))) }
+    var name by remember { mutableStateOf(TextFieldValue(member.name, TextRange(0, 0))) }
     var isErrorName by remember { mutableStateOf(false) }
     var errorMessageName by remember { mutableStateOf("") }
 
@@ -115,7 +113,12 @@ private fun EditMemberContent(
         scope.launch {
             if (name.text.isNotBlank()) {
                 addLike()
-                onMemberAdded.invoke(name.text, likes)
+                onMemberAdded.invoke(
+                    member.toCopy(
+                        name = name.text,
+                        likes = likes
+                    )
+                )
             }
             name = TextFieldValue("", TextRange(0, 0))
             likes.clear()
@@ -128,7 +131,7 @@ private fun EditMemberContent(
     }
 
     LaunchedEffect(Unit) {
-        list.forEach { likes.add(it) }
+        member.likes.forEach { likes.add(it) }
     }
 
     Column(
@@ -245,12 +248,12 @@ private fun AddMemberBottomSheetPreview() {
     FriendsSecretsTheme {
         EditMemberContent(
             sheetState = rememberModalBottomSheetState(),
-            member = "Bruno",
-            list = listOf("Like 1", "Like 2"),
+            member = UserModel(
+                name = "Bruno",
+                likes = listOf("Like 1", "Like 2"),
+            ),
             onDismiss = {},
-            onMemberAdded = { _, _ ->
-
-            }
+            onMemberAdded = { }
         )
     }
 }

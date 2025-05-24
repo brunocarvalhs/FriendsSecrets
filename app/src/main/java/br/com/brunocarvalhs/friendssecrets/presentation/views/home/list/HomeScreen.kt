@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -29,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -55,7 +55,8 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupCreateScreenRoute
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupDetailsScreenRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupCard
@@ -125,8 +126,8 @@ private fun HomeContent(
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 title = {
                     session?.let {
@@ -158,6 +159,7 @@ private fun HomeContent(
                                             }
                                         }
                                     }
+
                                     else -> navController.navigate(menu.route.orEmpty())
                                 }
                             },
@@ -173,14 +175,14 @@ private fun HomeContent(
 
                 if (isCreateGroupEnabled) {
                     ExtendedFloatingActionButton(onClick = {
-                        navController.navigate(GroupNavigation.Create.route)
+                        navController.navigate(GroupCreateScreenRoute)
                     }) {
                         Icon(Icons.Filled.Add, "Add")
                         Text(stringResource(R.string.home_action_create_group))
                     }
                 }
             }
-        }
+        },
     ) {
         when (uiState) {
             is HomeUiState.Error -> {
@@ -196,17 +198,17 @@ private fun HomeContent(
                     EmptyGroupComponent(
                         modifier = Modifier.padding(it),
                         onGroupToEnter = { showBottomSheet = true },
-                        onCreateGroup = { navController.navigate(GroupNavigation.Create.route) },
+                        onCreateGroup = { navController.navigate(GroupCreateScreenRoute) },
                         isJoinGroupEnabled = isJoinGroupEnabled,
                         isCreateGroupEnabled = isCreateGroupEnabled
                     )
                 } else {
-                    LazyColumn(
+                    LazyVerticalGrid(
                         modifier = Modifier
                             .padding(it)
                             .fillMaxSize()
                             .nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        columns = GridCells.Fixed(2),
                     ) {
                         items(uiState.list) { item ->
                             GroupCard(
@@ -215,9 +217,8 @@ private fun HomeContent(
                                     .fillMaxWidth(),
                                 group = item,
                                 onClick = {
-                                    navController.navigate(
-                                        route = GroupNavigation.Read.createRoute(item.id)
-                                    )
+                                    val destination = GroupDetailsScreenRoute(item.id)
+                                    navController.navigate(destination)
                                 }
                             )
                         }
@@ -247,9 +248,12 @@ private class HomePreviewProvider : PreviewParameterProvider<HomeUiState> {
             GroupModel(
                 name = "Group $it",
                 description = "Description $it",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 }
             )

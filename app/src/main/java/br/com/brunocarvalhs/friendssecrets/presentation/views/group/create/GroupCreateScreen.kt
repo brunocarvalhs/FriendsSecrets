@@ -36,7 +36,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -114,11 +113,11 @@ private fun GroupCreateContent(
     uiState: GroupCreateUiState,
     onHome: () -> Unit,
     onBack: () -> Unit,
-    onSave: (String, String, Map<String, String>) -> Unit,
+    onSave: (String, String, List<UserEntities>) -> Unit,
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
-    val members = remember { mutableStateMapOf<String, String>() }
+    val members = remember { mutableStateListOf<UserEntities>() }
     val contacts = remember { mutableStateListOf<UserEntities>() }
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -140,9 +139,7 @@ private fun GroupCreateContent(
             ExtendedFloatingActionButton(onClick = {
                 onSave.invoke(
                     name.text, description.text,
-                    // mesclas os membros selecionados com os contatos selecionados
-                    members.toMap() + contacts.associateBy({ it.name },
-                        { it.likes.orEmpty().joinToString("|") })
+                    members.apply { addAll(contacts) },
                 )
             }) {
                 Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
@@ -197,12 +194,9 @@ private fun GroupCreateContent(
                             }
                         }
                     }
-                    items(members.keys.toList()) { member ->
+                    items(members) { member ->
                         ContactItem(
-                            contact = UserModel(
-                                name = member,
-                                likes = members[member]?.split("|") ?: emptyList(),
-                            ),
+                            contact = member,
                             isSelected = true,
                             action = { _, _ ->
                                 Icon(
@@ -219,9 +213,7 @@ private fun GroupCreateContent(
                         )
                     }
                     if (uiState.contacts.isNotEmpty()) {
-                        items(uiState.contacts
-                            .filterNot { contact -> members.containsKey(contact.name) }
-                        ) { contact ->
+                        items(uiState.contacts.filterNot { contact -> members.contains(contact) }) { contact ->
                             ContactItem(
                                 contact = contact,
                                 isSelected = contacts.contains(contact),
@@ -260,8 +252,10 @@ private fun GroupCreateContent(
         }
     }
     if (showBottomSheet && uiState is GroupCreateUiState.Idle) {
-        AddMemberBottomSheet(onDismiss = { showBottomSheet = false },
-            onMemberAdded = { member, likes -> members[member] = likes.joinToString("|") })
+        AddMemberBottomSheet(
+            onDismiss = { showBottomSheet = false },
+            onMemberAdded = { member -> members.add(member) }
+        )
     }
     when (uiState) {
         is GroupCreateUiState.Success -> {

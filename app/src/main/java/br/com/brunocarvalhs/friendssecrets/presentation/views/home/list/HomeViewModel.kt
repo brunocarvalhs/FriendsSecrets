@@ -12,7 +12,6 @@ import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +53,6 @@ class HomeViewModel(
     private fun fetchGroups() {
         _uiState.value = HomeUiState.Loading
         viewModelScope.launch {
-            delay(timeMillis = 1500)
             groupListUseCase.invoke().onSuccess {
                 _uiState.value = HomeUiState.Success(list = it)
             }.onFailure {

@@ -1,14 +1,21 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 
 import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
+import androidx.startup.Initializer
+import br.com.brunocarvalhs.friendssecrets.commons.extensions.getId
+import com.google.firebase.analytics.FirebaseAnalytics
 
-class AnalyticsInitialization(private val context: Context) : AppInitialization() {
+class AnalyticsInitialization : Initializer<FirebaseAnalytics> {
 
-    override fun tag(): String = "AnalyticsInitialization"
+    override fun create(context: Context): FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(context).apply {
+            setUserId(context.getId())
+        }
+    }
 
-    override fun execute() {
-        AnalyticsProvider.setUserId(context)
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf(
+            FirebaseAppInitialization::class.java
+        )
     }
 }

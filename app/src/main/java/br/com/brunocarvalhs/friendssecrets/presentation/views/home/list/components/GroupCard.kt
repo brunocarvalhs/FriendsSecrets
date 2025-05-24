@@ -2,22 +2,16 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.compone
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,17 +19,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -93,55 +86,6 @@ fun GroupCard(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
-
-                Column(
-                    modifier = Modifier.fillMaxHeight(0.8f),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    val overlapOffset = (-10).dp
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(overlapOffset)
-                    ) {
-                        if (group.members.size > 3) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(shape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .border(1.dp, Color.White, shape)
-                                    .zIndex(group.members.size.toFloat()),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "+${group.members.size - 3}",
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-
-                        group.members.keys.take(3).forEachIndexed { index, member ->
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(shape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .border(1.dp, Color.White, shape)
-                                    .zIndex((group.members.size - index - 1).toFloat()),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = member.first().toString(),
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -163,9 +107,12 @@ private fun GroupCardPreview() {
         GroupCard(
             group = GroupModel(
                 name = "Living Room",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
             ),
@@ -190,9 +137,12 @@ private fun GroupCardPreviewTwo() {
         GroupCard(
             group = GroupModel(
                 name = "Living Room",
-                members = mutableMapOf<String, String>().apply {
+                members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        this["Member $it"] = "Secret Santa $it"
+                        UserModel(
+                            name = "Member $it",
+                            likes = listOf("Like $it")
+                        )
                     }
                 },
             ),

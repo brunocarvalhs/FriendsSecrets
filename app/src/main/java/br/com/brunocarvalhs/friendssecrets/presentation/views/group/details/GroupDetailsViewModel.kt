@@ -14,6 +14,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManage
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
@@ -51,11 +52,12 @@ class GroupDetailsViewModel(
                 secret = intent.secret,
                 token = intent.token
             )
+
             is GroupDetailsIntent.EditMember -> editMember(
                 entities = intent.group,
                 member = intent.participant,
-                likes = intent.likes
             )
+
             is GroupDetailsIntent.RemoveMember -> removeMember(
                 entities = intent.group,
                 member = intent.participant
@@ -85,7 +87,7 @@ class GroupDetailsViewModel(
 
     private fun removeMember(
         entities: GroupEntities,
-        member: String
+        member: UserEntities
     ) {
         viewModelScope.launch {
             val group = entities.toCopy(
@@ -102,15 +104,12 @@ class GroupDetailsViewModel(
 
     private fun editMember(
         entities: GroupEntities,
-        member: String,
-        likes: List<String>
+        member: UserEntities,
     ) {
         viewModelScope.launch {
             groupEditUseCase.invoke(
                 entities.toCopy(
-                    members = HashMap(entities.members).apply {
-                        put(member, likes.joinToString(separator = "|"))
-                    }
+                    members = entities.members.map { if (it == member) member else it }
                 )
             ).onSuccess {
                 _uiState.value = GroupDetailsUiState.Success(it)
@@ -142,14 +141,14 @@ class GroupDetailsViewModel(
         }
     }
 
-    private fun shareMember(context: Context, member: String, secret: String, token: String) {
+    private fun shareMember(context: Context, member: UserEntities, secret: String, token: String) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
                 context.getString(
                     R.string.group_details_share_member,
-                    member,
+                    member.name,
                     token,
                     secret,
                     BuildConfig.APPLICATION_ID,
@@ -166,7 +165,6 @@ class GroupDetailsViewModel(
     private fun drawMembers(group: GroupEntities) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {
-            delay(timeMillis = 3000)
             groupDrawUseCase.invoke(group).onSuccess {
                 _uiState.value = GroupDetailsUiState.Draw
             }.onFailure {

@@ -1,18 +1,23 @@
 package br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks
 
+import android.content.Context
+import androidx.startup.Initializer
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitialization
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
 import timber.log.Timber
 
-class TimberInitialization : AppInitialization() {
+class TimberInitialization : Initializer<Timber.Forest> {
 
-    override fun execute() {
-        val type = if (BuildConfig.DEBUG) Timber.DebugTree()
+    override fun create(context: Context): Timber.Forest {
+        val type: Timber.Tree = if (BuildConfig.DEBUG) Timber.DebugTree()
         else CrashLoggerProvider()
 
-        Timber.plant(type)
+         return Timber.apply {
+             plant(type)
+         }
     }
 
-    override fun tag(): String = "TimberInitialization"
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf(CrashlyticsInitialization::class.java)
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
 
@@ -41,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddMemberBottomSheet(
     onDismiss: () -> Unit,
-    onMemberAdded: (String, List<String>) -> Unit,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -65,15 +68,14 @@ fun AddMemberBottomSheet(
 private fun AddMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onMemberAdded: (String, List<String>) -> Unit,
+    onMemberAdded: (UserEntities) -> Unit,
 ) {
     val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
 
     var name by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
-    var isErrorName by remember { mutableStateOf(false) }
-    var errorMessageName by remember { mutableStateOf("") }
+    var nameValidationError by remember { mutableStateOf<String?>(null) }
 
     var likeName by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
     val likes = remember { mutableStateListOf<String>() }
@@ -89,7 +91,12 @@ private fun AddMemberContent(
 
     fun addMember() {
         scope.launch {
-            onMemberAdded.invoke(name.text, likes)
+            onMemberAdded.invoke(
+                UserModel(
+                    name = name.text,
+                    likes = likes
+                )
+            )
             name = TextFieldValue("", TextRange(0, 0))
             addLike()
             likes.clear()
@@ -101,7 +108,12 @@ private fun AddMemberContent(
         scope.launch {
             if (name.text.isNotBlank()) {
                 addLike() // <- Adiciona antes de limpar
-                onMemberAdded.invoke(name.text, likes)
+                onMemberAdded.invoke(
+                    UserModel(
+                        name = name.text,
+                        likes = likes
+                    )
+                )
             }
             name = TextFieldValue("", TextRange(0, 0))
             likes.clear()
@@ -110,6 +122,14 @@ private fun AddMemberContent(
             if (!sheetState.isVisible) {
                 onDismiss.invoke()
             }
+        }
+    }
+
+    fun validateName(name: String, context: Context): Pair<Boolean, String> {
+        return if ("^[a-zA-Z\\s]*$".toRegex().matches(name)) {
+            Pair(false, "")
+        } else {
+            Pair(true, context.getString(R.string.add_member_bottom_sheet_input_new_member_error_message))
         }
     }
 
@@ -127,26 +147,18 @@ private fun AddMemberContent(
             OutlinedTextField(
                 value = name,
                 onValueChange = { value ->
-                    if ("^[a-zA-Z\\s]*$".toRegex().matches(value.text)) {
-                        name = value
-                        isErrorName = false
-                        errorMessageName = ""
-                    } else {
-                        isErrorName = true
-                        errorMessageName =
-                            context.getString(R.string.add_member_bottom_sheet_input_new_member_error_message)
-                    }
+                    name = value
+                    val (isError, message) = validateName(value.text, context)
+                    nameValidationError = if (isError) message else null
                 },
                 label = { Text(text = stringResource(R.string.add_member_bottom_sheet_input_new_member)) },
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester),
                 singleLine = true,
-                isError = isErrorName,
+                isError = nameValidationError != null,
                 supportingText = {
-                    if (isErrorName) {
-                        Text(text = errorMessageName)
-                    }
+                    nameValidationError?.let { Text(text = it) }
                 },
                 keyboardActions = KeyboardActions(
                     onNext = {
@@ -190,9 +202,7 @@ private fun AddMemberBottomSheetPreview() {
         AddMemberContent(
             sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
-            onMemberAdded = { _, _ ->
-
-            }
+            onMemberAdded = {}
         )
     }
 }

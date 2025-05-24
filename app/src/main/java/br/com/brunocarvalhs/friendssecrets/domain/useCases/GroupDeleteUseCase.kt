@@ -14,39 +14,49 @@ class GroupDeleteUseCase(
     private val storage: StorageService,
     private val performance: PerformanceManager
 ) {
-    suspend fun invoke(groupId: String): Result<Unit> = runCatching {
+    suspend fun invoke(groupId: String): Result<Unit> {
         performance.start(GroupDeleteUseCase::class.java.simpleName)
-        validationGroupId(groupId)
-        val group = groupRepository.read(groupId)
-        clearGroup(group)
-        clearAdmin(group)
-        groupRepository.delete(groupId)
-    }.also {
-        performance.stop(GroupDeleteUseCase::class.java.simpleName)
-    }
+        return try {
+            runCatching {
+                validateGroupId(groupId)
+                val group = groupRepository.read(groupId)
 
-    fun validationGroupId(groupId: String) {
-        require(groupId.isNotBlank()) { context.getString(R.string.require_group_id_cannot_be_blank) }
-    }
+                removeGroupFromStorage(group.token)
+                removeAdminFromStorage(group.token)
 
-    fun clearGroup(group: GroupEntities) {
-        val list = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME)
-            ?: emptyList()
-
-        if (list.contains(group.token)) {
-            storage.save(
-                GroupEntities.COLLECTION_NAME,
-                list.toMutableList().apply { remove(group.token) })
+                groupRepository.delete(groupId)
+            }
+        } finally {
+            performance.stop(GroupDeleteUseCase::class.java.simpleName)
         }
     }
 
-    fun clearAdmin(group: GroupEntities) {
-        val adminList = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME_ADMINS)
-            ?: emptyList()
-        if (adminList.contains(group.token)) {
+    // Validação de entrada
+    private fun validateGroupId(groupId: String) {
+        require(groupId.isNotBlank()) {
+            context.getString(R.string.require_group_id_cannot_be_blank)
+        }
+    }
+
+    // Limpeza do token do grupo do armazenamento local
+    private fun removeGroupFromStorage(token: String) {
+        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME).orEmpty()
+        if (token in groupList) {
+            storage.save(
+                GroupEntities.COLLECTION_NAME,
+                groupList.toMutableList().apply { remove(token) }
+            )
+        }
+    }
+
+    // Limpeza do token do grupo da lista de administradores
+    private fun removeAdminFromStorage(token: String) {
+        val adminList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS).orEmpty()
+        if (token in adminList) {
             storage.save(
                 GroupEntities.COLLECTION_NAME_ADMINS,
-                adminList.toMutableList().apply { remove(group.token) })
+                adminList.toMutableList().apply { remove(token) }
+            )
         }
     }
 }

@@ -1,17 +1,12 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.auth
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.login.LoginScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.login.LoginViewModel
@@ -21,31 +16,22 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify.P
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify.PhoneVerifyViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile.ProfileScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile.ProfileViewModel
+import kotlinx.serialization.Serializable
 
-sealed class LoginNavigation(
-    override val route: String,
-    override val arguments: List<NamedNavArgument> = emptyList(),
-    override val deepLinks: List<NavDeepLink> = emptyList(),
-) : NavigationBase {
+@Serializable
+object LoginGraphRoute
 
-    data object Login : LoginNavigation("login")
-    data object PhoneSend : LoginNavigation("phone_send")
+@Serializable
+object LoginScreenRoute
 
-    data object PhoneVerification : LoginNavigation(
-        route = "phone_verification?phoneNumber={phoneNumber}",
-        arguments = listOf(navArgument("phoneNumber") { defaultValue = "" })
-    ) {
-        const val phoneNumber = "phoneNumber"
+@Serializable
+object PhoneSendScreenRoute
 
-        fun createRoute(phoneNumber: String) = "phone_verification?phoneNumber=$phoneNumber"
-    }
+@Serializable
+data class PhoneVerificationScreenRoute(val phoneNumber: String)
 
-    data object Profile : LoginNavigation("profile")
-
-    companion object {
-        val START_DESTINATION = Login.route
-    }
-}
+@Serializable
+object ProfileScreenRoute
 
 fun NavGraphBuilder.loginGraph(
     activity: ComponentActivity,
@@ -53,31 +39,32 @@ fun NavGraphBuilder.loginGraph(
     route: String,
     toggleManager: ToggleManager
 ) {
-    navigation(startDestination = LoginNavigation.START_DESTINATION, route = route) {
-        composable(LoginNavigation.Login.route) {
+    navigation<LoginGraphRoute>(startDestination = LoginScreenRoute) {
+        composable<LoginScreenRoute> {
             val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
             LoginScreen(
                 navController = navController,
                 viewModel = viewModel
             )
         }
-        composable(LoginNavigation.PhoneSend.route) {
-            val viewModel: PhoneSendViewModel = viewModel(factory = PhoneSendViewModel.Factory(activity))
+        composable<PhoneSendScreenRoute> {
+            val viewModel: PhoneSendViewModel =
+                viewModel(factory = PhoneSendViewModel.Factory(activity))
             PhoneSendScreen(
                 navController = navController,
                 viewModel = viewModel
             )
         }
-        composable(LoginNavigation.PhoneVerification.route) {
+        composable<PhoneVerificationScreenRoute> { backStackEntry ->
+            val args = backStackEntry.toRoute<PhoneVerificationScreenRoute>()
             val viewModel: PhoneVerifyViewModel = viewModel(factory = PhoneVerifyViewModel.Factory)
             PhoneVerifyScreen(
-                phoneNumber = it.arguments?.getString(LoginNavigation.PhoneVerification.phoneNumber)
-                    ?: "",
+                phoneNumber = args.phoneNumber,
                 navController = navController,
                 viewModel = viewModel
             )
         }
-        composable(LoginNavigation.Profile.route) {
+        composable<ProfileScreenRoute> {
             val viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
             ProfileScreen(
                 navController = navController,

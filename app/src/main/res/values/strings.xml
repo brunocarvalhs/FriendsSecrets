@@ -114,4 +114,14 @@
     <string name="phone_send_textfield_label">Phone number</string>
     <string name="phone_send_textfield_description">Carrier charges may apply.</string>
     <string name="phone_send_button">Next</string>
+    <string name="add_like_description" translatable="false">Add like</string>
+    <string name="remove_like_description" translatable="false">remove like: %1$s</string>
+    <string name="contact_photo_description">Foto de contato de %1$s</string>
+    <string name="collapse_likes_action">likes gone</string>
+    <string name="expand_likes_action">likes more</string>
+    <string name="likes_expanded_state">expanded</string>
+    <string name="likes_collapsed_state">collapsed</string>
+    <string name="share_secret_friend_action">Compartilhar amigo secreto de %1$s</string>
+    <string name="edit_participant_action">Editar participante %1$s</string>
+    <string name="remove_participant_action">Remover participante %1$s</string>
 </resources>
