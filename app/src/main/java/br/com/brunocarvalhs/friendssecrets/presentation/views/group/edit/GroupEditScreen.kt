@@ -244,8 +244,7 @@ private fun GroupEditForm(
         }
         items(members) { member ->
             MemberItem(
-                participant = member.name,
-                likes = member.likes,
+                participant = member,
                 onRemove = {
                     onMembersChange(members.apply { remove(member) })
                 },

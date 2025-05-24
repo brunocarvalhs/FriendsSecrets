@@ -113,7 +113,7 @@ private fun GroupDetailsContent(
         navController.navigate(route = GroupNavigation.Revelation.createRoute(group.id))
     }
 
-    fun onShare(participant: String, secret: String, token: String) {
+    fun onShare(participant: UserEntities, secret: String, token: String) {
         onEvent.invoke(
             GroupDetailsIntent.ShareMember(
                 context = context, member = participant, secret = secret, token = token
@@ -121,17 +121,16 @@ private fun GroupDetailsContent(
         )
     }
 
-    fun onEdit(group: GroupEntities, participant: String, likes: List<String>) {
+    fun onEdit(group: GroupEntities, participant: UserEntities) {
         onEvent.invoke(
             GroupDetailsIntent.EditMember(
                 group = group,
                 participant = participant,
-                likes = likes
             )
         )
     }
 
-    fun onRemove(group: GroupEntities, participant: String) {
+    fun onRemove(group: GroupEntities, participant: UserEntities) {
         onEvent.invoke(GroupDetailsIntent.RemoveMember(group = group, participant = participant))
     }
 
@@ -190,11 +189,14 @@ private fun GroupDetailsContent(
     }
     if (showBottomSheet && uiState is GroupDetailsUiState.Success) {
         EditMemberBottomSheet(onDismiss = { showBottomSheet = false },
-            member = name,
-            likes = likes,
-            onMemberAdded = { member, likes ->
+            member = UserModel(
+                name = name,
+                likes = likes
+            ),
+            onMemberAdded = { member ->
                 onEdit(
-                    group = uiState.group, participant = member, likes = likes
+                    group = uiState.group,
+                    participant = member,
                 )
             })
     }

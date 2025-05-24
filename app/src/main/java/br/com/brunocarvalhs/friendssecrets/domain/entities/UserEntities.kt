@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.domain.entities
 
+import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+
 interface UserEntities {
     val id: String
     val name: String
@@ -32,6 +34,22 @@ interface UserEntities {
 }
 
 fun List<UserEntities>.byName(name: String): UserEntities? = find { it.name == name }
+
+fun UserEntities?.orEmpty(
+    id: String = this?.id.orEmpty(),
+    name: String = this?.name.orEmpty(),
+    photoUrl: String? = this?.photoUrl.orEmpty(),
+    phoneNumber: String = this?.phoneNumber.orEmpty(),
+    isPhoneNumberVerified: Boolean = this?.isPhoneNumberVerified ?: false,
+    likes: List<String> = this?.likes.orEmpty()
+) = this ?: UserModel(
+    id = id,
+    name = name,
+    photoUrl = photoUrl,
+    phoneNumber = phoneNumber,
+    isPhoneNumberVerified = isPhoneNumberVerified,
+    likes = likes
+)
 
 fun List<UserEntities>.byPhoneNumber(phoneNumber: String): UserEntities? =
     find { it.phoneNumber == phoneNumber }

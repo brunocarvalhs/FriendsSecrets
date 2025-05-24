@@ -13,29 +13,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun MemberItem(
-    participant: String,
-    likes: List<String> = emptyList(),
+    participant: UserEntities,
     group: GroupEntities? = null,
     isAdministrator: Boolean = false,
-    onShare: (String, String, String) -> Unit = { _, _, _ -> },
+    onShare: (UserEntities, String, String) -> Unit = { _, _, _ -> },
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
 ) {
-    val hasLikes = likes.any { it.isNotBlank() }
     val canShare = isAdministrator && group?.draws?.isNotEmpty() == true
 
     ContactItem(
-        contact = UserModel(
-            name = participant,
-            likes = likes
-        ),
+        contact = participant,
         action = { _, isLiked ->
 
-            if (hasLikes) {
+            if (participant.likes.isEmpty().not()) {
                 Icon(
                     imageVector = if (isLiked) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
                     contentDescription = "Toggle Likes"
@@ -43,7 +39,7 @@ fun MemberItem(
             }
 
             if (canShare) {
-                group?.draws?.get(participant)?.let { secret ->
+                group?.draws?.get(participant.name)?.let { secret ->
                     IconButton(onClick = { onShare(participant, secret, group.token) }) {
                         Icon(
                             imageVector = Icons.Filled.Share,
@@ -81,10 +77,16 @@ fun MemberItem(
 private fun MemberItemPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = "Member 1",
+            participant = UserModel(
+                name = "Produto de Teste",
+                id = "1",
+                phoneNumber = "123456789",
+                photoUrl = "",
+                isPhoneNumberVerified = false,
+                likes = listOf("Like 1", "Like 2", "Like 3")
+            ),
             group = GroupModel(),
             isAdministrator = false,
-            likes = listOf("Like 1", "Like 2", "Like 3", "Like 4", "Like 5", "Like 6"),
             onEdit = {},
             onRemove = {}
         )
@@ -96,10 +98,16 @@ private fun MemberItemPreview() {
 private fun MemberItemEmptyPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = "Member 1",
+            participant = UserModel(
+                name = "Produto de Teste",
+                id = "1",
+                phoneNumber = "123456789",
+                photoUrl = "",
+                isPhoneNumberVerified = false,
+                likes = listOf()
+            ),
             group = GroupModel(),
             isAdministrator = false,
-            likes = listOf(),
             onEdit = {},
             onRemove = {}
         )
@@ -111,10 +119,16 @@ private fun MemberItemEmptyPreview() {
 private fun MemberItemBlankPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = "Member 1",
+            participant = UserModel(
+                name = "Produto de Teste",
+                id = "1",
+                phoneNumber = "123456789",
+                photoUrl = "",
+                isPhoneNumberVerified = false,
+                likes = listOf(""),
+            ),
             group = GroupModel(),
             isAdministrator = false,
-            likes = listOf(""),
             onEdit = {},
             onRemove = {}
         )
@@ -126,10 +140,16 @@ private fun MemberItemBlankPreview() {
 private fun MemberItemAdminPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = "Member 1",
+            participant = UserModel(
+                name = "Produto de Teste",
+                id = "1",
+                phoneNumber = "123456789",
+                photoUrl = "",
+                isPhoneNumberVerified = false,
+                likes = listOf(""),
+            ),
             group = GroupModel(),
             isAdministrator = true,
-            likes = listOf(""),
             onEdit = {},
             onRemove = {}
         )

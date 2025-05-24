@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.textWithFormatting
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.byName
+import br.com.brunocarvalhs.friendssecrets.domain.entities.orEmpty
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.ExpandableText
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
@@ -41,8 +43,8 @@ fun GroupDetailsContentComponent(
     setShowBottomSheet: (Boolean) -> Unit = {},
     setName: (String) -> Unit = {},
     setLikes: (List<String>) -> Unit = {},
-    onShare: (member: String, secret: String, token: String) -> Unit = { _, _, _ -> },
-    onRemove: (group: GroupEntities, participant: String) -> Unit = { _, _ -> }
+    onShare: (member: UserEntities, secret: String, token: String) -> Unit = { _, _, _ -> },
+    onRemove: (group: GroupEntities, participant: UserEntities) -> Unit = { _, _ -> }
 ) {
     LazyColumn(
         modifier = modifier
@@ -87,29 +89,29 @@ fun GroupDetailsContentComponent(
         if (uiState.group.draws.isNotEmpty()) {
             items(uiState.group.draws.keys.toList()) { participant ->
                 MemberItem(
-                    participant = participant,
+                    participant = uiState.group.members.byName(participant).orEmpty(
+                        name = participant
+                    ),
                     group = uiState.group,
                     isAdministrator = uiState.group.isOwner,
                     onShare = { member, secret, token ->
                         onShare(member, secret, token)
                     },
-                    likes = uiState.group.members.byName(participant)?.likes.orEmpty()
                 )
             }
         } else if (uiState.group.members.isNotEmpty()) {
-            items(uiState.group.members.toList()) { member ->
+            items(uiState.group.members) { member ->
                 MemberItem(
-                    participant = member.name,
+                    participant = member,
                     group = uiState.group,
                     isAdministrator = uiState.group.isOwner,
-                    likes = member.likes,
                     onEdit = {
                         setShowBottomSheet(!showBottomSheet)
                         setName(member.name)
                         setLikes(member.likes)
                     },
                     onRemove = {
-                        onRemove(uiState.group, member.name)
+                        onRemove(uiState.group, member)
                     },
                 )
             }
@@ -118,7 +120,7 @@ fun GroupDetailsContentComponent(
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun GroupDetailsBodyComponentPreview(
     @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState
 ) {

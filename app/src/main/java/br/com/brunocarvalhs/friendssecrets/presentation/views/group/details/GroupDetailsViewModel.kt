@@ -14,6 +14,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManage
 import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
@@ -55,7 +56,6 @@ class GroupDetailsViewModel(
             is GroupDetailsIntent.EditMember -> editMember(
                 entities = intent.group,
                 member = intent.participant,
-                likes = intent.likes
             )
 
             is GroupDetailsIntent.RemoveMember -> removeMember(
@@ -87,7 +87,7 @@ class GroupDetailsViewModel(
 
     private fun removeMember(
         entities: GroupEntities,
-        member: String
+        member: UserEntities
     ) {
         viewModelScope.launch {
             val group = entities.toCopy(
@@ -104,19 +104,12 @@ class GroupDetailsViewModel(
 
     private fun editMember(
         entities: GroupEntities,
-        member: String,
-        likes: List<String>
+        member: UserEntities,
     ) {
         viewModelScope.launch {
             groupEditUseCase.invoke(
                 entities.toCopy(
-                    members = entities.members.map {
-                        if (it.name == member) {
-                            it.toCopy(likes = likes)
-                        } else {
-                            it
-                        }
-                    }
+                    members = entities.members.map { if (it == member) member else it }
                 )
             ).onSuccess {
                 _uiState.value = GroupDetailsUiState.Success(it)
@@ -148,7 +141,7 @@ class GroupDetailsViewModel(
         }
     }
 
-    private fun shareMember(context: Context, member: String, secret: String, token: String) {
+    private fun shareMember(context: Context, member: UserEntities, secret: String, token: String) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
