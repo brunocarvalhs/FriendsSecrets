@@ -7,6 +7,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManage
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
+import br.com.brunocarvalhs.friendssecrets.domain.repository.response.toModel
 
 class GroupReadUseCase(
     private val context: Context = CustomApplication.getInstance(),
@@ -18,9 +19,8 @@ class GroupReadUseCase(
         performance.start(GroupReadUseCase::class.java.simpleName)
         return try {
             runCatching {
-
                 validationGroupId(groupId)
-                val group = groupRepository.read(groupId)
+                val group = groupRepository.read(groupId).toModel()
                 defineAdmin(group)
             }
         } finally {

@@ -8,6 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManage
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import kotlin.random.Random
 
@@ -17,59 +18,83 @@ class GroupCreateUseCase(
     private val storage: StorageService,
     private val performance: PerformanceManager,
 ) {
+
     suspend fun invoke(
         name: String,
         description: String,
-        members: Map<String, String>,
-    ): Result<Unit> =
-        runCatching {
-            performance.start(GroupCreateUseCase::class.java.simpleName)
-            validationName(name)
-            validationMembers(members)
-            var group: GroupEntities =
-                GroupModel(name = name, description = description, members = members)
-            do {
-                group = group.toCopy(token = Random.token(size = 8))
-            } while (!validationTokenIsUnique(group.token))
-            groupRepository.create(group)
-            defineAdmin(group)
-            includeGroup(group)
-        }.also {
+        members: List<UserEntities>,
+    ): Result<Unit> {
+        performance.start(GroupCreateUseCase::class.java.simpleName)
+        return try {
+            runCatching {
+                validateGroupData(name, members)
+                val group = generateUniqueGroup(name, description, members)
+
+                groupRepository.create(group)
+                persistGroupToken(group.token)
+                persistAdminToken(group.token)
+            }
+        } finally {
             performance.stop(GroupCreateUseCase::class.java.simpleName)
         }
-
-    private fun validationName(name: String) {
-        require(value = name.isNotBlank()) { context.getString(R.string.require_name_cannot_be_blank) }
-        require(value = name.length <= 255) { context.getString(R.string.require_name_cannot_be_longer_than_255_characters) }
     }
 
-    private fun validationMembers(members: Map<String, String>) {
-        require(value = members.isNotEmpty()) { context.getString(R.string.require_group_must_have_at_least_one_member) }
-        require(value = members.size >= 3) { context.getString(R.string.require_group_cannot_have_more_than_2_members) }
+    // 1. Validação de entrada
+    private fun validateGroupData(name: String, members: List<UserEntities>) {
+        validateName(name)
+        validateMembers(members)
     }
 
-    private suspend fun validationTokenIsUnique(token: String): Boolean {
-        val group = groupRepository.searchByToken(token)
-        return group == null
+    private fun validateName(name: String) {
+        require(name.isNotBlank()) {
+            context.getString(R.string.require_name_cannot_be_blank)
+        }
+        require(name.length <= 255) {
+            context.getString(R.string.require_name_cannot_be_longer_than_255_characters)
+        }
     }
 
-    private fun includeGroup(group: GroupEntities) {
-        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME)
-            ?: emptyList()
+    private fun validateMembers(members: List<UserEntities>) {
+        require(members.isNotEmpty()) {
+            context.getString(R.string.require_group_must_have_at_least_one_member)
+        }
+        require(members.size >= 3) {
+            context.getString(R.string.require_group_cannot_have_more_than_2_members)
+        }
+    }
 
+    private suspend fun generateUniqueGroup(
+        name: String,
+        description: String,
+        members: List<UserEntities>
+    ): GroupEntities {
+        var group: GroupEntities =
+            GroupModel(name = name, description = description, members = members)
+        do {
+            val token = Random.token(size = 8)
+            group = group.toCopy(token = token)
+        } while (!isTokenUnique(token))
+        return group
+    }
+
+    private suspend fun isTokenUnique(token: String): Boolean {
+        return groupRepository.searchByToken(token) == null
+    }
+
+    // 3. Persistência do grupo e admin
+    private fun persistGroupToken(token: String) {
+        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME).orEmpty()
         storage.save(
-            key = GroupEntities.COLLECTION_NAME,
-            value = groupList.toMutableList().apply { add(group.token) }
+            GroupEntities.COLLECTION_NAME,
+            groupList.toMutableList().apply { add(token) }
         )
     }
 
-    private fun defineAdmin(group: GroupEntities) {
-        val admins = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS)
-            ?: emptyList()
-
+    private fun persistAdminToken(token: String) {
+        val adminList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS).orEmpty()
         storage.save(
-            key = GroupEntities.COLLECTION_NAME_ADMINS,
-            value = admins.toMutableList().apply { add(group.token) }
+            GroupEntities.COLLECTION_NAME_ADMINS,
+            adminList.toMutableList().apply { add(token) }
         )
     }
 }

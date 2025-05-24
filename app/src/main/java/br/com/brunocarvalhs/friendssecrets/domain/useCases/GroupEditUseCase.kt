@@ -8,11 +8,15 @@ class GroupEditUseCase(
     private val groupRepository: GroupRepository,
     private val performance: PerformanceManager
 ) {
-    suspend fun invoke(group: GroupEntities): Result<GroupEntities> = runCatching {
+    suspend fun invoke(group: GroupEntities): Result<GroupEntities> {
         performance.start(GroupEditUseCase::class.java.simpleName)
-        groupRepository.update(group)
-        group
-    }.also {
-        performance.stop(GroupEditUseCase::class.java.simpleName)
+        return try {
+            runCatching {
+                groupRepository.update(group)
+                group
+            }
+        } finally {
+            performance.stop(GroupEditUseCase::class.java.simpleName)
+        }
     }
 }

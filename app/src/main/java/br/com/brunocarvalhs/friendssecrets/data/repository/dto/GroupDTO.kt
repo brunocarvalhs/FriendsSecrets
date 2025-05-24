@@ -62,23 +62,3 @@ internal fun GroupEntities.toDTO(): GroupDTO {
         isOwner = this.isOwner
     )
 }
-
-internal fun GroupDTO.toModel(): GroupEntities {
-    val membersList = members.map { (key, valueMap) ->
-        UserModel(
-            name = valueMap[UserEntities.NAME] ?: key,
-            likes = valueMap[UserEntities.LIKES]?.split("|")?.map { it.trim() }.orEmpty(),
-            photoUrl = valueMap[UserEntities.PHOTO_URL]?.takeIf { it.isNotEmpty() }
-        )
-    }
-
-    return GroupModel(
-        id = id,
-        token = token,
-        name = name,
-        description = description,
-        members = membersList,
-        draws = draws,
-        isOwner = isOwner
-    )
-}
