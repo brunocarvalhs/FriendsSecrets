@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -29,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -125,8 +125,8 @@ private fun HomeContent(
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 title = {
                     session?.let {
@@ -180,7 +180,7 @@ private fun HomeContent(
                     }
                 }
             }
-        }
+        },
     ) {
         when (uiState) {
             is HomeUiState.Error -> {
@@ -201,12 +201,12 @@ private fun HomeContent(
                         isCreateGroupEnabled = isCreateGroupEnabled
                     )
                 } else {
-                    LazyColumn(
+                    LazyVerticalGrid(
                         modifier = Modifier
                             .padding(it)
                             .fillMaxSize()
                             .nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        columns = GridCells.Fixed(2),
                     ) {
                         items(uiState.list) { item ->
                             GroupCard(
