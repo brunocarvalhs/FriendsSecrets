@@ -217,7 +217,7 @@ private fun HomeContent(
                                     .fillMaxWidth(),
                                 group = item,
                                 onClick = {
-                                    val destination = GroupDetailsScreenRoute(item)
+                                    val destination = GroupDetailsScreenRoute(item.id)
                                     navController.navigate(destination)
                                 }
                             )

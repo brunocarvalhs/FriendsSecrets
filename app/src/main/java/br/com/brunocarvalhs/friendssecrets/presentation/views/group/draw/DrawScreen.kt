@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -52,6 +51,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsT
 @Composable
 fun DrawScreen(
     groupId: String,
+    code: String? = null,
     navController: NavController,
     viewModel: DrawViewModel = viewModel(
         factory = DrawViewModel.Factory

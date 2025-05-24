@@ -33,7 +33,6 @@ fun MainApp(
         )
         groupGraph(
             navController = navController,
-            route = Screen.Group.route,
             toggleManager = toggleManager
         )
         generativeGraph(
