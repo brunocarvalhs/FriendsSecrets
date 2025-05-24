@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,8 +75,7 @@ private fun AddMemberContent(
     val focusRequester = remember { FocusRequester() }
 
     var name by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
-    var isErrorName by remember { mutableStateOf(false) }
-    var errorMessageName by remember { mutableStateOf("") }
+    var nameValidationError by remember { mutableStateOf<String?>(null) }
 
     var likeName by remember { mutableStateOf(TextFieldValue("", TextRange(0, 0))) }
     val likes = remember { mutableStateListOf<String>() }
@@ -125,6 +125,14 @@ private fun AddMemberContent(
         }
     }
 
+    fun validateName(name: String, context: Context): Pair<Boolean, String> {
+        return if ("^[a-zA-Z\\s]*$".toRegex().matches(name)) {
+            Pair(false, "")
+        } else {
+            Pair(true, context.getString(R.string.add_member_bottom_sheet_input_new_member_error_message))
+        }
+    }
+
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
@@ -139,26 +147,18 @@ private fun AddMemberContent(
             OutlinedTextField(
                 value = name,
                 onValueChange = { value ->
-                    if ("^[a-zA-Z\\s]*$".toRegex().matches(value.text)) {
-                        name = value
-                        isErrorName = false
-                        errorMessageName = ""
-                    } else {
-                        isErrorName = true
-                        errorMessageName =
-                            context.getString(R.string.add_member_bottom_sheet_input_new_member_error_message)
-                    }
+                    name = value
+                    val (isError, message) = validateName(value.text, context)
+                    nameValidationError = if (isError) message else null
                 },
                 label = { Text(text = stringResource(R.string.add_member_bottom_sheet_input_new_member)) },
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester),
                 singleLine = true,
-                isError = isErrorName,
+                isError = nameValidationError != null,
                 supportingText = {
-                    if (isErrorName) {
-                        Text(text = errorMessageName)
-                    }
+                    nameValidationError?.let { Text(text = it) }
                 },
                 keyboardActions = KeyboardActions(
                     onNext = {

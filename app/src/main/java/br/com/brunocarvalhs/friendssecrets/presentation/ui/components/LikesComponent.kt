@@ -58,7 +58,7 @@ fun LikesComponent(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
-                            contentDescription = "add"
+                            contentDescription = stringResource(R.string.add_like_description)
                         )
                     }
                 }
@@ -85,7 +85,10 @@ fun LikesComponent(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
-                                contentDescription = "remove"
+                                contentDescription = stringResource(
+                                    R.string.remove_like_description,
+                                    like
+                                )
                             )
                         }
                     },

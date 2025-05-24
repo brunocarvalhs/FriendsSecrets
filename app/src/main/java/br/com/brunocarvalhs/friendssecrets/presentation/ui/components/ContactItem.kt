@@ -33,9 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
@@ -45,11 +51,13 @@ import coil.compose.AsyncImage
 fun ContactItem(
     contact: UserEntities,
     isSelected: Boolean = false,
+    isLikedExpanded: Boolean = false,
     action: @Composable ((UserEntities, Boolean) -> Unit)? = null,
 ) {
-    val filteredLikes = contact.likes.filter { it.isNotBlank() }
-
-    var isLiked by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val filteredLikes = remember(contact.likes) {
+        contact.likes.filter { it.isNotBlank() }
+    }
 
     val backgroundColor = if (isSelected) {
         MaterialTheme.colorScheme.primaryContainer
@@ -57,12 +65,25 @@ fun ContactItem(
         MaterialTheme.colorScheme.surface
     }
 
+    var isLiked by remember { mutableStateOf(isLikedExpanded) }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clickable(enabled = filteredLikes.isNotEmpty()) {
-                isLiked = !isLiked
+            .clickable(
+                enabled = filteredLikes.isNotEmpty(),
+                onClickLabel = stringResource(if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action),
+                role = Role.Button,
+                onClick = {
+                    isLiked = !isLiked
+                }
+            )
+            .semantics(mergeDescendants = true) {
+                stateDescription = if (isLiked)
+                    context.getString(R.string.likes_expanded_state)
+                else
+                    context.getString(R.string.likes_collapsed_state)
             },
         tonalElevation = if (isSelected) 4.dp else 2.dp,
         color = backgroundColor,
@@ -78,7 +99,10 @@ fun ContactItem(
                 if (!contact.photoUrl.isNullOrBlank()) {
                     AsyncImage(
                         model = contact.photoUrl,
-                        contentDescription = "Contact photo",
+                        contentDescription = stringResource(
+                            R.string.contact_photo_description,
+                            contact.name
+                        ),
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
@@ -119,7 +143,7 @@ fun ContactItem(
                 }
             }
 
-            if (filteredLikes.isEmpty().not()) {
+            if (filteredLikes.isNotEmpty()) {
                 AnimatedVisibility(visible = isLiked) {
                     LazyRow(
                         modifier = Modifier
@@ -160,6 +184,7 @@ private fun ContactItemPreview() {
             isPhoneNumberVerified = false,
             likes = listOf("Like 1", "Like 2", "Like 3")
         ),
+        isLikedExpanded = true,
     )
 }
 
@@ -186,6 +211,7 @@ private fun ContactItemSelectedPreview() {
                 likes = listOf("Like 1", "Like 2", "Like 3")
             ),
             isSelected = true,
+            isLikedExpanded = true,
         )
     }
 }
