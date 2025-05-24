@@ -54,7 +54,7 @@
     <string name="group_details_action_preview_my_secret_friend">Meus Amigos Secretos</string>
 
     <!-- Shared Link -->
-    <string name="group_details_share_member">Olá %1$s! 👋\n\nVocê foi convidado para um jogo empolgante! 🎉\n\nClique no link para saber quem é o seu amigo secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\n🚀 Não perca tempo, comece a planejar seu presente de amigo secreto agora mesmo!</string>
+    <string name="group_details_share_member">Olá %1$s! 👋\n\nVocê foi convidado para um jogo empolgante! 🎉\n\nClique no link para saber quem é o seu amigo secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nSe não conseguir acessar o link, baixe o aplicativo Friends Secrets usando este link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse o código do grupo: %2$s para entrar e clique em %5$s.\n\nSeu código do seu amigo secreto é: %3$s.\n\n🚀 Não perca tempo, comece a planejar seu presente de amigo secreto agora mesmo!</string>
     <string name="group_details_share_member_simple">Olá! 👋\n\nVocê foi convidado para o amigo secreto chamado %1$s 🎉\n\nUse o código do grupo: %2$s para entrar.\n\nComece a planejar seu presente de amigo secreto agora! 🚀</string>
 
     <!--  Biometric  -->
