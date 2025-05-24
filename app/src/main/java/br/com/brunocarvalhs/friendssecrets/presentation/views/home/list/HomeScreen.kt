@@ -55,7 +55,8 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupCreateScreenRoute
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupDetailsScreenRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupCard
@@ -158,6 +159,7 @@ private fun HomeContent(
                                             }
                                         }
                                     }
+
                                     else -> navController.navigate(menu.route.orEmpty())
                                 }
                             },
@@ -173,7 +175,7 @@ private fun HomeContent(
 
                 if (isCreateGroupEnabled) {
                     ExtendedFloatingActionButton(onClick = {
-                        navController.navigate(GroupNavigation.Create.route)
+                        navController.navigate(GroupCreateScreenRoute)
                     }) {
                         Icon(Icons.Filled.Add, "Add")
                         Text(stringResource(R.string.home_action_create_group))
@@ -196,7 +198,7 @@ private fun HomeContent(
                     EmptyGroupComponent(
                         modifier = Modifier.padding(it),
                         onGroupToEnter = { showBottomSheet = true },
-                        onCreateGroup = { navController.navigate(GroupNavigation.Create.route) },
+                        onCreateGroup = { navController.navigate(GroupCreateScreenRoute) },
                         isJoinGroupEnabled = isJoinGroupEnabled,
                         isCreateGroupEnabled = isCreateGroupEnabled
                     )
@@ -215,9 +217,8 @@ private fun HomeContent(
                                     .fillMaxWidth(),
                                 group = item,
                                 onClick = {
-                                    navController.navigate(
-                                        route = GroupNavigation.Read.createRoute(item.id)
-                                    )
+                                    val destination = GroupDetailsScreenRoute(item)
+                                    navController.navigate(destination)
                                 }
                             )
                         }

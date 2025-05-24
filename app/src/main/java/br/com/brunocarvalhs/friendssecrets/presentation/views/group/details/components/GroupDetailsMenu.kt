@@ -23,7 +23,7 @@ import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupEditScreenRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsUiState
 
 @Composable
@@ -45,9 +45,8 @@ fun GroupDetailsMenu(
     DropdownMenu(expanded = expanded, onDismissRequest = { setExpanded(false) }) {
         DropdownMenuItem(text = { Text(stringResource(R.string.group_details_drop_menu_item_text_edit)) },
             onClick = {
-                navController.navigate(
-                    route = GroupNavigation.Edit.createRoute(uiState.group.id)
-                )
+                val destination = GroupEditScreenRoute(uiState.group.id)
+                navController.navigate(route = destination)
             },
             leadingIcon = {
                 Icon(

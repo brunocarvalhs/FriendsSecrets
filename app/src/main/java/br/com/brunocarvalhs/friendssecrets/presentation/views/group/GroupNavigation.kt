@@ -1,15 +1,11 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.group
 
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavController
-import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import br.com.brunocarvalhs.friendssecrets.commons.navigation.NavigationBase
+import androidx.navigation.compose.navigation // Use navigation-compose import
+import androidx.navigation.toRoute // Import for type-safe argument access
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.create.GroupCreateViewModel
@@ -19,112 +15,68 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawScr
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.draw.DrawViewModel
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditScreen
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.edit.GroupEditViewModel
+import kotlinx.serialization.Serializable
 
-sealed class GroupNavigation(
-    override val route: String,
-    override val arguments: List<NamedNavArgument> = emptyList(),
-    override val deepLinks: List<NavDeepLink> = emptyList(),
-) : NavigationBase {
 
-    data object Create : GroupNavigation(
-        route = "group/create",
-    )
+@Serializable
+object GroupGraphRoute
 
-    data object Read : GroupNavigation(
-        route = "group/{groupId}",
-        arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
-    ) {
-        fun createRoute(groupId: String) = "group/$groupId"
-    }
+@Serializable
+object GroupCreateScreenRoute
 
-    data object Edit : GroupNavigation(
-        route = "group/{groupId}/edit",
-        arguments = listOf(navArgument(name = "groupId") { type = NavType.StringType })
-    ) {
-        fun createRoute(groupId: String) = "group/$groupId/edit"
-    }
+@Serializable
+data class GroupDetailsScreenRoute(val groupId: String)
 
-    data object Revelation : GroupNavigation(
-        route = "group/{groupId}/revelation?code={code}",
-        arguments = listOf(
-            navArgument("groupId") { type = NavType.StringType },
-            navArgument("code") {
-                type = NavType.StringType
-                defaultValue = ""
-                nullable = true
-            }
-        )
-    ) {
-        fun createRoute(groupId: String, code: String? = null): String {
-            return if (!code.isNullOrBlank()) {
-                "group/$groupId/revelation?code=$code"
-            } else {
-                "group/$groupId/revelation"
-            }
-        }
-    }
+@Serializable
+data class GroupEditScreenRoute(val groupId: String)
 
-    companion object {
-        val START_DESTINATION = Create.route
-    }
-}
+@Serializable
+data class GroupRevelationScreenRoute(val groupId: String, val code: String? = null)
 
 fun NavGraphBuilder.groupGraph(
     navController: NavController,
-    route: String,
     toggleManager: ToggleManager,
 ) {
-    navigation(
-        startDestination = GroupNavigation.START_DESTINATION,
-        route = route
+    navigation<GroupGraphRoute>(
+        startDestination = GroupCreateScreenRoute,
     ) {
-        composable(
-            route = GroupNavigation.Create.route,
-            arguments = GroupNavigation.Create.arguments,
-            deepLinks = GroupNavigation.Create.deepLinks
-        ) {
+        composable<GroupCreateScreenRoute> {
             val viewModel: GroupCreateViewModel = viewModel(factory = GroupCreateViewModel.Factory)
-            GroupCreateScreen(navController = navController, viewModel = viewModel)
+            GroupCreateScreen(
+                navController = navController,
+                viewModel = viewModel,
+            )
         }
-        composable(
-            route = GroupNavigation.Read.route,
-            arguments = GroupNavigation.Read.arguments,
-            deepLinks = GroupNavigation.Read.deepLinks
-        ) {
-            val groupId = it.arguments?.getString("groupId") ?: ""
+
+        composable<GroupDetailsScreenRoute> { backStackEntry ->
+            val args = backStackEntry.toRoute<GroupDetailsScreenRoute>()
             val viewModel: GroupDetailsViewModel =
                 viewModel(factory = GroupDetailsViewModel.Factory)
             GroupDetailsScreen(
                 navController = navController,
                 viewModel = viewModel,
-                groupId = groupId
+                groupId = args.groupId
             )
         }
-        composable(
-            route = GroupNavigation.Edit.route,
-            arguments = GroupNavigation.Edit.arguments,
-            deepLinks = GroupNavigation.Edit.deepLinks
-        ) {
-            val groupId = it.arguments?.getString("groupId") ?: ""
-            val viewModel: GroupEditViewModel =
-                viewModel(factory = GroupEditViewModel.Factory)
+
+        composable<GroupEditScreenRoute> { backStackEntry ->
+            val args = backStackEntry.toRoute<GroupEditScreenRoute>()
+            val viewModel: GroupEditViewModel = viewModel(factory = GroupEditViewModel.Factory)
             GroupEditScreen(
                 navController = navController,
                 viewModel = viewModel,
-                groupId = groupId
+                groupId = args.groupId
             )
         }
-        composable(
-            route = GroupNavigation.Revelation.route,
-            arguments = GroupNavigation.Revelation.arguments,
-            deepLinks = GroupNavigation.Revelation.deepLinks
-        ) {
-            val groupId = it.arguments?.getString("groupId") ?: ""
+
+        composable<GroupRevelationScreenRoute> { backStackEntry ->
+            val args = backStackEntry.toRoute<GroupRevelationScreenRoute>()
             val viewModel: DrawViewModel = viewModel(factory = DrawViewModel.Factory)
             DrawScreen(
                 navController = navController,
                 viewModel = viewModel,
-                groupId = groupId,
+                groupId = args.groupId,
+                code = args.code,
                 toggleManager = toggleManager
             )
         }

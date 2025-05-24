@@ -36,13 +36,12 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.EditMemberBottomSheet
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupNavigation
+import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupRevelationScreenRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.FloatingButtonComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsContentComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsErrorComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsLoadingComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.HeaderComponent
-import kotlinx.coroutines.delay
 import kotlin.collections.set
 
 @Composable
@@ -62,7 +61,6 @@ fun GroupDetailsScreen(
     LaunchedEffect(uiState) {
         when (uiState) {
             is GroupDetailsUiState.Draw -> {
-                delay(timeMillis = 1000)
                 viewModel.eventIntent(GroupDetailsIntent.FetchGroup(groupId))
             }
 
@@ -110,7 +108,8 @@ private fun GroupDetailsContent(
     }
 
     fun revelationDraw(group: GroupEntities) {
-        navController.navigate(route = GroupNavigation.Revelation.createRoute(group.id))
+        val destination = GroupRevelationScreenRoute(group.id)
+        navController.navigate(destination)
     }
 
     fun onShare(participant: UserEntities, secret: String, token: String) {
