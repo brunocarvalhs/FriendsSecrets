@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.ui"
+    namespace = "br.com.brunocarvalhs.settings"
     compileSdk = 35
 
     defaultConfig {
@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
