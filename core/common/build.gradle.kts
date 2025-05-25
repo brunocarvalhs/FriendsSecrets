@@ -34,9 +34,15 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.timber)
+    implementation(libs.androidx.biometric)
+    implementation(libs.googleid)
+    implementation(libs.ucrop)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.country.picker)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
