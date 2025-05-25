@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

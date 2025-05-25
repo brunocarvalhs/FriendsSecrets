@@ -35,9 +35,16 @@ android {
 dependencies {
     api(project(":core:domain"))
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.analytics)
     implementation(libs.gson)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" />
+    <string name="login_screen_welcome" />
+    <string name="login_screen_description" />
+    <string name="login_screen_privacy" />
+    <string name="login_screen_and" />
+    <string name="login_screen_terms" />
+    <string name="login_screen_button_register" />
+    <string name="login_screen_button_anonymation" />
+</resources>
