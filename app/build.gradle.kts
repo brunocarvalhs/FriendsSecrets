@@ -130,4 +130,13 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.country.picker)
     implementation(libs.androidx.startup.runtime)
+
+    // A partir daqui
+
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestAnnotationProcessor(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    testAnnotationProcessor(libs.hilt.compiler)
 }

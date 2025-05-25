@@ -115,7 +115,7 @@ class CryptoService(
         )
     }
 
-    private fun decrypt(encoded: String): String {
+    fun decrypt(encoded: String): String {
         val decodedBytes = base64Encoder.decode(
             input = encoded, flags = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
         )

@@ -37,8 +37,6 @@ android {
 }
 
 dependencies {
-
-
     implementation(libs.timber)
     implementation(libs.androidx.biometric)
     implementation(libs.googleid)
