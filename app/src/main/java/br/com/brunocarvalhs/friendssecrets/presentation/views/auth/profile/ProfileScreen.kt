@@ -59,7 +59,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
-import br.com.brunocarvalhs.friendssecrets.presentation.Screen
+import br.com.brunocarvalhs.friendssecrets.navigation.Screen
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme

@@ -1,19 +1,18 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend
+package br.com.brunocarvalhs.auth.app.phoneSend
 
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PhoneSendViewModel(
-    private val sendPhoneUseCase: SendPhoneUseCase
+@HiltViewModel
+class PhoneSendViewModel @Inject constructor(
+    private val useCase: SendPhoneUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<PhoneSendUiState> = MutableStateFlow(PhoneSendUiState.Idle)
@@ -26,23 +25,12 @@ class PhoneSendViewModel(
     private fun sendCode(phone: String, countryCode: String) {
         _uiState.value = PhoneSendUiState.Loading
         viewModelScope.launch {
-            sendPhoneUseCase.invoke(phone = phone, countryCode = countryCode).onSuccess {
+            useCase.invoke(phone = phone, countryCode = countryCode).onSuccess {
                 _uiState.value = PhoneSendUiState.Success(phone = "$countryCode$phone")
             }.onFailure {
                 _uiState.value = PhoneSendUiState.Error(it.message.orEmpty())
             }
         }
 
-    }
-
-    companion object {
-        fun Factory(activity: ComponentActivity? = null): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    activity ?: throw IllegalArgumentException("Activity cannot be null")
-                    val sendPhoneUseCase = SendPhoneUseCase(activity = activity)
-                    PhoneSendViewModel(sendPhoneUseCase = sendPhoneUseCase)
-                }
-            }
     }
 }

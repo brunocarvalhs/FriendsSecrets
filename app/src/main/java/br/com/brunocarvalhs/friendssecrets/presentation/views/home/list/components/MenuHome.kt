@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.presentation.Screen
+import br.com.brunocarvalhs.friendssecrets.navigation.Screen
 
 sealed class MenuItem(
     val title: @Composable () -> String,

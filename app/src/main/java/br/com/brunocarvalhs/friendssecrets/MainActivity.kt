@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
+import br.com.brunocarvalhs.friendssecrets.navigation.MainApp
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 
 class MainActivity : FragmentActivity() {

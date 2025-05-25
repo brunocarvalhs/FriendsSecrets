@@ -50,4 +50,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestAnnotationProcessor(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    testAnnotationProcessor(libs.hilt.compiler)
 }

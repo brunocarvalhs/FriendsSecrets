@@ -34,41 +34,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.extensions.openUrl
 import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
 internal fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.Factory
-    )
+    viewModel: LoginViewModel
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState) {
         when (uiState) {
-            LoginUiState.PrivacyPolicy -> {
-                context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
-            }
-
-            LoginUiState.TermsOfUse -> {
-                context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
-            }
-
-            LoginUiState.Register -> {
-                navController.navigate(PhoneSendScreenRoute)
-            }
-
-            LoginUiState.AcceptNotRegister -> {
-                navController.navigate(HomeGraphRoute)
-            }
-
+            LoginUiState.PrivacyPolicy -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
+            LoginUiState.TermsOfUse -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
+            LoginUiState.Register -> navController.navigate(PhoneSendScreenRoute)
+            LoginUiState.AcceptNotRegister -> navController.navigate(HomeGraphRoute)
             else -> {}
         }
     }

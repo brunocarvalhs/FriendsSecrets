@@ -8,4 +8,9 @@
     <string name="login_screen_terms" />
     <string name="login_screen_button_register" />
     <string name="login_screen_button_anonymation" />
+    <string name="phone_send_title" />
+    <string name="phone_send_description" />
+    <string name="phone_send_textfield_label" />
+    <string name="phone_send_textfield_description" />
+    <string name="phone_send_button" />
 </resources>

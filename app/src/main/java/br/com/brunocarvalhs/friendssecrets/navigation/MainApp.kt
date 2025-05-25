@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation
+package br.com.brunocarvalhs.friendssecrets.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable

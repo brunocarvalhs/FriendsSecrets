@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend
+package br.com.brunocarvalhs.auth.app.phoneSend
 
 sealed class PhoneSendUiState {
     data object Idle : PhoneSendUiState()

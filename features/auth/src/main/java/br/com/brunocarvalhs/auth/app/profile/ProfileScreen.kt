@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile
+package br.com.brunocarvalhs.auth.app.profile
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -54,46 +54,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
-import br.com.brunocarvalhs.friendssecrets.presentation.Screen
+import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.PhoneSendScreenRoute
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.ProfileScreenRoute
 import coil.compose.AsyncImage
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ProfileViewModel = viewModel(
-        factory = ProfileViewModel.Factory
-    ),
+    viewModel: ProfileViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.handleIntent(ProfileIntent.FetchData)
-        if (SessionManager.getInstance().isProfileComplete().not()) {
-            navController.navigate(PhoneSendScreenRoute) {
-                popUpTo(ProfileScreenRoute) {
-                    inclusive = true
-                }
-            }
-        }
     }
 
     LaunchedEffect(uiState) {
         if (uiState is ProfileUiState.Success) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Auth.route) {
+            navController.navigate(HomeGraphRoute) {
+                popUpTo(AuthGraphRoute) {
                     inclusive = true
                 }
             }

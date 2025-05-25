@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components
+package br.com.brunocarvalhs.settings.app.appearence.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,11 +23,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.R
 
-internal enum class Theme(val value: String, val image: Int) {
-    LIGHT(value = "Light", image = R.drawable.ic_theme_light),
-    DARK(value = "Dark", image = R.drawable.ic_theme_dark),
-    SYSTEM(value = "System", image = R.drawable.ic_theme_system)
-}
+
 
 @Composable
 fun ThemeSelect(

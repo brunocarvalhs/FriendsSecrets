@@ -1,22 +1,19 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile
+package br.com.brunocarvalhs.auth.app.profile
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import br.com.brunocarvalhs.friendssecrets.common.performance.PerformanceManager
-import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
-import br.com.brunocarvalhs.friendssecrets.data.repository.UserRepositoryImpl
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
     private val createProfileUseCase: CreateProfileUseCase,
     private val getLikesProfileUseCase: GetLikesProfileUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
@@ -71,35 +68,5 @@ class ProfileViewModel(
                 _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")
             }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val sessionManager = SessionManager.getInstance()
-                    val userRepository = UserRepositoryImpl()
-                    val performanceManager = PerformanceManager()
-                    val getLikesProfileUseCase = GetLikesProfileUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository
-                    )
-                    val createProfileUseCase = CreateProfileUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository,
-                        performanceManager = performanceManager
-                    )
-                    val deleteAccountUseCase = DeleteAccountUseCase(
-                        sessionManager = sessionManager,
-                        userRepository = userRepository,
-                        performanceManager = performanceManager
-                    )
-                    ProfileViewModel(
-                        createProfileUseCase = createProfileUseCase,
-                        getLikesProfileUseCase = getLikesProfileUseCase,
-                        deleteAccountUseCase = deleteAccountUseCase,
-                    )
-                }
-            }
     }
 }

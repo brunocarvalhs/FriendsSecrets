@@ -1,14 +1,17 @@
 package br.com.brunocarvalhs.auth.app.login
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-internal class LoginViewModel : ViewModel() {
+@HiltViewModel
+internal class LoginViewModel @Inject constructor(
+    private val session: SessionService
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -27,16 +30,8 @@ internal class LoginViewModel : ViewModel() {
         }
 
         LoginIntent.AcceptNotRegister -> {
+            session.setUserAnonymous()
             _uiState.value = LoginUiState.AcceptNotRegister
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    LoginViewModel()
-                }
-            }
     }
 }

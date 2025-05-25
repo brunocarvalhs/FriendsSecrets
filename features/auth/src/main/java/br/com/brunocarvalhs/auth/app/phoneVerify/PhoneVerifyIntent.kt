@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify
+package br.com.brunocarvalhs.auth.app.phoneVerify
 
 sealed class PhoneVerifyIntent {
     data class VerifyCode(val code: String) : PhoneVerifyIntent()

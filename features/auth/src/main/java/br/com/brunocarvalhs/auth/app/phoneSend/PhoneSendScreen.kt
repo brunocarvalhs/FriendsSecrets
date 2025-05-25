@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneSend
+package br.com.brunocarvalhs.auth.app.phoneSend
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -39,13 +39,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.auth.R
+import br.com.brunocarvalhs.auth.commons.navigation.PhoneVerificationScreenRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.PhoneVerificationScreenRoute
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
 import com.arpitkatiyarprojects.countrypicker.models.CountriesListDialogDisplayProperties
 import com.arpitkatiyarprojects.countrypicker.models.CountryDetails
@@ -55,9 +54,7 @@ import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 @Composable
 fun PhoneSendScreen(
     navController: NavController,
-    viewModel: PhoneSendViewModel = viewModel(
-        factory = PhoneSendViewModel.Factory()
-    ),
+    viewModel: PhoneSendViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

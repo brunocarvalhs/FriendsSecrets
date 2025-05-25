@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.phoneVerify
+package br.com.brunocarvalhs.auth.app.phoneVerify
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -45,22 +45,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.auth.commons.navigation.ProfileScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.auth.ProfileScreenRoute
 import kotlinx.coroutines.delay
 
 @Composable
 fun PhoneVerifyScreen(
     phoneNumber: String? = null,
     navController: NavController,
-    viewModel: PhoneVerifyViewModel = viewModel(
-        factory = PhoneVerifyViewModel.Factory
-    ),
+    viewModel: PhoneVerifyViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

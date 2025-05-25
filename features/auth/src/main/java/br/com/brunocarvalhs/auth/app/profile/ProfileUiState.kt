@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.auth.profile
+package br.com.brunocarvalhs.auth.app.profile
 
 sealed class ProfileUiState {
     data class Idle(
