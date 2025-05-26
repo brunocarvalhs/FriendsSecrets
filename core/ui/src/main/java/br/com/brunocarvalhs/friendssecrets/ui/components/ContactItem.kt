@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -41,9 +41,9 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.ui.R
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.AsyncImage
 
@@ -176,7 +176,7 @@ fun ContactItem(
 )
 private fun ContactItemPreview() {
     ContactItem(
-        contact = UserModel(
+        contact = UserEntities.toFake(
             name = "Produto de Teste",
             id = "1",
             phoneNumber = "123456789",
@@ -202,7 +202,7 @@ private fun ContactItemPreview() {
 private fun ContactItemSelectedPreview() {
     FriendsSecretsTheme {
         ContactItem(
-            contact = UserModel(
+            contact = UserEntities.toFake(
                 name = "Produto de Teste",
                 id = "1",
                 phoneNumber = "123456789",

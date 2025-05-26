@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.WebViewContainer
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.WebViewContainer
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
 

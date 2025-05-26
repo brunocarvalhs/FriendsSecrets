@@ -6,7 +6,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 
 class GetLikesProfileUseCase(
-    private val session: SessionService,
+    private val session: SessionService<UserEntities>,
     private val repository: UserRepository,
     private val performance: PerformanceService
 ) {

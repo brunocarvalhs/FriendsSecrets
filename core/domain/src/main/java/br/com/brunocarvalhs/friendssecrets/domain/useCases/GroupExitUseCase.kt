@@ -29,7 +29,9 @@ class GroupExitUseCase(
     }
 
     private fun clearGroupToken(token: String) {
-        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME) ?: emptyList()
+        val groupList =
+            storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
+                .orEmpty()
         if (groupList.contains(token)) {
             storage.save(
                 GroupEntities.COLLECTION_NAME,
@@ -39,7 +41,9 @@ class GroupExitUseCase(
     }
 
     private fun clearAdminToken(token: String) {
-        val adminList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS) ?: emptyList()
+        val adminList =
+            storage.load(GroupEntities.COLLECTION_NAME_ADMINS, Array<String>::class.java)?.toList()
+                .orEmpty()
         if (adminList.contains(token)) {
             storage.save(
                 GroupEntities.COLLECTION_NAME_ADMINS,

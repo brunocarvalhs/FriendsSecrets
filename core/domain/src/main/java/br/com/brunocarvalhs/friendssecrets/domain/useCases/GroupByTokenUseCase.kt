@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.exceptions.GroupAlreadyExistException
+import br.com.brunocarvalhs.friendssecrets.domain.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
@@ -32,7 +32,9 @@ class GroupByTokenUseCase(
     }
 
     private fun ensureTokenNotExists(token: String): List<String> {
-        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME) ?: emptyList()
+        val groupList =
+            storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
+                .orEmpty()
         if (groupList.contains(token)) throw GroupAlreadyExistException()
         return groupList
     }

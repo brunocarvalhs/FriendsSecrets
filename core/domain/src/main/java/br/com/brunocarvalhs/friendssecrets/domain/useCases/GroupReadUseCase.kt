@@ -28,8 +28,10 @@ class GroupReadUseCase(
     }
 
     private fun defineAdmin(group: GroupEntities): GroupEntities {
-        val adminList = storage.load<List<String>>(key = GroupEntities.COLLECTION_NAME_ADMINS)
-            ?: emptyList()
+        val adminList = storage.load(
+            key = GroupEntities.COLLECTION_NAME_ADMINS,
+            clazz = Array<String>::class.java
+        )?.toList().orEmpty()
         return if (adminList.contains(group.token)) group.toCopy(isOwner = true) else group
     }
 }

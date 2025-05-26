@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.auth.app.login
 
 import androidx.lifecycle.ViewModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
-    private val session: SessionService
+    private val session: SessionService<UserEntities>
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState.Idle)

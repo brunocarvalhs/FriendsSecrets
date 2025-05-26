@@ -9,8 +9,10 @@ class ThemeManager(
     private val storage: StorageManager
 ) {
 
-    private var themeState = storage.load<String>(THEME_KEY) ?: Theme.SYSTEM.value
-    private var isDynamicThemeEnabled = storage.load<Boolean>(DYNAMIC_THEME_KEY) ?: false
+    private var themeState = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.value
+
+    private var isDynamicThemeEnabled =
+        storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
 
     var theme: Theme = Theme.entries.firstOrNull { it.value == themeState } ?: Theme.SYSTEM
         set(value) {

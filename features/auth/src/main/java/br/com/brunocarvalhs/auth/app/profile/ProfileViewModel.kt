@@ -2,6 +2,8 @@ package br.com.brunocarvalhs.auth.app.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.friendssecrets.data.model.create
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
@@ -35,7 +37,8 @@ class ProfileViewModel @Inject constructor(
     private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
         _uiState.value = ProfileUiState.Loading
         viewModelScope.launch {
-            createProfileUseCase.invoke(name, photoUrl, likes).onSuccess {
+            val user = UserEntities.create(name = name, photoUrl = photoUrl, likes = likes)
+            createProfileUseCase.invoke(user).onSuccess {
                 _uiState.value = ProfileUiState.Success
             }.onFailure {
                 _uiState.value = ProfileUiState.Error(it.message ?: "Unknown error")

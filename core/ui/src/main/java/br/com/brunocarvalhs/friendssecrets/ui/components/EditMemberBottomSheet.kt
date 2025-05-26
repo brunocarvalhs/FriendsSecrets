@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,9 +46,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.ui.R
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
 
@@ -248,7 +248,7 @@ private fun AddMemberBottomSheetPreview() {
     FriendsSecretsTheme {
         EditMemberContent(
             sheetState = rememberModalBottomSheetState(),
-            member = UserModel(
+            member = UserEntities.toFake(
                 name = "Bruno",
                 likes = listOf("Like 1", "Like 2"),
             ),

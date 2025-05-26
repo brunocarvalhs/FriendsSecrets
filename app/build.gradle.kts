@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.google.firebase.crashlytics)
     id("org.jetbrains.dokka") version "1.9.20"
     kotlin("plugin.serialization") version "2.1.20"
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -17,15 +19,13 @@ android {
     defaultConfig {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 35
 
-        versionCode = 7
-        versionName = "1.2.4"
+        versionCode = 8
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
-        buildConfigField("String", "apiKey", "\"${System.getenv("API_KEY")}\"")
     }
 
     signingConfigs {
@@ -80,6 +80,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:ui"))
+
+    implementation(project(":features:auth"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -134,9 +141,10 @@ dependencies {
     // A partir daqui
 
     implementation(libs.hilt.android)
-    annotationProcessor(libs.hilt.compiler)
-    androidTestImplementation(libs.hilt.android.testing)
-    androidTestAnnotationProcessor(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    androidTestImplementation (libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
-    testAnnotationProcessor(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 }

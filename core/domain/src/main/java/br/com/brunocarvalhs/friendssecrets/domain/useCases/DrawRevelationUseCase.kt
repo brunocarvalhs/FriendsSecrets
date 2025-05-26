@@ -36,7 +36,7 @@ class DrawRevelationUseCase(
             storage.save(secretKey, code)
             code
         } else {
-            storage.load<String>(secretKey)
+            storage.load(secretKey, String::class.java)
         }
     }
 

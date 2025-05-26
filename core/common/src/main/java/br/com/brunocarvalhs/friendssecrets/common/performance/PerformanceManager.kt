@@ -1,21 +1,20 @@
 package br.com.brunocarvalhs.friendssecrets.common.performance
 
+import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import timber.log.Timber
 
 class PerformanceManager(
     private val event: PerformanceEvent
-) {
+) : PerformanceService {
 
-    fun start(name: String) = event.start(name)
+    override fun start(simpleName: String) = event.start(simpleName)
 
-    fun stop(name: String) = event.stop(name)
+    override fun stop(simpleName: String) = event.stop(simpleName)
 
-    fun parameter(key: String, value: String) = event.parameter(key, value)
-
-    internal inline fun <T> trace(name: String, block: (PerformanceEvent) -> T): T {
+    internal inline fun <T> trace(name: String, block: () -> T): T {
         event.start(name)
         try {
-            return block(event)
+            return block()
         } finally {
             event.stop(name)
         }
@@ -24,7 +23,6 @@ class PerformanceManager(
     interface PerformanceEvent {
         fun start(name: String)
         fun stop(name: String)
-        fun parameter(key: String, value: String)
     }
 
     companion object {

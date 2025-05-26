@@ -24,7 +24,7 @@ import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components.SettingsListItemNavigation

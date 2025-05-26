@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,21 +11,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.navigation.MainApp
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : FragmentActivity() {
-
-    private val toggleManager = ToggleManager(context = this)
-    private val themeRemoteProvider = ThemeRemoteProvider(context = this)
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,28 +28,17 @@ class MainActivity : FragmentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            FriendsSecretsTheme(
-                isThemeRemote = toggleManager.isFeatureEnabled(ToggleKeys.APP_IS_THEME_REMOTE),
-                themeRemoteProvider = themeRemoteProvider
-            ) {
+            FriendsSecretsTheme {
                 Surface(
-                    modifier = Modifier.imePadding().fillMaxSize(),
+                    modifier = Modifier
+                        .imePadding()
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val navController = rememberNavController().apply {
-                        addOnDestinationChangedListener { _, destination, _ ->
-                            AnalyticsProvider.track(
-                                event = AnalyticsEvents.VISUALIZATION,
-                                params = mapOf(
-                                    AnalyticsParams.SCREEN_NAME to destination.route.toString()
-                                )
-                            )
-                        }
-                    }
+                    val navController = rememberNavController()
                     MainApp(
                         activity = this,
                         navController = navController,
-                        toggleManager = toggleManager
                     )
                 }
             }

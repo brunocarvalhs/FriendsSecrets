@@ -2,16 +2,16 @@ package br.com.brunocarvalhs.friendssecrets.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
-import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -92,19 +92,22 @@ private val darkScheme = darkColorScheme(
 @Composable
 fun FriendsSecretsTheme(
     isThemeRemote: Boolean = false,
-    themeRemoteProvider: ThemeRemoteProvider? = null,
-    darkTheme: Boolean = if (LocalInspectionMode.current) isSystemInDarkTheme() else ThemeManager.isDarkTheme(),
-    dynamicColor: Boolean = if (LocalInspectionMode.current) false else ThemeManager.isDynamicThemeEnabled(),
+    themeRemoteProvider: ThemeService? = null,
+    getDarkColorScheme: (() -> ColorScheme)? = null,
+    getLightColorScheme: (() -> ColorScheme)? = null,
+    darkTheme: Boolean = if (LocalInspectionMode.current) isSystemInDarkTheme() else themeRemoteProvider?.isDarkTheme() == true,
+    dynamicColor: Boolean = if (LocalInspectionMode.current) false else themeRemoteProvider?.isDynamicThemeEnabled() == true,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
+    val colorScheme: ColorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> if (isThemeRemote) themeRemoteProvider?.getDarkColorScheme() ?: darkScheme else darkScheme
-        else -> if (isThemeRemote) themeRemoteProvider?.getLightColorScheme() ?: lightScheme else lightScheme
+        darkTheme -> if (isThemeRemote) getDarkColorScheme?.invoke() ?: darkScheme else darkScheme
+
+        else -> if (isThemeRemote) getLightColorScheme?.invoke() ?: lightScheme else lightScheme
     }
 
     MaterialTheme(

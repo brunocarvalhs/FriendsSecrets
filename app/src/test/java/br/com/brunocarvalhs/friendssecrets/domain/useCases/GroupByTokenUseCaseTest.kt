@@ -1,10 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
-import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupNotFoundException
-import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import io.mockk.coEvery
 import io.mockk.every

@@ -27,7 +27,9 @@ class GroupDeleteUseCase(
     }
 
     private fun removeGroupFromStorage(token: String) {
-        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME).orEmpty()
+        val groupList =
+            storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
+                .orEmpty()
         if (token in groupList) {
             storage.save(
                 GroupEntities.COLLECTION_NAME,
@@ -37,7 +39,9 @@ class GroupDeleteUseCase(
     }
 
     private fun removeAdminFromStorage(token: String) {
-        val adminList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS).orEmpty()
+        val adminList =
+            storage.load(GroupEntities.COLLECTION_NAME_ADMINS, Array<String>::class.java)?.toList()
+                .orEmpty()
         if (token in adminList) {
             storage.save(
                 GroupEntities.COLLECTION_NAME_ADMINS,

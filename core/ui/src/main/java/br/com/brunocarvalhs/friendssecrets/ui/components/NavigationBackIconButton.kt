@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

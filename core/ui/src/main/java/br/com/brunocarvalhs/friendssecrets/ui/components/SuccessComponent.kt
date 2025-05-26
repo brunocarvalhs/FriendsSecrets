@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.ui.R
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec

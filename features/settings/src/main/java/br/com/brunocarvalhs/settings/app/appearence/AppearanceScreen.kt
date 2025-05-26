@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
 import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components.Theme

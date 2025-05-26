@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

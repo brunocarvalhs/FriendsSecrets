@@ -6,7 +6,8 @@ class BiometricManager(
     private val storage: StorageManager
 ) {
 
-    private var isBiometricPromptEnabled: Boolean = storage.load<Boolean>(BIOMETRIC_KEY) ?: false
+    private var isBiometricPromptEnabled: Boolean =
+        storage.load(BIOMETRIC_KEY, Boolean::class.java) ?: false
 
     fun isBiometricPromptEnabled(): Boolean {
         return isBiometricPromptEnabled

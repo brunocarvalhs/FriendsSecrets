@@ -9,7 +9,7 @@ interface GroupEntities {
     val draws: Map<String, String>
     val isOwner: Boolean
 
-    fun toMap(): Map<String, Any>
+    fun toMap(): Map<String, Any?>
 
     fun toCopy(
         token: String = this.token,

@@ -1,16 +1,17 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 
 class DeleteAccountUseCase(
     private val repository: UserRepository,
-    private val session: SessionService,
-    private val performanceManager: PerformanceService
+    private val session: SessionService<UserEntities>,
+    private val performance: PerformanceService
 ) {
     suspend operator fun invoke(): Result<Unit> {
-        performanceManager.start(DeleteAccountUseCase::class.java.simpleName)
+        performance.start(DeleteAccountUseCase::class.java.simpleName)
         return try {
             runCatching {
                 val user = session.getCurrentUserModel() ?: throw Exception("User not found")
@@ -18,7 +19,7 @@ class DeleteAccountUseCase(
                 session.deleteAccount()
             }
         } finally {
-            performanceManager.stop(DeleteAccountUseCase::class.java.simpleName)
+            performance.stop(DeleteAccountUseCase::class.java.simpleName)
         }
     }
 }

@@ -1,7 +1,9 @@
 package br.com.brunocarvalhs.auth.app.phoneSend
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneVerificationScreenRoute
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
 import com.arpitkatiyarprojects.countrypicker.models.CountriesListDialogDisplayProperties
@@ -53,6 +56,7 @@ import com.arpitkatiyarprojects.countrypicker.utils.CountryPickerUtils
 
 @Composable
 fun PhoneSendScreen(
+    activity: ComponentActivity? = null,
     navController: NavController,
     viewModel: PhoneSendViewModel
 ) {
@@ -70,16 +74,19 @@ fun PhoneSendScreen(
     }
 
     PhoneSendContent(
+        activity = activity,
         navController = navController,
         handleIntent = viewModel::handleIntent,
         uiState = uiState
     )
 }
 
+@SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PhoneSendContent(
     modifier: Modifier = Modifier,
+    activity: ComponentActivity? = LocalContext.current as? ComponentActivity,
     navController: NavController = rememberNavController(),
     uiState: PhoneSendUiState = PhoneSendUiState.Idle,
     handleIntent: (PhoneSendIntent) -> Unit = {},
@@ -175,12 +182,15 @@ private fun PhoneSendContent(
                     onClick = {
                         keyboardController?.hide()
 
-                        handleIntent(
-                            PhoneSendIntent.SendCode(
-                                phone = phoneNumber,
-                                countryCode = selectedCountryState?.countryPhoneNumberCode.orEmpty()
+                        activity?.let {
+                            handleIntent(
+                                PhoneSendIntent.SendCode(
+                                    activity = activity,
+                                    phone = phoneNumber,
+                                    countryCode = selectedCountryState?.countryPhoneNumberCode.orEmpty()
+                                )
                             )
-                        )
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

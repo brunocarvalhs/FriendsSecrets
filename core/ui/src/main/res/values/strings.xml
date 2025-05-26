@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_member_bottom_sheet_button_label" />
+    <string name="add_member_bottom_sheet_text_button_label" />
+    <string name="add_member_bottom_sheet_input_new_member" />
+    <string name="add_member_bottom_sheet_title_label" />
+    <string name="add_member_bottom_sheet_input_new_member_error_message" />
+    <string name="collapse_likes_action" />
+    <string name="expand_likes_action" />
+    <string name="likes_expanded_state" />
+    <string name="likes_collapsed_state" />
+    <string name="contact_photo_description" />
+    <string name="remove_participant_action" />
+    <string name="edit_participant_action" />
+    <string name="share_secret_friend_action" />
+    <string name="error_component_button_try_again" />
+    <string name="error_component_button_to_home" />
+    <string name="add_member_bottom_sheet_input_liker" />
+    <string name="add_like_description" />
+    <string name="remove_like_description" />
+</resources>

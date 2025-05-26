@@ -47,7 +47,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="br.com.brunocarvalhs.friendssecrets.commons.initialization.sdks.FirebaseAppInitialization"
+                android:name="br.com.brunocarvalhs.friendssecrets.initialization.sdks.FirebaseAppInitialization"
                 android:value="androidx.startup" />
         </provider>
 

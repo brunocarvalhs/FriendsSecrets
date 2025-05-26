@@ -60,8 +60,8 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LikesComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.AsyncImage
 import com.yalantis.ucrop.UCrop

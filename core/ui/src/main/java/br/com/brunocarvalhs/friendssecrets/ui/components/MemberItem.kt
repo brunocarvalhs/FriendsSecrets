@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.ui.components
+package br.com.brunocarvalhs.friendssecrets.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -11,11 +11,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.ui.R
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
@@ -107,7 +106,7 @@ fun MemberItem(
 private fun MemberItemPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserModel(
+            participant = UserEntities.toFake(
                 name = "Produto de Teste",
                 id = "1",
                 phoneNumber = "123456789",
@@ -115,7 +114,7 @@ private fun MemberItemPreview() {
                 isPhoneNumberVerified = false,
                 likes = listOf("Like 1", "Like 2", "Like 3")
             ),
-            group = GroupModel(),
+            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -128,7 +127,7 @@ private fun MemberItemPreview() {
 private fun MemberItemEmptyPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserModel(
+            participant = UserEntities.toFake(
                 name = "Produto de Teste",
                 id = "1",
                 phoneNumber = "123456789",
@@ -136,7 +135,7 @@ private fun MemberItemEmptyPreview() {
                 isPhoneNumberVerified = false,
                 likes = listOf()
             ),
-            group = GroupModel(),
+            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -149,7 +148,7 @@ private fun MemberItemEmptyPreview() {
 private fun MemberItemBlankPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserModel(
+            participant = UserEntities.toFake(
                 name = "Produto de Teste",
                 id = "1",
                 phoneNumber = "123456789",
@@ -157,7 +156,7 @@ private fun MemberItemBlankPreview() {
                 isPhoneNumberVerified = false,
                 likes = listOf(""),
             ),
-            group = GroupModel(),
+            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -170,7 +169,7 @@ private fun MemberItemBlankPreview() {
 private fun MemberItemAdminPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserModel(
+            participant = UserEntities.toFake(
                 name = "Produto de Teste",
                 id = "1",
                 phoneNumber = "123456789",
@@ -178,7 +177,7 @@ private fun MemberItemAdminPreview() {
                 isPhoneNumberVerified = false,
                 likes = listOf(""),
             ),
-            group = GroupModel(),
+            group = GroupEntities.toFake(),
             isAdministrator = true,
             onEdit = {},
             onRemove = {}

@@ -9,13 +9,13 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.auth.app.login.LoginScreen
 import br.com.brunocarvalhs.auth.app.login.LoginViewModel
-import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendScreen
 import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendViewModel
 import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyScreen
 import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyViewModel
 import br.com.brunocarvalhs.auth.app.profile.ProfileScreen
 import br.com.brunocarvalhs.auth.app.profile.ProfileViewModel
+import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -45,6 +45,7 @@ internal fun NavGraphBuilder.loginGraph(
         composable<PhoneSendScreenRoute> {
             val viewModel: PhoneSendViewModel = hiltViewModel()
             PhoneSendScreen(
+                activity = activity,
                 navController = navController,
                 viewModel = viewModel
             )

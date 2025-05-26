@@ -23,5 +23,5 @@ class GroupListUseCase(
     }
 
     private fun loadGroupTokens(): List<String> =
-        storage.load<List<String>>(GroupEntities.COLLECTION_NAME) ?: emptyList()
+        storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList().orEmpty()
 }

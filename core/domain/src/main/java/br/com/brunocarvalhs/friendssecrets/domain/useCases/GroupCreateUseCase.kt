@@ -25,7 +25,9 @@ class GroupCreateUseCase(
     }
 
     private fun persistGroupToken(token: String) {
-        val groupList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME).orEmpty()
+        val groupList =
+            storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
+                .orEmpty()
         storage.save(
             GroupEntities.COLLECTION_NAME,
             groupList.toMutableList().apply { add(token) }
@@ -33,7 +35,9 @@ class GroupCreateUseCase(
     }
 
     private fun persistAdminToken(token: String) {
-        val adminList = storage.load<List<String>>(GroupEntities.COLLECTION_NAME_ADMINS).orEmpty()
+        val adminList =
+            storage.load(GroupEntities.COLLECTION_NAME_ADMINS, Array<String>::class.java)?.toList()
+                .orEmpty()
         storage.save(
             GroupEntities.COLLECTION_NAME_ADMINS,
             adminList.toMutableList().apply { add(token) }
