@@ -18,7 +18,7 @@ import br.com.brunocarvalhs.auth.app.profile.ProfileScreen
 import br.com.brunocarvalhs.auth.app.profile.ProfileViewModel
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardViewModel
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardingScreen
+import br.com.brunocarvalhs.auth.app.onboard.OnboardingScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

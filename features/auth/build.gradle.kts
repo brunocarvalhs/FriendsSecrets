@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.country.picker)
     implementation(libs.ucrop)
     implementation(libs.timber)
+    implementation(libs.gson)
 
     // Testes
     testImplementation(libs.junit)

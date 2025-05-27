@@ -1,12 +1,15 @@
-package br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard
+package br.com.brunocarvalhs.auth.app.onboard
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
 import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.friendssecrets.common.remote.RemoteProvider
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -15,6 +18,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.google.gson.annotations.SerializedName
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,11 +26,14 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.reflect.Type
 import java.util.Locale
+import javax.inject.Inject
 
-class OnboardViewModel : ViewModel() {
+class OnboardViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<OnboardUiState> =
-        MutableStateFlow(OnboardUiState.Idle(default))
+        MutableStateFlow(OnboardUiState.Idle(default(context)))
 
     val uiState: StateFlow<OnboardUiState> =
         _uiState.asStateFlow()
@@ -79,7 +86,8 @@ class OnboardViewModel : ViewModel() {
                     .create()
 
                 val data: String =
-                    RemoteProvider().getAsyncString("${ONBOARDING_PAGES}_${getSystemLanguage()}")
+                    RemoteProvider.getInstance()
+                        .getAsyncString("${ONBOARDING_PAGES}_${getSystemLanguage()}")
 
                 val list: List<Onboarding> =
                     gson.fromJson(data, object : TypeToken<List<Onboarding>>() {}.type)
@@ -87,7 +95,7 @@ class OnboardViewModel : ViewModel() {
                 _uiState.value = OnboardUiState.Success(list)
             } catch (e: Exception) {
                 Timber.e(e)
-                _uiState.value = OnboardUiState.Success(default)
+                _uiState.value = OnboardUiState.Success(default(context))
             }
         }
     }
@@ -99,21 +107,13 @@ class OnboardViewModel : ViewModel() {
 
     companion object {
         const val ONBOARDING_PAGES = "onboarding_pages"
-        private val context = CustomApplication.getInstance()
 
-        val default = listOf(
+        fun default(context: Context) = listOf(
             Onboarding(
-                imageSource = ImageSource.Resource(R.drawable.ic_logo__friends_secrets),
+                imageSource = ImageSource.Resource(R.drawable.ic_logo_friends_secrets),
                 title = context.getString(R.string.onboarding_screen_title),
                 description = context.getString(R.string.onboarding_screen_description)
             )
         )
-
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    OnboardViewModel()
-                }
-            }
     }
 }

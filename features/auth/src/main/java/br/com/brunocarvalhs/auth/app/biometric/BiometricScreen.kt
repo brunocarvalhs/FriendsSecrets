@@ -31,7 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.R
+import br.com.brunocarvalhs.auth.R
+import br.com.brunocarvalhs.auth.commons.navigation.BiometricScreenRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import timber.log.Timber
 
 @SuppressLint("ContextCastToActivity")
@@ -52,9 +55,9 @@ fun BiometricScreen(
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 navController.navigate(
-                    route = HomeNavigation.Home.route,
+                    route = GroupGraphRoute,
                     builder = {
-                        popUpTo(HomeNavigation.Biometric.route) {
+                        popUpTo(BiometricScreenRoute) {
                             inclusive = true
                             saveState = true
                         }
