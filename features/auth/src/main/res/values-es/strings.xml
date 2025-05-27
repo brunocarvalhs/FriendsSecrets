@@ -13,4 +13,11 @@
     <string name="phone_send_button">Siguiente</string>
     <string name="login_screen_button_anonymation">Aceptar y continuar</string>
     <string name="login_screen_button_register">Aceptar y registrarse</string>
+    <string name="your_name">Tu nombre</string>
+    <string name="phone_number">Número de teléfono</string>
+    <string name="save">Guardar</string>
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="code_has_been_send_to">Se ha enviado un código a %1$s</string>
+    <string name="resend_code_in_s">Reenviar código en %1$s s</string>
+    <string name="verify">Verificar</string>
 </resources>

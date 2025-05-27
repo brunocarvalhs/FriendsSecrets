@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
@@ -246,7 +248,7 @@ private fun ProfileForm(
                 )
             },
             onValueChange = { name = it },
-            label = { Text("Your name") },
+            label = { Text(stringResource(R.string.your_name)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -264,7 +266,7 @@ private fun ProfileForm(
                 )
             },
             onValueChange = { },
-            label = { Text("Phone number") },
+            label = { Text(stringResource(R.string.phone_number)) },
             singleLine = true,
             enabled = false,
             modifier = Modifier.fillMaxWidth()
@@ -302,7 +304,7 @@ private fun ProfileForm(
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Save")
+            Text(stringResource(R.string.save))
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -321,7 +323,7 @@ private fun ProfileForm(
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Delete account")
+                    Text(stringResource(R.string.delete_account))
                 }
             }
         }

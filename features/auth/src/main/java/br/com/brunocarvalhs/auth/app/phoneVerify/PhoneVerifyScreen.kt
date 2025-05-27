@@ -41,12 +41,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.ProfileScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
@@ -128,7 +130,10 @@ private fun PhoneVerifyContent(
                 Spacer(modifier = Modifier.height(40.dp))
 
                 Text(
-                    text = "Code has been send to ${phoneNumber.toMaskedPhoneNumber()}",
+                    text = stringResource(
+                        R.string.code_has_been_send_to,
+                        phoneNumber.toMaskedPhoneNumber()
+                    ),
                     fontSize = 16.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
@@ -188,7 +193,7 @@ private fun PhoneVerifyContent(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    text = "Resend Code in ${remainingTime}s",
+                    text = stringResource(R.string.resend_code_in_s, remainingTime),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     color = Color(0xFF009688)
                 )
@@ -206,7 +211,7 @@ private fun PhoneVerifyContent(
                     .fillMaxWidth()
                     .padding(bottom = 24.dp),
             ) {
-                Text("Verify")
+                Text(stringResource(R.string.verify))
             }
         }
     }
@@ -214,8 +219,8 @@ private fun PhoneVerifyContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x88000000)) // fundo escurecido
-                .clickable(enabled = false) {}, // bloqueia cliques
+                .background(Color(0x88000000))
+                .clickable(enabled = false) {},
             contentAlignment = Alignment.Center
         ) {
             Card(
