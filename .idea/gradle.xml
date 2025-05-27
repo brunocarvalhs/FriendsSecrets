@@ -18,9 +18,7 @@
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/auth" />
-            <option value="$PROJECT_DIR$/features/generative" />
             <option value="$PROJECT_DIR$/features/group" />
-            <option value="$PROJECT_DIR$/features/home" />
             <option value="$PROJECT_DIR$/features/settings" />
           </set>
         </option>

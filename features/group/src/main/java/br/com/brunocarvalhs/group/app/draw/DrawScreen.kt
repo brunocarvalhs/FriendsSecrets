@@ -56,7 +56,6 @@ fun DrawScreen(
     viewModel: DrawViewModel = viewModel(
         factory = DrawViewModel.Factory
     ),
-    toggleManager: ToggleManager,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,8 +68,6 @@ fun DrawScreen(
         navController = navController,
         uiState = uiState.value,
         eventIntent = viewModel::eventIntent,
-        isGenerativeEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.DRAW_IS_GENERATIVE_ENABLED),
     )
 }
 
