@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Secret Santa</string>
+    <string name="login_screen_terms">Terms of Service</string>
+    <string name="login_screen_and">" and "</string>
+    <string name="login_screen_privacy">Privacy Policy</string>
+    <string name="login_screen_description">Read our Privacy Policy. Tap \'Accept and Register\' to create your account or \'Accept and Continue\' to proceed without registration. Both options imply acceptance of the Terms of Service.</string>
+    <string name="login_screen_welcome">Welcome to %1$s</string>
+    <string name="phone_send_title">Enter your phone number</string>
+    <string name="phone_send_description">%1$s will need to verify your phone number.</string>
+    <string name="phone_send_textfield_label">Phone number</string>
+    <string name="phone_send_textfield_description">Carrier charges may apply.</string>
+    <string name="phone_send_button">Next</string>
+    <string name="login_screen_button_anonymation">Accept and Continue</string>
+    <string name="login_screen_button_register">Accept and Register</string>
+    <string name="your_name">Your name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="save">Save</string>
+    <string name="delete_account">Delete account</string>
+    <string name="code_has_been_send_to">Code has been send to %1$s</string>
+    <string name="resend_code_in_s">Resend Code in %1$ss</string>
+    <string name="verify">Verify</string>
+</resources>
