@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.common.di
 import br.com.brunocarvalhs.friendssecrets.common.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.common.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
-import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
+import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager // Supondo que StorageManager também não precise de getInstance()
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class CommonsProvidesModule {
+object CommonsProvidesModule {
 
     @Provides
     @Singleton
@@ -25,13 +25,17 @@ abstract class CommonsProvidesModule {
 
     @Provides
     @Singleton
-    fun bindPerformanceService(): PerformanceService = PerformanceManager.getInstance()
+    fun providePerformanceService(event: PerformanceManager.PerformanceEvent): PerformanceService {
+        return PerformanceManager(event)
+    }
 
     @Provides
     @Singleton
-    fun bindSessionService(): SessionService<UserEntities> = SessionManager.getInstance()
+    fun provideSessionService(event: SessionManager.SessionEvent<UserEntities>): SessionService<UserEntities> {
+        return SessionManager(event)
+    }
 
     @Provides
     @Singleton
-    fun bindStorageService(): StorageService = StorageManager.getInstance()
+    fun provideStorageService(): StorageService = StorageManager.getInstance() // TODO: Refatorar StorageManager se ele também usar getInstance()
 }

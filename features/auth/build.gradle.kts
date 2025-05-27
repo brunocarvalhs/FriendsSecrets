@@ -34,6 +34,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+        }
+    }
     buildFeatures {
         compose = true
     }
@@ -45,44 +51,57 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:data"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose)
+    // Compose Core
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
+
+    // Preview (IDE)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.ui.tooling)
+
+    // Lifecycle / ViewModel
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Navigation Compose
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.timber)
-    implementation(libs.lottie.compose)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    // Outros Comuns (Remova os que não usa)
     implementation(libs.coil.compose)
-    implementation(libs.androidx.biometric)
+    implementation(libs.lottie.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.biometric)
     implementation(libs.country.picker)
     implementation(libs.ucrop)
+    implementation(libs.timber)
 
+    // Testes
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.mockito.inline)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.androidx.espresso.core)
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.mockk)
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-    androidTestImplementation (libs.hilt.android.testing)
-    kspAndroidTest(libs.hilt.compiler)
+    // Hilt Testes
     testImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.compiler)
 }
