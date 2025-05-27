@@ -46,15 +46,5 @@ fun NavGraphBuilder.homeGraph(
                 toggleManager = toggleManager
             )
         }
-        composable(HomeNavigation.Onboarding.route) {
-            val onboardingViewModel: OnboardViewModel = viewModel(factory = OnboardViewModel.Factory)
-            OnboardingScreen(
-                navController = navController,
-                viewModel = onboardingViewModel
-            )
-        }
-        composable(HomeNavigation.Biometric.route) {
-            BiometricScreen(navController = navController)
-        }
     }
 }
