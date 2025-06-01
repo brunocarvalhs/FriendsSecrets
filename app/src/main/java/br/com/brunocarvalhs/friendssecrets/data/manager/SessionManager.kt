@@ -22,6 +22,7 @@ class SessionManager(
         return UserModel(
             id = user.uid,
             name = user.displayName.orEmpty(),
+            email = user.email.orEmpty(),
             photoUrl = user.photoUrl?.toString(),
             phoneNumber = user.phoneNumber.orEmpty(),
             isPhoneNumberVerified = user.phoneNumber != null,
@@ -35,7 +36,7 @@ class SessionManager(
     fun isProfileComplete(): Boolean {
         val user = auth.currentUser ?: return false
 
-        return user.displayName != null && user.photoUrl != null
+        return user.displayName != null
     }
 
     fun isPhoneNumberVerified(): Boolean {
@@ -62,13 +63,14 @@ class SessionManager(
 
     suspend fun updateUserProfile(
         name: String,
-        photoUrl: String
+        photoUrl: String,
     ) {
         val user = auth.currentUser
 
         val profileUpdates = userProfileChangeRequest {
             displayName = name
             photoUri = Uri.parse(photoUrl)
+
         }
 
         user?.updateProfile(profileUpdates)?.await()

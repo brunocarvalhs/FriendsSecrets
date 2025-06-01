@@ -1,26 +1,27 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.friendssecrets.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.base.BaseUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
+import javax.inject.Inject
 
-class GroupByTokenUseCase(
+class GroupByTokenUseCase @Inject constructor(
     private val groupRepository: GroupRepository,
     private val storage: StorageService,
-    private val performance: PerformanceManager,
-) {
-    suspend fun invoke(token: String): Result<GroupEntities> = runCatching {
-        performance.start(GroupByTokenUseCase::class.java.simpleName)
+) : BaseUseCase<String, GroupEntities>() {
+
+    override val traceName: String = "GroupByTokenUseCase"
+
+    override suspend fun execute(parameters: String): Result<GroupEntities> = runCatching {
+        val token = parameters
         validationToken(token = token)
         val groupList = searchByToken(token)
         val group = groupRepository.searchByToken(token)
         saveGroup(token, groupList)
         group ?: throw GroupNotFoundException()
-    }.also {
-        performance.stop(GroupByTokenUseCase::class.java.simpleName)
     }
 
     private fun validationToken(token: String) {

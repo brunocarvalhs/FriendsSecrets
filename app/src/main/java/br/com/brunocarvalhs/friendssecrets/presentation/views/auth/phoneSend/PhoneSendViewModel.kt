@@ -7,12 +7,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PhoneSendViewModel(
+@HiltViewModel
+class PhoneSendViewModel @Inject constructor(
     private val sendPhoneUseCase: SendPhoneUseCase
 ) : ViewModel() {
 
@@ -33,16 +36,5 @@ class PhoneSendViewModel(
             }
         }
 
-    }
-
-    companion object {
-        fun Factory(activity: ComponentActivity? = null): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    activity ?: throw IllegalArgumentException("Activity cannot be null")
-                    val sendPhoneUseCase = SendPhoneUseCase(activity = activity)
-                    PhoneSendViewModel(sendPhoneUseCase = sendPhoneUseCase)
-                }
-            }
     }
 }

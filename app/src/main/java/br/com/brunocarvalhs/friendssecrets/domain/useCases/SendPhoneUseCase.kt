@@ -5,7 +5,7 @@ import br.com.brunocarvalhs.friendssecrets.data.service.AuthService
 
 class SendPhoneUseCase(
     private val activity: Activity,
-    private val authService: AuthService = AuthService()
+    private val authService: AuthService
 ) {
     suspend fun invoke(phone: String, countryCode: String): Result<Unit> {
         return authService.sendVerificationCode(

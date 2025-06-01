@@ -3,29 +3,26 @@ package br.com.brunocarvalhs.friendssecrets.presentation.views.group.details
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
-import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
-import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
-import br.com.brunocarvalhs.friendssecrets.data.service.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupDetailsViewModel(
+@HiltViewModel
+class GroupDetailsViewModel @Inject constructor(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupEditUseCase: GroupEditUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
@@ -51,11 +48,13 @@ class GroupDetailsViewModel(
                 secret = intent.secret,
                 token = intent.token
             )
+
             is GroupDetailsIntent.EditMember -> editMember(
                 entities = intent.group,
                 member = intent.participant,
                 likes = intent.likes
             )
+
             is GroupDetailsIntent.RemoveMember -> removeMember(
                 entities = intent.group,
                 member = intent.participant
@@ -185,46 +184,5 @@ class GroupDetailsViewModel(
                 _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
             }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val repository = GroupRepositoryImpl()
-                    val storage = StorageService()
-                    val performance = PerformanceManager()
-                    val groupReadUseCase = GroupReadUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupDrawUseCase = GroupDrawUseCase(
-                        groupRepository = repository,
-                        performance = performance
-                    )
-                    val groupExitUseCase = GroupExitUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupDeleteUseCase = GroupDeleteUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupEditUseCase = GroupEditUseCase(
-                        groupRepository = repository,
-                        performance = performance
-                    )
-                    GroupDetailsViewModel(
-                        groupReadUseCase = groupReadUseCase,
-                        groupEditUseCase = groupEditUseCase,
-                        groupDrawUseCase = groupDrawUseCase,
-                        groupExitUseCase = groupExitUseCase,
-                        groupDeleteUseCase = groupDeleteUseCase
-                    )
-                }
-            }
     }
 }

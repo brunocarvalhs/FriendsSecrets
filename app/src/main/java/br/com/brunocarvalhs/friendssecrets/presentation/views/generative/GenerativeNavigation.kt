@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.presentation.views.generative
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
@@ -44,10 +45,7 @@ fun NavGraphBuilder.generativeGraph(
     navigation(startDestination = GenerativeNavigation.START_DESTINATION, route = route) {
         composable(GenerativeNavigation.Chat.route) {
             val data = it.arguments?.getString("data")
-
-            val viewModel: ChatGenerativeViewModel =
-                viewModel(factory = ChatGenerativeViewModel.Factory)
-
+            val viewModel: ChatGenerativeViewModel = hiltViewModel()
             ChatGenerativeScreen(
                 data = data,
                 navController = navController,

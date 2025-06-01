@@ -6,12 +6,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.VerifyPhoneUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PhoneVerifyViewModel(
+@HiltViewModel
+class PhoneVerifyViewModel @Inject constructor(
     private val verifyPhoneUseCase: VerifyPhoneUseCase
 ) : ViewModel() {
 
@@ -32,15 +35,5 @@ class PhoneVerifyViewModel(
                 _uiState.value = PhoneVerifyUiState.Error(it.message.orEmpty())
             }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val verifyPhoneUseCase = VerifyPhoneUseCase()
-                    PhoneVerifyViewModel(verifyPhoneUseCase = verifyPhoneUseCase)
-                }
-            }
     }
 }

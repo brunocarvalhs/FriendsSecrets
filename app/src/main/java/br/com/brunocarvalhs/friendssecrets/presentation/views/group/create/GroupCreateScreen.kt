@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -70,7 +71,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun GroupCreateScreen(
     navController: NavController = rememberNavController(),
-    viewModel: GroupCreateViewModel = viewModel(factory = GroupCreateViewModel.Factory),
+    viewModel: GroupCreateViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

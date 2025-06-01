@@ -2,8 +2,14 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
 import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitializationManager
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+@HiltAndroidApp
 class CustomApplication : Application() {
+
+    @Inject
+    lateinit var initializationManager: AppInitializationManager
 
     override fun onCreate() {
         super.onCreate()
@@ -12,7 +18,7 @@ class CustomApplication : Application() {
     }
 
     private fun setup() {
-        AppInitializationManager(this.applicationContext).initialize()
+        initializationManager.initialize()
     }
 
     companion object {

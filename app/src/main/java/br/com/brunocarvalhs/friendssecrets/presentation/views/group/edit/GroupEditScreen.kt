@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -59,9 +60,7 @@ import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigatio
 @Composable
 fun GroupEditScreen(
     navController: NavController = rememberNavController(),
-    viewModel: GroupEditViewModel = viewModel(
-        factory = GroupEditViewModel.Factory
-    ),
+    viewModel: GroupEditViewModel = hiltViewModel(),
     groupId: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
