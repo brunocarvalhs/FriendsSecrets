@@ -80,12 +80,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
     implementation(project(":core:data"))
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
 
     implementation(project(":features:auth"))
+    implementation(project(":features:group"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

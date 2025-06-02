@@ -26,7 +26,7 @@ internal data class GroupFake(
     ): GroupEntities = this.copy()
 }
 
-internal fun GroupEntities.Companion.toFake(
+fun GroupEntities.Companion.toFake(
     id: String = "1",
     token: String = "123456789",
     name: String = "Produto de Teste",
@@ -34,7 +34,7 @@ internal fun GroupEntities.Companion.toFake(
     members: List<UserEntities> = emptyList(),
     draws: Map<String, String> = emptyMap(),
     isOwner: Boolean = false,
-) = GroupFake(
+): GroupEntities = GroupFake(
     id = id,
     token = token,
     name = name,

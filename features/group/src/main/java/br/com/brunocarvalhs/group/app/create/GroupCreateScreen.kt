@@ -48,19 +48,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.ui.components.AddMemberBottomSheet
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ContactItem
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.ui.components.ContactItem
+import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -69,7 +68,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun GroupCreateScreen(
     navController: NavController = rememberNavController(),
-    viewModel: GroupCreateViewModel = viewModel(factory = GroupCreateViewModel.Factory),
+    viewModel: GroupCreateViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -278,8 +277,8 @@ private fun GroupCreateContent(
 private class GroupCreatePreviewProvider : PreviewParameterProvider<GroupCreateUiState> {
     override val values = sequenceOf(
         GroupCreateUiState.Idle(
-            contacts = listOf<UserEntities>(
-                UserModel(
+            contacts = listOf(
+                UserEntities.toFake(
                     name = "Produto de Teste",
                     id = "1",
                     phoneNumber = "123456789",
@@ -287,7 +286,7 @@ private class GroupCreatePreviewProvider : PreviewParameterProvider<GroupCreateU
                     isPhoneNumberVerified = false,
                     likes = listOf("Produto 1", "Produto 2")
                 ),
-                UserModel(
+                UserEntities.toFake(
                     name = "Produto de Teste",
                     id = "1",
                     phoneNumber = "123456789",
@@ -295,7 +294,7 @@ private class GroupCreatePreviewProvider : PreviewParameterProvider<GroupCreateU
                     isPhoneNumberVerified = false,
                     likes = listOf("Produto 1", "Produto 2")
                 ),
-                UserModel(
+                UserEntities.toFake(
                     name = "Produto de Teste",
                     id = "1",
                     phoneNumber = "123456789",

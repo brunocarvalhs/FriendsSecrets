@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    api(project(":core:data"))
     implementation(project(":core:domain"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
@@ -79,6 +80,7 @@ dependencies {
     implementation(libs.ucrop)
     implementation(libs.timber)
     implementation(libs.gson)
+    implementation(libs.accompanist.permissions)
 
     // Testes
     testImplementation(libs.junit)

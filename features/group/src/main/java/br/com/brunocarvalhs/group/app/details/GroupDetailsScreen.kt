@@ -25,31 +25,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.data.model.create
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.EditMemberBottomSheet
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.GroupRevelationScreenRoute
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.FloatingButtonComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsContentComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsErrorComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.GroupDetailsLoadingComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.components.HeaderComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.EditMemberBottomSheet
+import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.app.details.components.FloatingButtonComponent
+import br.com.brunocarvalhs.group.app.details.components.GroupDetailsContentComponent
+import br.com.brunocarvalhs.group.app.details.components.GroupDetailsErrorComponent
+import br.com.brunocarvalhs.group.app.details.components.GroupDetailsLoadingComponent
+import br.com.brunocarvalhs.group.app.details.components.HeaderComponent
+import br.com.brunocarvalhs.group.commons.navigation.GroupRevelationScreenRoute
 import kotlin.collections.set
 
 @Composable
 fun GroupDetailsScreen(
     navController: NavController = rememberNavController(),
-    viewModel: br.com.brunocarvalhs.group.app.details.GroupDetailsViewModel = viewModel(
-        factory = br.com.brunocarvalhs.group.app.details.GroupDetailsViewModel.Factory
-    ),
+    viewModel: GroupDetailsViewModel,
     groupId: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -188,7 +185,7 @@ private fun GroupDetailsContent(
     }
     if (showBottomSheet && uiState is GroupDetailsUiState.Success) {
         EditMemberBottomSheet(onDismiss = { showBottomSheet = false },
-            member = UserModel(
+            member = UserEntities.create(
                 name = name,
                 likes = likes
             ),
@@ -207,6 +204,7 @@ private fun GroupDetailsContent(
         }
     }
 }
+
 
 @Composable
 fun ExpandableText(
@@ -241,11 +239,11 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
         GroupDetailsUiState.Error(message = "Error"),
         // Members ----------------------------------------------------------------
         GroupDetailsUiState.Success(
-            group = GroupModel(name = "Group",
+            group = GroupEntities.toFake(name = "Group",
                 description = "Description",
                 members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        UserModel(
+                        UserEntities.toFake(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )
@@ -253,12 +251,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
                 })
         ),
         GroupDetailsUiState.Success(
-            group = GroupModel(
+            group = GroupEntities.toFake(
                 name = "Group sorteado",
                 description = "Description",
                 members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        UserModel(
+                        UserEntities.toFake(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )
@@ -274,12 +272,12 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
 
         // Admin -----------------------------------------------------------------
         GroupDetailsUiState.Success(
-            group = GroupModel(name = "Group admin",
+            group = GroupEntities.toFake(name = "Group admin",
                 isOwner = true,
                 description = "Description",
                 members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        UserModel(
+                        UserEntities.toFake(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )
@@ -287,13 +285,13 @@ internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetai
                 }),
         ),
         GroupDetailsUiState.Success(
-            group = GroupModel(
+            group = GroupEntities.toFake(
                 name = "Group admin sorteado",
                 isOwner = true,
                 description = "Description",
                 members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        UserModel(
+                        UserEntities.toFake(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )

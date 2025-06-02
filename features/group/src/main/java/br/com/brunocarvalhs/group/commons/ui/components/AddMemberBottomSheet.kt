@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.ui.R
 import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
@@ -41,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddMemberBottomSheet(
     onDismiss: () -> Unit,
-    onMemberAdded: (name: String, likes: List<String>) -> Unit,
+    onMemberAdded: (member: UserEntities) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 

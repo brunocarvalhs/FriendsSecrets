@@ -31,7 +31,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.orEmpty
 import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.ExpandableText
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsUiState
+import br.com.brunocarvalhs.group.app.details.GroupDetailsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

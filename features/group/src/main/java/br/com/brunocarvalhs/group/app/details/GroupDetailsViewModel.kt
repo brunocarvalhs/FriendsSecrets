@@ -3,14 +3,8 @@ package br.com.brunocarvalhs.group.app.details
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import br.com.brunocarvalhs.friendssecrets.BuildConfig
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
-import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDeleteUseCase
@@ -18,13 +12,17 @@ import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupDrawUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
+import br.com.brunocarvalhs.group.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupDetailsViewModel(
+@HiltViewModel
+class GroupDetailsViewModel @Inject constructor(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupEditUseCase: GroupEditUseCase,
     private val groupDrawUseCase: GroupDrawUseCase,
@@ -38,30 +36,45 @@ class GroupDetailsViewModel(
     val uiState: StateFlow<GroupDetailsUiState> =
         _uiState.asStateFlow()
 
-    fun eventIntent(intent: br.com.brunocarvalhs.group.app.details.GroupDetailsIntent) {
+    fun eventIntent(intent: GroupDetailsIntent) {
         when (intent) {
-            is br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.FetchGroup -> fetchGroup(groupId = intent.groupId)
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.DrawMembers -> drawMembers(group = intent.group)
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.ExitGroup -> exitGroup(groupId = intent.groupId)
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.DeleteGroup -> deleteGroup(groupId = intent.groupId)
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.ShareMember -> shareMember(
+            is GroupDetailsIntent.FetchGroup -> fetchGroup(
+                groupId = intent.groupId
+            )
+
+            is GroupDetailsIntent.DrawMembers -> drawMembers(
+                group = intent.group
+            )
+
+            is GroupDetailsIntent.ExitGroup -> exitGroup(
+                groupId = intent.groupId
+            )
+
+            is GroupDetailsIntent.DeleteGroup -> deleteGroup(
+                groupId = intent.groupId
+            )
+
+            is GroupDetailsIntent.ShareMember -> shareMember(
                 context = intent.context,
                 member = intent.member,
                 secret = intent.secret,
                 token = intent.token
             )
 
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.EditMember -> editMember(
+            is GroupDetailsIntent.EditMember -> editMember(
                 entities = intent.group,
                 member = intent.participant,
             )
 
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.RemoveMember -> removeMember(
+            is GroupDetailsIntent.RemoveMember -> removeMember(
                 entities = intent.group,
                 member = intent.participant
             )
 
-            is _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsIntent.ShareGroup -> shareGroup(intent.context, intent.group)
+            is GroupDetailsIntent.ShareGroup -> shareGroup(
+                intent.context,
+                intent.group
+            )
         }
     }
 
@@ -149,7 +162,7 @@ class GroupDetailsViewModel(
                     member.name,
                     token,
                     secret,
-                    BuildConfig.APPLICATION_ID,
+                    context.applicationContext.packageName,
                     context.getString(R.string.home_drop_menu_item_text_join_a_group)
                 )
             )
@@ -181,46 +194,5 @@ class GroupDetailsViewModel(
                 _uiState.value = GroupDetailsUiState.Error(it.report()?.message.orEmpty())
             }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val repository = GroupRepositoryImpl()
-                    val storage = StorageService()
-                    val performance = PerformanceManager()
-                    val groupReadUseCase = GroupReadUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupDrawUseCase = GroupDrawUseCase(
-                        groupRepository = repository,
-                        performance = performance
-                    )
-                    val groupExitUseCase = GroupExitUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupDeleteUseCase = GroupDeleteUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    val groupEditUseCase = GroupEditUseCase(
-                        groupRepository = repository,
-                        performance = performance
-                    )
-                    _root_ide_package_.br.com.brunocarvalhs.group.app.details.GroupDetailsViewModel(
-                        groupReadUseCase = groupReadUseCase,
-                        groupEditUseCase = groupEditUseCase,
-                        groupDrawUseCase = groupDrawUseCase,
-                        groupExitUseCase = groupExitUseCase,
-                        groupDeleteUseCase = groupDeleteUseCase
-                    )
-                }
-            }
     }
 }

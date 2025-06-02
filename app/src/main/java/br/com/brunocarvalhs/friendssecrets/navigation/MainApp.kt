@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.auth.AuthInitializer
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
+import br.com.brunocarvalhs.group.GroupInitializer
 
 @Composable
 fun MainApp(
@@ -16,6 +17,10 @@ fun MainApp(
     NavHost(navController = navController, startDestination = AuthGraphRoute) {
         AuthInitializer.Builder()
             .activity(activity = activity)
+            .navController(navController = navController)
+            .build(navGraphBuilder = this)
+
+        GroupInitializer.Builder()
             .navController(navController = navController)
             .build(navGraphBuilder = this)
     }

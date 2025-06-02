@@ -24,14 +24,14 @@ internal data class UserFake(
     ): UserEntities = this.copy()
 }
 
-internal fun UserEntities.Companion.toFake(
+fun UserEntities.Companion.toFake(
     id: String = "1",
     name: String = "John Doe",
     photoUrl: String? = null,
     phoneNumber: String = "",
     isPhoneNumberVerified: Boolean = false,
     likes: List<String> = emptyList()
-) = UserFake(
+): UserEntities = UserFake(
     id = id,
     name = name,
     photoUrl = photoUrl,

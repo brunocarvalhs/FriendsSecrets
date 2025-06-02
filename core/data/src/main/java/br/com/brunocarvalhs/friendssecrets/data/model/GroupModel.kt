@@ -87,3 +87,21 @@ internal data class GroupModel(
         }
     }
 }
+
+fun GroupEntities.Companion.create(
+    id: String = UUID.randomUUID().toString(),
+    token: String = Random.token(size = 8),
+    name: String = "",
+    description: String? = null,
+    members: List<UserEntities> = emptyList(),
+    draws: Map<String, String> = emptyMap(),
+    isOwner: Boolean = false,
+): GroupEntities = GroupModel(
+    id = id,
+    token = token,
+    name = name,
+    description = description,
+    members = members,
+    draws = draws,
+    isOwner = isOwner
+)

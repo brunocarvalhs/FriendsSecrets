@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsUiState
+import br.com.brunocarvalhs.group.app.details.GroupDetailsUiState
 
 @Composable
 fun FloatingButtonComponent(
