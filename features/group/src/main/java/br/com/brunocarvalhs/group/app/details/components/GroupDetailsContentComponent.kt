@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package br.com.brunocarvalhs.group.app.details.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -22,15 +20,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.textWithFormatting
+import br.com.brunocarvalhs.friendssecrets.data.model.create
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.byName
-import br.com.brunocarvalhs.friendssecrets.domain.entities.orEmpty
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.ExpandableText
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
+import br.com.brunocarvalhs.friendssecrets.ui.components.MemberItem
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.app.details.ExpandableText
+import br.com.brunocarvalhs.group.app.details.GroupDetailsPreviewProvider
 import br.com.brunocarvalhs.group.app.details.GroupDetailsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,8 +65,7 @@ fun GroupDetailsContentComponent(
                         .fillMaxWidth()
                 ) {
                     ExpandableText(
-                        text = uiState.group.description?.textWithFormatting()
-                            .orEmpty(), maxLines = 3
+                        text = uiState.group.description.orEmpty(), maxLines = 3
                     )
                 }
             }
@@ -89,9 +84,10 @@ fun GroupDetailsContentComponent(
         if (uiState.group.draws.isNotEmpty()) {
             items(uiState.group.draws.keys.toList()) { participant ->
                 MemberItem(
-                    participant = uiState.group.members.byName(participant).orEmpty(
-                        name = participant
-                    ),
+                    participant = uiState.group.members.find { it.name == participant }
+                        ?: UserEntities.create(
+                            name = participant
+                        ),
                     group = uiState.group,
                     isAdministrator = uiState.group.isOwner,
                     onShare = { member, secret, token ->
@@ -119,20 +115,19 @@ fun GroupDetailsContentComponent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true)
 fun GroupDetailsBodyComponentPreview(
     @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState
 ) {
     if (state is GroupDetailsUiState.Success) {
-        GroupDetailsContentComponent(
-            uiState = state,
+        GroupDetailsContentComponent(uiState = state,
             showBottomSheet = false,
             setShowBottomSheet = {},
             setName = {},
             setLikes = {},
             onShare = { _, _, _ -> },
-            onRemove = { _, _ -> }
-        )
+            onRemove = { _, _ -> })
     }
 }

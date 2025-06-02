@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.data.model.create
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.ui.R
 import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
@@ -65,7 +66,7 @@ fun AddMemberBottomSheet(
 private fun AddMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onMemberAdded: (name: String, likes: List<String>) -> Unit,
+    onMemberAdded: (member: UserEntities) -> Unit,
 ) {
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
@@ -97,7 +98,12 @@ private fun AddMemberContent(
     val addMember = remember(name, likes) {
         {
             scope.launch {
-                onMemberAdded(name.trim(), likes.toList())
+                onMemberAdded(
+                    UserEntities.create(
+                        name = name.trim(),
+                        likes = likes.toList()
+                    )
+                )
                 name = ""
                 likeName = ""
                 likes.clear()
@@ -111,7 +117,12 @@ private fun AddMemberContent(
             scope.launch {
                 if (name.isNotBlank()) {
                     likes.add(likeName)
-                    onMemberAdded(name.trim(), likes.toList())
+                    onMemberAdded(
+                        UserEntities.create(
+                            name = name.trim(),
+                            likes = likes.toList()
+                        )
+                    )
                 }
                 name = ""
                 likeName = ""
@@ -189,7 +200,7 @@ private fun AddMemberBottomSheetPreview() {
         AddMemberContent(
             sheetState = rememberModalBottomSheetState(),
             onDismiss = {},
-            onMemberAdded = { _, _ -> }
+            onMemberAdded = {}
         )
     }
 }

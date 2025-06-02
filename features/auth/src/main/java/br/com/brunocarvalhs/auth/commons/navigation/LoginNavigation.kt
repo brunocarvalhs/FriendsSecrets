@@ -19,6 +19,7 @@ import br.com.brunocarvalhs.auth.app.profile.ProfileScreen
 import br.com.brunocarvalhs.auth.app.profile.ProfileViewModel
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.auth.app.onboard.OnboardingScreen
+import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,9 +30,6 @@ internal data object PhoneSendScreenRoute
 
 @Serializable
 internal data class PhoneVerificationScreenRoute(val phoneNumber: String)
-
-@Serializable
-internal data object ProfileScreenRoute
 
 @Serializable
 internal data object OnboardingScreenRoute
@@ -68,7 +66,7 @@ internal fun NavGraphBuilder.loginGraph(
                 viewModel = viewModel
             )
         }
-        composable<ProfileScreenRoute> {
+        composable<ProfileGraphRoute> {
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(
                 navController = navController,

@@ -1,22 +1,21 @@
 package br.com.brunocarvalhs.group.app.edit
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.report
-import br.com.brunocarvalhs.friendssecrets.data.repository.GroupRepositoryImpl
+import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupEditViewModel(
+@HiltViewModel
+class GroupEditViewModel @Inject constructor(
     private val groupReadUseCase: GroupReadUseCase,
     private val groupEditUseCase: GroupEditUseCase,
 ) : ViewModel() {
@@ -58,29 +57,5 @@ class GroupEditViewModel(
                 }
 
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    val repository = GroupRepositoryImpl()
-                    val performance = PerformanceManager()
-                    val storage = StorageService()
-                    val groupEditUseCase = GroupEditUseCase(
-                        groupRepository = repository,
-                        performance = performance
-                    )
-                    val groupReadUseCase = GroupReadUseCase(
-                        groupRepository = repository,
-                        storage = storage,
-                        performance = performance
-                    )
-                    GroupEditViewModel(
-                        groupEditUseCase = groupEditUseCase,
-                        groupReadUseCase = groupReadUseCase
-                    )
-                }
-            }
     }
 }

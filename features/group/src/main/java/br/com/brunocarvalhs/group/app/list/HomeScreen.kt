@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -31,60 +32,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.extensions.isFistAppOpen
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.data.manager.SessionManager
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.SettingsGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.commons.navigation.GroupCreateScreenRoute
-import br.com.brunocarvalhs.group.commons.navigation.GroupDetailsScreenRoute
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.EmptyGroupComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupCard
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.GroupToEnterBottomSheet
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.MenuHome
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.list.components.MenuItem
+import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.app.list.components.EmptyGroupComponent
+import br.com.brunocarvalhs.group.app.list.components.GroupCard
+import br.com.brunocarvalhs.group.app.list.components.GroupToEnterBottomSheet
+import br.com.brunocarvalhs.group.app.list.components.MenuHome
+import br.com.brunocarvalhs.group.app.list.components.MenuItem
+import br.com.brunocarvalhs.group.commons.navigation.GroupListScreenRoute
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.Factory
-    ),
+    viewModel: HomeViewModel,
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
-    val session = SessionManager.getInstance()
+    val session = SessionManager.getInstance<UserEntities>()
 
     LaunchedEffect(Unit) {
-        AnalyticsProvider.track(
-            event = AnalyticsEvents.VISUALIZATION,
-            params = mapOf(
-                AnalyticsParams.SCREEN_NAME to HomeNavigation.Home.route
-            )
-        )
-    }
-
-    LaunchedEffect(Unit) {
-        if (context.isFistAppOpen()) navController.navigate(HomeNavigation.Onboarding.route)
         viewModel.event(HomeIntent.FetchGroups)
     }
 
@@ -93,12 +73,9 @@ fun HomeScreen(
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
-        isSettingsEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.SETTINGS_IS_ENABLED),
-        isJoinGroupEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.HOME_IS_JOIN_GROUP_ENABLED),
-        isCreateGroupEnabled = toggleManager
-            .isFeatureEnabled(ToggleKeys.HOME_IS_CREATE_GROUP_ENABLED),
+        isSettingsEnabled = true,
+        isJoinGroupEnabled = true,
+        isCreateGroupEnabled = true,
     )
 }
 
@@ -120,7 +97,7 @@ private fun HomeContent(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -146,25 +123,31 @@ private fun HomeContent(
                         MenuHome(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
-                            onClick = {
-                                when (val menu = it) {
+                            onClick = { menu ->
+                                when (menu) {
                                     MenuItem.JoinGroup -> showBottomSheet = true
                                     MenuItem.Logout -> {
                                         onEvent(HomeIntent.Logout)
-                                        navController.navigate(HomeNavigation.Home.route) {
-                                            popUpTo(HomeNavigation.Home.route) {
+                                        navController.navigate(GroupListScreenRoute) {
+                                            popUpTo(GroupListScreenRoute) {
                                                 inclusive = true
                                             }
                                         }
                                     }
 
-                                    else -> navController.navigate(menu.route.orEmpty())
+                                    MenuItem.Profile -> {
+                                        navController.navigate(ProfileGraphRoute)
+                                    }
+
+                                    MenuItem.Settings -> {
+                                        navController.navigate(SettingsGraphRoute)
+                                    }
                                 }
                             },
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior // Associar comportamento de rolagem
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
@@ -246,12 +229,12 @@ private class HomePreviewProvider : PreviewParameterProvider<HomeUiState> {
         HomeUiState.Loading,
         HomeUiState.Success(list = listOf()),
         HomeUiState.Success(list = (1..10).map { it ->
-            GroupModel(
+            GroupEntities.toFake(
                 name = "Group $it",
                 description = "Description $it",
                 members = listOf<UserEntities>().apply {
                     repeat(10) {
-                        UserModel(
+                        UserEntities.toFake(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )
@@ -301,7 +284,7 @@ fun HomeContentSessionPreview(
 ) {
     FriendsSecretsTheme {
         HomeContent(
-            session = UserModel(
+            session = UserEntities.toFake(
                 id = "1",
                 name = "John Doe",
                 photoUrl = null,

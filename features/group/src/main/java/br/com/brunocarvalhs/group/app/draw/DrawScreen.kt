@@ -36,26 +36,22 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.group.R
 
 @Composable
 fun DrawScreen(
     groupId: String,
     code: String? = null,
     navController: NavController,
-    viewModel: DrawViewModel = viewModel(
-        factory = DrawViewModel.Factory
-    ),
+    viewModel: DrawViewModel,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -189,7 +185,7 @@ private class DrawPreviewProvider : PreviewParameterProvider<DrawUiState> {
         DrawUiState.Loading,
         DrawUiState.Success(
             draw = mapOf("Secret" to "Like 1 | Like 2 | Like 3"),
-            group = GroupModel(name = "Group")
+            group = GroupEntities.toFake(name = "Group")
         ),
         DrawUiState.Error(error = "Error")
     )

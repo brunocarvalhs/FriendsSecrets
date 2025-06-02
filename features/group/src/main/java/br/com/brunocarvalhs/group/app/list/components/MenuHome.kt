@@ -12,12 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.navigation.Screen
+import br.com.brunocarvalhs.group.R
 
 sealed class MenuItem(
     val title: @Composable () -> String,
-    val route: String? = null,
     val icon: ImageVector? = null,
     val isEnabled: Boolean
 ) {
@@ -30,14 +28,12 @@ sealed class MenuItem(
 
     data object Settings : MenuItem(
         title = { stringResource(R.string.home_drop_menu_item_text_settings) },
-        route = Screen.Settings.route,
         icon = Icons.Outlined.Settings,
         isEnabled = true
     )
 
     data object Profile : MenuItem(
         title = { stringResource(id = R.string.home_drop_menu_item_text_profile) },
-        route = null,
         icon = Icons.Outlined.Person,
         isEnabled = true
     )

@@ -6,13 +6,10 @@ import kotlinx.serialization.Serializable
 object AuthGraphRoute
 
 @Serializable
-object HomeGraphRoute
-
-@Serializable
-object GenerateGraphRoute
-
-@Serializable
 object GroupGraphRoute
+
+@Serializable
+object ProfileGraphRoute
 
 @Serializable
 object SettingsGraphRoute

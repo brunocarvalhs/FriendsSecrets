@@ -62,7 +62,7 @@ import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
@@ -84,7 +84,7 @@ fun ProfileScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is ProfileUiState.Success) {
-            navController.navigate(HomeGraphRoute) {
+            navController.navigate(GroupGraphRoute) {
                 popUpTo(AuthGraphRoute) {
                     inclusive = true
                 }

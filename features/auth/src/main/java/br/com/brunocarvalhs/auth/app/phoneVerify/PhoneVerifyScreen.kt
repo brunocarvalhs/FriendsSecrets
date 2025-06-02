@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
-import br.com.brunocarvalhs.auth.commons.navigation.ProfileScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
+import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.delay
@@ -72,7 +72,7 @@ fun PhoneVerifyScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is PhoneVerifyUiState.Success) {
-            navController.navigate(ProfileScreenRoute)
+            navController.navigate(ProfileGraphRoute)
         }
     }
 

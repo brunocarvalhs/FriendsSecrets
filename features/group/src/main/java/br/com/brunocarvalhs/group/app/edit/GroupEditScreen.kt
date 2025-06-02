@@ -39,29 +39,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-import br.com.brunocarvalhs.friendssecrets.ui.components.AddMemberBottomSheet
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.MemberItem
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.components.SuccessComponent
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.HomeNavigation
+import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
+import br.com.brunocarvalhs.friendssecrets.ui.components.MemberItem
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.commons.navigation.GroupListScreenRoute
+import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
 
 @Composable
 fun GroupEditScreen(
     navController: NavController = rememberNavController(),
-    viewModel: GroupEditViewModel = viewModel(
-        factory = GroupEditViewModel.Factory
-    ),
+    viewModel: GroupEditViewModel,
     groupId: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -74,8 +70,9 @@ fun GroupEditScreen(
         navController = navController,
         uiState = uiState,
         onHome = {
-            navController.navigate(HomeNavigation.Home.route) {
-                popUpTo(HomeNavigation.Home.route) {
+            val destination = GroupListScreenRoute
+            navController.navigate(destination) {
+                popUpTo(destination) {
                     inclusive = true
                 }
             }
@@ -132,16 +129,16 @@ private fun GroupEditContent(
                 Text(stringResource(R.string.group_create_action_save_group))
             }
         }
-    }) {
+    }) { paddingValues ->
         when (uiState) {
             is GroupEditUiState.Idle -> {
                 GroupEditForm(
-                    modifier = Modifier.padding(it),
+                    modifier = Modifier.padding(paddingValues),
                     uiState = uiState,
                     name = name,
-                    onNameChange = { name = it },
+                    onNameChange = { data -> name = data },
                     description = description,
-                    onDescriptionChange = { description = it },
+                    onDescriptionChange = { data -> description = data },
                     members = members,
                     onMembersChange = { list ->
                         members.clear()
@@ -153,7 +150,7 @@ private fun GroupEditContent(
             GroupEditUiState.Loading -> {
                 LoadingProgress(
                     modifier = Modifier
-                        .padding(it)
+                        .padding(paddingValues)
                         .fillMaxSize()
                 )
             }
@@ -263,12 +260,12 @@ private fun GroupEditForm(
 private class GroupEditPreviewProvider : PreviewParameterProvider<GroupEditUiState> {
     override val values = sequenceOf(
         GroupEditUiState.Idle(
-            group = GroupModel(
+            group = GroupEntities.toFake(
                 id = "1",
                 name = "Group",
                 description = "Description",
                 members = listOf(
-                    UserModel(
+                    UserEntities.toFake(
                         name = "Member 1",
                         likes = listOf(
                             "Like 1",

@@ -39,7 +39,7 @@ import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.openUrl
-import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
@@ -56,7 +56,7 @@ internal fun LoginScreen(
             LoginUiState.PrivacyPolicy -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
             LoginUiState.TermsOfUse -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
             LoginUiState.Register -> navController.navigate(PhoneSendScreenRoute)
-            LoginUiState.AcceptNotRegister -> navController.navigate(HomeGraphRoute)
+            LoginUiState.AcceptNotRegister -> navController.navigate(GroupGraphRoute)
             else -> {}
         }
     }

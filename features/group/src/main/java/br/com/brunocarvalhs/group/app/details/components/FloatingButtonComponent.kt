@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import br.com.brunocarvalhs.friendssecrets.R
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.presentation.views.group.details.GroupDetailsPreviewProvider
+import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.app.details.GroupDetailsPreviewProvider
 import br.com.brunocarvalhs.group.app.details.GroupDetailsUiState
 
 @Composable
