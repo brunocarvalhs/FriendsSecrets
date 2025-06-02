@@ -1,6 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.common.di
 
+import br.com.brunocarvalhs.friendssecrets.common.analytics.AnalyticsProvider
+import br.com.brunocarvalhs.friendssecrets.common.logger.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.common.performance.PerformanceManager
+import br.com.brunocarvalhs.friendssecrets.common.remote.RemoteProvider
+import br.com.brunocarvalhs.friendssecrets.common.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.common.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager // Supondo que StorageManager também não precise de getInstance()
@@ -37,5 +41,31 @@ object CommonsProvidesModule {
 
     @Provides
     @Singleton
-    fun provideStorageService(): StorageService = StorageManager.getInstance() // TODO: Refatorar StorageManager se ele também usar getInstance()
+    fun provideStorageService(event: StorageManager.StorageEvent): StorageService {
+        return StorageManager(event)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBiometricManager(storage: StorageManager): BiometricManager {
+        return BiometricManager(storage)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteProvider(event: RemoteProvider.RemoteEvent): RemoteProvider {
+        return RemoteProvider(event)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCrashlytics(event: CrashlyticsProvider.CrashlyticsEvent): CrashlyticsProvider {
+        return CrashlyticsProvider(event)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsProvider(event: AnalyticsProvider.AnalyticsEvent): AnalyticsProvider {
+        return AnalyticsProvider(event)
+    }
 }

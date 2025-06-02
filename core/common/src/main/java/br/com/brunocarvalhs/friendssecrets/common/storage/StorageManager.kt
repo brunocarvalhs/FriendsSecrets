@@ -1,9 +1,9 @@
 package br.com.brunocarvalhs.friendssecrets.common.storage
 
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
-import timber.log.Timber
+import javax.inject.Inject
 
-class StorageManager(
+class StorageManager @Inject constructor(
     private val storage: StorageEvent
 ) : StorageService {
 
@@ -17,29 +17,6 @@ class StorageManager(
         fun <T> save(key: String, value: T)
         fun <T> load(key: String, clazz: Class<T>): T?
         fun remove(key: String)
-    }
-
-    companion object {
-        @Volatile
-        private var instance: StorageManager? = null
-
-        fun initialize(event: StorageEvent) {
-            synchronized(this) {
-                if (instance == null) {
-                    instance = StorageManager(event)
-                } else {
-                    Timber.tag("StorageManager").w("StorageManager já inicializado.")
-                }
-            }
-        }
-
-        fun getInstance(): StorageManager {
-            return instance ?: synchronized(this) {
-                instance ?: throw IllegalStateException(
-                    "StorageManager não inicializado. Chame initialize() primeiro."
-                )
-            }
-        }
     }
 }
 

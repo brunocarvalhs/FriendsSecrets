@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.common.performance
 
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
-import timber.log.Timber
 
 class PerformanceManager(
     private val event: PerformanceEvent
@@ -23,27 +22,5 @@ class PerformanceManager(
     interface PerformanceEvent {
         fun start(name: String)
         fun stop(name: String)
-    }
-
-    companion object {
-        @Volatile
-        private var instance: PerformanceManager? = null
-
-        fun initialize(event: PerformanceEvent) {
-            synchronized(this) {
-                if (instance == null) {
-                    instance = PerformanceManager(event)
-                } else {
-                    Timber.tag("PerformanceManager").w("Provider já inicializado.")
-                }
-            }
-        }
-
-        fun getInstance(): PerformanceManager {
-            return instance ?: synchronized(this) {
-                instance
-                    ?: throw IllegalStateException("PerformanceManager não inicializado. Chame initialize() primeiro.")
-            }
-        }
     }
 }

@@ -41,7 +41,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.SettingsGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
@@ -62,14 +61,14 @@ fun HomeScreen(
     viewModel: HomeViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val session = SessionManager.getInstance<UserEntities>()
+    val session = viewModel.session
 
     LaunchedEffect(Unit) {
         viewModel.event(HomeIntent.FetchGroups)
     }
 
     HomeContent(
-        session = session.getCurrentUserModel(),
+        session = session,
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,

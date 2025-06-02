@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.common.session
 
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
-import timber.log.Timber
 
 class SessionManager<T>(
     private val event: SessionEvent<T>
@@ -30,23 +29,5 @@ class SessionManager<T>(
         suspend fun updateUserProfile(profile: T)
         fun signOut()
         fun deleteAccount()
-    }
-
-    companion object {
-        private var instance: SessionManager<*>? = null
-
-        @Suppress("UNCHECKED_CAST")
-        fun <T> getInstance(): SessionManager<T> {
-            return instance as? SessionManager<T>
-                ?: throw IllegalStateException("SessionManager não inicializado. Chame initialize() primeiro.")
-        }
-
-        fun <T> initialize(event: SessionEvent<T>) {
-            if (instance == null) {
-                instance = SessionManager(event)
-            } else {
-                Timber.tag("SessionManager").w("SessionManager já foi inicializado.")
-            }
-        }
     }
 }

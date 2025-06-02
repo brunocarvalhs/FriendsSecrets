@@ -3,6 +3,9 @@ package br.com.brunocarvalhs.group.app.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.common.extensions.report
+import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
+import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
@@ -17,8 +20,12 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val sessionService: SessionService<UserEntities>
 ) : ViewModel() {
+
+    val session: UserEntities?
+        get() = sessionService.getCurrentUserModel()
 
     private val _uiState: MutableStateFlow<HomeUiState> =
         MutableStateFlow(HomeUiState.Loading)
