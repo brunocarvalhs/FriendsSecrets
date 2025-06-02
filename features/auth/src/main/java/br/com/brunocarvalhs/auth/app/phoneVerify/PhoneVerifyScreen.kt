@@ -50,6 +50,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.ProfileScreenRoute
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
@@ -61,6 +62,7 @@ fun PhoneVerifyScreen(
     navController: NavController,
     viewModel: PhoneVerifyViewModel
 ) {
+    LaunchPerformanceLifecycleTracing("phone_verify")
     val uiState by viewModel.uiState.collectAsState()
 
     phoneNumber ?: run {

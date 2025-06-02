@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,12 +43,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.home.onboard.OnboardViewModel
+import br.com.brunocarvalhs.auth.R
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
@@ -62,30 +62,42 @@ import kotlinx.coroutines.launch
 fun OnboardingScreen(
     navController: NavHostController,
     initialPage: Int = 0,
-    viewModel: OnboardViewModel = viewModel(
-        factory = OnboardViewModel.Factory
-    ),
+    viewModel: OnboardViewModel
 ) {
+    LaunchPerformanceLifecycleTracing("onboarding")
     val uiState: OnboardUiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(OnboardViewIntent.FetchData)
     }
 
+    OnboardingContent(
+        navController = navController,
+        initialPage = initialPage,
+        uiState = uiState
+    )
+}
+
+@Composable
+private fun OnboardingContent(
+    navController: NavHostController,
+    initialPage: Int = 0,
+    uiState: OnboardUiState,
+) {
     when (uiState) {
         is OnboardUiState.Success -> {
-            OnboardingContent(
+            OnboardingList(
                 navController = navController,
                 initialPage = initialPage,
-                pages = (uiState as OnboardUiState.Success).onboard
+                pages = uiState.onboard
             )
         }
 
         is OnboardUiState.Idle -> {
-            OnboardingContent(
+            OnboardingList(
                 navController = navController,
                 initialPage = initialPage,
-                pages = (uiState as OnboardUiState.Idle).onboard
+                pages = uiState.onboard
             )
         }
 
@@ -101,7 +113,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun OnboardingContent(
+private fun OnboardingList(
     navController: NavHostController,
     initialPage: Int = 0,
     pages: List<OnboardViewModel.Onboarding> = emptyList(),
@@ -115,7 +127,11 @@ private fun OnboardingContent(
 
     Scaffold(
         topBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
                 IconButton(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier
@@ -255,8 +271,8 @@ private fun OnboardingPage(
 
 private class OnboardingPreviewProvider : PreviewParameterProvider<OnboardUiState> {
     override val values = sequenceOf(
-        OnboardUiState.Idle(onboard = OnboardViewModel.default),
-        OnboardUiState.Success(onboard = OnboardViewModel.default),
+        OnboardUiState.Idle(onboard = emptyList()),
+        OnboardUiState.Success(onboard = emptyList()),
         OnboardUiState.Loading
     )
 }
@@ -264,9 +280,17 @@ private class OnboardingPreviewProvider : PreviewParameterProvider<OnboardUiStat
 @Preview
 @Composable
 fun OnboardingContentPreview(
-    @PreviewParameter(OnboardingPreviewProvider::class) page: Int,
+    @PreviewParameter(OnboardingPreviewProvider::class) page: OnboardUiState,
 ) {
+    val context = LocalContext.current
+
+    val pages = when (page) {
+        is OnboardUiState.Idle -> page.copy(OnboardViewModel.default(context))
+        OnboardUiState.Loading -> return
+        is OnboardUiState.Success -> page.copy(OnboardViewModel.default(context))
+    }
+
     FriendsSecretsTheme {
-        OnboardingContent(navController = rememberNavController(), initialPage = page)
+        OnboardingContent(navController = rememberNavController(), uiState = pages)
     }
 }

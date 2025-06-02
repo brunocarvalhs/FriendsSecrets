@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.openUrl
 import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
@@ -46,6 +47,7 @@ internal fun LoginScreen(
     navController: NavHostController,
     viewModel: LoginViewModel
 ) {
+    LaunchPerformanceLifecycleTracing("login")
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 

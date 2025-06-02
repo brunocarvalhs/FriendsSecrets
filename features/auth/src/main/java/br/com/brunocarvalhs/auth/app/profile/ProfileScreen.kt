@@ -60,6 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.HomeGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
@@ -74,6 +75,7 @@ fun ProfileScreen(
     navController: NavController,
     viewModel: ProfileViewModel
 ) {
+    LaunchPerformanceLifecycleTracing("profile")
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {

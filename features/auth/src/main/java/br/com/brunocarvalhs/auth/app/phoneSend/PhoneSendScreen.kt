@@ -46,6 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneVerificationScreenRoute
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
@@ -60,6 +61,7 @@ fun PhoneSendScreen(
     navController: NavController,
     viewModel: PhoneSendViewModel
 ) {
+    LaunchPerformanceLifecycleTracing("phone_send")
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState) {

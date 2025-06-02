@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.BiometricScreenRoute
+import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import timber.log.Timber
@@ -42,6 +43,7 @@ import timber.log.Timber
 fun BiometricScreen(
     navController: NavHostController,
 ) {
+    LaunchPerformanceLifecycleTracing("biometric")
     val context = LocalContext.current as FragmentActivity
     val executor = remember { ContextCompat.getMainExecutor(context) }
     val biometricPrompt =

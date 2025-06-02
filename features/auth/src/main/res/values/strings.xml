@@ -20,4 +20,14 @@
     <string name="code_has_been_send_to">Code has been send to %1$s</string>
     <string name="resend_code_in_s">Resend Code in %1$ss</string>
     <string name="verify">Verify</string>
+    <string name="onboarding_screen_title">Welcome to Friends Secrets!</string>
+    <string name="onboarding_screen_description">The app that will help you organize your Secret Santa game.</string>
+    <string name="onboarding_screen_close">Close</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Start</string>
+    <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Log in using your biometric credential</string>
+    <string name="biometric_screen_use_account_password">Use account password</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
+    <string name="biometric_screen_unlock">Unlock</string>
 </resources>

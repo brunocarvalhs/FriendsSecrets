@@ -58,6 +58,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.androidx.runtime.tracing)
+    debugImplementation(libs.androidx.tracing.perfetto)
+    debugImplementation(libs.androidx.tracing.perfetto.binary)
 
     // Preview (IDE)
     implementation(libs.androidx.ui.tooling.preview)
@@ -105,4 +108,10 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
     kspAndroidTest(libs.hilt.compiler)
+
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 }
