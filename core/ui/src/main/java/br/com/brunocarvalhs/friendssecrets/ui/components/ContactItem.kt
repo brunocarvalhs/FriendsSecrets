@@ -127,13 +127,6 @@ fun ContactItem(
                         text = contact.name,
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
                     )
-                    if (contact.phoneNumber.isNotBlank()) {
-                        Text(
-                            text = contact.phoneNumber,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                 }
 
                 Row(

@@ -53,6 +53,8 @@ import br.com.brunocarvalhs.group.app.list.components.GroupCard
 import br.com.brunocarvalhs.group.app.list.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.app.list.components.MenuHome
 import br.com.brunocarvalhs.group.app.list.components.MenuItem
+import br.com.brunocarvalhs.group.commons.navigation.GroupCreateScreenRoute
+import br.com.brunocarvalhs.group.commons.navigation.GroupDetailsScreenRoute
 import br.com.brunocarvalhs.group.commons.navigation.GroupListScreenRoute
 
 @Composable
@@ -72,9 +74,6 @@ fun HomeScreen(
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
-        isSettingsEnabled = true,
-        isJoinGroupEnabled = true,
-        isCreateGroupEnabled = true,
     )
 }
 
@@ -155,7 +154,7 @@ private fun HomeContent(
 
                 if (isCreateGroupEnabled) {
                     ExtendedFloatingActionButton(onClick = {
-                        navController.navigate(br.com.brunocarvalhs.group.commons.navigation.GroupCreateScreenRoute)
+                        navController.navigate(GroupCreateScreenRoute)
                     }) {
                         Icon(Icons.Filled.Add, "Add")
                         Text(stringResource(R.string.home_action_create_group))
@@ -178,7 +177,7 @@ private fun HomeContent(
                     EmptyGroupComponent(
                         modifier = Modifier.padding(it),
                         onGroupToEnter = { showBottomSheet = true },
-                        onCreateGroup = { navController.navigate(br.com.brunocarvalhs.group.commons.navigation.GroupCreateScreenRoute) },
+                        onCreateGroup = { navController.navigate(GroupCreateScreenRoute) },
                         isJoinGroupEnabled = isJoinGroupEnabled,
                         isCreateGroupEnabled = isCreateGroupEnabled
                     )
@@ -187,7 +186,7 @@ private fun HomeContent(
                         modifier = Modifier
                             .padding(it)
                             .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection), // Adicionado aqui
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
                         columns = GridCells.Fixed(2),
                     ) {
                         items(uiState.list) { item ->
@@ -197,10 +196,7 @@ private fun HomeContent(
                                     .fillMaxWidth(),
                                 group = item,
                                 onClick = {
-                                    val destination =
-                                        br.com.brunocarvalhs.group.commons.navigation.GroupDetailsScreenRoute(
-                                            item.id
-                                        )
+                                    val destination = GroupDetailsScreenRoute(item.id)
                                     navController.navigate(destination)
                                 }
                             )

@@ -94,55 +94,6 @@ fun GroupCard(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
-
-                Column(
-                    modifier = Modifier.fillMaxHeight(0.8f),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    val overlapOffset = (-10).dp
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(overlapOffset)
-                    ) {
-                        if (group.members.size > 3) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(shape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .border(1.dp, Color.White, shape)
-                                    .zIndex(group.members.size.toFloat()),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "+${group.members.size - 3}",
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-
-                        group.members.take(3).forEachIndexed { index, member ->
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(shape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .border(1.dp, Color.White, shape)
-                                    .zIndex((group.members.size - index - 1).toFloat()),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = member.toString(),
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-                    }
-                }
             }
         }
     }
