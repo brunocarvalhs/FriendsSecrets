@@ -23,4 +23,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "FriendsSecrets"
 include(":app")
- 
+include(":core:domain")
+include(":core:data")
+include(":core:ui")
+include(":core:common")
+include(":features:auth")
+include(":features:group")
+include(":features:settings")

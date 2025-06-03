@@ -1,0 +1,116 @@
+<resources>
+    <!--  App  -->
+    <string name="app_name">Amigo Secreto</string>
+
+    <!--  Onboarding  -->
+    <string name="onboarding_screen_title">Bem-vindo ao Amigo Secreto!</string>
+    <string name="onboarding_screen_description">O aplicativo que vai te ajudar a organizar o jogo de Amigo Secreto, além de ajudar a descobrir o presente ideal para seu amigo sorteado.</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">Descrição do grupo</string>
+    <string name="group_create_input_name">Nome do grupo</string>
+    <string name="group_create_text_button_member">Membros</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">Ver menos</string>
+    <string name="group_details_text_button_label_see_more">Ver mais</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">Enviar feedback</string>
+    <string name="group_details_drop_menu_item_text_settings">Configurações</string>
+    <string name="group_details_drop_menu_item_text_edit">Editar</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_profile">Perfil</string>
+    <string name="home_drop_menu_item_text_join_a_group">Entrar em um grupo</string>
+    <string name="home_drop_menu_item_text_settings">Configurações</string>
+    <string name="home_action_create_group">Criar novo grupo</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">Sucesso!</string>
+    <string name="group_create_action_save_group">Salvar grupo</string>
+    <string name="group_details_action_draw_members">Sorteio</string>
+    <string name="group_details_action_shared">Compartilhado</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">Oi, preciso de uma sugestão de presente para %s, que gosta de %s, para o amigo secreto %s.</string>
+
+    <!--  Add Member Bottom Sheet  -->
+    <string name="add_member_bottom_sheet_title_label">Adicionar novo membro</string>
+    <string name="add_member_bottom_sheet_input_new_member">Novo membro</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">Nome inválido! Apenas letras e espaços são permitidos.</string>
+    <string name="add_member_bottom_sheet_input_liker">Gosta de</string>
+    <string name="add_member_bottom_sheet_button_label">Adicionar membro</string>
+    <string name="add_member_bottom_sheet_text_button_label">Concluir</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">O grupo já existe</string>
+    <string name="exception_group_not_found">Grupo não encontrado</string>
+    <string name="require_name_cannot_be_blank">O nome não pode estar em branco</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">O nome não pode ter mais de 255 caracteres</string>
+    <string name="require_group_must_have_at_least_one_member">O grupo deve ter pelo menos um membro</string>
+    <string name="require_group_cannot_have_more_than_2_members">O grupo deve ter no mínimo 3 membros</string>
+    <string name="require_draw_already_held">O sorteio já foi realizado</string>
+    <string name="require_group_id_cannot_be_blank">O ID do grupo não pode estar em branco</string>
+    <string name="exception_minimums_members_of_draw">O grupo precisa de pelo menos 3 participantes para realizar o sorteio.</string>
+    <string name="group_details_action_preview_my_secret_friend">Meus Amigos Secretos</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">Olá %1$s! 👋\n\nVocê foi convidado para um jogo empolgante! 🎉\n\nClique no link para saber quem é o seu amigo secreto: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nSe não conseguir acessar o link, baixe o aplicativo Friends Secrets usando este link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse o código do grupo: %2$s para entrar e clique em %5$s.\n\nSeu código do seu amigo secreto é: %3$s.\n\n🚀 Não perca tempo, comece a planejar seu presente de amigo secreto agora mesmo!</string>
+    <string name="group_details_share_member_simple">Olá! 👋\n\nVocê foi convidado para o amigo secreto chamado %1$s 🎉\n\nUse o código do grupo: %2$s para entrar.\n\nComece a planejar seu presente de amigo secreto agora! 🚀</string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">Desbloqueie para usar o Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Faça login usando sua credencial biométrica</string>
+    <string name="biometric_screen_use_account_password">Usar a senha da conta</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets bloqueado</string>
+    <string name="biometric_screen_unlock">Desbloquear</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Excluir o grupo</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_appearance">Aparência</string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_report_an_issue">Relatar um problema</string>
+    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
+    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o aplicativo ajuste automaticamente suas cores com base no plano de fundo do seu dispositivo.</string>
+    <string name="appearance_screen_title">Selecionar uma opção específica mudará a aparência (cor) do aplicativo de acordo com suas preferências.</string>
+    <string name="settings_screen_general">Geral</string>
+    <string name="settings_screen_security">Segurança</string>
+    <string name="settings_screen_support">Suporte</string>
+    <string name="group_details_description">Descrição</string>
+    <string name="group_details_members">Membros</string>
+    <string name="draw_screen_title">Seu amigo secreto é...</string>
+    <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
+    <string name="draw_screen_action_generative">Sugestões de presentes</string>
+    <string name="draw_screen_code_secret">Código secreto</string>
+    <string name="draw_screen_title_like">Gostos</string>
+    <string name="onboarding_screen_close">Fechar</string>
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_finish">Começar</string>
+    <string name="group_to_enter_button_text">Validar</string>
+    <string name="group_to_enter_button_enter_to_group">Entrar no grupo</string>
+    <string name="group_to_enter_textfield_token_to_grup">Token do grupo</string>
+    <string name="error_component_button_try_again">Tentar novamente</string>
+    <string name="error_component_button_to_home">Ir para o inicio</string>
+    <string name="empty_group_component_button_create_grup">Criar um grupo</string>
+    <string name="chat_generative_title_chat">Conversa</string>
+    <string name="empty_group_component_button_enter_grup">Entrar em um grupo</string>
+    <string name="chat_generative_textfield_message">Digite uma mensagem...</string>
+    <string name="chat_generative_button_send">Enviar</string>
+    <string name="empty_group_title">Ops!</string>
+    <string name="empty_group_message">Nenhum grupo encontrado</string>
+    <string name="home_title">E aí</string>
+    <string name="home_drop_menu_item_text_logout">Logout</string>
+    <string name="group_create_phone_contacts" />
+    <string name="group_create_app_users" />
+    <string name="login_screen_welcome">Bem-vindo ao %1$s</string>
+    <string name="login_screen_description">Leia nossa Política de Privacidade. Toque em \'Aceitar e Registrar\' para criar sua conta ou em \'Aceitar e Continuar\' para prosseguir sem registro. Ambas as opções implicam na aceitação dos Termos de Serviço.</string>
+    <string name="login_screen_privacy">Política de Privacidade</string>
+    <string name="login_screen_terms">Termos de Serviço</string>
+    <string name="login_screen_and">" e "</string>
+    <string name="login_screen_button_register">Aceitar e Registrar</string>
+    <string name="login_screen_button_anonymation">Aceitar e Continuar</string>
+    <string name="phone_send_title">Insira seu número de telefone</string>
+    <string name="phone_send_description">%1$s precisará verificar seu número de telefone.</string>
+    <string name="phone_send_textfield_label">Número de telefone</string>
+    <string name="phone_send_textfield_description">Podem ser aplicadas tarifas da operadora.</string>
+    <string name="phone_send_button">Próximo</string>
+</resources>
