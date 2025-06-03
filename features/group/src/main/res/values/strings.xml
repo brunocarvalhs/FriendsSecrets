@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="group_tab_info">Informações</string>
+    <string name="group_tab_members">Membros</string>
+    <string name="group_tab_gift_ideas">Presentes</string>
+
     <!--  App  -->
     <string name="app_name">Secret Santa</string>
 

@@ -63,8 +63,11 @@ import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
+import br.com.brunocarvalhs.friendssecrets.ui.components.BottomNavItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.LikesComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationComponent
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.AsyncImage
 import com.yalantis.ucrop.UCrop
@@ -106,6 +109,7 @@ private fun ProfileContent(
     navController: NavController = rememberNavController(),
     handleIntent: (ProfileIntent) -> Unit = {},
 ) {
+    var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Profile) }
 
     Scaffold(
         topBar = {
@@ -116,6 +120,22 @@ private fun ProfileContent(
                         navController.currentBackStackEntry?.toRoute<PhoneSendScreenRoute>()
                     if (currentRoute != PhoneSendScreenRoute) {
                         NavigationBackIconButton(navController = navController)
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            NavigationComponent(
+                selectedItem = selectedItem,
+                onItemSelected = { menu ->
+                    selectedItem = menu
+                    val route: Any = when (menu) {
+                        is BottomNavItem.Groups -> GroupGraphRoute
+                        is BottomNavItem.Profile -> ProfileGraphRoute
+                    }
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
             )

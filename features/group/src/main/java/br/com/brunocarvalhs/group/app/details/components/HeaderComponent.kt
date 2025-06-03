@@ -28,8 +28,8 @@ fun HeaderComponent(
     onShareGroup: KFunction1<GroupEntities, Unit>
 ) {
     LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
     ), title = {
         if (uiState is GroupDetailsUiState.Success) {
             Text(uiState.group.name)

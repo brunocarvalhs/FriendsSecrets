@@ -11,9 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
-    private val session: SessionService<UserEntities>
+    val session: SessionService<UserEntities>
 ) : ViewModel() {
-
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 

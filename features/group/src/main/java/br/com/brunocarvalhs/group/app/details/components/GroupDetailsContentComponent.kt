@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.app.details.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,10 +10,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,34 +49,70 @@ fun GroupDetailsContentComponent(
     onShare: (member: UserEntities, secret: String, token: String) -> Unit = { _, _, _ -> },
     onRemove: (group: GroupEntities, participant: UserEntities) -> Unit = { _, _ -> }
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    val tabTitles = listOf(
+        stringResource(R.string.group_tab_info),
+        stringResource(R.string.group_tab_members),
+        stringResource(R.string.group_tab_gift_ideas)
+    )
+
+    Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(text = title) }
+                )
+            }
+        }
+
+        when (selectedTabIndex) {
+            0 -> GroupInfoTab(uiState)
+            1 -> MembersTab(
+                uiState,
+                showBottomSheet,
+                setShowBottomSheet,
+                setName,
+                setLikes,
+                onShare,
+                onRemove
+            )
+
+            2 -> GiftIdeasTab()
+        }
+    }
+}
+
+@Composable
+private fun GroupInfoTab(uiState: GroupDetailsUiState.Success) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
             uiState.group.description?.let {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = stringResource(R.string.group_details_description),
                         style = MaterialTheme.typography.titleMedium
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
-                    ExpandableText(
-                        text = uiState.group.description.orEmpty(), maxLines = 3
-                    )
+                    ExpandableText(text = it, maxLines = 3)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun MembersTab(
+    uiState: GroupDetailsUiState.Success,
+    showBottomSheet: Boolean,
+    setShowBottomSheet: (Boolean) -> Unit,
+    setName: (String) -> Unit,
+    setLikes: (List<String>) -> Unit,
+    onShare: (UserEntities, String, String) -> Unit,
+    onRemove: (GroupEntities, UserEntities) -> Unit
+) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
             Row(
                 modifier = Modifier
@@ -81,13 +124,12 @@ fun GroupDetailsContentComponent(
                 Text(text = stringResource(R.string.group_details_members))
             }
         }
+
         if (uiState.group.draws.isNotEmpty()) {
             items(uiState.group.draws.keys.toList()) { participant ->
                 MemberItem(
                     participant = uiState.group.members.find { it.name == participant }
-                        ?: UserEntities.create(
-                            name = participant
-                        ),
+                        ?: UserEntities.create(name = participant),
                     group = uiState.group,
                     isAdministrator = uiState.group.isOwner,
                     onShare = { member, secret, token ->
@@ -95,7 +137,7 @@ fun GroupDetailsContentComponent(
                     },
                 )
             }
-        } else if (uiState.group.members.isNotEmpty()) {
+        } else {
             items(uiState.group.members) { member ->
                 MemberItem(
                     participant = member,
@@ -111,6 +153,20 @@ fun GroupDetailsContentComponent(
                     },
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun GiftIdeasTab() {
+    LazyColumn(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
+        item {
+            Text(
+                text = "Indicações de presentes (em construção)",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

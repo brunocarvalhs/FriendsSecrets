@@ -10,17 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -32,30 +23,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.navigation.SettingsGraphRoute
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.ui.components.BottomNavItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
+import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationComponent
 import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.R
 import br.com.brunocarvalhs.group.app.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.app.list.components.GroupCard
 import br.com.brunocarvalhs.group.app.list.components.GroupToEnterBottomSheet
-import br.com.brunocarvalhs.group.app.list.components.MenuHome
-import br.com.brunocarvalhs.group.app.list.components.MenuItem
+import br.com.brunocarvalhs.group.app.list.components.HeaderHomeComponent
 import br.com.brunocarvalhs.group.commons.navigation.GroupCreateScreenRoute
 import br.com.brunocarvalhs.group.commons.navigation.GroupDetailsScreenRoute
-import br.com.brunocarvalhs.group.commons.navigation.GroupListScreenRoute
 
 @Composable
 fun HomeScreen(
@@ -88,80 +77,42 @@ private fun HomeContent(
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
+    var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Groups) }
+
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    var expanded by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    session?.let {
-                        Text(
-                            text = "${stringResource(R.string.home_title)} ${it.name}",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                },
-                actions = {
-                    if (isSettingsEnabled || isJoinGroupEnabled) {
-                        IconButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "More"
-                            )
-                        }
-                        MenuHome(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            onClick = { menu ->
-                                when (menu) {
-                                    MenuItem.JoinGroup -> showBottomSheet = true
-                                    MenuItem.Logout -> {
-                                        onEvent(HomeIntent.Logout)
-                                        navController.navigate(GroupListScreenRoute) {
-                                            popUpTo(GroupListScreenRoute) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    }
-
-                                    MenuItem.Profile -> {
-                                        navController.navigate(ProfileGraphRoute)
-                                    }
-
-                                    MenuItem.Settings -> {
-                                        navController.navigate(SettingsGraphRoute)
-                                    }
-                                }
-                            },
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
+            HeaderHomeComponent(
+                session = session,
+                navController = navController,
+                scrollBehavior = scrollBehavior,
+                isSettingsEnabled = isSettingsEnabled,
+                isJoinGroupEnabled = isJoinGroupEnabled,
+                onEvent = onEvent,
+                onShowBottomSheet = { showBottomSheet = it }
             )
         },
-        floatingActionButton = {
-            if (uiState is HomeUiState.Success) {
-                if (uiState.list.isEmpty()) return@Scaffold
-
-                if (isCreateGroupEnabled) {
-                    ExtendedFloatingActionButton(onClick = {
-                        navController.navigate(GroupCreateScreenRoute)
-                    }) {
-                        Icon(Icons.Filled.Add, "Add")
-                        Text(stringResource(R.string.home_action_create_group))
+        bottomBar = {
+            NavigationComponent(
+                selectedItem = selectedItem,
+                onItemSelected = { menu ->
+                    selectedItem = menu
+                    val route: Any = when (menu) {
+                        is BottomNavItem.Groups -> GroupGraphRoute
+                        is BottomNavItem.Profile -> ProfileGraphRoute
+                    }
+                    navController.navigate(route) {
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
-            }
-        },
+            )
+        }
     ) {
         when (uiState) {
             is HomeUiState.Error -> {

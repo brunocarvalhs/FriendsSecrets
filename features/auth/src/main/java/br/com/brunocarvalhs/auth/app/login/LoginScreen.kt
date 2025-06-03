@@ -51,15 +51,26 @@ internal fun LoginScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        if (viewModel.session.isUserLoggedIn()) {
+            navController.navigate(GroupGraphRoute)
+        }
+    }
+
     LaunchedEffect(uiState) {
         when (uiState) {
             LoginUiState.PrivacyPolicy -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
             LoginUiState.TermsOfUse -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
             LoginUiState.Register -> navController.navigate(PhoneSendScreenRoute)
-            LoginUiState.AcceptNotRegister -> navController.navigate(GroupGraphRoute)
+            LoginUiState.AcceptNotRegister -> {
+                viewModel.session.setUserAnonymous()
+                navController.navigate(GroupGraphRoute)
+            }
             else -> {}
         }
     }
+
+    if (uiState == LoginUiState.None) return
 
     LoginContent(
         handleIntent = viewModel::handleIntent
