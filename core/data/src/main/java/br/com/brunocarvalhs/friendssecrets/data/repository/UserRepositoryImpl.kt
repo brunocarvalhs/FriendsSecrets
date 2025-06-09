@@ -6,7 +6,6 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -15,10 +14,9 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val cryptoService: CryptoService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UserRepository {
     override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities> =
-        withContext(dispatcher) {
+        withContext(Dispatchers.IO) {
             val phoneNumberEncrypted = cryptoService.encrypt(phoneNumber)
 
             val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
@@ -34,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(
         }
 
     override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities> =
-        withContext(dispatcher) {
+        withContext(Dispatchers.IO) {
             val phoneNumbersEncrypted = list.map { cryptoService.encrypt(it) }
 
             val chunks = phoneNumbersEncrypted.chunked(10)
@@ -59,7 +57,7 @@ class UserRepositoryImpl @Inject constructor(
             return@withContext allResults
         }
 
-    override suspend fun createUser(user: UserEntities): Unit = withContext(dispatcher) {
+    override suspend fun createUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
         firestore.collection(UserEntities.COLLECTION_NAME)
@@ -68,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun updateUser(user: UserEntities): Unit = withContext(dispatcher) {
+    override suspend fun updateUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
         firestore.collection(UserEntities.COLLECTION_NAME)
@@ -77,7 +75,7 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun getUserById(userId: String): UserEntities? = withContext(dispatcher) {
+    override suspend fun getUserById(userId: String): UserEntities? = withContext(Dispatchers.IO) {
         val documentSnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)
             .get()
@@ -91,7 +89,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities? =
-        withContext(dispatcher) {
+        withContext(Dispatchers.IO) {
             val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
                 .whereEqualTo(UserEntities.PHONE_NUMBER, phoneNumber)
                 .get()
@@ -105,7 +103,7 @@ class UserRepositoryImpl @Inject constructor(
             return@withContext UserDTO.fromMap(decryptedData).toEntities()
         }
 
-    override suspend fun deleteUser(userId: String): Unit = withContext(dispatcher) {
+    override suspend fun deleteUser(userId: String): Unit = withContext(Dispatchers.IO) {
         firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)
             .delete()
