@@ -55,9 +55,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.generativeai)
 
+    // Testes
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

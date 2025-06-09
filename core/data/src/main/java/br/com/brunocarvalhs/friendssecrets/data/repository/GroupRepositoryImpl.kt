@@ -10,16 +10,20 @@ import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DrawService
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val cryptoService: CryptoService,
-    private val drawService: DrawService
+    private val drawService: DrawService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : GroupRepository {
 
-    override suspend fun create(group: GroupEntities) {
+    override suspend fun create(group: GroupEntities): Unit = withContext(dispatcher) {
         val payload = group.toDTO()
 
         val data =
@@ -31,7 +35,7 @@ class GroupRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun read(groupId: String): GroupEntities {
+    override suspend fun read(groupId: String): GroupEntities = withContext(dispatcher) {
         val documentSnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .document(groupId)
             .get()
@@ -42,10 +46,10 @@ class GroupRepositoryImpl @Inject constructor(
         val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
         val decryptedData =
             cryptoService.decryptMap(encryptedData, setOf(GroupEntities.TOKEN, GroupEntities.ID))
-        return GroupDTO.fromMap(decryptedData).toEntities()
+        GroupDTO.fromMap(decryptedData).toEntities()
     }
 
-    override suspend fun update(group: GroupEntities) {
+    override suspend fun update(group: GroupEntities): Unit = withContext(dispatcher) {
         val payload = group.toDTO()
 
         val data =
@@ -57,17 +61,17 @@ class GroupRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun delete(groupId: String) {
+    override suspend fun delete(groupId: String): Unit = withContext(dispatcher){
         firestore.collection(GroupEntities.COLLECTION_NAME).document(groupId).delete().await()
     }
 
-    override suspend fun list(list: List<String>): List<GroupEntities> {
+    override suspend fun list(list: List<String>): List<GroupEntities> = withContext(dispatcher){
         val querySnapshot = firestore.collection(GroupEntities.COLLECTION_NAME)
             .whereIn(GroupEntities.TOKEN, list)
             .get()
             .await()
 
-        return querySnapshot.documents.map { documentSnapshot ->
+        querySnapshot.documents.map { documentSnapshot ->
             val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
             val decryptedData = cryptoService.decryptMap(
                 encryptedData,

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.UUID
 import kotlin.random.Random
 
-internal data class GroupModel(
+data class GroupModel(
     @SerializedName(GroupEntities.ID) override val id: String = UUID.randomUUID().toString(),
     @SerializedName(GroupEntities.TOKEN) override val token: String = Random.token(size = 8),
     @SerializedName(GroupEntities.NAME) override val name: String = "",

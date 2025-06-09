@@ -14,30 +14,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.group.R
-import br.com.brunocarvalhs.group.app.list.HomeIntent
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun HeaderHomeComponent(
     session: UserEntities? = null,
-    navController: NavController,
-    scrollBehavior: TopAppBarScrollBehavior,
-    isSettingsEnabled: Boolean = true,
-    isJoinGroupEnabled: Boolean = true,
-    onEvent: (HomeIntent) -> Unit = {},
-    onShowBottomSheet: (Boolean) -> Unit = {},
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    onAdd: () -> Unit = {},
+    onNotification: () -> Unit = {},
     notificationsCount: Int = 0,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.background,
         titleContentColor = MaterialTheme.colorScheme.onBackground,
@@ -49,13 +41,13 @@ internal fun HeaderHomeComponent(
             text = text, style = MaterialTheme.typography.titleLarge
         )
     }, actions = {
-        IconButton(onClick = { onShowBottomSheet(true) }) {
+        IconButton(onClick = onAdd) {
             Icon(
                 imageVector = Icons.Filled.Add,
                 contentDescription = "Add"
             )
         }
-        IconButton(onClick = { expanded = true }) {
+        IconButton(onClick = onNotification) {
             BadgedBox(badge = {
                 if (notificationsCount > 0) {
                     Badge()
@@ -69,4 +61,21 @@ internal fun HeaderHomeComponent(
         }
     }, scrollBehavior = scrollBehavior
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Preview
+private fun HeaderHomeComponentPreview() {
+    FriendsSecretsTheme {
+        HeaderHomeComponent(
+            session = UserEntities.toFake(
+                id = "1",
+                name = "John Doe",
+                photoUrl = null,
+                phoneNumber = "+5511999999999",
+                isPhoneNumberVerified = true
+            )
+        )
+    }
 }

@@ -73,7 +73,6 @@ private fun HomeContent(
     navController: NavController,
     uiState: HomeUiState,
     onEvent: (HomeIntent) -> Unit = {},
-    isSettingsEnabled: Boolean = true,
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
@@ -89,12 +88,9 @@ private fun HomeContent(
         topBar = {
             HeaderHomeComponent(
                 session = session,
-                navController = navController,
                 scrollBehavior = scrollBehavior,
-                isSettingsEnabled = isSettingsEnabled,
-                isJoinGroupEnabled = isJoinGroupEnabled,
-                onEvent = onEvent,
-                onShowBottomSheet = { showBottomSheet = it }
+                onAdd = { navController.navigate(GroupCreateScreenRoute) },
+                onNotification = { showBottomSheet = true },
             )
         },
         bottomBar = {
