@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import dagger.Lazy
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -18,7 +19,7 @@ import org.junit.Before
 import org.junit.Test
 
 class PhoneAuthServiceImplTest {
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: Lazy<FirebaseAuth>
     private lateinit var service: PhoneAuthService
     private lateinit var activity: Activity
 
