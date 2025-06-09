@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="11">
       <module name="FriendsSecrets.features.generative" target="21" />
       <module name="FriendsSecrets.features.home" target="21" />
+      <module name="FriendsSecrets.features.profiler" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

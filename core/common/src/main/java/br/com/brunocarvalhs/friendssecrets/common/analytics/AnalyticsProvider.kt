@@ -14,5 +14,6 @@ class AnalyticsProvider(
 
     interface AnalyticsEvent {
         fun logEvent(event: String, params: Bundle)
+        fun setUserId(id: String)
     }
 }

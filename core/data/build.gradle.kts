@@ -41,6 +41,7 @@ android {
 
 dependencies {
     api(project(":core:domain"))
+    api(project(":core:common"))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.generativeai)
+    implementation(libs.timber)
 
     // Testes
     testImplementation(libs.junit)

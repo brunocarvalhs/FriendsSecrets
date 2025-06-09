@@ -22,5 +22,6 @@ class PerformanceManager(
     interface PerformanceEvent {
         fun start(name: String)
         fun stop(name: String)
+        fun setDeviceId(id: String)
     }
 }

@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,8 +9,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
-import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -91,23 +88,14 @@ private val darkScheme = darkColorScheme(
 
 @Composable
 fun FriendsSecretsTheme(
-    isThemeRemote: Boolean = false,
-    themeRemoteProvider: ThemeService? = null,
-    getDarkColorScheme: (() -> ColorScheme)? = null,
-    getLightColorScheme: (() -> ColorScheme)? = null,
-    darkTheme: Boolean = if (LocalInspectionMode.current) isSystemInDarkTheme() else themeRemoteProvider?.isDarkTheme() == true,
-    dynamicColor: Boolean = if (LocalInspectionMode.current) false else themeRemoteProvider?.isDynamicThemeEnabled() == true,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colorScheme: ColorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> if (isThemeRemote) getDarkColorScheme?.invoke() ?: darkScheme else darkScheme
-
-        else -> if (isThemeRemote) getLightColorScheme?.invoke() ?: lightScheme else lightScheme
+    val context = LocalContext.current
+    val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        if (darkTheme) darkScheme else lightScheme
     }
 
     MaterialTheme(
@@ -116,3 +104,4 @@ fun FriendsSecretsTheme(
         content = content
     )
 }
+

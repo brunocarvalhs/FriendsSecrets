@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.initialization.providers
+package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 
 import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
@@ -6,11 +6,14 @@ import br.com.brunocarvalhs.friendssecrets.data.model.create
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
+import dagger.Lazy
 import kotlinx.coroutines.tasks.await
 
 class SessionEventImpl(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val firebaseAuth: Lazy<FirebaseAuth>
 ) : SessionManager.SessionEvent<UserEntities> {
+
+    private val auth: FirebaseAuth by lazy { firebaseAuth.get() }
 
     override fun getCurrentUserModel(): UserEntities? {
         val user = auth.currentUser ?: return null

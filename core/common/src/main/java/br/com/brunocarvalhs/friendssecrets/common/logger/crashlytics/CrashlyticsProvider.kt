@@ -22,5 +22,6 @@ class CrashlyticsProvider(
         fun report(throwable: Throwable)
         fun log(message: String)
         fun parameter(key: String, value: String)
+        fun setUserId(id: String)
     }
 }

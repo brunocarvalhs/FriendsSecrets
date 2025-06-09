@@ -12,7 +12,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.navigation.MainApp
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

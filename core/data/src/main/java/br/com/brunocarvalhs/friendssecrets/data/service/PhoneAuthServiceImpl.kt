@@ -7,14 +7,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import dagger.Lazy
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PhoneAuthServiceImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+class PhoneAuthServiceImpl(
+    private val firebaseAuth: Lazy<FirebaseAuth>
 ) : PhoneAuthService {
 
     override suspend fun <T> sendVerificationCode(phoneNumber: String, activity: T): Result<Unit> {
@@ -23,7 +23,7 @@ class PhoneAuthServiceImpl @Inject constructor(
         }
 
         return suspendCancellableCoroutine { continuation ->
-            val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+            val options = PhoneAuthOptions.newBuilder(firebaseAuth.get())
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(activity)
@@ -63,7 +63,7 @@ class PhoneAuthServiceImpl @Inject constructor(
 
         return try {
             val credential = PhoneAuthProvider.getCredential(id, code)
-            firebaseAuth.signInWithCredential(credential).await()
+            firebaseAuth.get().signInWithCredential(credential).await()
             PhoneVerificationManager.clear()
             Result.success(Unit)
         } catch (e: Exception) {

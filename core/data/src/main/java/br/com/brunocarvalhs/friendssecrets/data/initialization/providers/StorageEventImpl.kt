@@ -1,14 +1,20 @@
-package br.com.brunocarvalhs.friendssecrets.initialization.providers
+package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 
+import android.content.Context
 import android.content.SharedPreferences
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
 import com.google.gson.Gson
 import timber.log.Timber
 
 class StorageEventImpl(
-    private val sharedPreferences: SharedPreferences,
-    private val gson: Gson = Gson()
+    private val context: Context,
 ) : StorageManager.StorageEvent {
+
+    private val sharedPreferences: SharedPreferences by lazy {
+        context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
+    }
+
+    private val gson by lazy { Gson() }
 
     override fun <T> save(key: String, value: T) {
         with(sharedPreferences.edit()) {

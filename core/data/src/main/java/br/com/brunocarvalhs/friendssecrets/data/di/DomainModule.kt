@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.di
+package br.com.brunocarvalhs.friendssecrets.data.di
 
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
