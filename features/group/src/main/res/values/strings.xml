@@ -3,6 +3,7 @@
     <string name="group_tab_info">Informações</string>
     <string name="group_tab_members">Membros</string>
     <string name="group_tab_gift_ideas">Presentes</string>
+    <string name="group_tab_chat">Chat</string>
 
     <!--  App  -->
     <string name="app_name">Secret Santa</string>

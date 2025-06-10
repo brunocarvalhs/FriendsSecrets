@@ -40,6 +40,7 @@ import br.com.brunocarvalhs.group.app.details.components.GroupDetailsContentComp
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsErrorComponent
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsLoadingComponent
 import br.com.brunocarvalhs.group.app.details.components.HeaderComponent
+import br.com.brunocarvalhs.group.commons.navigation.GroupEditScreenRoute
 import br.com.brunocarvalhs.group.commons.navigation.GroupRevelationScreenRoute
 import kotlin.collections.set
 
@@ -144,12 +145,6 @@ private fun GroupDetailsContent(
             onDraw = ::onDraw,
             onShareGroup = ::onShareGroup
         )
-    }, floatingActionButton = {
-        FloatingButtonComponent(
-            uiState = uiState,
-            onDraw = ::onDraw,
-            revelationDraw = ::revelationDraw
-        )
     }) { paddingValue ->
         when (uiState) {
             is GroupDetailsUiState.Error -> {
@@ -177,8 +172,11 @@ private fun GroupDetailsContent(
                     setShowBottomSheet = { showBottomSheet = it },
                     setName = { name = it },
                     setLikes = { likes = it },
+                    onEdit = { group -> navController.navigate(route = GroupEditScreenRoute(group.id)) },
                     onShare = ::onShare,
-                    onRemove = ::onRemove
+                    onRemove = ::onRemove,
+                    onDraw = ::onDraw,
+                    onShareGroup = ::onShareGroup
                 )
             }
         }
