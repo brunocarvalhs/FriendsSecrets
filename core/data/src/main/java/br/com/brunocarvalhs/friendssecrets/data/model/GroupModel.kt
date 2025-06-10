@@ -16,6 +16,10 @@ data class GroupModel(
     @SerializedName(GroupEntities.MEMBERS) override val members: List<UserEntities> = emptyList(),
     @SerializedName(GroupEntities.DRAWS) override val draws: Map<String, String> = emptyMap(),
     @SerializedName(GroupEntities.IS_OWNER) override val isOwner: Boolean = false,
+    @SerializedName(GroupEntities.DATE) override val date: String? = null,
+    @SerializedName(GroupEntities.MIN_PRICE) override val minPrice: Double? = null,
+    @SerializedName(GroupEntities.MAX_PRICE) override val maxPrice: Double? = null,
+    @SerializedName(GroupEntities.TYPE) override val type: String? = null
 ) : GroupEntities {
 
     override fun toMap(): Map<String, Any?> {
@@ -24,6 +28,10 @@ data class GroupModel(
             GroupEntities.TOKEN to token,
             GroupEntities.NAME to name,
             GroupEntities.DESCRIPTION to description,
+            GroupEntities.DATE to date,
+            GroupEntities.MIN_PRICE to minPrice,
+            GroupEntities.MAX_PRICE to maxPrice,
+            GroupEntities.TYPE to type,
             GroupEntities.MEMBERS to members.map { it.toMap() },
             GroupEntities.DRAWS to draws,
             GroupEntities.IS_OWNER to isOwner
@@ -34,14 +42,22 @@ data class GroupModel(
         token: String,
         name: String,
         description: String?,
+        date: String?,
+        minPrice: Double?,
+        maxPrice: Double?,
+        type: String?,
         members: List<UserEntities>,
         draws: Map<String, String>,
-        isOwner: Boolean,
+        isOwner: Boolean
     ): GroupEntities {
         return this.copy(
             token = token,
             name = name,
             description = description,
+            date = date,
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            type = type,
             members = members,
             draws = draws,
             isOwner = isOwner
@@ -56,6 +72,10 @@ data class GroupModel(
             val token = map[GroupEntities.TOKEN] as? String ?: ""
             val name = map[GroupEntities.NAME] as? String ?: ""
             val description = map[GroupEntities.DESCRIPTION] as? String
+            val date = map[GroupEntities.DATE] as? String
+            val minPrice = (map[GroupEntities.MIN_PRICE] as? Number)?.toDouble()
+            val maxPrice = (map[GroupEntities.MAX_PRICE] as? Number)?.toDouble()
+            val type = map[GroupEntities.TYPE] as? String
             val isOwner = map[GroupEntities.IS_OWNER] as? Boolean ?: false
 
             val draws = (map[GroupEntities.DRAWS] as? Map<*, *>)?.mapNotNull {
@@ -80,6 +100,10 @@ data class GroupModel(
                 token = token,
                 name = name,
                 description = description,
+                date = date,
+                minPrice = minPrice,
+                maxPrice = maxPrice,
+                type = type,
                 members = members,
                 draws = draws,
                 isOwner = isOwner
@@ -93,6 +117,10 @@ fun GroupEntities.Companion.create(
     token: String = Random.token(size = 8),
     name: String = "",
     description: String? = null,
+    date: String? = null,
+    minPrice: Double? = null,
+    maxPrice: Double? = null,
+    type: String? = null,
     members: List<UserEntities> = emptyList(),
     draws: Map<String, String> = emptyMap(),
     isOwner: Boolean = false,
@@ -101,6 +129,10 @@ fun GroupEntities.Companion.create(
     token = token,
     name = name,
     description = description,
+    date = date,
+    minPrice = minPrice,
+    maxPrice = maxPrice,
+    type = type,
     members = members,
     draws = draws,
     isOwner = isOwner
