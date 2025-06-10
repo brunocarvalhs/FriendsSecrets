@@ -40,6 +40,7 @@ import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.openUrl
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingComponent
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
@@ -51,22 +52,28 @@ internal fun LoginScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.handleIntent(LoginIntent.Logged)
+    }
+
     LaunchedEffect(uiState) {
         when (uiState) {
             LoginUiState.PrivacyPolicy -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/PrivacyPolicy.md")
             LoginUiState.TermsOfUse -> context.openUrl(url = "https://github.com/brunocarvalhs/FriendsSecrets/blob/develop/docs/TermsEndConditions.md")
             LoginUiState.Register -> navController.navigate(PhoneSendScreenRoute)
             LoginUiState.AcceptNotRegister -> navController.navigate(GroupGraphRoute)
-            LoginUiState.Logged -> {
-                navController.navigate(GroupGraphRoute) {
-                    popUpTo(0)
-                }
+            LoginUiState.Logged -> navController.navigate(GroupGraphRoute) {
+                popUpTo(0)
             }
+
             else -> {}
         }
     }
 
-    if (uiState == LoginUiState.None) return
+    if (uiState == LoginUiState.Loading) {
+        LoadingComponent()
+        return
+    }
 
     LoginContent(
         handleIntent = viewModel::handleIntent
@@ -75,11 +82,12 @@ internal fun LoginScreen(
 
 @Composable
 private fun LoginContent(
+    modifier: Modifier = Modifier,
     handleIntent: (LoginIntent) -> Unit = {},
 ) {
     Scaffold { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(horizontal = 24.dp),

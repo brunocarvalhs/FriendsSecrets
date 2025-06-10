@@ -47,6 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneVerificationScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
@@ -207,24 +208,7 @@ private fun PhoneSendContent(
         }
     }
     if (uiState is PhoneSendUiState.Loading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x88000000))
-                .clickable(enabled = false) {}, contentAlignment = Alignment.Center
-        ) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                modifier = Modifier.size(100.dp)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
+        LoadingComponent()
     }
 }
 

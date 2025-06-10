@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.auth.app.login
 
 internal sealed class LoginUiState {
-    data object None : LoginUiState()
+    data object Loading : LoginUiState()
     data object Idle : LoginUiState()
     data object PrivacyPolicy : LoginUiState()
     data object TermsOfUse : LoginUiState()
