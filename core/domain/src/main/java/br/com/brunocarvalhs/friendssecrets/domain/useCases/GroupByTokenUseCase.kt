@@ -31,7 +31,7 @@ class GroupByTokenUseCase(
         if (token.isBlank()) throw IllegalArgumentException("Token cannot be blank")
     }
 
-    private fun ensureTokenNotExists(token: String): List<String> {
+    private suspend fun ensureTokenNotExists(token: String): List<String> {
         val groupList =
             storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
                 .orEmpty()
@@ -43,7 +43,7 @@ class GroupByTokenUseCase(
         return repository.searchByToken(token) ?: throw GroupNotFoundException()
     }
 
-    private fun storeToken(token: String, groupList: List<String>) {
+    private suspend fun storeToken(token: String, groupList: List<String>) {
         storage.save(
             GroupEntities.COLLECTION_NAME,
             groupList.toMutableList().apply { add(token) }

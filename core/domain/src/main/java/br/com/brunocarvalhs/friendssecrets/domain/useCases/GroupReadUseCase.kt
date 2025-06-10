@@ -27,7 +27,7 @@ class GroupReadUseCase(
         require(groupId.isNotBlank())
     }
 
-    private fun defineAdmin(group: GroupEntities): GroupEntities {
+    private suspend fun defineAdmin(group: GroupEntities): GroupEntities {
         val adminList = storage.load(
             key = GroupEntities.COLLECTION_NAME_ADMINS,
             clazz = Array<String>::class.java

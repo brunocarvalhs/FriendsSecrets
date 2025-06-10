@@ -22,6 +22,6 @@ class GroupListUseCase(
         }
     }
 
-    private fun loadGroupTokens(): List<String> =
+    private suspend fun loadGroupTokens(): List<String> =
         storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList().orEmpty()
 }

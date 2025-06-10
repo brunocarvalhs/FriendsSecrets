@@ -52,7 +52,7 @@ fun HomeScreen(
     viewModel: HomeViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val session = viewModel.session
+    val session by viewModel.session.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.event(HomeIntent.FetchGroups)

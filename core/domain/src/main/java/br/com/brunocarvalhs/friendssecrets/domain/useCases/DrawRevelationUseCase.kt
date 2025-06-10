@@ -30,7 +30,7 @@ class DrawRevelationUseCase(
         }
     }
 
-    private fun resolveSecret(id: String, code: String?): String? {
+    private suspend fun resolveSecret(id: String, code: String?): String? {
         val secretKey = SECRET_KEY + id
         return if (code != null) {
             storage.save(secretKey, code)

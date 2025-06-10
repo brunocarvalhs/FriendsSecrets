@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.domain.services
 
 interface StorageService {
-    fun <T> save(key: String, value: T)
-    fun <T> load(key: String, clazz: Class<T>): T?
-    fun remove(key: String)
+    suspend fun <T> save(key: String, value: T)
+    suspend fun <T> load(key: String, clazz: Class<T>): T?
+    suspend fun remove(key: String)
 }

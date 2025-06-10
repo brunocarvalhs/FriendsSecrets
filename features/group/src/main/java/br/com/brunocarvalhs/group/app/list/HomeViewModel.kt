@@ -3,7 +3,6 @@ package br.com.brunocarvalhs.group.app.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.common.extensions.report
-import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
@@ -24,8 +23,15 @@ class HomeViewModel @Inject constructor(
     private val sessionService: SessionService<UserEntities>
 ) : ViewModel() {
 
-    val session: UserEntities?
-        get() = sessionService.getCurrentUserModel()
+    private val _session = MutableStateFlow<UserEntities?>(null)
+    val session = _session.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val user = sessionService.getCurrentUserModel()
+            _session.value = user
+        }
+    }
 
     private val _uiState: MutableStateFlow<HomeUiState> =
         MutableStateFlow(HomeUiState.Loading)
@@ -42,7 +48,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun logout() {
-        logoutUseCase.invoke()
+        viewModelScope.launch {
+            logoutUseCase.invoke()
+        }
     }
 
     private fun groupToEnter(token: String) {

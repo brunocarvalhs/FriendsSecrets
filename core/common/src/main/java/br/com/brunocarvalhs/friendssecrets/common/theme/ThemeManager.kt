@@ -8,18 +8,21 @@ class ThemeManager(
     private val context: Context,
     private val storage: StorageManager
 ) {
+    var theme: Theme = Theme.SYSTEM
+        private set
 
-    private var themeState = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.value
+    private var isDynamicThemeEnabled = false
 
-    private var isDynamicThemeEnabled =
-        storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
+    suspend fun init() {
+        val themeValue = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.value
+        theme = Theme.entries.firstOrNull { it.value == themeValue } ?: Theme.SYSTEM
+        isDynamicThemeEnabled = storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
+    }
 
-    var theme: Theme = Theme.entries.firstOrNull { it.value == themeState } ?: Theme.SYSTEM
-        set(value) {
-            field = value
-            storage.save(THEME_KEY, value.name)
-            themeState = theme.name
-        }
+    suspend fun setTheme(value: Theme) {
+        theme = value
+        storage.save(THEME_KEY, value.value)
+    }
 
     private fun getSystemTheme(): Theme {
         return if ((context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
@@ -29,16 +32,7 @@ class ThemeManager(
         }
     }
 
-    internal fun setDynamicThemeEnabled(enabled: Boolean) {
-        storage.save(DYNAMIC_THEME_KEY, enabled)
-        isDynamicThemeEnabled = enabled
-    }
-
-    internal fun isDynamicThemeEnabled(): Boolean {
-        return isDynamicThemeEnabled
-    }
-
-    internal fun isDarkTheme(): Boolean {
+    fun isDarkTheme(): Boolean {
         return if (theme == Theme.SYSTEM) {
             getSystemTheme() == Theme.DARK
         } else {
@@ -46,10 +40,19 @@ class ThemeManager(
         }
     }
 
+    suspend fun setDynamicThemeEnabled(enabled: Boolean) {
+        isDynamicThemeEnabled = enabled
+        storage.save(DYNAMIC_THEME_KEY, enabled)
+    }
+
+    fun isDynamicThemeEnabled(): Boolean {
+        return isDynamicThemeEnabled
+    }
+
     enum class Theme(val value: String) {
-        LIGHT(value = "Light"),
-        DARK(value = "Dark"),
-        SYSTEM(value = "System")
+        LIGHT("Light"),
+        DARK("Dark"),
+        SYSTEM("System")
     }
 
     companion object {

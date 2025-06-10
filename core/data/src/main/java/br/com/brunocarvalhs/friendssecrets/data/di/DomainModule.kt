@@ -22,6 +22,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
+import br.com.brunocarvalhs.friendssecrets.domain.useCases.LoginAnonymousUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.VerifyPhoneUseCase
@@ -141,4 +142,9 @@ class DomainModule {
         phoneAuthService: PhoneAuthService,
         performance: PerformanceService
     ) = VerifyPhoneUseCase(phoneAuthService, performance)
+
+    @Provides
+    fun provideLoginAnonymousUseCase(
+        session: SessionService<UserEntities>,
+    ) = LoginAnonymousUseCase(session)
 }

@@ -20,6 +20,7 @@ import br.com.brunocarvalhs.friendssecrets.data.service.PhoneAuthServiceImpl
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.GenerativeService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PhoneAuthService
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -94,8 +95,11 @@ object DataProvidesModule {
 
     @Provides
     @Singleton
-    fun provideSession(firebaseAuthProvider: Lazy<FirebaseAuth>): SessionManager.SessionEvent<UserEntities> {
-        return SessionEventImpl(firebaseAuthProvider)
+    fun provideSession(
+        firebaseAuthProvider: FirebaseAuth,
+        storageManager: StorageService
+    ): SessionManager.SessionEvent<UserEntities> {
+        return SessionEventImpl(firebaseAuthProvider, storageManager)
     }
 
     @Provides

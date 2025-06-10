@@ -7,4 +7,5 @@ internal sealed class LoginUiState {
     data object TermsOfUse : LoginUiState()
     data object Register : LoginUiState()
     data object AcceptNotRegister : LoginUiState()
+    data object Logged : LoginUiState()
 }

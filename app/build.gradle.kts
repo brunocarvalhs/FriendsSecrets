@@ -104,6 +104,7 @@ dependencies {
     // A partir daqui
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.core.splashscreen)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     androidTestImplementation (libs.hilt.android.testing)

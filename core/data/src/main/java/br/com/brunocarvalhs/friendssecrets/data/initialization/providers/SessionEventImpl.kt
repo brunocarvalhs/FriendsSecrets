@@ -4,42 +4,49 @@ import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.create
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
-import dagger.Lazy
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class SessionEventImpl(
-    private val firebaseAuth: Lazy<FirebaseAuth>
+    private val auth: FirebaseAuth,
+    private val storageManager: StorageService
 ) : SessionManager.SessionEvent<UserEntities> {
 
-    private val auth: FirebaseAuth by lazy { firebaseAuth.get() }
-
-    override fun getCurrentUserModel(): UserEntities? {
-        val user = auth.currentUser ?: return null
-
-        return UserEntities.create(
-            id = user.uid,
-            name = user.displayName.orEmpty(),
-            photoUrl = user.photoUrl?.toString(),
-            phoneNumber = user.phoneNumber.orEmpty(),
-            isPhoneNumberVerified = user.phoneNumber != null,
-        )
+    override suspend fun getCurrentUserModel(): UserEntities? {
+        val user = auth.currentUser?.let { user ->
+            val userEntity = UserEntities.create(
+                id = user.uid,
+                name = user.displayName.orEmpty(),
+                photoUrl = user.photoUrl?.toString(),
+                phoneNumber = user.phoneNumber.orEmpty(),
+                isPhoneNumberVerified = user.phoneNumber != null,
+            )
+            storageManager.save(STORAGE_USER_KEY, userEntity)
+            return@let userEntity
+        }
+        return user
     }
 
-    override fun isUserLoggedIn(): Boolean =
-        auth.currentUser != null || auth.currentUser?.isAnonymous == true
-
-    override fun isProfileComplete(): Boolean {
-        val user = auth.currentUser ?: return false
-
-        return user.displayName != null && user.photoUrl != null
+    override suspend fun isUserLoggedIn(): Boolean {
+        return true
     }
 
-    override fun isPhoneNumberVerified(): Boolean {
-        val user = auth.currentUser ?: return false
+    override suspend fun isProfileComplete(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val user = auth.currentUser ?: return@withContext false
+            return@withContext user.displayName != null && user.photoUrl != null
+        }
+    }
 
-        return user.phoneNumber != null
+    override suspend fun isPhoneNumberVerified(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val user = auth.currentUser ?: return@withContext false
+            return@withContext user.phoneNumber != null
+        }
     }
 
     override fun getUserName(): String? = auth.currentUser?.displayName
@@ -48,33 +55,45 @@ class SessionEventImpl(
 
     override fun getUserPhoneNumber(): String? = auth.currentUser?.phoneNumber
 
-    override fun setUserAnonymous() {
+    override suspend fun setUserAnonymous() {
         auth.signInAnonymously()
     }
 
     override suspend fun updateUserProfile(profile: UserEntities) {
         val user = auth.currentUser
-
         val profileUpdates = userProfileChangeRequest {
             displayName = profile.name
             photoUri = Uri.parse(profile.photoUrl)
         }
 
         user?.updateProfile(profileUpdates)?.await()
+
+        storageManager.save(STORAGE_USER_KEY, profile)
     }
 
-    override fun signOut() {
-        auth.signOut()
+    override suspend fun signOut() {
+        withContext(Dispatchers.IO) {
+            auth.signOut()
+            storageManager.remove(STORAGE_USER_KEY)
+        }
     }
 
-    override fun deleteAccount() {
-        val user = auth.currentUser ?: return
+    override suspend fun deleteAccount() {
+        return withContext(Dispatchers.IO) {
+            val user = auth.currentUser ?: return@withContext
 
-        user.delete()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    auth.signOut()
+            user.delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        auth.signOut()
+                    }
                 }
-            }
+
+            storageManager.remove(STORAGE_USER_KEY)
+        }
+    }
+
+    companion object {
+        private const val STORAGE_USER_KEY = "user_session_model"
     }
 }

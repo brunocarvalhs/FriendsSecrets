@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.generativeai)
     implementation(libs.timber)
+    implementation(libs.androidx.datastore.preferences)
 
     // Testes
     testImplementation(libs.junit)

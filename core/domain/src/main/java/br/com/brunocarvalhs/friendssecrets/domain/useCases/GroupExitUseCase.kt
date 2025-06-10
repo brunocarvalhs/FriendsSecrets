@@ -28,7 +28,7 @@ class GroupExitUseCase(
         require(groupId.isNotBlank())
     }
 
-    private fun clearGroupToken(token: String) {
+    private suspend fun clearGroupToken(token: String) {
         val groupList =
             storage.load(GroupEntities.COLLECTION_NAME, Array<String>::class.java)?.toList()
                 .orEmpty()
@@ -40,7 +40,7 @@ class GroupExitUseCase(
         }
     }
 
-    private fun clearAdminToken(token: String) {
+    private suspend fun clearAdminToken(token: String) {
         val adminList =
             storage.load(GroupEntities.COLLECTION_NAME_ADMINS, Array<String>::class.java)?.toList()
                 .orEmpty()

@@ -6,16 +6,12 @@ class BiometricManager(
     private val storage: StorageManager
 ) {
 
-    private var isBiometricPromptEnabled: Boolean =
-        storage.load(BIOMETRIC_KEY, Boolean::class.java) ?: false
-
-    fun isBiometricPromptEnabled(): Boolean {
-        return isBiometricPromptEnabled
+    suspend fun isBiometricPromptEnabled(): Boolean {
+        return storage.load(key = BIOMETRIC_KEY, clazz = Boolean::class.java) ?: false
     }
 
-    fun setBiometricPromptEnabled(enabled: Boolean) {
+    suspend fun setBiometricPromptEnabled(enabled: Boolean) {
         storage.save(BIOMETRIC_KEY, enabled)
-        isBiometricPromptEnabled = enabled
     }
 
     companion object {
