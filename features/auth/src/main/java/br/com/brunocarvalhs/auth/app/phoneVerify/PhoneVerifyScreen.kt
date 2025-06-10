@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,6 +43,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,9 +51,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
+import br.com.brunocarvalhs.auth.commons.navigation.CreateProfileScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
-import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.delay
@@ -72,7 +74,10 @@ fun PhoneVerifyScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is PhoneVerifyUiState.Success) {
-            navController.navigate(ProfileGraphRoute)
+            navController.navigate(CreateProfileScreenRoute) {
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
 
@@ -182,11 +187,12 @@ private fun PhoneVerifyContent(
                                 fontSize = 24.sp,
                                 textAlign = TextAlign.Center
                             ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
                             modifier = Modifier
                                 .width(48.dp)
                                 .height(68.dp)
                                 .focusRequester(focusRequesters[index]),
-                            singleLine = true,
                             shape = RoundedCornerShape(12.dp)
                         )
                     }
@@ -209,6 +215,7 @@ private fun PhoneVerifyContent(
                         )
                     )
                 },
+                enabled = otpCode.all { it.isNotBlank() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp),

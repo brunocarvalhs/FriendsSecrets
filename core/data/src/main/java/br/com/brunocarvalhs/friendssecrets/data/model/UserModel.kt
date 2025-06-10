@@ -31,6 +31,10 @@ internal data class UserModel(
         )
     }
 
+    override fun toJson(): String {
+        return gson.toJson(this)
+    }
+
     override fun toCopy(
         id: String,
         name: String,

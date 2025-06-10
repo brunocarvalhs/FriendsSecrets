@@ -8,17 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.auth.app.biometric.BiometricScreen
+import br.com.brunocarvalhs.auth.app.create_profile.CreateProfileScreen
 import br.com.brunocarvalhs.auth.app.login.LoginScreen
-import br.com.brunocarvalhs.auth.app.login.LoginViewModel
-import br.com.brunocarvalhs.auth.app.onboard.OnboardViewModel
-import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendScreen
-import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendViewModel
-import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyScreen
-import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyViewModel
-import br.com.brunocarvalhs.auth.app.profile.ProfileScreen
-import br.com.brunocarvalhs.auth.app.profile.ProfileViewModel
-import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.auth.app.onboard.OnboardingScreen
+import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendScreen
+import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyScreen
+import br.com.brunocarvalhs.auth.app.profiler.UserProfileScreen
+import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import kotlinx.serialization.Serializable
 
@@ -37,47 +33,51 @@ internal data object OnboardingScreenRoute
 @Serializable
 internal data object BiometricScreenRoute
 
+@Serializable
+internal data object CreateProfileScreenRoute
+
 internal fun NavGraphBuilder.loginGraph(
     activity: ComponentActivity,
     navController: NavHostController,
 ) {
     navigation<AuthGraphRoute>(startDestination = LoginScreenRoute) {
         composable<LoginScreenRoute> {
-            val viewModel: LoginViewModel = hiltViewModel()
             LoginScreen(
                 navController = navController,
-                viewModel = viewModel
+                viewModel = hiltViewModel()
             )
         }
         composable<PhoneSendScreenRoute> {
-            val viewModel: PhoneSendViewModel = hiltViewModel()
             PhoneSendScreen(
                 activity = activity,
                 navController = navController,
-                viewModel = viewModel
+                viewModel = hiltViewModel()
             )
         }
         composable<PhoneVerificationScreenRoute> { backStackEntry ->
             val args = backStackEntry.toRoute<PhoneVerificationScreenRoute>()
-            val viewModel: PhoneVerifyViewModel = hiltViewModel()
             PhoneVerifyScreen(
                 phoneNumber = args.phoneNumber,
                 navController = navController,
-                viewModel = viewModel
+                viewModel = hiltViewModel()
+            )
+        }
+        composable<CreateProfileScreenRoute> {
+            CreateProfileScreen(
+                navController = navController,
+                viewModel = hiltViewModel()
             )
         }
         composable<ProfileGraphRoute> {
-            val viewModel: ProfileViewModel = hiltViewModel()
-            ProfileScreen(
+            UserProfileScreen(
                 navController = navController,
-                viewModel = viewModel
+                viewModel = hiltViewModel()
             )
         }
         composable<OnboardingScreenRoute> {
-            val onboardingViewModel: OnboardViewModel = hiltViewModel()
             OnboardingScreen(
                 navController = navController,
-                viewModel = onboardingViewModel
+                viewModel = hiltViewModel()
             )
         }
         composable<BiometricScreenRoute> {

@@ -13,6 +13,8 @@ interface UserEntities {
 
     fun toMap(): Map<String, Any>
 
+    fun toJson(): String
+
     fun toCopy(
         id: String = this.id,
         name: String = this.name,
