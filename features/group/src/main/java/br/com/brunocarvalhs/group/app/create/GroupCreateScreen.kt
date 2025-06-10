@@ -12,10 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
@@ -97,7 +96,7 @@ private fun GroupCreateContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text(text = stringResource(R.string.group_create_title)) },
                 navigationIcon = {
                     NavigationBackIconButton(onClick = {
                         if (uiState.currentStep > 0) {
@@ -114,19 +113,25 @@ private fun GroupCreateContent(
             )
         },
         floatingActionButton = {
-            if (!uiState.isLoading && uiState.currentStep < 2) {
+            if (!uiState.isLoading) {
                 ExtendedFloatingActionButton(onClick = {
-                    onIntent(GroupCreateIntent.NextStep)
+                    if (uiState.currentStep < 2) {
+                        onIntent(GroupCreateIntent.NextStep)
+                    } else {
+                        onIntent(GroupCreateIntent.CreateGroup)
+                    }
                 }) {
-                    Icon(Icons.Filled.Check, contentDescription = null)
-                    Text("Próximo")
-                }
-            } else if (!uiState.isLoading) {
-                ExtendedFloatingActionButton(onClick = {
-                    onIntent(GroupCreateIntent.CreateGroup)
-                }) {
-                    Icon(Icons.Filled.Check, contentDescription = null)
-                    Text(stringResource(R.string.group_create_action_save_group))
+                    Icon(
+                        imageVector = if (uiState.currentStep < 2) Icons.AutoMirrored.Filled.ArrowForward else Icons.Filled.Check,
+                        contentDescription = null
+                    )
+                    Text(
+                        text = when (uiState.currentStep) {
+                            0 -> stringResource(R.string.group_create_next_members)
+                            1 -> stringResource(R.string.group_create_next_draw)
+                            else -> stringResource(R.string.group_create_action_save_group)
+                        }
+                    )
                 }
             }
         }
@@ -165,7 +170,11 @@ private fun GroupCreateContent(
                     }
 
                     2 -> {
-                        item { StepThreeDrawInfo(uiState) }
+                        item {
+                            StepThreeDrawInfo(
+                                uiState,
+                                onEdit = { step -> onIntent(GroupCreateIntent.GoToStep(step)) })
+                        }
                     }
                 }
             }
@@ -185,43 +194,57 @@ private fun StepOneGroupInfo(
     uiState: GroupCreateUiState,
     onIntent: (GroupCreateIntent) -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         OutlinedTextField(
             value = uiState.name,
             onValueChange = { onIntent(GroupCreateIntent.UpdateName(it)) },
             label = { Text(stringResource(R.string.group_create_input_name)) },
+            placeholder = { Text("Ex: Amigo Secreto 2025") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
-        Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = uiState.description,
             onValueChange = { onIntent(GroupCreateIntent.UpdateDescription(it)) },
             label = { Text(stringResource(R.string.group_create_input_description)) },
+            placeholder = { Text("Descreva o propósito do grupo") },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = uiState.drawDate,
-            onValueChange = { onIntent(GroupCreateIntent.UpdateDrawDate(it)) },
-            label = { Text("Data do sorteio") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = uiState.minValue,
-            onValueChange = { onIntent(GroupCreateIntent.UpdateMinValue(it)) },
-            label = { Text("Valor mínimo") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        // Agrupando data e valores lado a lado
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedTextField(
+                value = uiState.drawDate,
+                onValueChange = { onIntent(GroupCreateIntent.UpdateDrawDate(it)) },
+                label = { Text("Data do sorteio") },
+                placeholder = { Text("dd/mm/aaaa") },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                // Aqui poderia ser um DatePicker se implementado
+            )
+            OutlinedTextField(
+                value = uiState.minValue,
+                onValueChange = { onIntent(GroupCreateIntent.UpdateMinValue(it)) },
+                label = { Text("Valor mínimo") },
+                placeholder = { Text("Ex: 10") },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
+                // Pode aplicar máscara de valor monetário
+            )
+        }
+
         OutlinedTextField(
             value = uiState.maxValue,
             onValueChange = { onIntent(GroupCreateIntent.UpdateMaxValue(it)) },
             label = { Text("Valor máximo") },
-            modifier = Modifier.fillMaxWidth()
+            placeholder = { Text("Ex: 100") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
         DrawTypeDropdown(
             selectedType = uiState.drawType,
             onTypeSelected = { onIntent(GroupCreateIntent.UpdateDrawType(it)) }
@@ -235,53 +258,53 @@ private fun StepTwoMembers(
     onIntent: (GroupCreateIntent) -> Unit,
     showBottomSheet: () -> Unit
 ) {
-    Column {
+    Column(modifier = Modifier.padding(16.dp)) {
         Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = { showBottomSheet() }) {
-                Text(stringResource(R.string.group_create_text_button_member))
-            }
-            IconButton(onClick = { showBottomSheet() }) {
-                Icon(Icons.Filled.Add, contentDescription = null)
-            }
-        }
-
-        // Membros selecionados
-        uiState.members.forEach { member ->
-            ContactItem(
-                contact = member,
-                isSelected = true,
-                action = { _, _ ->
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                onIntent(GroupCreateIntent.ToggleMember(member))
-                            }
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                }
+            Text(
+                stringResource(R.string.group_create_members_title),
+                style = MaterialTheme.typography.titleMedium
             )
+            IconButton(onClick = { showBottomSheet() }) {
+                Icon(Icons.Filled.Add, contentDescription = "Adicionar membro")
+            }
         }
 
-        // Contatos disponíveis (não selecionados)
+        if (uiState.members.isEmpty()) {
+            Text("Nenhum membro adicionado ainda", style = MaterialTheme.typography.bodyMedium)
+        } else {
+            uiState.members.forEach { member ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(member.name, modifier = Modifier.weight(1f))
+                    IconButton(onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) }) {
+                        Icon(Icons.Default.Delete, contentDescription = "Remover membro")
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            stringResource(R.string.group_create_contacts_available),
+            style = MaterialTheme.typography.titleMedium
+        )
         uiState.contacts.filterNot { it in uiState.members }.forEach { contact ->
             ContactItem(
                 contact = contact,
-                isSelected = uiState.members.contains(contact),
+                isSelected = false,
                 action = { _, _ ->
                     Checkbox(
-                        checked = uiState.members.contains(contact),
-                        onCheckedChange = {
-                            onIntent(GroupCreateIntent.ToggleMember(contact))
-                        }
+                        checked = false,
+                        onCheckedChange = { onIntent(GroupCreateIntent.ToggleMember(contact)) }
                     )
                 }
             )
@@ -291,43 +314,50 @@ private fun StepTwoMembers(
 
 @Composable
 private fun StepThreeDrawInfo(
-    uiState: GroupCreateUiState
+    uiState: GroupCreateUiState,
+    onEdit: (step: Int) -> Unit
 ) {
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Confirmação do Grupo", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Nome: ${uiState.name}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
+        // Card-like container para informações gerais
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("Informações do Grupo", style = MaterialTheme.typography.titleMedium)
+            Text("Nome: ${uiState.name}", style = MaterialTheme.typography.bodyLarge)
+            Text("Descrição: ${uiState.description}", style = MaterialTheme.typography.bodyLarge)
+            Text("Data do Sorteio: ${uiState.drawDate}", style = MaterialTheme.typography.bodyLarge)
+            Text("Valor Mínimo: ${uiState.minValue}", style = MaterialTheme.typography.bodyLarge)
+            Text("Valor Máximo: ${uiState.maxValue}", style = MaterialTheme.typography.bodyLarge)
+            Text("Tipo de Sorteio: ${uiState.drawType}", style = MaterialTheme.typography.bodyLarge)
+            TextButton(onClick = { onEdit(0) }) { Text("Editar") }
+        }
 
-        Text("Descrição: ${uiState.description}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Data do Sorteio: ${uiState.drawDate}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Valor Mínimo: ${uiState.minValue}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Valor Máximo: ${uiState.maxValue}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Tipo de Sorteio: ${uiState.drawType}", style = MaterialTheme.typography.bodyLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Membros:", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (uiState.members.isEmpty()) {
-            Text("Nenhum membro adicionado", style = MaterialTheme.typography.bodyMedium)
-        } else {
-            uiState.members.forEach { member ->
-                Text("- ${member.name}", style = MaterialTheme.typography.bodyMedium)
+        // Card-like container para membros
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("Membros", style = MaterialTheme.typography.titleMedium)
+            if (uiState.members.isEmpty()) {
+                Text("Nenhum membro adicionado", style = MaterialTheme.typography.bodyMedium)
+            } else {
+                uiState.members.forEach { member ->
+                    Text("- ${member.name}", style = MaterialTheme.typography.bodyMedium)
+                }
             }
+            TextButton(onClick = { onEdit(1) }) { Text("Editar Membros") }
         }
     }
 }

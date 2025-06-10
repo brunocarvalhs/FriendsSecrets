@@ -7,6 +7,7 @@ sealed interface GroupCreateIntent {
     data object CreateGroup : GroupCreateIntent
     data object NextStep : GroupCreateIntent
     data object Back : GroupCreateIntent
+    data class GoToStep(val step: Int) : GroupCreateIntent
 
     data class UpdateName(val name: String) : GroupCreateIntent
     data class UpdateDescription(val description: String) : GroupCreateIntent

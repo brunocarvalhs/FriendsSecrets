@@ -37,6 +37,7 @@ class GroupCreateViewModel @Inject constructor(
             is GroupCreateIntent.UpdateMinValue -> updateMinValue(intent.value)
             is GroupCreateIntent.UpdateMaxValue -> updateMaxValue(intent.value)
             is GroupCreateIntent.UpdateDrawType -> updateDrawType(intent.type)
+            is GroupCreateIntent.GoToStep -> goToStep(intent.step)
         }
     }
 
@@ -119,5 +120,9 @@ class GroupCreateViewModel @Inject constructor(
 
     private fun resetState() {
         _uiState.value = GroupCreateUiState()
+    }
+
+    private fun goToStep(step: Int) {
+        _uiState.update { it.copy(currentStep = step) }
     }
 }

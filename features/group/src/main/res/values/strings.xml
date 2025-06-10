@@ -129,4 +129,9 @@
     <string name="share_secret_friend_action">Compartilhar amigo secreto de %1$s</string>
     <string name="edit_participant_action">Editar participante %1$s</string>
     <string name="remove_participant_action">Remover participante %1$s</string>
+    <string name="group_create_next_members">Avançar para membros</string>
+    <string name="group_create_next_draw">Avançar para sorteio</string>
+    <string name="group_create_title">Criar Grupo</string>
+    <string name="group_create_members_title">Membros do grupo\n</string>
+    <string name="group_create_contacts_available">Contatos</string>
 </resources>
