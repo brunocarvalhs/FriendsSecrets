@@ -50,7 +50,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.auth.commons.extensions.toCurrencyMask
 import br.com.brunocarvalhs.friendssecrets.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
@@ -60,6 +59,7 @@ import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.group.R
 import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.group.commons.ui.components.DateInputField
+import br.com.brunocarvalhs.group.commons.ui.components.DrawTypeDropdown
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -218,11 +218,12 @@ private fun StepOneGroupInfo(
             modifier = Modifier.fillMaxWidth()
         )
 
+        DateInputField(
+            value = uiState.drawDate,
+            onValueChange = { onIntent(GroupCreateIntent.UpdateDrawDate(it)) }
+        )
+
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            DateInputField(
-                value = uiState.drawDate,
-                onValueChange = { it -> onIntent(GroupCreateIntent.UpdateDrawDate(it)) }
-            )
             OutlinedTextField(
                 value = uiState.minValue,
                 onValueChange = {
@@ -233,21 +234,22 @@ private fun StepOneGroupInfo(
                 placeholder = { Text(stringResource(R.string.ex_10)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                visualTransformation = uiState.minValue.toCurrencyMask(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            )
+
+            OutlinedTextField(
+                value = uiState.maxValue,
+                onValueChange = {
+                    if (it.all { char -> char.isDigit() } && it.length <= 8)
+                        onIntent(GroupCreateIntent.UpdateMaxValue(it))
+                },
+                label = { Text(stringResource(R.string.valor_m_ximo)) },
+                placeholder = { Text(stringResource(R.string.ex_100)) },
+                modifier = Modifier.weight(1f),
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
         }
-
-        OutlinedTextField(
-            value = uiState.maxValue,
-            onValueChange = { onIntent(GroupCreateIntent.UpdateMaxValue(it)) },
-            label = { Text(stringResource(R.string.valor_m_ximo)) },
-            placeholder = { Text(stringResource(R.string.ex_100)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = uiState.minValue.toCurrencyMask(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        )
 
         DrawTypeDropdown(
             selectedType = uiState.drawType,
@@ -274,12 +276,18 @@ private fun StepTwoMembers(
                 style = MaterialTheme.typography.titleMedium
             )
             IconButton(onClick = { showBottomSheet() }) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.adicionar_membro))
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.adicionar_membro)
+                )
             }
         }
 
         if (uiState.members.isEmpty()) {
-            Text(stringResource(R.string.nenhum_membro_adicionado_ainda), style = MaterialTheme.typography.bodyMedium)
+            Text(
+                stringResource(R.string.nenhum_membro_adicionado_ainda),
+                style = MaterialTheme.typography.bodyMedium
+            )
         } else {
             uiState.members.forEach { member ->
                 Row(
@@ -290,7 +298,10 @@ private fun StepTwoMembers(
                 ) {
                     Text(member.name, modifier = Modifier.weight(1f))
                     IconButton(onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) }) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.remover_membro))
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.remover_membro)
+                        )
                     }
                 }
             }
@@ -328,80 +339,69 @@ private fun StepThreeDrawInfo(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(stringResource(R.string.confirma_o_do_grupo), style = MaterialTheme.typography.titleLarge)
+        Text(
+            stringResource(R.string.confirma_o_do_grupo),
+            style = MaterialTheme.typography.titleLarge
+        )
 
-        // Card-like container para informações gerais
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = stringResource(R.string.informa_es_do_grupo), style = MaterialTheme.typography.titleMedium)
-            Text(text = stringResource(R.string.nome, uiState.name), style = MaterialTheme.typography.bodyLarge)
-            Text(text = stringResource(R.string.descri_o, uiState.description), style = MaterialTheme.typography.bodyLarge)
-            Text(text = stringResource(R.string.data_do_sorteio, uiState.drawDate), style = MaterialTheme.typography.bodyLarge)
-            Text(text = stringResource(R.string.info_valor_m_nimo, uiState.minValue), style = MaterialTheme.typography.bodyLarge)
-            Text(text = stringResource(R.string.info_valor_m_ximo, uiState.maxValue), style = MaterialTheme.typography.bodyLarge)
-            Text(text = stringResource(R.string.info_tipo_de_sorteio, uiState.drawType), style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = stringResource(R.string.informa_es_do_grupo),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = stringResource(R.string.nome, uiState.name),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.descri_o, uiState.description),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.data_do_sorteio, uiState.drawDate),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_valor_m_nimo, uiState.minValue),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_valor_m_ximo, uiState.maxValue),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_tipo_de_sorteio, uiState.drawType),
+                style = MaterialTheme.typography.bodyLarge
+            )
             TextButton(onClick = { onEdit(0) }) { Text(stringResource(R.string.editar)) }
         }
 
-        // Card-like container para membros
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = stringResource(R.string.membros), style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = stringResource(R.string.membros),
+                style = MaterialTheme.typography.titleMedium
+            )
             if (uiState.members.isEmpty()) {
-                Text(text = stringResource(R.string.nenhum_membro_adicionado), style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = stringResource(R.string.nenhum_membro_adicionado),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             } else {
                 uiState.members.forEach { member ->
                     Text(text = "- ${member.name}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
             TextButton(onClick = { onEdit(1) }) { Text(stringResource(R.string.editar_membros)) }
-        }
-    }
-}
-
-
-@Composable
-fun DrawTypeDropdown(
-    selectedType: String,
-    onTypeSelected: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val types = listOf("Padrão", "Manual", "Outro")
-
-    Column {
-        Text("Tipo de sorteio", style = MaterialTheme.typography.labelLarge)
-        Box {
-            OutlinedTextField(
-                value = selectedType,
-                onValueChange = {},
-                label = { Text("Tipo") },
-                readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { expanded = true }
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                types.forEach { type ->
-                    DropdownMenuItem(
-                        text = { Text(type) },
-                        onClick = {
-                            onTypeSelected(type)
-                            expanded = false
-                        }
-                    )
-                }
-            }
         }
     }
 }

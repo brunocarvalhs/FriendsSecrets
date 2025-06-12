@@ -155,4 +155,8 @@
     <string name="editar_membros">Editar Membros</string>
     <string name="confirma_o_do_grupo">Confirmação do Grupo</string>
     <string name="editar">Editar</string>
+    <string name="tipo_de_sorteio">Tipo de sorteio</string>
+    <string name="selecionar_tipo_de_sorteio">Selecionar tipo de sorteio</string>
+    <string name="escolha_o_tipo_de_amigo_secreto">Escolha o tipo de amigo secreto</string>
+    <string name="cancelar">Cancelar</string>
 </resources>
