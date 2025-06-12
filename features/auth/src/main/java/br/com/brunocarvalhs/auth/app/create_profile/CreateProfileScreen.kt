@@ -47,12 +47,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.constants.SUGGESTION_LIKES
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
@@ -173,6 +175,9 @@ private fun ProfileForm(
     val suggestedLikes = SUGGESTION_LIKES
     val selectedLikes = remember { mutableStateListOf<String>().apply { addAll(userLikes) } }
 
+    var searchText by remember { mutableStateOf("") }
+    var addedCustomLike by remember { mutableStateOf(false) }
+
     val cropLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
@@ -208,53 +213,101 @@ private fun ProfileForm(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(24.dp),
                     ) {
-                        suggestedLikes.forEach { (category, likes) ->
-                            item {
-                                Column {
-                                    Text(
-                                        text = category,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.padding(bottom = 8.dp)
-                                    )
-                                    FlowRow(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                                        modifier = Modifier.fillMaxWidth()
+                        item {
+                            Column {
+                                OutlinedTextField(
+                                    value = searchText,
+                                    onValueChange = {
+                                        searchText = it
+                                        addedCustomLike = false
+                                    },
+                                    label = { Text(stringResource(R.string.pesquisar_gosto)) },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                val allLikes = suggestedLikes.values.flatten()
+                                val hasMatch =
+                                    allLikes.any { it.contains(searchText, ignoreCase = true) }
+                                if (searchText.isNotBlank() && !hasMatch && !addedCustomLike) {
+                                    Button(
+                                        onClick = {
+                                            val custom = searchText.trim()
+                                            if (custom.isNotEmpty() && custom !in selectedLikes) {
+                                                selectedLikes.add(custom)
+                                                addedCustomLike = true
+                                                searchText = ""
+                                            }
+                                        }
                                     ) {
-                                        likes.forEach { like ->
-                                            val isSelected = selectedLikes.contains(like)
-                                            val backgroundColor by animateColorAsState(
-                                                targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+                                        Text(
+                                            stringResource(
+                                                R.string.adicionar_como_gosto_personalizado,
+                                                searchText
+                                            ))
+                                    }
+                                }
+                            }
+                        }
+
+                        // Mostrar gostos filtrados por texto de busca
+                        (suggestedLikes + mapOf(context.getString(R.string.personalizado) to selectedLikes.filterNot { it in suggestedLikes.values.flatten() }))
+                            .forEach { (category, likes) ->
+                                val filteredLikes = likes.filter {
+                                    it.contains(
+                                        searchText,
+                                        ignoreCase = true
+                                    ) || searchText.isBlank()
+                                }
+
+                                if (filteredLikes.isNotEmpty()) {
+                                    item {
+                                        Column {
+                                            Text(
+                                                text = category,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                modifier = Modifier.padding(bottom = 8.dp)
                                             )
-                                            val contentColor by animateColorAsState(
-                                                targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                            Surface(
-                                                tonalElevation = if (isSelected) 4.dp else 0.dp,
-                                                shape = RoundedCornerShape(16.dp),
-                                                color = backgroundColor,
-                                                modifier = Modifier
-                                                    .clickable {
-                                                        if (isSelected) selectedLikes.remove(like) else selectedLikes.add(
-                                                            like
+                                            FlowRow(
+                                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                                modifier = Modifier.fillMaxWidth()
+                                            ) {
+                                                filteredLikes.forEach { like ->
+                                                    val isSelected = selectedLikes.contains(like)
+                                                    val backgroundColor by animateColorAsState(
+                                                        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+                                                    )
+                                                    val contentColor by animateColorAsState(
+                                                        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                    Surface(
+                                                        tonalElevation = if (isSelected) 4.dp else 0.dp,
+                                                        shape = RoundedCornerShape(16.dp),
+                                                        color = backgroundColor,
+                                                        modifier = Modifier
+                                                            .clickable {
+                                                                if (isSelected) selectedLikes.remove(
+                                                                    like
+                                                                ) else selectedLikes.add(like)
+                                                            }
+                                                    ) {
+                                                        Text(
+                                                            text = like,
+                                                            color = contentColor,
+                                                            modifier = Modifier.padding(
+                                                                horizontal = 12.dp,
+                                                                vertical = 6.dp
+                                                            ),
+                                                            style = MaterialTheme.typography.bodyMedium
                                                         )
                                                     }
-                                            ) {
-                                                Text(
-                                                    text = like,
-                                                    color = contentColor,
-                                                    modifier = Modifier.padding(
-                                                        horizontal = 12.dp,
-                                                        vertical = 6.dp
-                                                    ),
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
                     }
                 }
 
@@ -273,7 +326,7 @@ private fun ProfileForm(
                         OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Seu nome") },
+                            label = { Text(stringResource(R.string.seu_nome)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -283,7 +336,7 @@ private fun ProfileForm(
                         OutlinedTextField(
                             value = phoneNumber,
                             onValueChange = {},
-                            label = { Text("Número de telefone") },
+                            label = { Text(stringResource(R.string.n_mero_de_telefone)) },
                             singleLine = true,
                             enabled = false,
                             modifier = Modifier.fillMaxWidth()
@@ -312,7 +365,7 @@ private fun ProfileForm(
                     },
                     enabled = name.isNotBlank()
                 ) {
-                    Text("Salvar")
+                    Text(stringResource(R.string.salvar))
                 }
             }
         }
@@ -346,7 +399,7 @@ fun ProfilePicture(photoUrl: String?, onClick: () -> Unit) {
         if (photoUrl != null) {
             AsyncImage(
                 model = photoUrl,
-                contentDescription = "Foto do perfil",
+                contentDescription = stringResource(R.string.foto_do_perfil),
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
@@ -354,7 +407,7 @@ fun ProfilePicture(photoUrl: String?, onClick: () -> Unit) {
         } else {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Avatar padrão",
+                contentDescription = stringResource(R.string.avatar_padr_o),
                 modifier = Modifier.size(100.dp),
                 tint = Color.DarkGray
             )

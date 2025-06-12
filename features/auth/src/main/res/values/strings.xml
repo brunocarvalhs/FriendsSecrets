@@ -33,4 +33,12 @@
     <string name="phone_send_invalid_number">Número de telefone inválido</string>
     <string name="invalid_code">Código inválido. Verifique e tente novamente.</string>
     <string name="resend_code_now">Reenviar código</string>
+    <string name="pesquisar_gosto">Pesquisar gosto</string>
+    <string name="adicionar_como_gosto_personalizado">Adicionar \"%1$s\" como gosto personalizado</string>
+    <string name="personalizado">Personalizado</string>
+    <string name="seu_nome">Seu nome</string>
+    <string name="n_mero_de_telefone">Número de telefone</string>
+    <string name="salvar">Salvar</string>
+    <string name="foto_do_perfil">Foto do perfil</string>
+    <string name="avatar_padr_o">Avatar padrão</string>
 </resources>
