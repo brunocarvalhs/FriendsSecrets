@@ -2,7 +2,8 @@ package br.com.brunocarvalhs.group.app.create
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,16 +13,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,8 +36,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -42,8 +51,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -258,72 +271,177 @@ private fun StepOneGroupInfo(
     }
 }
 
-
 @Composable
 private fun StepTwoMembers(
     uiState: GroupCreateUiState,
     onIntent: (GroupCreateIntent) -> Unit,
     showBottomSheet: () -> Unit
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    val filteredContacts = uiState.contacts.filter { contact ->
+        contact !in uiState.members && contact.name.contains(searchQuery, ignoreCase = true)
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                stringResource(R.string.group_create_members_title),
-                style = MaterialTheme.typography.titleMedium
+                text = stringResource(R.string.group_create_members_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onBackground
             )
-            IconButton(onClick = { showBottomSheet() }) {
+            IconButton(
+                onClick = showBottomSheet,
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = CircleShape
+                    )
+            ) {
                 Icon(
-                    Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.adicionar_membro)
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.adicionar_membro),
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text(stringResource(R.string.search_contacts)) },
+            placeholder = { Text(stringResource(R.string.search_contacts_placeholder)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.group_create_members_added),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         if (uiState.members.isEmpty()) {
             Text(
-                stringResource(R.string.nenhum_membro_adicionado_ainda),
-                style = MaterialTheme.typography.bodyMedium
+                text = stringResource(R.string.nenhum_membro_adicionado_ainda),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                modifier = Modifier.padding(vertical = 8.dp)
             )
         } else {
-            uiState.members.forEach { member ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(member.name, modifier = Modifier.weight(1f))
-                    IconButton(onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) }) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = stringResource(R.string.remover_membro)
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(uiState.members) { member ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .width(80.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = member.name.take(1).uppercase(),
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            IconButton(
+                                onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) },
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .align(Alignment.TopEnd)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.errorContainer,
+                                        shape = CircleShape
+                                    )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = "Remover ${member.name}",
+                                    tint = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = member.name,
+                            style = MaterialTheme.typography.bodySmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            stringResource(R.string.group_create_contacts_available),
-            style = MaterialTheme.typography.titleMedium
+            text = stringResource(R.string.group_create_contacts_available),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground
         )
-        uiState.contacts.filterNot { it in uiState.members }.forEach { contact ->
-            ContactItem(
-                contact = contact,
-                isSelected = false,
-                action = { _, _ ->
-                    Checkbox(
-                        checked = false,
-                        onCheckedChange = { onIntent(GroupCreateIntent.ToggleMember(contact)) }
-                    )
-                }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (filteredContacts.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_contacts_found),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                modifier = Modifier.padding(vertical = 12.dp)
             )
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(filteredContacts) { contact ->
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        tonalElevation = 2.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ContactItem(
+                            contact = contact,
+                            isSelected = false,
+                            action = { _, _ ->
+                                onIntent(GroupCreateIntent.ToggleMember(contact))
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -335,74 +453,116 @@ private fun StepThreeDrawInfo(
 ) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Text(
-            stringResource(R.string.confirma_o_do_grupo),
-            style = MaterialTheme.typography.titleLarge
+            text = stringResource(R.string.confirma_o_do_grupo),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Surface(
+            tonalElevation = 4.dp,
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(R.string.informa_es_do_grupo),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = stringResource(R.string.nome, uiState.name),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.descri_o, uiState.description),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.data_do_sorteio, uiState.drawDate),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.info_valor_m_nimo, uiState.minValue),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.info_valor_m_ximo, uiState.maxValue),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(R.string.info_tipo_de_sorteio, uiState.drawType),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            TextButton(onClick = { onEdit(0) }) { Text(stringResource(R.string.editar)) }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.membros),
-                style = MaterialTheme.typography.titleMedium
-            )
-            if (uiState.members.isEmpty()) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Text(
-                    text = stringResource(R.string.nenhum_membro_adicionado),
-                    style = MaterialTheme.typography.bodyMedium
+                    text = stringResource(R.string.informa_es_do_grupo),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            } else {
-                uiState.members.forEach { member ->
-                    Text(text = "- ${member.name}", style = MaterialTheme.typography.bodyMedium)
+
+                // Informações principais
+                GroupInfoRow(label = stringResource(R.string.nome), value = uiState.name)
+                GroupInfoRow(label = stringResource(R.string.descri_o), value = uiState.description)
+                GroupInfoRow(label = stringResource(R.string.data_do_sorteio), value = uiState.drawDate)
+                GroupInfoRow(label = stringResource(R.string.info_valor_m_nimo), value = uiState.minValue)
+                GroupInfoRow(label = stringResource(R.string.info_valor_m_ximo), value = uiState.maxValue)
+                GroupInfoRow(label = stringResource(R.string.info_tipo_de_sorteio), value = uiState.drawType)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextButton(
+                    onClick = { onEdit(0) },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(text = stringResource(R.string.editar))
                 }
             }
-            TextButton(onClick = { onEdit(1) }) { Text(stringResource(R.string.editar_membros)) }
         }
+
+        Surface(
+            tonalElevation = 4.dp,
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.membros),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                if (uiState.members.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.nenhum_membro_adicionado),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        uiState.members.forEach { member ->
+                            Text(
+                                text = "- ${member.name}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextButton(
+                    onClick = { onEdit(1) },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(text = stringResource(R.string.editar_membros))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GroupInfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
 
