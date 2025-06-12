@@ -14,13 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -36,10 +32,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,16 +47,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.ui.R.string
 import br.com.brunocarvalhs.friendssecrets.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
@@ -73,6 +68,7 @@ import br.com.brunocarvalhs.group.R
 import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
 import br.com.brunocarvalhs.group.commons.ui.components.DateInputField
 import br.com.brunocarvalhs.group.commons.ui.components.DrawTypeDropdown
+import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -283,164 +279,146 @@ private fun StepTwoMembers(
         contact !in uiState.members && contact.name.contains(searchQuery, ignoreCase = true)
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
-    ) {
+    val scrollState = rememberScrollState()
+
+    Column(modifier = Modifier.padding(16.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.group_create_members_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground
+                stringResource(R.string.group_create_members_title),
+                style = MaterialTheme.typography.titleMedium
             )
-            IconButton(
-                onClick = showBottomSheet,
-                modifier = Modifier
-                    .size(36.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = CircleShape
-                    )
-            ) {
+            IconButton(onClick = { showBottomSheet() }) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.adicionar_membro),
-                    tint = MaterialTheme.colorScheme.primary
+                    Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.adicionar_membro)
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text(stringResource(R.string.search_contacts)) },
             placeholder = { Text(stringResource(R.string.search_contacts_placeholder)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.group_create_members_added),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         if (uiState.members.isEmpty()) {
             Text(
-                text = stringResource(R.string.nenhum_membro_adicionado_ainda),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                modifier = Modifier.padding(vertical = 8.dp)
+                stringResource(R.string.nenhum_membro_adicionado_ainda),
+                style = MaterialTheme.typography.bodyMedium
             )
         } else {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollState),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(uiState.members) { member ->
+                uiState.members.forEach { member ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .width(80.dp)
+                            .size(80.dp)
                     ) {
                         Box(
                             modifier = Modifier
                                 .size(60.dp)
                                 .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.primaryContainer),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.TopEnd
                         ) {
-                            Text(
-                                text = member.name.take(1).uppercase(),
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                            if (!member.photoUrl.isNullOrBlank()) {
+                                AsyncImage(
+                                    model = member.photoUrl,
+                                    contentDescription = stringResource(
+                                        string.contact_photo_description,
+                                        member.name
+                                    ),
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Gray.copy(alpha = 0.1f)),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Gray.copy(alpha = 0.1f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = member.name.take(1).uppercase(),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+
                             IconButton(
                                 onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) },
                                 modifier = Modifier
-                                    .size(20.dp)
+                                    .size(24.dp)
                                     .align(Alignment.TopEnd)
-                                    .background(
-                                        color = MaterialTheme.colorScheme.errorContainer,
-                                        shape = CircleShape
-                                    )
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = "Remover ${member.name}",
-                                    tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(14.dp)
+                                    tint = Color.Red
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = member.name,
                             style = MaterialTheme.typography.bodySmall,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = stringResource(R.string.group_create_contacts_available),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
+            stringResource(R.string.group_create_contacts_available),
+            style = MaterialTheme.typography.titleMedium
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         if (filteredContacts.isEmpty()) {
             Text(
-                text = stringResource(R.string.no_contacts_found),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                modifier = Modifier.padding(vertical = 12.dp)
+                stringResource(R.string.no_contacts_found),
+                style = MaterialTheme.typography.bodyMedium
             )
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(filteredContacts) { contact ->
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        tonalElevation = 2.dp,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ContactItem(
-                            contact = contact,
-                            isSelected = false,
-                            action = { _, _ ->
-                                onIntent(GroupCreateIntent.ToggleMember(contact))
+            filteredContacts.forEach { contact ->
+                ContactItem(
+                    contact = contact,
+                    isSelected = uiState.members.contains(contact),
+                    action = { user, state ->
+                        Checkbox(
+                            checked = state,
+                            onCheckedChange = {
+                                onIntent(GroupCreateIntent.ToggleMember(user))
                             }
                         )
                     }
-                }
+                )
             }
         }
     }
@@ -453,116 +431,74 @@ private fun StepThreeDrawInfo(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = stringResource(R.string.confirma_o_do_grupo),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onBackground
+            stringResource(R.string.confirma_o_do_grupo),
+            style = MaterialTheme.typography.titleLarge
         )
 
-        Surface(
-            tonalElevation = 4.dp,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.informa_es_do_grupo),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                // Informações principais
-                GroupInfoRow(label = stringResource(R.string.nome), value = uiState.name)
-                GroupInfoRow(label = stringResource(R.string.descri_o), value = uiState.description)
-                GroupInfoRow(label = stringResource(R.string.data_do_sorteio), value = uiState.drawDate)
-                GroupInfoRow(label = stringResource(R.string.info_valor_m_nimo), value = uiState.minValue)
-                GroupInfoRow(label = stringResource(R.string.info_valor_m_ximo), value = uiState.maxValue)
-                GroupInfoRow(label = stringResource(R.string.info_tipo_de_sorteio), value = uiState.drawType)
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextButton(
-                    onClick = { onEdit(0) },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text(text = stringResource(R.string.editar))
-                }
-            }
+            Text(
+                text = stringResource(R.string.informa_es_do_grupo),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = stringResource(R.string.nome, uiState.name),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.descri_o, uiState.description),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.data_do_sorteio, uiState.drawDate),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_valor_m_nimo, uiState.minValue),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_valor_m_ximo, uiState.maxValue),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = stringResource(R.string.info_tipo_de_sorteio, uiState.drawType),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            TextButton(onClick = { onEdit(0) }) { Text(stringResource(R.string.editar)) }
         }
 
-        Surface(
-            tonalElevation = 4.dp,
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            Text(
+                text = stringResource(R.string.membros),
+                style = MaterialTheme.typography.titleMedium
+            )
+            if (uiState.members.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.membros),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    text = stringResource(R.string.nenhum_membro_adicionado),
+                    style = MaterialTheme.typography.bodyMedium
                 )
-
-                if (uiState.members.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.nenhum_membro_adicionado),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                } else {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        uiState.members.forEach { member ->
-                            Text(
-                                text = "- ${member.name}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextButton(
-                    onClick = { onEdit(1) },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text(text = stringResource(R.string.editar_membros))
+            } else {
+                uiState.members.forEach { member ->
+                    Text(text = "- ${member.name}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
+            TextButton(onClick = { onEdit(1) }) { Text(stringResource(R.string.editar_membros)) }
         }
-    }
-}
-
-@Composable
-private fun GroupInfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
     }
 }
 
