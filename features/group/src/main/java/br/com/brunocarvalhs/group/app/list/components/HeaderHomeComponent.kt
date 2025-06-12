@@ -2,7 +2,10 @@ package br.com.brunocarvalhs.group.app.list.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Groups2
+import androidx.compose.material.icons.filled.Groups3
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,8 +57,8 @@ internal fun HeaderHomeComponent(
                 }
             }) {
                 Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "Notifications"
+                    imageVector = Icons.Filled.Groups,
+                    contentDescription = "Groups"
                 )
             }
         }

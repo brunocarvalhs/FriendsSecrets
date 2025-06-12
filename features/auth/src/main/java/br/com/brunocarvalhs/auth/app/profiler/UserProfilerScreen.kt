@@ -16,18 +16,26 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,10 +52,12 @@ import br.com.brunocarvalhs.auth.commons.navigation.CreateProfileScreenRoute
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.SettingsGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.BottomNavItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationComponent
 import coil.compose.AsyncImage
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileScreen(
     navController: NavController, viewModel: UserProfileViewModel
@@ -55,19 +65,32 @@ fun UserProfileScreen(
     var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Profile) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(bottomBar = {
-        NavigationComponent(selectedItem = selectedItem, onItemSelected = { menu ->
-            selectedItem = menu
-            val route: Any = when (menu) {
-                is BottomNavItem.Groups -> GroupGraphRoute
-                is BottomNavItem.Profile -> ProfileGraphRoute
-            }
-            navController.navigate(route) {
-                launchSingleTop = true
-                restoreState = true
-            }
-        })
-    }) { paddingValues ->
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {}, actions = {
+                IconButton(onClick = {
+                    navController.navigate(SettingsGraphRoute)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings"
+                    )
+                }
+            })
+        },
+        bottomBar = {
+            NavigationComponent(selectedItem = selectedItem, onItemSelected = { menu ->
+                selectedItem = menu
+                val route: Any = when (menu) {
+                    is BottomNavItem.Groups -> GroupGraphRoute
+                    is BottomNavItem.Profile -> ProfileGraphRoute
+                }
+                navController.navigate(route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            })
+        }) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
