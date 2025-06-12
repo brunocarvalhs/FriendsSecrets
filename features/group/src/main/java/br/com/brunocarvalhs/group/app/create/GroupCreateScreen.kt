@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
@@ -42,12 +43,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.auth.commons.extensions.toCurrencyMask
 import br.com.brunocarvalhs.friendssecrets.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
@@ -56,6 +59,7 @@ import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.group.R
 import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
+import br.com.brunocarvalhs.group.commons.ui.components.DateInputField
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -202,7 +206,7 @@ private fun StepOneGroupInfo(
             value = uiState.name,
             onValueChange = { onIntent(GroupCreateIntent.UpdateName(it)) },
             label = { Text(stringResource(R.string.group_create_input_name)) },
-            placeholder = { Text("Ex: Amigo Secreto 2025") },
+            placeholder = { Text(stringResource(R.string.ex_amigo_secreto_2025)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -210,39 +214,39 @@ private fun StepOneGroupInfo(
             value = uiState.description,
             onValueChange = { onIntent(GroupCreateIntent.UpdateDescription(it)) },
             label = { Text(stringResource(R.string.group_create_input_description)) },
-            placeholder = { Text("Descreva o propósito do grupo") },
+            placeholder = { Text(stringResource(R.string.descreva_o_prop_sito_do_grupo)) },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Agrupando data e valores lado a lado
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(
+            DateInputField(
                 value = uiState.drawDate,
-                onValueChange = { onIntent(GroupCreateIntent.UpdateDrawDate(it)) },
-                label = { Text("Data do sorteio") },
-                placeholder = { Text("dd/mm/aaaa") },
-                modifier = Modifier.weight(1f),
-                singleLine = true,
-                // Aqui poderia ser um DatePicker se implementado
+                onValueChange = { it -> onIntent(GroupCreateIntent.UpdateDrawDate(it)) }
             )
             OutlinedTextField(
                 value = uiState.minValue,
-                onValueChange = { onIntent(GroupCreateIntent.UpdateMinValue(it)) },
-                label = { Text("Valor mínimo") },
-                placeholder = { Text("Ex: 10") },
+                onValueChange = {
+                    if (it.all { char -> char.isDigit() } && it.length <= 8)
+                        onIntent(GroupCreateIntent.UpdateMinValue(it))
+                },
+                label = { Text(stringResource(R.string.valor_m_nimo)) },
+                placeholder = { Text(stringResource(R.string.ex_10)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                // Pode aplicar máscara de valor monetário
+                visualTransformation = uiState.minValue.toCurrencyMask(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
         }
 
         OutlinedTextField(
             value = uiState.maxValue,
             onValueChange = { onIntent(GroupCreateIntent.UpdateMaxValue(it)) },
-            label = { Text("Valor máximo") },
-            placeholder = { Text("Ex: 100") },
+            label = { Text(stringResource(R.string.valor_m_ximo)) },
+            placeholder = { Text(stringResource(R.string.ex_100)) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            visualTransformation = uiState.minValue.toCurrencyMask(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
 
         DrawTypeDropdown(
@@ -251,6 +255,7 @@ private fun StepOneGroupInfo(
         )
     }
 }
+
 
 @Composable
 private fun StepTwoMembers(
@@ -269,12 +274,12 @@ private fun StepTwoMembers(
                 style = MaterialTheme.typography.titleMedium
             )
             IconButton(onClick = { showBottomSheet() }) {
-                Icon(Icons.Filled.Add, contentDescription = "Adicionar membro")
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.adicionar_membro))
             }
         }
 
         if (uiState.members.isEmpty()) {
-            Text("Nenhum membro adicionado ainda", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.nenhum_membro_adicionado_ainda), style = MaterialTheme.typography.bodyMedium)
         } else {
             uiState.members.forEach { member ->
                 Row(
@@ -285,7 +290,7 @@ private fun StepTwoMembers(
                 ) {
                     Text(member.name, modifier = Modifier.weight(1f))
                     IconButton(onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Remover membro")
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.remover_membro))
                     }
                 }
             }
@@ -323,7 +328,7 @@ private fun StepThreeDrawInfo(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Confirmação do Grupo", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.confirma_o_do_grupo), style = MaterialTheme.typography.titleLarge)
 
         // Card-like container para informações gerais
         Column(
@@ -332,14 +337,14 @@ private fun StepThreeDrawInfo(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Informações do Grupo", style = MaterialTheme.typography.titleMedium)
-            Text("Nome: ${uiState.name}", style = MaterialTheme.typography.bodyLarge)
-            Text("Descrição: ${uiState.description}", style = MaterialTheme.typography.bodyLarge)
-            Text("Data do Sorteio: ${uiState.drawDate}", style = MaterialTheme.typography.bodyLarge)
-            Text("Valor Mínimo: ${uiState.minValue}", style = MaterialTheme.typography.bodyLarge)
-            Text("Valor Máximo: ${uiState.maxValue}", style = MaterialTheme.typography.bodyLarge)
-            Text("Tipo de Sorteio: ${uiState.drawType}", style = MaterialTheme.typography.bodyLarge)
-            TextButton(onClick = { onEdit(0) }) { Text("Editar") }
+            Text(text = stringResource(R.string.informa_es_do_grupo), style = MaterialTheme.typography.titleMedium)
+            Text(text = stringResource(R.string.nome, uiState.name), style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.descri_o, uiState.description), style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.data_do_sorteio, uiState.drawDate), style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.info_valor_m_nimo, uiState.minValue), style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.info_valor_m_ximo, uiState.maxValue), style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.info_tipo_de_sorteio, uiState.drawType), style = MaterialTheme.typography.bodyLarge)
+            TextButton(onClick = { onEdit(0) }) { Text(stringResource(R.string.editar)) }
         }
 
         // Card-like container para membros
@@ -349,15 +354,15 @@ private fun StepThreeDrawInfo(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Membros", style = MaterialTheme.typography.titleMedium)
+            Text(text = stringResource(R.string.membros), style = MaterialTheme.typography.titleMedium)
             if (uiState.members.isEmpty()) {
-                Text("Nenhum membro adicionado", style = MaterialTheme.typography.bodyMedium)
+                Text(text = stringResource(R.string.nenhum_membro_adicionado), style = MaterialTheme.typography.bodyMedium)
             } else {
                 uiState.members.forEach { member ->
-                    Text("- ${member.name}", style = MaterialTheme.typography.bodyMedium)
+                    Text(text = "- ${member.name}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            TextButton(onClick = { onEdit(1) }) { Text("Editar Membros") }
+            TextButton(onClick = { onEdit(1) }) { Text(stringResource(R.string.editar_membros)) }
         }
     }
 }

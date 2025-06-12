@@ -134,4 +134,25 @@
     <string name="group_create_title">Criar Grupo</string>
     <string name="group_create_members_title">Membros do grupo\n</string>
     <string name="group_create_contacts_available">Contatos</string>
+    <string name="valor_m_nimo">Valor mínimo</string>
+    <string name="ex_10">Ex: 10</string>
+    <string name="valor_m_ximo">Valor máximo</string>
+    <string name="ex_100">Ex: 100</string>
+    <string name="adicionar_membro">Adicionar membro</string>
+    <string name="nenhum_membro_adicionado_ainda">Nenhum membro adicionado ainda</string>
+    <string name="remover_membro">Remover membro</string>
+    <string name="descreva_o_prop_sito_do_grupo">Descreva o propósito do grupo</string>
+    <string name="ex_amigo_secreto_2025">Ex: Amigo Secreto 2025</string>
+    <string name="nome">Nome: %1$s</string>
+    <string name="informa_es_do_grupo">Informações do Grupo</string>
+    <string name="descri_o">Descrição: %1$s</string>
+    <string name="data_do_sorteio">Data do Sorteio: %1$s</string>
+    <string name="info_valor_m_ximo">Valor Máximo: %1$s</string>
+    <string name="info_valor_m_nimo">Valor Mínimo: %1$s</string>
+    <string name="info_tipo_de_sorteio">Tipo de Sorteio: %1$s</string>
+    <string name="membros">Membros</string>
+    <string name="nenhum_membro_adicionado">Nenhum membro adicionado</string>
+    <string name="editar_membros">Editar Membros</string>
+    <string name="confirma_o_do_grupo">Confirmação do Grupo</string>
+    <string name="editar">Editar</string>
 </resources>

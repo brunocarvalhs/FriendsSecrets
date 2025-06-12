@@ -77,7 +77,6 @@ class GroupCreateViewModel @Inject constructor(
 
     private fun fetchContacts() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
             val result = getListUsersByContactUseCase.invoke().getOrNull().orEmpty()
             _uiState.update {
                 it.copy(
