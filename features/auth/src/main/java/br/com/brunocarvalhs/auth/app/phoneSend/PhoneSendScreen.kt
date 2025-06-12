@@ -1,11 +1,9 @@
 package br.com.brunocarvalhs.auth.app.phoneSend
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,11 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,7 +41,6 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneVerificationScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
-import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.arpitkatiyarprojects.countrypicker.CountryPickerOutlinedTextField
@@ -68,7 +61,10 @@ fun PhoneSendScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is PhoneSendUiState.Success -> {
-                val destination = PhoneVerificationScreenRoute(phoneNumber = state.phone)
+                val destination = PhoneVerificationScreenRoute(
+                    phoneNumber = state.phone,
+                    countryCode = state.countryCode
+                )
                 navController.navigate(destination)
             }
 
@@ -84,12 +80,11 @@ fun PhoneSendScreen(
     )
 }
 
-@SuppressLint("ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PhoneSendContent(
     modifier: Modifier = Modifier,
-    activity: ComponentActivity? = LocalContext.current as? ComponentActivity,
+    activity: ComponentActivity? = null,
     navController: NavController = rememberNavController(),
     uiState: PhoneSendUiState = PhoneSendUiState.Idle,
     handleIntent: (PhoneSendIntent) -> Unit = {},
@@ -114,11 +109,22 @@ private fun PhoneSendContent(
         mutableStateOf(false)
     }
 
-    Scaffold(topBar = {
-        TopAppBar(title = {}, navigationIcon = {
-            NavigationBackIconButton(navController = navController)
-        })
-    }) { paddingValues ->
+    val isPhoneValid = remember(phoneNumber, selectedCountryState) {
+        CountryPickerUtils.isMobileNumberValid(
+            phoneNumber, selectedCountryState?.countryCode ?: "IN"
+        )
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    NavigationBackIconButton(navController = navController)
+                }
+            )
+        }
+    ) { paddingValues ->
         Column(
             modifier = modifier
                 .padding(paddingValues)
@@ -132,7 +138,7 @@ private fun PhoneSendContent(
 
                 Text(
                     text = stringResource(R.string.phone_send_title),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -144,7 +150,7 @@ private fun PhoneSendContent(
                         R.string.phone_send_description,
                         stringResource(R.string.app_name)
                     ),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
 
@@ -154,7 +160,7 @@ private fun PhoneSendContent(
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(R.string.phone_send_textfield_label)) },
                     mobileNumber = CountryPickerUtils.getFormattedMobileNumber(
-                        phoneNumber, selectedCountryState?.countryCode ?: "IN",
+                        phoneNumber, selectedCountryState?.countryCode ?: "IN"
                     ),
                     onMobileNumberChange = {
                         phoneNumber = it
@@ -171,6 +177,17 @@ private fun PhoneSendContent(
                     isError = isMobileNumberValidationError,
                 )
 
+                if (isMobileNumberValidationError && phoneNumber.isNotBlank()) {
+                    Text(
+                        text = stringResource(R.string.phone_send_invalid_number),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .align(Alignment.Start)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -184,7 +201,6 @@ private fun PhoneSendContent(
                 Button(
                     onClick = {
                         keyboardController?.hide()
-
                         activity?.let {
                             handleIntent(
                                 PhoneSendIntent.SendCode(
@@ -198,7 +214,8 @@ private fun PhoneSendContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    shape = RoundedCornerShape(50)
+                    shape = RoundedCornerShape(50),
+                    enabled = isPhoneValid
                 ) {
                     Text(stringResource(R.string.phone_send_button))
                 }
@@ -207,8 +224,16 @@ private fun PhoneSendContent(
             }
         }
     }
+
     if (uiState is PhoneSendUiState.Loading) {
-        LoadingComponent()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }
 }
 

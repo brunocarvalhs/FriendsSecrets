@@ -25,7 +25,10 @@ internal data object LoginScreenRoute
 internal data object PhoneSendScreenRoute
 
 @Serializable
-internal data class PhoneVerificationScreenRoute(val phoneNumber: String)
+internal data class PhoneVerificationScreenRoute(
+    val phoneNumber: String,
+    val countryCode: String
+)
 
 @Serializable
 internal data object OnboardingScreenRoute
@@ -57,7 +60,9 @@ internal fun NavGraphBuilder.loginGraph(
         composable<PhoneVerificationScreenRoute> { backStackEntry ->
             val args = backStackEntry.toRoute<PhoneVerificationScreenRoute>()
             PhoneVerifyScreen(
+                activity = activity,
                 phoneNumber = args.phoneNumber,
+                countryCode = args.countryCode,
                 navController = navController,
                 viewModel = hiltViewModel()
             )

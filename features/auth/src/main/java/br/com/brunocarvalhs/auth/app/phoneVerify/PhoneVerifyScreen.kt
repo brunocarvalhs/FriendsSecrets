@@ -2,10 +2,9 @@ package br.com.brunocarvalhs.auth.app.phoneVerify
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.background
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,16 +12,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -54,13 +50,16 @@ import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.CreateProfileScreenRoute
 import br.com.brunocarvalhs.auth.commons.performance.LaunchPerformanceLifecycleTracing
 import br.com.brunocarvalhs.friendssecrets.common.extensions.toMaskedPhoneNumber
+import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun PhoneVerifyScreen(
+    activity: ComponentActivity? = null,
     phoneNumber: String? = null,
+    countryCode: String? = null,
     navController: NavController,
     viewModel: PhoneVerifyViewModel
 ) {
@@ -84,7 +83,9 @@ fun PhoneVerifyScreen(
     PhoneVerifyContent(
         navController = navController,
         uiState = uiState,
+        activity = activity,
         phoneNumber = phoneNumber,
+        countryCode = countryCode.orEmpty(),
         handleIntent = viewModel::handleIntent
     )
 }
@@ -93,13 +94,19 @@ fun PhoneVerifyScreen(
 @Composable
 private fun PhoneVerifyContent(
     navController: NavController = rememberNavController(),
+    activity: ComponentActivity? = null,
     uiState: PhoneVerifyUiState = PhoneVerifyUiState.Idle,
     phoneNumber: String = "",
+    countryCode: String = "",
     handleIntent: (PhoneVerifyIntent) -> Unit = {}
 ) {
     val otpLength = 6
     var otpCode by remember { mutableStateOf(List(otpLength) { "" }) }
-    var remainingTime by remember { mutableIntStateOf(56) }
+    var remainingTime by remember { mutableIntStateOf(60) }
+    var showError by remember { mutableStateOf(false) }
+
+    val focusManager = LocalFocusManager.current
+    val focusRequesters = remember { List(otpLength) { FocusRequester() } }
 
     LaunchedEffect(Unit) {
         while (remainingTime > 0) {
@@ -111,15 +118,12 @@ private fun PhoneVerifyContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-
-                },
+                title = {},
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.Black
+                    containerColor = Color.Transparent
                 )
             )
         }
@@ -132,7 +136,8 @@ private fun PhoneVerifyContent(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -142,45 +147,32 @@ private fun PhoneVerifyContent(
                         phoneNumber.toMaskedPhoneNumber()
                     ),
                     fontSize = 16.sp,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                val focusManager = LocalFocusManager.current
-                val focusRequesters = remember { List(otpLength) { FocusRequester() } }
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     otpCode.forEachIndexed { index, char ->
                         OutlinedTextField(
                             value = char,
                             onValueChange = { input ->
                                 if (input.length <= 1 && (input.isEmpty() || input.all { it.isDigit() })) {
-                                    otpCode = otpCode.toMutableList().also { list ->
-                                        list[index] = input
+                                    val newOtp = otpCode.toMutableList()
+                                    newOtp[index] = input
+                                    otpCode = newOtp
+
+                                    if (input.isNotEmpty() && index < otpLength - 1) {
+                                        focusRequesters[index + 1].requestFocus()
+                                    } else if (input.isEmpty() && index > 0) {
+                                        focusRequesters[index - 1].requestFocus()
+                                    } else {
+                                        focusManager.clearFocus()
                                     }
 
-                                    when {
-                                        input.isNotEmpty() && index < otpLength - 1 -> {
-                                            focusRequesters[index + 1].requestFocus()
-                                        }
-
-                                        input.isEmpty() && index > 0 -> {
-                                            focusRequesters[index - 1].requestFocus()
-                                        }
-
-                                        input.isEmpty() -> {
-                                            focusRequesters[index].requestFocus()
-                                        }
-
-                                        else -> {
-                                            focusManager.clearFocus()
-                                        }
-                                    }
+                                    showError = false
                                 }
                             },
                             textStyle = LocalTextStyle.current.copy(
@@ -189,62 +181,76 @@ private fun PhoneVerifyContent(
                             ),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
+                            isError = showError,
                             modifier = Modifier
                                 .width(48.dp)
-                                .height(68.dp)
+                                .height(64.dp)
                                 .focusRequester(focusRequesters[index]),
                             shape = RoundedCornerShape(12.dp)
                         )
                     }
                 }
 
+                if (showError) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.invalid_code),
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 14.sp,
+                        modifier = Modifier.align(Alignment.Start)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = stringResource(R.string.resend_code_in_s, remainingTime),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = Color(0xFF009688)
-                )
+                if (remainingTime > 0) {
+                    Text(
+                        text = stringResource(R.string.resend_code_in_s, remainingTime),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 14.sp
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.resend_code_now),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            remainingTime = 60
+                            activity?.let {
+                                handleIntent(
+                                    PhoneVerifyIntent.ResendCode(
+                                        activity = activity,
+                                        phone = phoneNumber,
+                                        countryCode = countryCode
+                                    )
+                                )
+                            }
+                        }
+                    )
+                }
             }
 
             Button(
                 onClick = {
-                    handleIntent(
-                        PhoneVerifyIntent.VerifyCode(
-                            code = otpCode.joinToString("")
-                        )
-                    )
+                    if (otpCode.any { it.isBlank() }) {
+                        showError = true
+                        return@Button
+                    }
+
+                    handleIntent(PhoneVerifyIntent.VerifyCode(otpCode.joinToString("")))
                 },
                 enabled = otpCode.all { it.isNotBlank() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp),
+                shape = RoundedCornerShape(50)
             ) {
                 Text(stringResource(R.string.verify))
             }
         }
     }
+
     if (uiState is PhoneVerifyUiState.Loading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x88000000))
-                .clickable(enabled = false) {},
-            contentAlignment = Alignment.Center
-        ) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                modifier = Modifier.size(100.dp)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
+        LoadingComponent()
     }
 }
 

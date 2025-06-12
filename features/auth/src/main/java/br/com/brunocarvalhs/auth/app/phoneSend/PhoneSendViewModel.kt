@@ -33,7 +33,8 @@ class PhoneSendViewModel @Inject constructor(
         viewModelScope.launch {
             useCase.invoke(phone = phone, countryCode = countryCode, activity = activity)
                 .onSuccess {
-                    _uiState.value = PhoneSendUiState.Success(phone = "$countryCode$phone")
+                    _uiState.value =
+                        PhoneSendUiState.Success(countryCode = countryCode, phone = phone)
                 }.onFailure {
                     _uiState.value = PhoneSendUiState.Error(it.message.orEmpty())
                 }
