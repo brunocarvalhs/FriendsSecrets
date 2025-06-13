@@ -216,6 +216,12 @@ private fun StepGroupInfo(
     uiState: GroupCreateUiState,
     onIntent: (GroupCreateIntent) -> Unit
 ) {
+    val isMaxLessThanMin = uiState.minValue.toIntOrNull()?.let { min ->
+        uiState.maxValue.toIntOrNull()?.let { max ->
+            max < min
+        }
+    } ?: false
+
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -260,6 +266,10 @@ private fun StepGroupInfo(
                 onValueChange = {
                     if (it.all { char -> char.isDigit() } && it.length <= 8)
                         onIntent(GroupCreateIntent.UpdateMaxValue(it))
+                },
+                isError = isMaxLessThanMin,
+                supportingText = {
+                    if (isMaxLessThanMin) Text("O valor máximo não pode ser menor que o mínimo.")
                 },
                 label = { Text(stringResource(R.string.valor_m_ximo)) },
                 placeholder = { Text(stringResource(R.string.ex_100)) },

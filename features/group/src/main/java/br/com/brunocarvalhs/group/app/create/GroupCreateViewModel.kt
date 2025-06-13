@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -136,12 +139,34 @@ class GroupCreateViewModel @Inject constructor(
 
     fun isStepValid(uiState: GroupCreateUiState): Boolean {
         return when (uiState.currentStep) {
-            0 -> uiState.name.isNotBlank() &&
-                    uiState.description.isNotBlank() &&
-                    uiState.drawDate.isNotBlank() &&
-                    uiState.minValue.isNotBlank() &&
-                    uiState.maxValue.isNotBlank() &&
-                    uiState.drawType.isNotBlank()
+            0 -> {
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val today = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+
+                val drawDateValid = try {
+                    val drawDate = dateFormat.parse(uiState.drawDate)
+                    drawDate != null && !drawDate.before(today.time)
+                } catch (e: Exception) {
+                    false
+                }
+
+                val min = uiState.minValue.toDoubleOrNull()
+                val max = uiState.maxValue.toDoubleOrNull()
+                val valueRangeValid = min != null && max != null && min <= max
+
+                uiState.name.isNotBlank() &&
+                        uiState.description.isNotBlank() &&
+                        drawDateValid &&
+                        uiState.minValue.isNotBlank() &&
+                        uiState.maxValue.isNotBlank() &&
+                        valueRangeValid &&
+                        uiState.drawType.isNotBlank()
+            }
 
             1 -> uiState.members.size >= 3
 

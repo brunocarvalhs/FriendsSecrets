@@ -16,11 +16,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,14 +37,43 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateInputField(value: String, onValueChange: (String) -> Unit) {
+fun DateInputField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showSheet by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
 
     val dateFormatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
-    val today = remember { Calendar.getInstance().timeInMillis }
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = today)
-    var isFocused by remember { mutableStateOf(false) }
+
+    val todayMillis = remember {
+        Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    val selectableDates = remember(todayMillis) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= todayMillis
+            }
+        }
+    }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = todayMillis,
+        selectableDates = selectableDates
+    )
+
+    LaunchedEffect(isFocused) {
+        if (isFocused && !showSheet) {
+            showSheet = true
+        }
+    }
 
     OutlinedTextField(
         value = value,
@@ -52,16 +83,13 @@ fun DateInputField(value: String, onValueChange: (String) -> Unit) {
         label = { Text("Data do sorteio") },
         placeholder = { Text("dd/mm/aaaa") },
         trailingIcon = {
-            IconButton(
-                onClick = { showSheet = true },
-            ) { Icon(Icons.Filled.CalendarToday, contentDescription = "Selecionar data") }
+            IconButton(onClick = { showSheet = true }) {
+                Icon(Icons.Filled.CalendarToday, contentDescription = "Selecionar data")
+            }
         },
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                if (focusState.isFocused && !showSheet) {
-                    showSheet = true
-                }
                 isFocused = focusState.isFocused
             },
         singleLine = true
@@ -69,9 +97,7 @@ fun DateInputField(value: String, onValueChange: (String) -> Unit) {
 
     if (showSheet) {
         ModalBottomSheet(
-            onDismissRequest = {
-                showSheet = false
-            },
+            onDismissRequest = { showSheet = false },
             sheetState = sheetState
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -83,16 +109,13 @@ fun DateInputField(value: String, onValueChange: (String) -> Unit) {
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = {
-                        showSheet = false
-                    }) {
+                    TextButton(onClick = { showSheet = false }) {
                         Text("Cancelar")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(onClick = {
-                        val selectedDateMillis = datePickerState.selectedDateMillis
-                        if (selectedDateMillis != null) {
-                            onValueChange(dateFormatter.format(Date(selectedDateMillis)))
+                        datePickerState.selectedDateMillis?.let {
+                            onValueChange(dateFormatter.format(Date(it)))
                         }
                         showSheet = false
                     }) {
@@ -103,3 +126,4 @@ fun DateInputField(value: String, onValueChange: (String) -> Unit) {
         }
     }
 }
+
