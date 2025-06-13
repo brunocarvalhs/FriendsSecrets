@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,18 +14,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -60,23 +59,22 @@ import coil.compose.AsyncImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileScreen(
-    navController: NavController, viewModel: UserProfileViewModel
+    navController: NavController,
+    viewModel: UserProfileViewModel
 ) {
     var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Profile) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = {}, actions = {
-                IconButton(onClick = {
-                    navController.navigate(SettingsGraphRoute)
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings"
-                    )
+            TopAppBar(
+                title = { Text(text = "Perfil", style = MaterialTheme.typography.titleLarge) },
+                actions = {
+                    IconButton(onClick = { navController.navigate(SettingsGraphRoute) }) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Configurações")
+                    }
                 }
-            })
+            )
         },
         bottomBar = {
             NavigationComponent(selectedItem = selectedItem, onItemSelected = { menu ->
@@ -90,9 +88,12 @@ fun UserProfileScreen(
                     restoreState = true
                 }
             })
-        }) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues)
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             when (val state = uiState) {
                 is UserProfileUiState.Loading -> {
@@ -102,7 +103,8 @@ fun UserProfileScreen(
                 }
 
                 is UserProfileUiState.Idle -> {
-                    UserProfileContent(name = state.data?.name,
+                    UserProfileContent(
+                        name = state.data?.name,
                         phoneNumber = state.data?.phoneNumber,
                         photoUrl = state.data?.photoUrl,
                         likes = state.data?.likes.orEmpty(),
@@ -117,29 +119,26 @@ fun UserProfileScreen(
                         onLogout = {
                             viewModel.handleIntent(UserProfileIntent.Logout)
                             navController.navigate(GroupGraphRoute) {
-                                popUpTo(ProfileGraphRoute) {
-                                    inclusive = true
-                                }
+                                popUpTo(ProfileGraphRoute) { inclusive = true }
                             }
                         },
                         onDeleteAccount = {
                             viewModel.handleIntent(UserProfileIntent.DeleteAccount)
                             navController.navigate(GroupGraphRoute) {
-                                popUpTo(ProfileGraphRoute) {
-                                    inclusive = true
-                                }
+                                popUpTo(ProfileGraphRoute) { inclusive = true }
                             }
-                        })
+                        }
+                    )
                 }
 
                 is UserProfileUiState.Error -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(state.message, color = Color.Red)
+                        Text(state.message, color = MaterialTheme.colorScheme.error)
                     }
                 }
 
                 is UserProfileUiState.Success -> {
-                    // Ex: Navegar para outra tela ou exibir snackbar
+
                 }
             }
         }
@@ -158,80 +157,116 @@ fun UserProfileContent(
     onLogout: () -> Unit,
     onDeleteAccount: () -> Unit,
 ) {
-    Column(
+    val listState = rememberLazyListState()
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(bottom = 32.dp)
     ) {
-        Spacer(Modifier.height(24.dp))
-
-        ProfilePicture(photoUrl)
-
-        Spacer(Modifier.height(16.dp))
-
-        ProfileNameAndStatus(name, isAnonymous)
-
-        Spacer(Modifier.height(24.dp))
-
+        item { ProfilePicture(photoUrl) }
+        item { ProfileNameAndStatus(name, isAnonymous) }
         if (!isAnonymous && !phoneNumber.isNullOrEmpty()) {
-            ProfilePhone(phoneNumber)
-            Spacer(Modifier.height(16.dp))
+            item { ProfilePhone(phoneNumber) }
         }
-
         if (likes.isNotEmpty()) {
-            LikesSection(likes)
-            Spacer(Modifier.height(32.dp))
+            item { LikesSectionWithShowMore(likes) }
         }
+        item {
+            ActionsSection(
+                isAnonymous = isAnonymous,
+                onLogin = onLogin,
+                onEdit = onEdit,
+                onLogout = onLogout,
+                onDeleteAccount = onDeleteAccount
+            )
+        }
+    }
+}
 
-        ActionsSection(
-            isAnonymous = isAnonymous,
-            onLogin = onLogin,
-            onEdit = onEdit,
-            onLogout = onLogout,
-            onDeleteAccount = onDeleteAccount
-        )
+@Composable
+fun LikesSectionWithShowMore(likes: List<String>) {
+    var showAll by remember { mutableStateOf(false) }
+    val displayLikes = if (showAll) likes else likes.take(5)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium
+            )
+            .padding(16.dp)
+    ) {
+        Text("Seus gostos", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(12.dp))
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            displayLikes.forEach { like ->
+                AssistChip(onClick = {}, label = { Text(like) })
+            }
+        }
+        if (likes.size > 5) {
+            Spacer(Modifier.height(8.dp))
+            TextButton(
+                onClick = { showAll = !showAll },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(if (showAll) "Mostrar menos" else "Mostrar mais")
+            }
+        }
     }
 }
 
 @Composable
 fun ProfilePicture(photoUrl: String?) {
-    Box(
-        modifier = Modifier
-            .size(120.dp)
-            .clip(CircleShape)
-            .background(Color.LightGray),
-        contentAlignment = Alignment.Center
+    Card(
+        modifier = Modifier.size(130.dp),
+        shape = CircleShape,
     ) {
-        if (photoUrl != null) {
-            AsyncImage(
-                model = photoUrl,
-                contentDescription = "Foto do perfil",
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Avatar padrão",
-                modifier = Modifier.size(100.dp),
-                tint = Color.DarkGray
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            if (photoUrl != null) {
+                AsyncImage(
+                    model = photoUrl,
+                    contentDescription = "Foto do perfil",
+                    modifier = Modifier.clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Avatar padrão",
+                    modifier = Modifier.size(110.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ProfileNameAndStatus(name: String?, isAnonymous: Boolean) {
-    Text(
-        text = name ?: "Usuário Anônimo", style = MaterialTheme.typography.titleLarge
-    )
-    Text(
-        text = if (isAnonymous) "Modo Anônimo" else "Usuário Verificado",
-        style = MaterialTheme.typography.labelMedium,
-        color = Color.Gray
-    )
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = name ?: "Usuário Anônimo",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Text(
+            text = if (isAnonymous) "Modo Anônimo" else "Usuário Verificado",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.outline
+        )
+    }
 }
 
 @Composable
@@ -242,24 +277,8 @@ fun ProfilePhone(phone: String) {
         enabled = false,
         label = { Text("Telefone") },
         leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
-}
-
-@Composable
-fun LikesSection(likes: List<String>) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text("Seus gostos", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(8.dp))
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            likes.forEach { like ->
-                AssistChip(onClick = {}, label = { Text(like) })
-            }
-        }
-    }
 }
 
 @Composable
@@ -270,40 +289,50 @@ fun ActionsSection(
     onLogout: () -> Unit,
     onDeleteAccount: () -> Unit
 ) {
-    if (!isAnonymous) {
-        Button(
-            onClick = onEdit, modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Editar Perfil")
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        OutlinedButton(
-            onClick = onLogout, modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Sair")
-        }
-
-        TextButton(
-            onClick = onDeleteAccount, modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red)
-                Spacer(Modifier.width(4.dp))
-                Text("Excluir Conta", color = Color.Red)
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        if (!isAnonymous) {
+            Button(
+                onClick = onEdit,
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Editar Perfil")
             }
-        }
-    } else {
-        Button(
-            onClick = onLogin,
-        ) {
-            Text(
-                text = "Faça login para acessar recursos do perfil.",
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 16.dp)
-            )
+
+            OutlinedButton(
+                onClick = onLogout,
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Sair")
+            }
+
+            TextButton(
+                onClick = onDeleteAccount,
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text("Excluir Conta", color = MaterialTheme.colorScheme.error)
+                }
+            }
+        } else {
+            OutlinedButton(
+                onClick = onLogin,
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(
+                    text = "Faça login para acessar recursos do perfil.",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
