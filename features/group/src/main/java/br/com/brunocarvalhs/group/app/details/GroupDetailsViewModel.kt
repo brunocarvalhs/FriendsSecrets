@@ -153,25 +153,28 @@ class GroupDetailsViewModel @Inject constructor(
     }
 
     private fun shareMember(context: Context, member: UserEntities, secret: String, token: String) {
+        val formattedToken = token.toCharArray().joinToString(" ")
+        val emphasizedToken = "*$formattedToken*"
+
+        val shareText = context.getString(
+            R.string.group_details_share_member,
+            member.name,
+            emphasizedToken,
+            secret,
+            context.packageName,
+            context.getString(R.string.home_drop_menu_item_text_join_a_group)
+        )
+
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                context.getString(
-                    R.string.group_details_share_member,
-                    member.name,
-                    token,
-                    secret,
-                    context.applicationContext.packageName,
-                    context.getString(R.string.home_drop_menu_item_text_join_a_group)
-                )
-            )
+            putExtra(Intent.EXTRA_TEXT, shareText)
             type = "text/plain"
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         context.startActivity(shareIntent)
     }
+
 
     private fun drawMembers(group: GroupEntities) {
         _uiState.value = GroupDetailsUiState.Loading

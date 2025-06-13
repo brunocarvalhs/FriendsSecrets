@@ -30,6 +30,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +59,8 @@ fun GroupInfoTab(
     onExitGroup: ((GroupEntities) -> Unit)? = null,
     onDeleteGroup: ((GroupEntities) -> Unit)? = null,
 ) {
+    var showShareModal by remember { mutableStateOf(false) }
+
     Scaffold { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -63,7 +69,6 @@ fun GroupInfoTab(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Descrição do grupo
             item {
                 uiState.group.description?.let { description ->
                     Column {
@@ -112,7 +117,7 @@ fun GroupInfoTab(
                         icon = Icons.Default.Share,
                         title = stringResource(R.string.compartilhar_grupo),
                         description = stringResource(R.string.envie_o_link_do_grupo_para_amigos_entrarem),
-                        onClick = { onSharedGroup(uiState.group) }
+                        onClick = { showShareModal = true }
                     )
                 }
             }
@@ -154,9 +159,36 @@ fun GroupInfoTab(
                         }
                     }
                 }
+            } else {
+                if (uiState.group.isOwner) {
+                    onDeleteGroup?.let {
+                        item {
+                            ManagementCard(
+                                icon = Icons.Default.DeleteForever,
+                                title = stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin),
+                                description = stringResource(R.string.esta_a_o_apagar_permanentemente_o_grupo_e_todas_as_suas_informa_es_os_participantes_n_o_ter_o_mais_acesso_ao_grupo_esta_a_o_irrevers_vel),
+                                onClick = { onDeleteGroup(uiState.group) }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+
+    onSharedGroup?.let {
+        if (showShareModal) {
+            ShareTokenModal(
+                token = uiState.group.token,
+                onShareClick = {
+                    showShareModal = false
+                    onSharedGroup(uiState.group)
+                },
+                onDismiss = { showShareModal = false }
+            )
+        }
+    }
+
 }
 
 @Composable

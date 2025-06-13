@@ -181,4 +181,5 @@
     <string name="draw_screen_title_like">O que a pessoa gosta</string>
     <string name="draw_card_front_hint">Toque para revelar seu amigo secreto</string>
     <string name="draw_error_decode">Erro ao decodificar o nome</string>
+    <string name="group_to_enter_title">Digite o código do grupo</string>
 </resources>

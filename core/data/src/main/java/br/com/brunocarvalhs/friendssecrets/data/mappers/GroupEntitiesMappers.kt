@@ -23,7 +23,11 @@ internal fun GroupEntities.toDTO(): GroupDTO {
         description = this.description,
         members = membersMap,
         draws = this.draws,
-        isOwner = this.isOwner
+        isOwner = this.isOwner,
+        date = this.date,
+        minPrice = this.minPrice,
+        maxPrice = this.maxPrice,
+        type = this.type
     )
 }
 
@@ -43,6 +47,10 @@ internal fun GroupDTO.toEntities(): GroupEntities {
             }
         },
         draws = this.draws,
-        isOwner = this.isOwner
+        isOwner = this.isOwner,
+        date = this.date,
+        minPrice = this.minPrice,
+        maxPrice = this.maxPrice,
+        type = this.type
     )
 }

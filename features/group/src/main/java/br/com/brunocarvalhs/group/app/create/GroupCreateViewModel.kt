@@ -100,7 +100,11 @@ class GroupCreateViewModel @Inject constructor(
             val group = GroupEntities.create(
                 name = state.name,
                 description = state.description,
-                members = state.members
+                members = state.members,
+                date = state.drawDate,
+                minPrice = state.minValue.toDoubleOrNull(),
+                maxPrice = state.maxValue.toDoubleOrNull(),
+                type = state.drawType
             )
             useCase.invoke(group).onSuccess {
                 _uiState.update { it.copy(isLoading = false, isSuccess = true) }

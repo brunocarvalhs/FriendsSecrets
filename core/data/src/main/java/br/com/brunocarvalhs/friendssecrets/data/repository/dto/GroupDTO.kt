@@ -13,17 +13,28 @@ internal data class GroupDTO(
     @SerializedName(GroupEntities.MEMBERS) val members: Map<String, Map<String, Any>> = emptyMap(),
     @SerializedName(GroupEntities.DRAWS) val draws: Map<String, String> = emptyMap(),
     @SerializedName(GroupEntities.IS_OWNER) val isOwner: Boolean = false,
+    @SerializedName(GroupEntities.DATE) val date: String? = null,
+    @SerializedName(GroupEntities.MIN_PRICE) val minPrice: Double? = null,
+    @SerializedName(GroupEntities.MAX_PRICE) val maxPrice: Double? = null,
+    @SerializedName(GroupEntities.TYPE) val type: String? = null
 ) {
 
     fun toMap(): Map<String, Any> {
-        return mapOf(
-            GroupEntities.ID to id,
-            GroupEntities.TOKEN to token,
-            GroupEntities.NAME to name,
-            GroupEntities.DESCRIPTION to description.orEmpty(),
-            GroupEntities.MEMBERS to members,
-            GroupEntities.DRAWS to draws
-        )
+        val result = mutableMapOf<String, Any>()
+
+        result[GroupEntities.ID] = id
+        result[GroupEntities.TOKEN] = token
+        result[GroupEntities.NAME] = name
+        result[GroupEntities.MEMBERS] = members
+        result[GroupEntities.DRAWS] = draws
+
+        description?.let { result[GroupEntities.DESCRIPTION] = it }
+        date?.let { result[GroupEntities.DATE] = it }
+        minPrice?.let { result[GroupEntities.MIN_PRICE] = it }
+        maxPrice?.let { result[GroupEntities.MAX_PRICE] = it }
+        type?.let { result[GroupEntities.TYPE] = it }
+
+        return result
     }
 
     companion object {

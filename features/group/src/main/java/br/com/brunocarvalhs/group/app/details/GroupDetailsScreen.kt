@@ -35,7 +35,6 @@ import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.group.R
-import br.com.brunocarvalhs.group.app.details.components.FloatingButtonComponent
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsContentComponent
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsErrorComponent
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsLoadingComponent
