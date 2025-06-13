@@ -86,8 +86,6 @@
     <string name="draw_screen_title">Your secret friend is...</string>
     <string name="draw_screen_action_title">Reveal my secret friend</string>
     <string name="draw_screen_action_generative">Gift suggestions</string>
-    <string name="draw_screen_code_secret">Secret code</string>
-    <string name="draw_screen_title_like">Likes</string>
     <string name="onboarding_screen_close">Close</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Start</string>
@@ -177,4 +175,10 @@
     <string name="altere_nome_descri_o_e_configura_es">Altere nome, descrição e configurações</string>
     <string name="esta_a_o_apagar_permanentemente_o_grupo_e_todas_as_suas_informa_es_os_participantes_n_o_ter_o_mais_acesso_ao_grupo_esta_a_o_irrevers_vel">Esta ação apagará permanentemente o grupo e todas as suas informações. Os participantes não terão mais acesso ao grupo. Esta ação é irreversível.</string>
     <string name="voc_ser_removido_deste_grupo_e_n_o_poder_mais_participar_dos_sorteios_ou_visualizar_informa_es">Você será removido deste grupo e não poderá mais participar dos sorteios ou visualizar informações.</string>
+    <string name="draw_screen_title_reveal">Seu amigo secreto é:</string>
+    <string name="draw_screen_code_secret">Código secreto</string>
+    <string name="draw_screen_action_reset">Refazer Sorteio</string>
+    <string name="draw_screen_title_like">O que a pessoa gosta</string>
+    <string name="draw_card_front_hint">Toque para revelar seu amigo secreto</string>
+    <string name="draw_error_decode">Erro ao decodificar o nome</string>
 </resources>

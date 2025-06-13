@@ -61,7 +61,6 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.ui.R.string
 import br.com.brunocarvalhs.friendssecrets.ui.components.ContactItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
@@ -94,6 +93,7 @@ fun GroupCreateScreen(
     GroupCreateContent(
         navController = navController,
         uiState = uiState,
+        isStepValid = { viewModel.isStepValid(it) },
         onIntent = { viewModel.eventIntent(it) },
     )
 }
@@ -103,6 +103,7 @@ fun GroupCreateScreen(
 private fun GroupCreateContent(
     navController: NavController,
     uiState: GroupCreateUiState,
+    isStepValid: (GroupCreateUiState) -> Boolean = { true },
     onIntent: (GroupCreateIntent) -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -127,13 +128,27 @@ private fun GroupCreateContent(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = {
-                if (uiState.currentStep < 2) {
-                    onIntent(GroupCreateIntent.NextStep)
-                } else {
-                    onIntent(GroupCreateIntent.CreateGroup)
-                }
-            }) {
+            val isEnabled = isStepValid(uiState)
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    if (isEnabled) {
+                        if (uiState.currentStep < 2) {
+                            onIntent(GroupCreateIntent.NextStep)
+                        } else {
+                            onIntent(GroupCreateIntent.CreateGroup)
+                        }
+                    }
+                },
+                containerColor = if (isEnabled)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                contentColor = if (isEnabled)
+                    MaterialTheme.colorScheme.onPrimary
+                else
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            ) {
                 Icon(
                     imageVector = if (uiState.currentStep < 2) Icons.AutoMirrored.Filled.ArrowForward else Icons.Filled.Check,
                     contentDescription = null

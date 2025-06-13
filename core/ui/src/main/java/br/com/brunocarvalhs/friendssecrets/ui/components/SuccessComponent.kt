@@ -35,7 +35,7 @@ fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> Unit = {})
     val isAnimationFinished = progress == 1f
 
     val backgroundColor = if (isAnimationFinished) Color(0xFF00CA8D)
-    else MaterialTheme.colorScheme.onBackground
+    else MaterialTheme.colorScheme.background
 
     LaunchedEffect(isAnimationFinished) {
         delay(timeMillis = 500)

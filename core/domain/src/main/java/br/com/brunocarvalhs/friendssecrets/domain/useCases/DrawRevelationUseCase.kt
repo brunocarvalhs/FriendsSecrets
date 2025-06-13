@@ -49,7 +49,7 @@ class DrawRevelationUseCase(
         val member = group.members.find { it.name == memberKey }
 
         return mapOf(
-            memberKey to member?.likes.orEmpty().toString()
+            memberKey to (member?.likes?.joinToString(" | ")?.takeIf { it.isNotBlank() } ?: "")
         )
     }
 

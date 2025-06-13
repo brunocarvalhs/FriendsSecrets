@@ -66,7 +66,6 @@ fun NavGraphBuilder.groupGraph(
                 navController = navController,
                 viewModel = hiltViewModel(),
                 groupId = args.groupId,
-                code = args.code,
             )
         }
 

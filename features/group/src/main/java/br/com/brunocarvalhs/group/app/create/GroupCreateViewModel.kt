@@ -129,4 +129,19 @@ class GroupCreateViewModel @Inject constructor(
     private fun goToStep(step: Int) {
         _uiState.update { it.copy(currentStep = step) }
     }
+
+    fun isStepValid(uiState: GroupCreateUiState): Boolean {
+        return when (uiState.currentStep) {
+            0 -> uiState.name.isNotBlank() &&
+                    uiState.description.isNotBlank() &&
+                    uiState.drawDate.isNotBlank() &&
+                    uiState.minValue.isNotBlank() &&
+                    uiState.maxValue.isNotBlank() &&
+                    uiState.drawType.isNotBlank()
+
+            1 -> uiState.members.size >= 3
+
+            else -> true
+        }
+    }
 }

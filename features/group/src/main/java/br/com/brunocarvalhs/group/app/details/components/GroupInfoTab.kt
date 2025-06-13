@@ -117,7 +117,7 @@ fun GroupInfoTab(
                 }
             }
 
-            if (uiState.group.draws.isNotEmpty()) {
+            if (uiState.group.draws.isEmpty()) {
                 if (uiState.group.isOwner) {
                     onEditGroup?.let {
                         item {
