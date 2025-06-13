@@ -32,7 +32,7 @@ class GroupEntitiesTest {
                 token: String,
                 name: String,
                 description: String?,
-                members: Map<String, String>,
+                members: Map<String, Map<String, String>>,
                 draws: Map<String, String>,
                 isOwner: Boolean
             ): GroupEntities {

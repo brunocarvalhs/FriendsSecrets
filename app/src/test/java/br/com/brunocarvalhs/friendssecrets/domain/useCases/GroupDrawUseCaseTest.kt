@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.CustomApplication
-import br.com.brunocarvalhs.friendssecrets.commons.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repository.GroupRepository
 import io.mockk.every

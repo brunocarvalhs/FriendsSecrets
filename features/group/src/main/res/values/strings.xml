@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_tab_info">Informações</string>
+    <string name="group_tab_members">Membros</string>
+    <string name="group_tab_gift_ideas">Presentes</string>
+    <string name="group_tab_chat">Chat</string>
+
+    <!--  App  -->
+    <string name="app_name">Secret Santa</string>
+
+    <!--  Onboarding  -->
+    <string name="onboarding_screen_title">Welcome to Friends Secrets!</string>
+    <string name="onboarding_screen_description">The app that will help you organize your Secret Santa game.</string>
+
+    <!--  Group Create Screen  -->
+    <string name="group_create_input_description">Group description</string>
+    <string name="group_create_input_name">Group name</string>
+    <string name="group_create_text_button_member">Members</string>
+
+    <!--  Group Details Screen  -->
+    <string name="group_details_text_button_label_see_less">See less</string>
+    <string name="group_details_text_button_label_see_more">See more</string>
+    <string name="group_details_drop_menu_item_text_send_feedback">Send Feedback</string>
+    <string name="group_details_drop_menu_item_text_settings">Settings</string>
+    <string name="group_details_drop_menu_item_text_edit">Edit</string>
+
+    <!--  Home Screen  -->
+    <string name="home_drop_menu_item_text_profile">Profile</string>
+    <string name="home_drop_menu_item_text_join_a_group">Join a group</string>
+    <string name="home_drop_menu_item_text_settings">Settings</string>
+    <string name="home_action_create_group">Create a new group</string>
+
+    <!--  Draw Component  -->
+    <string name="draw_text_feedback">Success!</string>
+    <string name="group_create_action_save_group">Save group</string>
+    <string name="group_details_action_draw_members">Draw</string>
+    <string name="group_details_action_shared">Shared</string>
+
+    <!--  Generative AI  -->
+    <string name="ai_prompt">Hi, I need a gift suggestion for %s, who likes %s, for the secret friend %s.</string>
+
+    <!--  Add Member Bottom Sheet  -->
+    <string name="add_member_bottom_sheet_title_label">Add a new member</string>
+    <string name="add_member_bottom_sheet_input_new_member">New member</string>
+    <string name="add_member_bottom_sheet_input_new_member_error_message">Invalid name! Only letters and spaces are allowed.</string>
+    <string name="add_member_bottom_sheet_input_liker">Likes</string>
+    <string name="add_member_bottom_sheet_button_label">Add member</string>
+    <string name="add_member_bottom_sheet_text_button_label">Finish</string>
+
+    <!--  Exceptions and Requirements  -->
+    <string name="exception_group_already_exist">Group already exists</string>
+    <string name="exception_group_not_found">Group not found</string>
+    <string name="require_name_cannot_be_blank">Name cannot be blank</string>
+    <string name="require_name_cannot_be_longer_than_255_characters">Name cannot be longer than 255 characters</string>
+    <string name="require_group_must_have_at_least_one_member">Group must have at least one member</string>
+    <string name="require_group_cannot_have_more_than_2_members">The group must have a minimum of 3 members</string>
+    <string name="require_draw_already_held">Draw already held</string>
+    <string name="require_group_id_cannot_be_blank">Group ID cannot be blank</string>
+    <string name="exception_minimums_members_of_draw">The group must have at least 3 participants to hold the draw.</string>
+    <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
+
+    <!-- Shared Link -->
+    <string name="group_details_share_member">Hello %1$s! 👋\n\nYou have been invited to join an exciting game! 🎉\n\nClick the link to find out who your Secret Santa is: https://pontocomdesenvolvimento.net/apps/secretsanta/pt/%3$s\n\nIf you cannot access the link, download our Friends Secrets app using this link: https://play.google.com/store/apps/details?id=%4$s.\n\nUse the group code: %2$s to join, then click on %5$s.\n\nYour Secret Santa code is: %3$s.\n\n🚀 Do not waste time, start planning your Secret Santa gift now!</string>
+    <string name="group_details_share_member_simple">Hello! 👋\n\nYou have been invited to join the Secret Santa group: %1$s 🎉\n\nUse the group code: %2$s to join.\n\nStart planning your Secret Santa gift now! 🚀</string>
+
+    <!--  Biometric  -->
+    <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Log in using your biometric credential</string>
+    <string name="biometric_screen_use_account_password">Use account password</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
+    <string name="biometric_screen_unlock">Unlock</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Exit the group</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Delete the group</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_appearance">Appearance</string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_report_an_issue">Report an issue</string>
+    <string name="appearance_screen_dynamic_title">Dynamic Theme</string>
+    <string name="appearance_screen_title_description">Enabling the Dynamic Theme will allow the app to automatically adjust its colors based on your devices wallpaper.</string>
+    <string name="appearance_screen_title">Selecting a specific option will change the appearance (color) of the app according to your preferences.</string>
+    <string name="settings_screen_general">General</string>
+    <string name="settings_screen_security">Fingerprint</string>
+    <string name="settings_screen_support">Support</string>
+    <string name="group_details_description">Description</string>
+    <string name="group_details_members">Members</string>
+    <string name="draw_screen_title">Your secret friend is...</string>
+    <string name="draw_screen_action_title">Reveal my secret friend</string>
+    <string name="draw_screen_action_generative">Gift suggestions</string>
+    <string name="onboarding_screen_close">Close</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Start</string>
+    <string name="group_to_enter_button_text">Validate</string>
+    <string name="group_to_enter_button_enter_to_group">Enter the group</string>
+    <string name="group_to_enter_textfield_token_to_grup">Group token</string>
+    <string name="error_component_button_try_again">Try again</string>
+    <string name="error_component_button_to_home">Go to home</string>
+    <string name="empty_group_component_button_create_grup">Create a group</string>
+    <string name="chat_generative_title_chat">Chat</string>
+    <string name="empty_group_component_button_enter_grup">Enter a group</string>
+    <string name="chat_generative_textfield_message">Type a message...</string>
+    <string name="chat_generative_button_send">Send</string>
+    <string name="empty_group_title">Uh-oh!</string>
+    <string name="empty_group_message">No group found</string>
+    <string name="home_title">Hey</string>
+    <string name="home_drop_menu_item_text_logout">Logout</string>
+    <string name="group_create_phone_contacts">Contatos do telefone</string>
+    <string name="group_create_app_users">Usuários do app</string>
+    <string name="login_screen_welcome">Welcome to %1$s</string>
+    <string name="login_screen_description">Read our Privacy Policy. Tap \'Accept and Register\' to create your account or \'Accept and Continue\' to proceed without registration. Both options imply acceptance of the Terms of Service.</string>
+    <string name="login_screen_privacy">Privacy Policy</string>
+    <string name="login_screen_terms">Terms of Service</string>
+    <string name="login_screen_and">" and "</string>
+    <string name="login_screen_button_register">Accept and Register</string>
+    <string name="login_screen_button_anonymation">Accept and Continue</string>
+    <string name="phone_send_title">Enter your phone number</string>
+    <string name="phone_send_description">%1$s will need to verify your phone number.</string>
+    <string name="phone_send_textfield_label">Phone number</string>
+    <string name="phone_send_textfield_description">Carrier charges may apply.</string>
+    <string name="phone_send_button">Next</string>
+    <string name="add_like_description" translatable="false">Add like</string>
+    <string name="remove_like_description" translatable="false">remove like: %1$s</string>
+    <string name="contact_photo_description">Foto de contato de %1$s</string>
+    <string name="collapse_likes_action">likes gone</string>
+    <string name="expand_likes_action">likes more</string>
+    <string name="likes_expanded_state">expanded</string>
+    <string name="likes_collapsed_state">collapsed</string>
+    <string name="share_secret_friend_action">Compartilhar amigo secreto de %1$s</string>
+    <string name="edit_participant_action">Editar participante %1$s</string>
+    <string name="remove_participant_action">Remover participante %1$s</string>
+    <string name="group_create_next_members">Avançar para membros</string>
+    <string name="group_create_next_draw">Avançar para sorteio</string>
+    <string name="group_create_title">Criar Grupo</string>
+    <string name="group_create_members_title">Membros do grupo\n</string>
+    <string name="group_create_contacts_available">Contatos</string>
+    <string name="valor_m_nimo">Valor mínimo</string>
+    <string name="ex_10">Ex: 10</string>
+    <string name="valor_m_ximo">Valor máximo</string>
+    <string name="ex_100">Ex: 100</string>
+    <string name="adicionar_membro">Adicionar membro</string>
+    <string name="nenhum_membro_adicionado_ainda">Nenhum membro adicionado ainda</string>
+    <string name="remover_membro">Remover membro</string>
+    <string name="descreva_o_prop_sito_do_grupo">Descreva o propósito do grupo</string>
+    <string name="ex_amigo_secreto_2025">Ex: Amigo Secreto 2025</string>
+    <string name="nome">Nome: %1$s</string>
+    <string name="informa_es_do_grupo">Informações do Grupo</string>
+    <string name="descri_o">Descrição: %1$s</string>
+    <string name="data_do_sorteio">Data do Sorteio: %1$s</string>
+    <string name="info_valor_m_ximo">Valor Máximo: %1$s</string>
+    <string name="info_valor_m_nimo">Valor Mínimo: %1$s</string>
+    <string name="info_tipo_de_sorteio">Tipo de Sorteio: %1$s</string>
+    <string name="membros">Membros</string>
+    <string name="nenhum_membro_adicionado">Nenhum membro adicionado</string>
+    <string name="editar_membros">Editar Membros</string>
+    <string name="confirma_o_do_grupo">Confirmação do Grupo</string>
+    <string name="editar">Editar</string>
+    <string name="tipo_de_sorteio">Tipo de sorteio</string>
+    <string name="selecionar_tipo_de_sorteio">Selecionar tipo de sorteio</string>
+    <string name="escolha_o_tipo_de_amigo_secreto">Escolha o tipo de amigo secreto</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="no_contacts_found">Nenhum contato encontrado</string>
+    <string name="search_contacts">Buscar contatos</string>
+    <string name="search_contacts_placeholder">Digite o nome do contato</string>
+    <string name="group_create_members_added">Membros adicionados</string>
+    <string name="detalhes_do_sorteio">Detalhes do Sorteio</string>
+    <string name="est_na_hora_de_descobrir_quem_tirou_quem">Está na hora de descobrir quem tirou quem!</string>
+    <string name="clique_abaixo_para_realizar_o_sorteio_dos_participantes">Clique abaixo para realizar o sorteio dos participantes.</string>
+    <string name="revelar">Revelar</string>
+    <string name="sortear">Sortear</string>
+    <string name="revelar_amigo_secreto">Revelar Amigo Secreto</string>
+    <string name="pronto_para_sortear">Pronto para sortear?</string>
+    <string name="gerenciamento">Gerenciamento</string>
+    <string name="compartilhar_grupo">Compartilhar Grupo</string>
+    <string name="envie_o_link_do_grupo_para_amigos_entrarem">Envie o link do grupo para amigos entrarem</string>
+    <string name="editar_grupo">Editar Grupo</string>
+    <string name="altere_nome_descri_o_e_configura_es">Altere nome, descrição e configurações</string>
+    <string name="esta_a_o_apagar_permanentemente_o_grupo_e_todas_as_suas_informa_es_os_participantes_n_o_ter_o_mais_acesso_ao_grupo_esta_a_o_irrevers_vel">Esta ação apagará permanentemente o grupo e todas as suas informações. Os participantes não terão mais acesso ao grupo. Esta ação é irreversível.</string>
+    <string name="voc_ser_removido_deste_grupo_e_n_o_poder_mais_participar_dos_sorteios_ou_visualizar_informa_es">Você será removido deste grupo e não poderá mais participar dos sorteios ou visualizar informações.</string>
+    <string name="draw_screen_title_reveal">Seu amigo secreto é:</string>
+    <string name="draw_screen_code_secret">Código secreto</string>
+    <string name="draw_screen_action_reset">Refazer Sorteio</string>
+    <string name="draw_screen_title_like">O que a pessoa gosta</string>
+    <string name="draw_card_front_hint">Toque para revelar seu amigo secreto</string>
+    <string name="draw_error_decode">Erro ao decodificar o nome</string>
+    <string name="group_to_enter_title">Digite o código do grupo</string>
+</resources>

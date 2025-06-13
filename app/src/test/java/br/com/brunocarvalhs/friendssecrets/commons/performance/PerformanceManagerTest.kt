@@ -33,6 +33,7 @@ class PerformanceManagerTest {
         val trace = mockk<Trace>(relaxed = true)
         every { firebasePerformance.newTrace("testTrace") } returns trace
 
+        performanceManager.start("testTrace")
         performanceManager.stop("testTrace")
 
         verify { trace.stop() }

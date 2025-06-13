@@ -1,28 +1,29 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
-import br.com.brunocarvalhs.friendssecrets.commons.initialization.AppInitializationManager
+import android.os.StrictMode
+import br.com.brunocarvalhs.friendssecrets.data.initialization.AppInitializer
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+@HiltAndroidApp
 class CustomApplication : Application() {
+
+    @Inject
+    lateinit var appInitializer: AppInitializer
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        setup()
-    }
 
-    private fun setup() {
-        AppInitializationManager(this.applicationContext).initialize()
-    }
+        appInitializer.init()
 
-    companion object {
-        @Volatile
-        private var instance: CustomApplication? = null
-
-        fun getInstance(): CustomApplication {
-            return instance ?: synchronized(this) {
-                instance ?: CustomApplication().also { instance = it }
-            }
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
         }
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Amigo Secreto</string>
+    <string name="login_screen_terms">Termos de Serviço</string>
+    <string name="login_screen_and">" e "</string>
+    <string name="login_screen_privacy">Política de Privacidade</string>
+    <string name="login_screen_description">Leia nossa Política de Privacidade. Toque em 'Aceitar e Registrar' para criar sua conta ou em 'Aceitar e Continuar' para prosseguir sem registro. Ambas as opções implicam aceitação dos Termos de Serviço.</string>
+    <string name="login_screen_welcome">Bem-vindo ao %1$s</string>
+    <string name="phone_send_title">Digite seu número de telefone</string>
+    <string name="phone_send_description">O %1$s precisará verificar seu número de telefone.</string>
+    <string name="phone_send_textfield_label">Número de telefone</string>
+    <string name="phone_send_textfield_description">Podem ser aplicadas tarifas da operadora.</string>
+    <string name="phone_send_button">Próximo</string>
+    <string name="login_screen_button_anonymation">Aceitar e Continuar</string>
+    <string name="login_screen_button_register">Aceitar e Registrar</string>
+    <string name="your_name">Seu nome</string>
+    <string name="phone_number">Número de telefone</string>
+    <string name="save">Salvar</string>
+    <string name="delete_account">Excluir conta</string>
+    <string name="code_has_been_send_to">O código foi enviado para %1$s</string>
+    <string name="resend_code_in_s">Reenviar código em %1$ss</string>
+    <string name="verify">Verificar</string>
+</resources>

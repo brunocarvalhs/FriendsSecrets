@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Secret Santa</string>
+    <string name="login_screen_terms">Terms of Service</string>
+    <string name="login_screen_and">" and "</string>
+    <string name="login_screen_privacy">Privacy Policy</string>
+    <string name="login_screen_description">Read our Privacy Policy. Tap \'Accept and Register\' to create your account or \'Accept and Continue\' to proceed without registration. Both options imply acceptance of the Terms of Service.</string>
+    <string name="login_screen_welcome">Welcome to %1$s</string>
+    <string name="phone_send_title">Enter your phone number</string>
+    <string name="phone_send_description">%1$s will need to verify your phone number.</string>
+    <string name="phone_send_textfield_label">Phone number</string>
+    <string name="phone_send_textfield_description">Carrier charges may apply.</string>
+    <string name="phone_send_button">Next</string>
+    <string name="login_screen_button_anonymation">Accept and Continue</string>
+    <string name="login_screen_button_register">Accept and Register</string>
+    <string name="your_name">Your name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="save">Save</string>
+    <string name="delete_account">Delete account</string>
+    <string name="code_has_been_send_to">Code has been send to %1$s</string>
+    <string name="resend_code_in_s">Resend Code in %1$ss</string>
+    <string name="verify">Verify</string>
+    <string name="onboarding_screen_title">Welcome to Friends Secrets!</string>
+    <string name="onboarding_screen_description">The app that will help you organize your Secret Santa game.</string>
+    <string name="onboarding_screen_close">Close</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Start</string>
+    <string name="biometric_screen_title_authentication">Unlock to use Friends Secrets</string>
+    <string name="biometric_screen_log_in_using_your_biometric_credential">Log in using your biometric credential</string>
+    <string name="biometric_screen_use_account_password">Use account password</string>
+    <string name="biometric_screen_biometric_authentication">Friends Secrets locked</string>
+    <string name="biometric_screen_unlock">Unlock</string>
+    <string name="phone_send_invalid_number">Número de telefone inválido</string>
+    <string name="invalid_code">Código inválido. Verifique e tente novamente.</string>
+    <string name="resend_code_now">Reenviar código</string>
+    <string name="pesquisar_gosto">Pesquisar gosto</string>
+    <string name="adicionar_como_gosto_personalizado">Adicionar \"%1$s\" como gosto personalizado</string>
+    <string name="personalizado">Personalizado</string>
+    <string name="seu_nome">Seu nome</string>
+    <string name="n_mero_de_telefone">Número de telefone</string>
+    <string name="salvar">Salvar</string>
+    <string name="foto_do_perfil">Foto do perfil</string>
+    <string name="avatar_padr_o">Avatar padrão</string>
+</resources>

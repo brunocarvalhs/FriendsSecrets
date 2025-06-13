@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +7,9 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
     id("org.jetbrains.dokka") version "1.9.20"
+    kotlin("plugin.serialization") version "2.1.20"
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -18,15 +19,13 @@ android {
     defaultConfig {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 35
 
-        versionCode = 7
-        versionName = "1.2.4"
+        versionCode = 8
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "MODEL_NAME", "\"gemini-1.5-flash\"")
-        buildConfigField("String", "apiKey", "\"${System.getenv("API_KEY")}\"")
     }
 
     signingConfigs {
@@ -81,6 +80,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui"))
+    implementation(project(":core:data"))
+    implementation(project(":core:common"))
+    implementation(project(":core:domain"))
+
+    implementation(project(":features:auth"))
+    implementation(project(":features:group"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -91,41 +98,17 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.generativeai)
     implementation(libs.androidx.navigation.compose)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.config)
-    implementation(libs.firebase.analytics)
-    implementation(libs.gson)
     implementation(libs.timber)
-    implementation(libs.androidx.ui.text.google.fonts)
-    implementation(libs.lottie.compose)
-    implementation(libs.androidx.biometric)
-    implementation(libs.coil.compose)
-    implementation(libs.firebase.auth)
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
-    implementation(libs.core.ktx)
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.mockito.inline)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.androidx.espresso.core)
-    testImplementation(platform(libs.androidx.compose.bom))
-    testImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.mockk)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    dokkaPlugin(libs.android.documentation.plugin)
-    implementation(libs.ucrop)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.country.picker)
+
+    // A partir daqui
+
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.core.splashscreen)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    androidTestImplementation (libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.compiler)
 }
