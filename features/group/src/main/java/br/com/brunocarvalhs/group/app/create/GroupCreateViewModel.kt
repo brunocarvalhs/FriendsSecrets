@@ -8,11 +8,13 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetListUsersByContactUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,8 +78,11 @@ class GroupCreateViewModel @Inject constructor(
     }
 
     private fun fetchContacts() {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = getListUsersByContactUseCase.invoke().getOrNull().orEmpty()
+            val result = withContext(Dispatchers.IO) {
+                getListUsersByContactUseCase.invoke().getOrNull().orEmpty()
+            }
             _uiState.update {
                 it.copy(
                     contacts = result,

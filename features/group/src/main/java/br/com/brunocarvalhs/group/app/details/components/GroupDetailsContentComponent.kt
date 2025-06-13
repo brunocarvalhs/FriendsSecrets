@@ -29,17 +29,22 @@ fun GroupDetailsContentComponent(
     modifier: Modifier = Modifier,
     uiState: GroupDetailsUiState.Success,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+
+    // Members
     showBottomSheet: Boolean = false,
     setShowBottomSheet: (Boolean) -> Unit = {},
     setName: (String) -> Unit = {},
     setLikes: (List<String>) -> Unit = {},
     onShare: (member: UserEntities, secret: String, token: String) -> Unit = { _, _, _ -> },
     onRemove: (group: GroupEntities, participant: UserEntities) -> Unit = { _, _ -> },
-    onEdit: (group: GroupEntities) -> Unit = { },
+
+    // Info
+    onEdit: (group: GroupEntities) -> Unit = {},
     onDraw: (group: GroupEntities) -> Unit = {},
     onShareGroup: (group: GroupEntities) -> Unit = {},
     onRevelationDraw: (group: GroupEntities) -> Unit = {},
-    onInviteMembers: () -> Unit = {}
+    onExitGroup: (group: GroupEntities) -> Unit = { },
+    onDeleteGroup: (group: GroupEntities) -> Unit = { },
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -51,22 +56,21 @@ fun GroupDetailsContentComponent(
     Column(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
         TabRow(selectedTabIndex = selectedTabIndex) {
             tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
+                Tab(selected = selectedTabIndex == index,
                     onClick = { selectedTabIndex = index },
-                    text = { Text(text = title) }
-                )
+                    text = { Text(text = title) })
             }
         }
 
         when (selectedTabIndex) {
             0 -> GroupInfoTab(
                 uiState = uiState,
-                onEditGroup = { onEdit(uiState.group) },
-                onInviteMembers = { onInviteMembers() },
-                onConfigureDraw = { },
-                onDraw = { onDraw(uiState.group) },
-                revelationDraw = { onRevelationDraw(uiState.group) }
+                onEditGroup = onEdit,
+                onSharedGroup = onShareGroup,
+                onExitGroup = onExitGroup,
+                onDeleteGroup = onDeleteGroup,
+                onDraw = onDraw,
+                revelationDraw = onRevelationDraw,
             )
 
             1 -> MembersTab(

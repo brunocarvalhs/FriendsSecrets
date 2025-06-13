@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -126,36 +127,28 @@ private fun GroupCreateContent(
             )
         },
         floatingActionButton = {
-            if (!uiState.isLoading) {
-                ExtendedFloatingActionButton(onClick = {
-                    if (uiState.currentStep < 2) {
-                        onIntent(GroupCreateIntent.NextStep)
-                    } else {
-                        onIntent(GroupCreateIntent.CreateGroup)
-                    }
-                }) {
-                    Icon(
-                        imageVector = if (uiState.currentStep < 2) Icons.AutoMirrored.Filled.ArrowForward else Icons.Filled.Check,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = when (uiState.currentStep) {
-                            0 -> stringResource(R.string.group_create_next_members)
-                            1 -> stringResource(R.string.group_create_next_draw)
-                            else -> stringResource(R.string.group_create_action_save_group)
-                        }
-                    )
+            ExtendedFloatingActionButton(onClick = {
+                if (uiState.currentStep < 2) {
+                    onIntent(GroupCreateIntent.NextStep)
+                } else {
+                    onIntent(GroupCreateIntent.CreateGroup)
                 }
+            }) {
+                Icon(
+                    imageVector = if (uiState.currentStep < 2) Icons.AutoMirrored.Filled.ArrowForward else Icons.Filled.Check,
+                    contentDescription = null
+                )
+                Text(
+                    text = when (uiState.currentStep) {
+                        0 -> stringResource(R.string.group_create_next_members)
+                        1 -> stringResource(R.string.group_create_next_draw)
+                        else -> stringResource(R.string.group_create_action_save_group)
+                    }
+                )
             }
         }
     ) { padding ->
         when {
-            uiState.isLoading -> LoadingProgress(
-                Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-            )
-
             uiState.isSuccess -> SuccessComponent(
                 modifier = Modifier.fillMaxSize(),
                 redirectTo = { navController.popBackStack() }
@@ -175,18 +168,19 @@ private fun GroupCreateContent(
             ) {
                 when (uiState.currentStep) {
                     0 -> {
-                        item { StepOneGroupInfo(uiState, onIntent) }
+                        item { StepGroupInfo(uiState, onIntent) }
                     }
 
                     1 -> {
-                        item { StepTwoMembers(uiState, onIntent) { showBottomSheet = true } }
+                        item { StepMembers(uiState, onIntent) { showBottomSheet = true } }
                     }
 
                     2 -> {
                         item {
-                            StepThreeDrawInfo(
+                            StepDrawInfo(
                                 uiState,
-                                onEdit = { step -> onIntent(GroupCreateIntent.GoToStep(step)) })
+                                onEdit = { step -> onIntent(GroupCreateIntent.GoToStep(step)) }
+                            )
                         }
                     }
                 }
@@ -203,7 +197,7 @@ private fun GroupCreateContent(
 }
 
 @Composable
-private fun StepOneGroupInfo(
+private fun StepGroupInfo(
     uiState: GroupCreateUiState,
     onIntent: (GroupCreateIntent) -> Unit
 ) {
@@ -268,7 +262,7 @@ private fun StepOneGroupInfo(
 }
 
 @Composable
-private fun StepTwoMembers(
+private fun StepMembers(
     uiState: GroupCreateUiState,
     onIntent: (GroupCreateIntent) -> Unit,
     showBottomSheet: () -> Unit
@@ -299,19 +293,7 @@ private fun StepTwoMembers(
             }
         }
 
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = { Text(stringResource(R.string.search_contacts)) },
-            placeholder = { Text(stringResource(R.string.search_contacts_placeholder)) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
 
-        Spacer(modifier = Modifier.height(12.dp))
 
         if (uiState.members.isEmpty()) {
             Text(
@@ -393,39 +375,61 @@ private fun StepTwoMembers(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text(stringResource(R.string.search_contacts)) },
+            placeholder = { Text(stringResource(R.string.search_contacts_placeholder)) },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             stringResource(R.string.group_create_contacts_available),
             style = MaterialTheme.typography.titleMedium
         )
 
-        if (filteredContacts.isEmpty()) {
-            Text(
-                stringResource(R.string.no_contacts_found),
-                style = MaterialTheme.typography.bodyMedium
-            )
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
         } else {
-            filteredContacts.forEach { contact ->
-                ContactItem(
-                    contact = contact,
-                    isSelected = uiState.members.contains(contact),
-                    action = { user, state ->
-                        Checkbox(
-                            checked = state,
-                            onCheckedChange = {
-                                onIntent(GroupCreateIntent.ToggleMember(user))
-                            }
-                        )
-                    }
+            if (filteredContacts.isEmpty()) {
+                Text(
+                    stringResource(R.string.no_contacts_found),
+                    style = MaterialTheme.typography.bodyMedium
                 )
+            } else {
+                filteredContacts.forEach { contact ->
+                    ContactItem(
+                        contact = contact,
+                        isSelected = uiState.members.contains(contact),
+                        action = { user, state ->
+                            Checkbox(
+                                checked = state,
+                                onCheckedChange = {
+                                    onIntent(GroupCreateIntent.ToggleMember(user))
+                                }
+                            )
+                        }
+                    )
+                }
             }
         }
+
     }
 }
 
 @Composable
-private fun StepThreeDrawInfo(
+private fun StepDrawInfo(
     uiState: GroupCreateUiState,
     onEdit: (step: Int) -> Unit
 ) {

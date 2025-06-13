@@ -163,4 +163,18 @@
     <string name="search_contacts">Buscar contatos</string>
     <string name="search_contacts_placeholder">Digite o nome do contato</string>
     <string name="group_create_members_added">Membros adicionados</string>
+    <string name="detalhes_do_sorteio">Detalhes do Sorteio</string>
+    <string name="est_na_hora_de_descobrir_quem_tirou_quem">Está na hora de descobrir quem tirou quem!</string>
+    <string name="clique_abaixo_para_realizar_o_sorteio_dos_participantes">Clique abaixo para realizar o sorteio dos participantes.</string>
+    <string name="revelar">Revelar</string>
+    <string name="sortear">Sortear</string>
+    <string name="revelar_amigo_secreto">Revelar Amigo Secreto</string>
+    <string name="pronto_para_sortear">Pronto para sortear?</string>
+    <string name="gerenciamento">Gerenciamento</string>
+    <string name="compartilhar_grupo">Compartilhar Grupo</string>
+    <string name="envie_o_link_do_grupo_para_amigos_entrarem">Envie o link do grupo para amigos entrarem</string>
+    <string name="editar_grupo">Editar Grupo</string>
+    <string name="altere_nome_descri_o_e_configura_es">Altere nome, descrição e configurações</string>
+    <string name="esta_a_o_apagar_permanentemente_o_grupo_e_todas_as_suas_informa_es_os_participantes_n_o_ter_o_mais_acesso_ao_grupo_esta_a_o_irrevers_vel">Esta ação apagará permanentemente o grupo e todas as suas informações. Os participantes não terão mais acesso ao grupo. Esta ação é irreversível.</string>
+    <string name="voc_ser_removido_deste_grupo_e_n_o_poder_mais_participar_dos_sorteios_ou_visualizar_informa_es">Você será removido deste grupo e não poderá mais participar dos sorteios ou visualizar informações.</string>
 </resources>

@@ -176,7 +176,10 @@ private fun GroupDetailsContent(
                     onShare = ::onShare,
                     onRemove = ::onRemove,
                     onDraw = ::onDraw,
-                    onShareGroup = ::onShareGroup
+                    onShareGroup = ::onShareGroup,
+                    onExitGroup = ::exitGroup,
+                    onDeleteGroup = ::deleteGroup,
+                    onRevelationDraw = ::revelationDraw,
                 )
             }
         }

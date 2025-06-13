@@ -48,12 +48,19 @@ class GetListUsersByContactUseCase(
         val mergedList = mutableListOf<UserEntities>()
         mergedList.addAll(registeredUsers)
 
-        deviceContacts.forEach { contact ->
-            if (registeredUsers.none { it.phoneNumber == contact.phoneNumber }) {
-                mergedList.add(contact)
+        deviceContacts
+            .filter { contact ->
+                registeredUsers.none { it.phoneNumber == contact.phoneNumber } &&
+                        !isNameJustPhoneNumber(contact.name)
             }
-        }
+            .forEach { mergedList.add(it) }
 
         return mergedList
+    }
+
+    private fun isNameJustPhoneNumber(name: String?): Boolean {
+        if (name.isNullOrBlank()) return true
+        val normalized = name.replace("[\\s()+-]".toRegex(), "")
+        return normalized.all { it.isDigit() }
     }
 }

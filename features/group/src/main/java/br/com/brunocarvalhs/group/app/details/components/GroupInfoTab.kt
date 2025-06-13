@@ -18,9 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoneyOff
-import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
@@ -50,11 +49,11 @@ import br.com.brunocarvalhs.group.app.details.GroupDetailsUiState
 fun GroupInfoTab(
     uiState: GroupDetailsUiState.Success,
     onEditGroup: ((GroupEntities) -> Unit)? = null,
-    onInviteMembers: ((GroupEntities) -> Unit)? = null,
-    onConfigureDraw: ((GroupEntities) -> Unit)? = null,
     onSharedGroup: ((GroupEntities) -> Unit)? = null,
     onDraw: (GroupEntities) -> Unit = {},
-    revelationDraw: (GroupEntities) -> Unit = {}
+    revelationDraw: (GroupEntities) -> Unit = {},
+    onExitGroup: ((GroupEntities) -> Unit)? = null,
+    onDeleteGroup: ((GroupEntities) -> Unit)? = null,
 ) {
     Scaffold { paddingValues ->
         LazyColumn(
@@ -78,13 +77,19 @@ fun GroupInfoTab(
                 }
             }
 
-            // Detalhes do Sorteio
+            if (uiState.group.date != null) {
+                item {
+                    DrawDetailsSection(
+                        group = uiState.group
+                    )
+                }
+            }
+
             item {
-                DrawDetailsSection(
-                    date = "24/12/2025 às 18:00",
-                    minValue = "R$ 50,00",
-                    maxValue = "R$ 150,00",
-                    type = "Temático – Filmes Preferidos"
+                Text(
+                    text = stringResource(R.string.gerenciamento),
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
 
@@ -101,57 +106,53 @@ fun GroupInfoTab(
                 )
             }
 
-            // Título da seção de gerenciamento
-            item {
-                Text(
-                    text = "Gerenciamento",
-                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-            }
-
             onSharedGroup?.let {
                 item {
                     ManagementCard(
                         icon = Icons.Default.Share,
-                        title = "Compartilhar Grupo",
-                        description = "Envie o link do grupo para amigos entrarem",
+                        title = stringResource(R.string.compartilhar_grupo),
+                        description = stringResource(R.string.envie_o_link_do_grupo_para_amigos_entrarem),
                         onClick = { onSharedGroup(uiState.group) }
                     )
                 }
             }
 
-            // Cards de gerenciamento
-            onEditGroup?.let {
-                item {
-                    ManagementCard(
-                        icon = Icons.Default.Edit,
-                        title = "Editar Grupo",
-                        description = "Altere nome, descrição e configurações",
-                        onClick = { onEditGroup(uiState.group) }
-                    )
+            if (uiState.group.draws.isNotEmpty()) {
+                if (uiState.group.isOwner) {
+                    onEditGroup?.let {
+                        item {
+                            ManagementCard(
+                                icon = Icons.Default.Edit,
+                                title = stringResource(R.string.editar_grupo),
+                                description = stringResource(R.string.altere_nome_descri_o_e_configura_es),
+                                onClick = { onEditGroup(uiState.group) }
+                            )
+                        }
+                    }
                 }
-            }
 
-            onInviteMembers?.let {
-                item {
-                    ManagementCard(
-                        icon = Icons.Default.PersonAdd,
-                        title = "Convidar Membros",
-                        description = "Envie convites para seus amigos",
-                        onClick = { onInviteMembers(uiState.group) }
-                    )
-                }
-            }
-
-            onConfigureDraw?.let {
-                item {
-                    ManagementCard(
-                        icon = Icons.Default.Settings,
-                        title = "Configurar Sorteio",
-                        description = "Defina regras e datas para o amigo secreto",
-                        onClick = { onConfigureDraw(uiState.group) }
-                    )
+                if (uiState.group.isOwner) {
+                    onDeleteGroup?.let {
+                        item {
+                            ManagementCard(
+                                icon = Icons.Default.DeleteForever,
+                                title = stringResource(R.string.group_details_drop_menu_item_text_exit_to_group_admin),
+                                description = stringResource(R.string.esta_a_o_apagar_permanentemente_o_grupo_e_todas_as_suas_informa_es_os_participantes_n_o_ter_o_mais_acesso_ao_grupo_esta_a_o_irrevers_vel),
+                                onClick = { onDeleteGroup(uiState.group) }
+                            )
+                        }
+                    }
+                } else {
+                    onExitGroup?.let {
+                        item {
+                            ManagementCard(
+                                icon = Icons.Default.DeleteForever,
+                                title = stringResource(R.string.group_details_drop_menu_item_text_exit_to_group),
+                                description = stringResource(R.string.voc_ser_removido_deste_grupo_e_n_o_poder_mais_participar_dos_sorteios_ou_visualizar_informa_es),
+                                onClick = { onExitGroup(uiState.group) }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -186,16 +187,18 @@ fun DrawActionSection(
             )
 
             Text(
-                text = if (isDrawn) "Revelar Amigo Secreto" else "Pronto para sortear?",
+                text = if (isDrawn) stringResource(R.string.revelar_amigo_secreto) else stringResource(
+                    R.string.pronto_para_sortear
+                ),
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
 
             Text(
                 text = if (isDrawn)
-                    "Está na hora de descobrir quem tirou quem!"
+                    stringResource(R.string.est_na_hora_de_descobrir_quem_tirou_quem)
                 else
-                    "Clique abaixo para realizar o sorteio dos participantes.",
+                    stringResource(R.string.clique_abaixo_para_realizar_o_sorteio_dos_participantes),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -205,7 +208,7 @@ fun DrawActionSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = if (isDrawn) "Revelar" else "Sortear",
+                    text = if (isDrawn) stringResource(R.string.revelar) else stringResource(R.string.sortear),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -269,38 +272,45 @@ fun ManagementCard(
 
 @Composable
 fun DrawDetailsSection(
-    date: String,
-    minValue: String,
-    maxValue: String,
-    type: String
+    group: GroupEntities,
 ) {
     Column {
         Text(
-            text = "Detalhes do Sorteio",
+            text = stringResource(R.string.detalhes_do_sorteio),
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        DrawDetailCard(
-            icon = Icons.Default.CalendarToday,
-            label = "Data do Sorteio",
-            value = date
-        )
-        DrawDetailCard(
-            icon = Icons.Default.AttachMoney,
-            label = "Valor Mínimo",
-            value = minValue
-        )
-        DrawDetailCard(
-            icon = Icons.Default.MoneyOff,
-            label = "Valor Máximo",
-            value = maxValue
-        )
-        DrawDetailCard(
-            icon = Icons.Default.CardGiftcard,
-            label = "Tipo de Amigo Secreto",
-            value = type
-        )
+        if (group.date != null) {
+            DrawDetailCard(
+                icon = Icons.Default.CalendarToday,
+                label = stringResource(R.string.data_do_sorteio),
+                value = group.date.orEmpty()
+            )
+        }
+        if (group.minPrice != null) {
+            DrawDetailCard(
+                icon = Icons.Default.AttachMoney,
+                label = stringResource(R.string.valor_m_nimo),
+                value = group.minPrice.toString()
+            )
+        }
+
+        if (group.maxPrice != null) {
+            DrawDetailCard(
+                icon = Icons.Default.AttachMoney,
+                label = stringResource(R.string.valor_m_ximo),
+                value = group.maxPrice.toString()
+            )
+        }
+
+        if (group.type != null) {
+            DrawDetailCard(
+                icon = Icons.Default.CardGiftcard,
+                label = stringResource(R.string.tipo_de_sorteio),
+                value = group.type.orEmpty()
+            )
+        }
     }
 }
 
