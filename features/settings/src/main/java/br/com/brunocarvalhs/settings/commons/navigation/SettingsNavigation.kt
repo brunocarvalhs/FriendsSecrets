@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.settings.commons.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -24,16 +25,23 @@ internal data object FAQScreenRoute
 @Serializable
 internal data object ReportIssueScreenRoute
 
-internal fun NavGraphBuilder.settingsGraph(navController: NavHostController, toggleManager: ToggleManager) {
+internal fun NavGraphBuilder.settingsGraph(
+    navController: NavHostController,
+    toggleManager: ToggleManager
+) {
     navigation<SettingsGraphRoute>(startDestination = SettingsScreenRoute) {
         composable<SettingsScreenRoute>() {
             SettingsScreen(
                 navController = navController,
-                toggleManager = toggleManager
+                toggleManager = toggleManager,
+                viewModel = hiltViewModel()
             )
         }
         composable<AppearanceScreenRoute>() {
-            AppearanceScreen(navController = navController)
+            AppearanceScreen(
+                navController = navController,
+                viewModel = hiltViewModel()
+            )
         }
         composable<FAQScreenRoute>() {
             FAQScreen(navController = navController)

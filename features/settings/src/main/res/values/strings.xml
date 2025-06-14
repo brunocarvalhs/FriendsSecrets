@@ -124,4 +124,7 @@
     <string name="share_secret_friend_action">Compartilhar amigo secreto de %1$s</string>
     <string name="edit_participant_action">Editar participante %1$s</string>
     <string name="remove_participant_action">Remover participante %1$s</string>
+    <string name="tema_claro">Tema claro</string>
+    <string name="tema_escuro">Tema escuro</string>
+    <string name="tema_do_sistema">Tema do sistema</string>
 </resources>

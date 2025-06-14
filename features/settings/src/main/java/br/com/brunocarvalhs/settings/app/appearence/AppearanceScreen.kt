@@ -21,26 +21,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.R
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components.Theme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.appearence.components.ThemeSelect
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.list.components.SettingsListItemOptions
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.settings.R
+import br.com.brunocarvalhs.settings.app.appearence.components.ThemeSelect
+import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 
 @Composable
-fun AppearanceScreen(navController: NavHostController) {
-    AppearanceContent(navController = navController)
+fun AppearanceScreen(
+    navController: NavHostController,
+    viewModel: AppearanceViewModel
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
+    AppearanceContent(
+        navController = navController,
+        themeSelected = state.value.themeSelected,
+        isDynamicThemeEnabled = state.value.isDynamicThemeEnabled,
+        onIntent = viewModel::onEvent
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppearanceContent(
     navController: NavHostController,
+    themeSelected: String,
+    isDynamicThemeEnabled: Boolean = false,
+    onIntent: (AppearanceIntent) -> Unit = {}
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -53,7 +64,7 @@ private fun AppearanceContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = stringResource(SettingsNavigation.Appearance.title))
+                    Text(text = stringResource(R.string.title_appearance))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
@@ -75,9 +86,9 @@ private fun AppearanceContent(
             item {
                 ThemeSelect(
                     modifier = Modifier.fillMaxWidth(),
-                    selected = ThemeManager.theme.name,
+                    selected = themeSelected,
                     onClick = { theme ->
-                        ThemeManager.setTheme(theme = Theme.valueOf(theme))
+                        onIntent(AppearanceIntent.SetTheme(theme = theme))
                     },
                 )
             }
@@ -87,10 +98,16 @@ private fun AppearanceContent(
                     Text(text = stringResource(R.string.appearance_screen_title_description))
                     Spacer(modifier = Modifier.height(24.dp))
                     SettingsListItemOptions(
-                        selected = ThemeManager.isDynamicThemeEnabled(),
+                        selected = isDynamicThemeEnabled,
                         title = stringResource(R.string.appearance_screen_dynamic_title),
                         icon = Icons.Sharp.Style,
-                        onClick = { state -> ThemeManager.setDynamicThemeEnabled(state) }
+                        onClick = { state ->
+                            onIntent(
+                                AppearanceIntent.SetDynamicThemeEnabled(
+                                    enabled = state
+                                )
+                            )
+                        }
                     )
                 }
             }
@@ -104,7 +121,10 @@ private fun AppearanceContent(
 private fun AppearanceContentPreview() {
     FriendsSecretsTheme {
         AppearanceContent(
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            themeSelected = "Light",
+            isDynamicThemeEnabled = true,
+            onIntent = {}
         )
     }
 }

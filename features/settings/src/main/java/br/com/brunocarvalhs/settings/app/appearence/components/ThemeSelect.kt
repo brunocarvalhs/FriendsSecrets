@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.settings.app.appearence.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,12 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.R
-
-
+import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager.Theme
+import br.com.brunocarvalhs.settings.R
 
 @Composable
 fun ThemeSelect(
@@ -70,7 +69,6 @@ fun ThemeSelect(
     }
 }
 
-
 @Composable
 private fun ThemeItem(
     modifier: Modifier = Modifier,
@@ -78,27 +76,45 @@ private fun ThemeItem(
     type: Theme,
     onClick: (String) -> Unit = {},
 ) {
+    val imageRes = remember(type) {
+        when (type) {
+            Theme.LIGHT -> R.drawable.ic_theme_light
+            Theme.DARK -> R.drawable.ic_theme_dark
+            Theme.SYSTEM -> R.drawable.ic_theme_system
+        }
+    }
+
+    val descriptionRes = remember(type) {
+        when (type) {
+            Theme.LIGHT -> R.string.tema_claro
+            Theme.DARK -> R.string.tema_escuro
+            Theme.SYSTEM -> R.string.tema_do_sistema
+        }
+    }
+
+    val description = stringResource(id = descriptionRes)
+    val isSelected = selected == type.name
+    val onThemeClick = remember(type, onClick) { { onClick(type.name) } }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick.invoke(type.name) },
+            .clickable(onClick = onThemeClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = type.image),
-            contentDescription = type.value,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
+            painter = painterResource(id = imageRes),
+            contentDescription = description,
+            modifier = Modifier.height(200.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = type.value)
         Spacer(modifier = Modifier.height(4.dp))
         RadioButton(
-            selected = selected == type.name,
-            onClick = { onClick.invoke(type.name) },
-            modifier = Modifier.semantics {
-                contentDescription = "Localized Description"
+            selected = isSelected,
+            onClick = onThemeClick,
+            modifier = Modifier.semantics(mergeDescendants = true) {
+                this.contentDescription = description
             }
         )
     }

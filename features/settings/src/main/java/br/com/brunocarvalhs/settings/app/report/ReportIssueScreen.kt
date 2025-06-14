@@ -17,8 +17,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
 import br.com.brunocarvalhs.friendssecrets.ui.components.WebViewContainer
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.settings.R
 
 @Composable
 fun ReportIssueScreen(navController: NavHostController) {
@@ -41,7 +41,7 @@ private fun ReportIssueContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = stringResource(SettingsNavigation.ReportIssue.title))
+                    Text(text = stringResource(R.string.title_report_an_issue))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)

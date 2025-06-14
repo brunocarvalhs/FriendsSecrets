@@ -12,11 +12,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var toggleManager: ToggleManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     MainApp(
                         activity = this,
+                        toggleManager = toggleManager,
                         navController = navController,
                     )
                 }

@@ -17,9 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun SettingsListItemOptions(
@@ -36,7 +34,9 @@ fun SettingsListItemOptions(
     }
 
     ListItem(
-        modifier = Modifier.clickable { onClick(checked.not()) }.selectableGroup(),
+        modifier = Modifier
+            .clickable { onClick(checked.not()) }
+            .selectableGroup(),
         headlineContent = { Text(title) },
         trailingContent = {
             Switch(

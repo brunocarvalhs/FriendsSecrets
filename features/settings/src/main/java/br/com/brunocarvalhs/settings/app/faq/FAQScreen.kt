@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.settings.R
 
 @Composable
 fun FAQScreen(navController: NavHostController) {
@@ -41,7 +41,7 @@ private fun FAQContent(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(text = stringResource(SettingsNavigation.FAQ.title))
+                    Text(text = stringResource(R.string.title_faq))
                 },
                 navigationIcon = {
                     NavigationBackIconButton(navController = navController)
@@ -50,7 +50,9 @@ private fun FAQContent(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it).padding(16.dp)) {
+        Column(modifier = Modifier
+            .padding(it)
+            .padding(16.dp)) {
 
         }
     }

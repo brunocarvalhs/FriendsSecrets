@@ -9,21 +9,21 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.presentation.views.settings.SettingsNavigation
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.settings.R
 
 @Composable
 fun SettingsListItemNavigation(
-    navController: NavHostController,
-    settings: SettingsNavigation,
+    title: Int,
+    icon: ImageVector,
+    onClick: () -> Unit = {},
 ) {
     ListItem(
-        modifier = Modifier.clickable { navController.navigate(route = settings.route) },
-        headlineContent = { Text(stringResource(settings.title)) },
+        modifier = Modifier.clickable { onClick.invoke() },
+        headlineContent = { Text(stringResource(title)) },
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -32,8 +32,8 @@ fun SettingsListItemNavigation(
         },
         leadingContent = {
             Icon(
-                imageVector = settings.icon,
-                contentDescription = stringResource(settings.title),
+                imageVector = icon,
+                contentDescription = stringResource(title),
             )
         }
     )
@@ -45,8 +45,9 @@ fun SettingsListItemNavigation(
 private fun SettingsListItemNavigationPreview() {
     FriendsSecretsTheme {
         SettingsListItemNavigation(
-            navController = rememberNavController(),
-            settings = SettingsNavigation.Appearance
+            title = R.string.settings_screen_security,
+            icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            onClick = { }
         )
     }
 }
