@@ -23,7 +23,7 @@ class SettingsViewModel @Inject constructor(
 
     fun onEvent(event: SettingsIntent) {
         when (event) {
-            is SettingsIntent.SetBiometricPromptEnabled -> TODO()
+            is SettingsIntent.SetBiometricPromptEnabled -> setBiometricPromptEnabled(event.state)
         }
     }
 

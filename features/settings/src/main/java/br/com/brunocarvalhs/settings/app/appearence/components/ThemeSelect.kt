@@ -42,7 +42,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            type = Theme.LIGHT,
+            theme = Theme.LIGHT,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -51,7 +51,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            type = Theme.DARK,
+            theme = Theme.DARK,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -60,7 +60,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            type = Theme.SYSTEM,
+            theme = Theme.SYSTEM,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -73,19 +73,19 @@ fun ThemeSelect(
 private fun ThemeItem(
     modifier: Modifier = Modifier,
     selected: String,
-    type: Theme,
+    theme: Theme,
     onClick: (String) -> Unit = {},
 ) {
-    val imageRes = remember(type) {
-        when (type) {
+    val imageRes = remember(theme) {
+        when (theme) {
             Theme.LIGHT -> R.drawable.ic_theme_light
             Theme.DARK -> R.drawable.ic_theme_dark
             Theme.SYSTEM -> R.drawable.ic_theme_system
         }
     }
 
-    val descriptionRes = remember(type) {
-        when (type) {
+    val descriptionRes = remember(theme) {
+        when (theme) {
             Theme.LIGHT -> R.string.tema_claro
             Theme.DARK -> R.string.tema_escuro
             Theme.SYSTEM -> R.string.tema_do_sistema
@@ -93,8 +93,8 @@ private fun ThemeItem(
     }
 
     val description = stringResource(id = descriptionRes)
-    val isSelected = selected == type.name
-    val onThemeClick = remember(type, onClick) { { onClick(type.name) } }
+    val isSelected = selected == theme.type
+    val onThemeClick = remember(theme, onClick) { { onClick(theme.type) } }
 
     Column(
         modifier = modifier
@@ -108,7 +108,7 @@ private fun ThemeItem(
             modifier = Modifier.height(200.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = type.value)
+        Text(text = theme.type)
         Spacer(modifier = Modifier.height(4.dp))
         RadioButton(
             selected = isSelected,

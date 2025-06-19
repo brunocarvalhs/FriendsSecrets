@@ -5,14 +5,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,6 +27,12 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var toggleManager: ToggleManager
+
+    @Inject
+    lateinit var themeManager: ThemeManager
+
+    @Inject
+    lateinit var themeRemoteProvider: ThemeRemoteProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +44,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            FriendsSecretsTheme {
+            FriendsSecretsTheme(
+                themeManager = themeManager,
+                themeRemoteProvider = themeRemoteProvider,
+            ) {
                 Surface(
                     modifier = Modifier
                         .imePadding()

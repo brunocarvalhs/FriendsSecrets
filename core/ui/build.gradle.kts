@@ -38,6 +38,7 @@ android {
 
 dependencies {
     api(project(":core:domain"))
+    api(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

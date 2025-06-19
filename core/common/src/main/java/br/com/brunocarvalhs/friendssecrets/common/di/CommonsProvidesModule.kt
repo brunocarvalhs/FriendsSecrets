@@ -1,13 +1,17 @@
 package br.com.brunocarvalhs.friendssecrets.common.di
 
+import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.common.analytics.AnalyticsProvider
 import br.com.brunocarvalhs.friendssecrets.common.logger.crashlytics.CrashlyticsProvider
 import br.com.brunocarvalhs.friendssecrets.common.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.common.remote.RemoteProvider
+import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.common.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.common.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager // Supondo que StorageManager também não precise de getInstance()
+import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
@@ -16,6 +20,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -67,5 +72,37 @@ object CommonsProvidesModule {
     @Singleton
     fun provideAnalyticsProvider(event: AnalyticsProvider.AnalyticsEvent): AnalyticsProvider {
         return AnalyticsProvider(event)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeManager(
+        @ApplicationContext context: Context,
+        storage: StorageManager
+    ): ThemeManager {
+        return ThemeManager(
+            context = context,
+            storage = storage
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideToggleManager(
+        remoteProvider: RemoteProvider
+    ): ToggleManager {
+        return ToggleManager(remoteProvider = remoteProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeRemoteProvider(
+        @ApplicationContext context: Context,
+        remoteProvider: RemoteProvider
+    ): ThemeRemoteProvider {
+        return ThemeRemoteProvider(
+            context = context,
+            remoteProvider = remoteProvider
+        )
     }
 }

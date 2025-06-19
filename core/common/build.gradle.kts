@@ -50,6 +50,9 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.material3)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

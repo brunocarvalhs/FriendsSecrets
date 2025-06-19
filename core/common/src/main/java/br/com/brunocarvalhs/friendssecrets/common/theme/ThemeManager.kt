@@ -3,25 +3,43 @@ package br.com.brunocarvalhs.friendssecrets.common.theme
 import android.content.Context
 import android.content.res.Configuration
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ThemeManager(
-    private val context: Context,
+@Singleton
+class ThemeManager @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val storage: StorageManager
 ) {
-    var theme: Theme = Theme.SYSTEM
-        private set
+    private val _theme = MutableStateFlow(Theme.SYSTEM)
+    val theme: StateFlow<Theme> = _theme
 
-    private var isDynamicThemeEnabled = false
+    private val _isDynamicThemeEnabled = MutableStateFlow(false)
+    val isDynamicThemeEnabled: StateFlow<Boolean> = _isDynamicThemeEnabled
 
-    suspend fun init() {
-        val themeValue = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.value
-        theme = Theme.entries.firstOrNull { it.value == themeValue } ?: Theme.SYSTEM
-        isDynamicThemeEnabled = storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            init()
+        }
+    }
+
+    private suspend fun init() {
+        val themeValue = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.type
+        _theme.value = Theme.entries.firstOrNull { it.type == themeValue } ?: Theme.SYSTEM
+
+        val dynamic = storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
+        _isDynamicThemeEnabled.value = dynamic
     }
 
     suspend fun setTheme(value: Theme) {
-        theme = value
-        storage.save(THEME_KEY, value.value)
+        _theme.value = value
+        storage.save(THEME_KEY, value.type)
     }
 
     private fun getSystemTheme(): Theme {
@@ -33,23 +51,19 @@ class ThemeManager(
     }
 
     fun isDarkTheme(): Boolean {
-        return if (theme == Theme.SYSTEM) {
+        return if (_theme.value == Theme.SYSTEM) {
             getSystemTheme() == Theme.DARK
         } else {
-            theme == Theme.DARK
+            _theme.value == Theme.DARK
         }
     }
 
     suspend fun setDynamicThemeEnabled(enabled: Boolean) {
-        isDynamicThemeEnabled = enabled
+        _isDynamicThemeEnabled.value = enabled
         storage.save(DYNAMIC_THEME_KEY, enabled)
     }
 
-    fun isDynamicThemeEnabled(): Boolean {
-        return isDynamicThemeEnabled
-    }
-
-    enum class Theme(val value: String) {
+    enum class Theme(val type: String) {
         LIGHT("Light"),
         DARK("Dark"),
         SYSTEM("System")

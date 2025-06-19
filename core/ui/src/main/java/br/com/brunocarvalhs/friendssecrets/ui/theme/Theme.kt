@@ -8,7 +8,11 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -88,14 +92,39 @@ private val darkScheme = darkColorScheme(
 
 @Composable
 fun FriendsSecretsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    isThemeRemote: Boolean = false,
+    themeManager: ThemeManager? = null,
+    themeRemoteProvider: ThemeRemoteProvider? = null,
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
-    val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val isInPreview = LocalInspectionMode.current
+
+    val theme = if (!isInPreview) {
+        themeManager?.theme?.collectAsState()?.value ?: ThemeManager.Theme.SYSTEM
     } else {
-        if (darkTheme) darkScheme else lightScheme
+        ThemeManager.Theme.SYSTEM
+    }
+
+    val dynamicColorEnabled = if (!isInPreview) {
+        themeManager?.isDynamicThemeEnabled?.collectAsState()?.value ?: false
+    } else {
+        false
+    }
+
+    val darkTheme = when (theme) {
+        ThemeManager.Theme.DARK -> true
+        ThemeManager.Theme.LIGHT -> false
+        ThemeManager.Theme.SYSTEM -> isSystemInDarkTheme()
+    }
+
+    val colorScheme = when {
+        dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
+        darkTheme -> if (isThemeRemote) themeRemoteProvider?.getDarkColorScheme() ?: darkScheme else darkScheme
+        else -> if (isThemeRemote) themeRemoteProvider?.getLightColorScheme() ?: lightScheme else lightScheme
     }
 
     MaterialTheme(
@@ -104,4 +133,3 @@ fun FriendsSecretsTheme(
         content = content
     )
 }
-

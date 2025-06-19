@@ -35,6 +35,7 @@ import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 import br.com.brunocarvalhs.settings.commons.navigation.AppearanceScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.FAQScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.ReportIssueScreenRoute
+import br.com.brunocarvalhs.settings.commons.toggles.getToggles
 
 @Composable
 fun SettingsScreen(
@@ -47,13 +48,7 @@ fun SettingsScreen(
         navController = navController,
         state = state,
         onIntent = viewModel::onEvent,
-        toggle = mapOf(
-            ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED to toggleManager.isFeatureEnabled(ToggleKeys.SETTINGS_IS_FINGERPRINT_ENABLED),
-
-            ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED to toggleManager.isFeatureEnabled(ToggleKeys.SETTINGS_IS_APPEARANCE_ENABLED),
-
-            ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED to toggleManager.isFeatureEnabled(ToggleKeys.SETTINGS_IS_REPORT_ISSUE_ENABLED),
-        ),
+        toggle = getToggles(toggleManager),
     )
 }
 
@@ -70,8 +65,8 @@ private fun SettingsContent(
 
     Scaffold(topBar = {
         LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
         ), title = {
             Text(text = stringResource(R.string.title_settings))
         }, navigationIcon = {

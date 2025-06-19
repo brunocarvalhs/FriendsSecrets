@@ -13,13 +13,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppearanceViewModel @Inject constructor(
-    private val themeManager: ThemeManager
+    private val themeManager: ThemeManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
         AppearanceState(
-            themeSelected = themeManager.theme.value,
-            isDynamicThemeEnabled = themeManager.isDynamicThemeEnabled()
+            themeSelected = themeManager.theme.value.type,
+            isDynamicThemeEnabled = themeManager.isDynamicThemeEnabled.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
@@ -33,7 +33,7 @@ class AppearanceViewModel @Inject constructor(
 
     private fun setTheme(theme: String) {
         viewModelScope.launch {
-            themeManager.setTheme(ThemeManager.Theme.valueOf(theme))
+            themeManager.setTheme(ThemeManager.Theme.valueOf(theme.uppercase()))
             _state.update { it.copy(themeSelected = theme) }
         }
     }
