@@ -34,15 +34,8 @@ internal class LoginViewModel @Inject constructor(
         }
 
         LoginIntent.AcceptNotRegister -> accept()
-        LoginIntent.Logged -> logged()
-    }
+        LoginIntent.Logged -> {
 
-    private fun logged() {
-        viewModelScope.launch {
-            _uiState.value = LoginUiState.Loading
-            if (session.isUserLoggedIn()) {
-                _uiState.value = LoginUiState.Logged
-            }
         }
     }
 

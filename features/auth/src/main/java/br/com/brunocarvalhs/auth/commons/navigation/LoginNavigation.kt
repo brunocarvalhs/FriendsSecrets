@@ -14,9 +14,13 @@ import br.com.brunocarvalhs.auth.app.onboard.OnboardingScreen
 import br.com.brunocarvalhs.auth.app.phoneSend.PhoneSendScreen
 import br.com.brunocarvalhs.auth.app.phoneVerify.PhoneVerifyScreen
 import br.com.brunocarvalhs.auth.app.profiler.UserProfileScreen
+import br.com.brunocarvalhs.auth.app.splash.SplashScreen
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
 import kotlinx.serialization.Serializable
+
+@Serializable
+internal data object SplashScreenRoute
 
 @Serializable
 internal data object LoginScreenRoute
@@ -26,8 +30,7 @@ internal data object PhoneSendScreenRoute
 
 @Serializable
 internal data class PhoneVerificationScreenRoute(
-    val phoneNumber: String,
-    val countryCode: String
+    val phoneNumber: String, val countryCode: String
 )
 
 @Serializable
@@ -43,18 +46,20 @@ internal fun NavGraphBuilder.loginGraph(
     activity: ComponentActivity,
     navController: NavHostController,
 ) {
-    navigation<AuthGraphRoute>(startDestination = LoginScreenRoute) {
+    navigation<AuthGraphRoute>(startDestination = SplashScreenRoute) {
+        composable<SplashScreenRoute> {
+            SplashScreen(
+                viewModel = hiltViewModel(), navController = navController
+            )
+        }
         composable<LoginScreenRoute> {
             LoginScreen(
-                navController = navController,
-                viewModel = hiltViewModel()
+                navController = navController, viewModel = hiltViewModel()
             )
         }
         composable<PhoneSendScreenRoute> {
             PhoneSendScreen(
-                activity = activity,
-                navController = navController,
-                viewModel = hiltViewModel()
+                activity = activity, navController = navController, viewModel = hiltViewModel()
             )
         }
         composable<PhoneVerificationScreenRoute> { backStackEntry ->
@@ -69,20 +74,17 @@ internal fun NavGraphBuilder.loginGraph(
         }
         composable<CreateProfileScreenRoute> {
             CreateProfileScreen(
-                navController = navController,
-                viewModel = hiltViewModel()
+                navController = navController, viewModel = hiltViewModel()
             )
         }
         composable<ProfileGraphRoute> {
             UserProfileScreen(
-                navController = navController,
-                viewModel = hiltViewModel()
+                navController = navController, viewModel = hiltViewModel()
             )
         }
         composable<OnboardingScreenRoute> {
             OnboardingScreen(
-                navController = navController,
-                viewModel = hiltViewModel()
+                navController = navController, viewModel = hiltViewModel()
             )
         }
         composable<BiometricScreenRoute> {

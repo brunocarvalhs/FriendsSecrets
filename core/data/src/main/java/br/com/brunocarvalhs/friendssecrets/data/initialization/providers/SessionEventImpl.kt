@@ -30,10 +30,15 @@ class SessionEventImpl(
         loadCachedUser()
     }
 
-    override suspend fun getCurrentUserModel(): UserEntities? {
-        return auth.currentUser?.toUserEntity()?.also {
-            storageManager.save(STORAGE_USER_KEY, it)
+    override suspend fun getCurrentUserModel(): UserEntities? = withContext(Dispatchers.IO) {
+        val firebaseUser = auth.currentUser
+        if (firebaseUser != null) {
+            val userEntity = firebaseUser.toUserEntity()
+            storageManager.save(STORAGE_USER_KEY, userEntity)
+            return@withContext userEntity
         }
+
+        return@withContext loadUserFromStorage()
     }
 
     override suspend fun isUserLoggedIn(): Boolean = withContext(Dispatchers.IO) {
