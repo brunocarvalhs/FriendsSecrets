@@ -32,6 +32,14 @@ internal data class UserFake(
         lastLogin: Long,
         isActive: Boolean
     ): UserEntities = this.copy()
+
+    override fun firstName(): String {
+        return name.split(" ").first()
+    }
+
+    override fun lastName(): String {
+        return name.split(" ").last()
+    }
 }
 
 fun UserEntities.Companion.toFake(

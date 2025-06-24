@@ -27,6 +27,10 @@ interface UserEntities {
         isActive: Boolean = this.isActive
     ): UserEntities
 
+    fun firstName(): String
+
+    fun lastName(): String
+
     companion object {
         const val COLLECTION_NAME = "users"
 

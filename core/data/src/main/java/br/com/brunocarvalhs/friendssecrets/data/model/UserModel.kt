@@ -17,6 +17,14 @@ internal data class UserModel(
     @SerializedName(UserEntities.IS_ACTIVE) override val isActive: Boolean = true
 ) : UserEntities {
 
+    override fun firstName(): String {
+        return name.split(" ").first()
+    }
+
+    override fun lastName(): String {
+        return name.split(" ").last()
+    }
+
     override fun toMap(): Map<String, Any> {
         return mapOf(
             UserEntities.ID to id,

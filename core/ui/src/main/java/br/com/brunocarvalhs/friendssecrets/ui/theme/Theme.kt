@@ -9,10 +9,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -97,6 +99,7 @@ fun FriendsSecretsTheme(
     themeRemoteProvider: ThemeRemoteProvider? = null,
     content: @Composable () -> Unit,
 ) {
+    val systemUiController = rememberSystemUiController()
     val isInPreview = LocalInspectionMode.current
 
     val theme = if (!isInPreview) {
@@ -116,6 +119,14 @@ fun FriendsSecretsTheme(
         ThemeManager.Theme.LIGHT -> false
         ThemeManager.Theme.SYSTEM -> isSystemInDarkTheme()
     }
+
+    val backgroundColor = if (darkTheme) Color.Black else Color.White
+    val useDarkIcons = !darkTheme
+
+    systemUiController.setStatusBarColor(
+        color = backgroundColor,
+        darkIcons = useDarkIcons
+    )
 
     val colorScheme = when {
         dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

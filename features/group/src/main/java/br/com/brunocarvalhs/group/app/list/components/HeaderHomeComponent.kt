@@ -38,7 +38,7 @@ internal fun HeaderHomeComponent(
         titleContentColor = MaterialTheme.colorScheme.onBackground,
     ), title = {
         val text = session?.let {
-            "${stringResource(R.string.home_title)} ${it.name}"
+            "${stringResource(R.string.home_title)} ${it.firstName()}"
         } ?: stringResource(R.string.home_title)
         Text(
             text = text, style = MaterialTheme.typography.titleLarge
