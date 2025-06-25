@@ -37,6 +37,7 @@ import br.com.brunocarvalhs.friendssecrets.ui.components.BottomNavItem
 import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationComponent
+import br.com.brunocarvalhs.friendssecrets.ui.components.RandomReviewRequester
 import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.group.app.list.components.EmptyGroupComponent
@@ -63,6 +64,10 @@ fun HomeScreen(
         navController = navController,
         uiState = uiState,
         onEvent = viewModel::event,
+    )
+    RandomReviewRequester(
+        probability = 0.3,
+        minIntervalDays = 7
     )
 }
 

@@ -13,6 +13,7 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesPlayServices = "1.10.2"
 kotlinxCoroutinesTest = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
 leakcanaryAndroid = "2.14"
@@ -31,6 +32,7 @@ navigationCompose = "2.9.0"
 googleFirebaseFirebasePerf = "1.4.2"
 googleGmsGoogleServices = "4.4.2"
 googleFirebaseCrashlytics = "3.0.4"
+review = "2.0.2"
 robolectric = "4.14"
 timber = "5.0.1"
 tracingPerfetto = "1.0.0"
@@ -94,12 +96,14 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+review = { module = "com.google.android.play:review", version.ref = "review" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }

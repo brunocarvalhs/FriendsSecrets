@@ -101,8 +101,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.timber)
 
-    // A partir daqui
-
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)
     ksp(libs.hilt.compiler)

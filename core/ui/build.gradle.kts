@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.review)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Report
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.sharp.Fingerprint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
@@ -28,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleKeys
 import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
+import br.com.brunocarvalhs.friendssecrets.ui.remembers.rememberReviewRequester
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemNavigation
@@ -60,6 +62,7 @@ private fun SettingsContent(
     onIntent: (SettingsIntent) -> Unit = {},
     state: SettingsState = SettingsState(),
 ) {
+    val requestReview = rememberReviewRequester()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -128,6 +131,11 @@ private fun SettingsContent(
                         onClick = { navController.navigate(FAQScreenRoute) }
                     )
                 }
+                SettingsListItemNavigation(
+                    title = R.string.title_review,
+                    icon = Icons.Outlined.Star,
+                    onClick = { requestReview() }
+                )
             }
         }
     }
