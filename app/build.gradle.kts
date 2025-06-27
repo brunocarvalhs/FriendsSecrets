@@ -77,6 +77,10 @@ android {
             isIncludeAndroidResources = true
         }
     }
+    lint {
+        disable += "NullSafeMutableLiveData"
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {

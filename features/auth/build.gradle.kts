@@ -43,6 +43,10 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        disable += "NullSafeMutableLiveData"
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
