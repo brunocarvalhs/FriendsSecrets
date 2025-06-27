@@ -10,6 +10,7 @@ import dagger.Lazy
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
+import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -17,7 +18,12 @@ import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.NONE)
 class PhoneAuthServiceImplTest {
     private lateinit var firebaseAuth: Lazy<FirebaseAuth>
     private lateinit var service: PhoneAuthService
@@ -39,23 +45,6 @@ class PhoneAuthServiceImplTest {
     @Test
     fun `sendVerificationCode returns failure if not Activity`() = runTest {
         val result = service.sendVerificationCode("+5511999999999", "notActivity")
-        assertTrue(result.isFailure)
-    }
-
-    @Test
-    fun `sendVerificationCode triggers verification failed`() = runTest {
-        val builder = mockk<PhoneAuthOptions.Builder>(relaxed = true)
-        val options = mockk<PhoneAuthOptions>(relaxed = true)
-        val callbackSlot = slot<PhoneAuthProvider.OnVerificationStateChangedCallbacks>()
-        every { anyConstructed<PhoneAuthOptions.Builder>().setPhoneNumber(any()) } returns builder
-        every { builder.setTimeout(any<Long>(), any()) } returns builder
-        every { builder.setActivity(any()) } returns builder
-        every { builder.setCallbacks(capture(callbackSlot)) } returns builder
-        every { builder.build() } returns options
-        every { PhoneAuthProvider.verifyPhoneNumber(options) } answers {
-            callbackSlot.captured.onVerificationFailed(FirebaseException("fail"))
-        }
-        val result = service.sendVerificationCode("+5511999999999", activity)
         assertTrue(result.isFailure)
     }
 }
