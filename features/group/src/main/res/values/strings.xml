@@ -116,4 +116,8 @@
     <string name="draw_card_front_hint">Tap to reveal your Secret Santa</string>
     <string name="draw_error_decode">Error decoding name</string>
     <string name="group_to_enter_title">Enter the group code</string>
+    <string name="group_details_action_preview_my_secret_friend">My Friends Secrets</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group">Exit the group</string>
+    <string name="group_details_drop_menu_item_text_exit_to_group_admin">Delete the group</string>
+    <string name="c_digo_de_acesso">Access code</string>
 </resources>
