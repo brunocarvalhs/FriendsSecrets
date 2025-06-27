@@ -87,7 +87,7 @@ class CrashlyticsProviderTest {
             CrashlyticsProvider.getInstance()
         }
         assertEquals(
-            "CrashlyticsProvider não inicializado.",
+            "CrashlyticsProvider not initialized",
             exception.message
         )
     }

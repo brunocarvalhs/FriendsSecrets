@@ -9,6 +9,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertFalse
@@ -33,47 +34,49 @@ class BiometricManagerTest {
 
     @Test
     fun `should return false when biometric prompt is not enabled`() = runTest {
-        coEvery { storage.load("biometric_key", Boolean::class.java) } returns null
+        coEvery { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) } returns null
 
         biometricManager = BiometricManager(storage)
 
         assertFalse(biometricManager.isBiometricPromptEnabled())
-        coVerify { storage.load("biometric_key", Boolean::class.java) }
+        coVerify { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) }
     }
 
     @Test
     fun `should return true when biometric prompt is enabled`() = runTest {
-        coEvery { storage.load("biometric_key", Boolean::class.java) } returns true
+        coEvery { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) } returns true
 
-        biometricManager = BiometricManager(storage)
+        biometricManager = BiometricManager(storage, dispatcher = StandardTestDispatcher(testScheduler))
+        testScheduler.advanceUntilIdle()
 
         assertTrue(biometricManager.isBiometricPromptEnabled())
-        coVerify { storage.load("biometric_key", Boolean::class.java) }
+        coVerify { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) }
     }
+
 
     @Test
     fun `should save biometric preference and update internal state`() = runTest {
-        coEvery { storage.load("biometric_key", Boolean::class.java) } returns false
-        coEvery { storage.save("biometric_key", true) } just Runs
+        coEvery { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) } returns false
+        coEvery { storage.save(BiometricManager.BIOMETRIC_KEY, true) } just Runs
 
         biometricManager = BiometricManager(storage)
 
         biometricManager.setBiometricPromptEnabled(true)
 
         assertTrue(biometricManager.isBiometricPromptEnabled())
-        coVerify { storage.save("biometric_key", true) }
+        coVerify { storage.save(BiometricManager.BIOMETRIC_KEY, true) }
     }
 
     @Test
     fun `should save false and update internal state`() = runTest {
-        coEvery { storage.load("biometric_key", Boolean::class.java) } returns true
-        coEvery { storage.save("biometric_key", false) } just Runs
+        coEvery { storage.load(BiometricManager.BIOMETRIC_KEY, Boolean::class.java) } returns true
+        coEvery { storage.save(BiometricManager.BIOMETRIC_KEY, false) } just Runs
 
         biometricManager = BiometricManager(storage)
 
         biometricManager.setBiometricPromptEnabled(false)
 
         assertFalse(biometricManager.isBiometricPromptEnabled())
-        coVerify { storage.save("biometric_key", false) }
+        coVerify { storage.save(BiometricManager.BIOMETRIC_KEY, false) }
     }
 }

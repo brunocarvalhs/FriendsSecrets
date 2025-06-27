@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.common.security
 
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,13 +9,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class BiometricManager(
-    private val storage: StorageManager
+    private val storage: StorageManager,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val scope = CoroutineScope(dispatcher)
     private val _isBiometricPromptEnabled = MutableStateFlow(false)
     private val isBiometricPromptEnabled: StateFlow<Boolean> = _isBiometricPromptEnabled
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
+        scope.launch {
             init()
         }
     }
@@ -24,9 +27,7 @@ class BiometricManager(
         _isBiometricPromptEnabled.value = biometric
     }
 
-    fun isBiometricPromptEnabled(): Boolean {
-        return isBiometricPromptEnabled.value
-    }
+    fun isBiometricPromptEnabled(): Boolean = _isBiometricPromptEnabled.value
 
     suspend fun setBiometricPromptEnabled(enabled: Boolean) {
         storage.save(BIOMETRIC_KEY, enabled)
@@ -34,6 +35,6 @@ class BiometricManager(
     }
 
     companion object {
-        private const val BIOMETRIC_KEY = "biometric_key"
+        const val BIOMETRIC_KEY = "biometric_key"
     }
 }

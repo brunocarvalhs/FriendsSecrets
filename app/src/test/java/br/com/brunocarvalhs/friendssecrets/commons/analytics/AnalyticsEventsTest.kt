@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.analytics
 
+import br.com.brunocarvalhs.friendssecrets.common.analytics.AnalyticsEvents
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -29,6 +29,10 @@ class ContactServiceImplTest {
         every { context.contentResolver } returns contentResolver
         mockkStatic(ContextCompat::class)
         service = ContactServiceImpl(context)
+        mockkStatic(Uri::class)
+        every { Uri.parse(any<String>()) } answers {
+            Uri.EMPTY
+        }
     }
 
     @After
@@ -72,6 +76,11 @@ class ContactServiceImplTest {
         every { cursor.getString(0) } returns "John Doe"
         every { cursor.getString(1) } returns "12345"
         every { cursor.getString(2) } returns "content://photo/1"
+        every { Uri.parse(any<String>()) } answers {
+            val uriMock = mockk<Uri>()
+            every { uriMock.toString() } returns "content://photo/1"
+            uriMock
+        }
         val result = service.getContacts()
         assertEquals(1, result.size)
         val user = result[0] as UserModel
