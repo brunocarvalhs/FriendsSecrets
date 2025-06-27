@@ -70,6 +70,7 @@ fun PhoneSendScreen(
 
             else -> {}
         }
+        viewModel.resetUiState()
     }
 
     PhoneSendContent(

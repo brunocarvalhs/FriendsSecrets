@@ -39,6 +39,10 @@ internal class LoginViewModel @Inject constructor(
         }
     }
 
+    fun resetUiState() {
+        _uiState.value = LoginUiState.Idle
+    }
+
     private fun accept() {
         viewModelScope.launch {
             useCase.invoke().onSuccess {

@@ -60,6 +60,7 @@ internal fun LoginScreen(
             LoginUiState.AcceptNotRegister -> navController.navigate(GroupGraphRoute)
             else -> {}
         }
+        viewModel.resetUiState()
     }
 
     if (uiState == LoginUiState.Loading) {

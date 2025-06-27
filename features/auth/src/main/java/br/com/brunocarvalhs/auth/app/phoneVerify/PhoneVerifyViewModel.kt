@@ -31,6 +31,10 @@ class PhoneVerifyViewModel @Inject constructor(
         )
     }
 
+    fun resetUiState() {
+        _uiState.value = PhoneVerifyUiState.Idle
+    }
+
     private fun verifyCode(code: String) {
         _uiState.value = PhoneVerifyUiState.Loading
         viewModelScope.launch {

@@ -28,6 +28,10 @@ class PhoneSendViewModel @Inject constructor(
         )
     }
 
+    fun resetUiState() {
+        _uiState.value = PhoneSendUiState.Idle
+    }
+
     private fun sendCode(activity: Activity, phone: String, countryCode: String) {
         _uiState.value = PhoneSendUiState.Loading
         viewModelScope.launch {
