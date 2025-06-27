@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.auth.commons.navigation.BiometricScreenRoute
 import br.com.brunocarvalhs.auth.commons.navigation.LoginScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
 import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
@@ -34,6 +35,7 @@ internal fun SplashScreen(
             targetValue = 1f, animationSpec = tween(durationMillis = 1000)
         )
         val route = when (state) {
+            is SplashUiState.Biometric -> BiometricScreenRoute
             is SplashUiState.Success -> GroupGraphRoute
             else -> LoginScreenRoute
         }
