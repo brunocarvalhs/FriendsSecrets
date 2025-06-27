@@ -22,7 +22,7 @@ android {
         //noinspection OldTargetApi
         targetSdk = 35
 
-        versionCode = 8
+        versionCode = 9
         versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
