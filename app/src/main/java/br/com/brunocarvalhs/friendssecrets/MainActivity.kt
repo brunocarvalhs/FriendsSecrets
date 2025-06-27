@@ -2,30 +2,38 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsEvents
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsParams
-import br.com.brunocarvalhs.friendssecrets.commons.analytics.AnalyticsProvider
-import br.com.brunocarvalhs.friendssecrets.commons.remote.theme.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleKeys
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.presentation.MainApp
-import br.com.brunocarvalhs.friendssecrets.presentation.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    private val toggleManager = ToggleManager(context = this)
-    private val themeRemoteProvider = ThemeRemoteProvider(context = this)
+    @Inject
+    lateinit var toggleManager: ToggleManager
+
+    @Inject
+    lateinit var themeManager: ThemeManager
+
+    @Inject
+    lateinit var themeRemoteProvider: ThemeRemoteProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,29 +43,23 @@ class MainActivity : FragmentActivity() {
         }
 
         enableEdgeToEdge()
+
         setContent {
             FriendsSecretsTheme(
-                isThemeRemote = toggleManager.isFeatureEnabled(ToggleKeys.APP_IS_THEME_REMOTE),
-                themeRemoteProvider = themeRemoteProvider
+                themeManager = themeManager,
+                themeRemoteProvider = themeRemoteProvider,
             ) {
                 Surface(
-                    modifier = Modifier.imePadding().fillMaxSize(),
+                    modifier = Modifier
+                        .imePadding()
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val navController = rememberNavController().apply {
-                        addOnDestinationChangedListener { _, destination, _ ->
-                            AnalyticsProvider.track(
-                                event = AnalyticsEvents.VISUALIZATION,
-                                params = mapOf(
-                                    AnalyticsParams.SCREEN_NAME to destination.route.toString()
-                                )
-                            )
-                        }
-                    }
+                    val navController = rememberNavController()
                     MainApp(
                         activity = this,
+                        toggleManager = toggleManager,
                         navController = navController,
-                        toggleManager = toggleManager
                     )
                 }
             }
