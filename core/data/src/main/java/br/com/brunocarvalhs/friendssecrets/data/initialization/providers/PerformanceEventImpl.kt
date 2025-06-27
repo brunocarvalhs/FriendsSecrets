@@ -26,4 +26,8 @@ class PerformanceEventImpl(
     override fun setDeviceId(id: String) {
         performance.putAttribute("deviceId", id)
     }
+
+    override fun parameter(key: String, value: String) {
+        performance.putAttribute(key, value)
+    }
 }
