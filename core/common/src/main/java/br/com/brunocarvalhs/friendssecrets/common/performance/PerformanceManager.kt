@@ -43,7 +43,9 @@ class PerformanceManager(
 
         @JvmStatic
         fun initialize(event: PerformanceEvent) {
-            instance = PerformanceManager(event)
+            if (instance == null) {
+                instance = PerformanceManager(event)
+            }
         }
     }
 }

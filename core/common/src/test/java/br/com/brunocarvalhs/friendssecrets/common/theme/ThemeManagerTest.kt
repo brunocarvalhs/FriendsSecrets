@@ -54,7 +54,7 @@ class ThemeManagerTest {
 
         themeManager = ThemeManager(context, storage)
 
-        assertEquals(ThemeManager.Theme.SYSTEM, themeManager.theme)
+        assertEquals(ThemeManager.Theme.SYSTEM, themeManager.theme.value)
     }
 
     @Test
@@ -66,7 +66,7 @@ class ThemeManagerTest {
         themeManager = ThemeManager(context, storage)
         themeManager.setTheme(ThemeManager.Theme.DARK)
 
-        assertEquals(ThemeManager.Theme.DARK, themeManager.theme)
+        assertEquals(ThemeManager.Theme.DARK, themeManager.theme.value)
     }
 
     @Test

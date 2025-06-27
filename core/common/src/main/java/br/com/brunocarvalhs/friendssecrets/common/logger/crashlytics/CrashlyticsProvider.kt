@@ -36,5 +36,12 @@ class CrashlyticsProvider(
         fun getInstance(): CrashlyticsProvider {
             return instance ?: throw IllegalStateException("CrashlyticsProvider not initialized")
         }
+
+        @JvmStatic
+        fun initialize(event: CrashlyticsEvent) {
+            if (instance == null) {
+                instance = CrashlyticsProvider(event)
+            }
+        }
     }
 }

@@ -39,9 +39,7 @@ internal fun GroupDTO.toEntities(): GroupEntities {
         description = this.description,
         members = this.members.values.mapNotNull { member ->
             try {
-                val memberMap = member as? Map<*, *>
-                val memberJson = Gson().toJson(memberMap)
-                Gson().fromJson(memberJson, UserModel::class.java)
+                UserModel.fromMap(member)
             } catch (e: Exception) {
                 null
             }

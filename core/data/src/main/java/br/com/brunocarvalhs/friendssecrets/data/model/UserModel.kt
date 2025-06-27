@@ -68,9 +68,18 @@ internal data class UserModel(
     companion object {
         private val gson = Gson()
 
-        fun fromMap(map: Map<String, Any>): UserEntities {
-            val json = gson.toJson(map)
-            return gson.fromJson(json, UserModel::class.java)
+        fun fromMap(map: Map<String, Any?>): UserEntities {
+            return UserModel(
+                id = map[UserEntities.ID] as? String ?: UUID.randomUUID().toString(),
+                name = map[UserEntities.NAME] as? String ?: "",
+                photoUrl = map[UserEntities.PHOTO_URL] as? String,
+                phoneNumber = map[UserEntities.PHONE_NUMBER] as? String ?: "",
+                isPhoneNumberVerified = map[UserEntities.IS_PHONE_NUMBER_VERIFIED] as? Boolean ?: false,
+                likes = (map[UserEntities.LIKES] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
+                isAnonymous = map[UserEntities.IS_ANONYMOUS] as? Boolean ?: false,
+                lastLogin = (map[UserEntities.LAST_LOGIN] as? Number)?.toLong() ?: System.currentTimeMillis(),
+                isActive = map[UserEntities.IS_ACTIVE] as? Boolean ?: true
+            )
         }
     }
 }

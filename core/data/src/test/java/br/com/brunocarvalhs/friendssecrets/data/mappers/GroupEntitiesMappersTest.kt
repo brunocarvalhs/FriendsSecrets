@@ -48,8 +48,10 @@ class GroupEntitiesMappersTest {
     fun `toEntities should map GroupDTO to GroupEntities correctly`() {
         val members = mapOf(
             "User1" to mapOf(
-                GroupEntities.NAME to "User1",
-                UserEntities.LIKES to 5,
+                UserEntities.NAME to "User1",
+                UserEntities.LIKES to listOf(
+                    "like1", "like2", "like3", "like4", "like5"
+                ),
                 UserEntities.PHOTO_URL to "url1"
             )
         )
