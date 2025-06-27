@@ -77,6 +77,7 @@ fun PhoneVerifyScreen(
                 launchSingleTop = true
                 restoreState = true
             }
+            viewModel.resetUiState()
         }
     }
 

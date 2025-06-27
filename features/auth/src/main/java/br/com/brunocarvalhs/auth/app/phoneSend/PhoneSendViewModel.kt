@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.auth.app.phoneSend
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.auth.app.login.LoginUiState
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,10 @@ class PhoneSendViewModel @Inject constructor(
             phone = intent.phone,
             countryCode = intent.countryCode
         )
+    }
+
+    fun resetUiState() {
+        _uiState.value = PhoneSendUiState.Idle
     }
 
     private fun sendCode(activity: Activity, phone: String, countryCode: String) {
