@@ -16,7 +16,6 @@ espressoCore = "3.6.1"
 kotlinxCoroutinesPlayServices = "1.10.2"
 kotlinxCoroutinesTest = "1.10.2"
 kotlinxSerializationJson = "1.8.1"
-leakcanaryAndroid = "2.14"
 lifecycleRuntimeKtx = "2.9.1"
 lifecycleViewmodelCompose = "2.9.1"
 activityCompose = "1.10.1"
@@ -30,7 +29,7 @@ mockitoInline = "4.8.0"
 mockk = "1.13.13"
 navigationCompose = "2.9.0"
 googleFirebaseFirebasePerf = "1.4.2"
-googleGmsGoogleServices = "4.4.2"
+googleGmsGoogleServices = "4.4.3"
 googleFirebaseCrashlytics = "3.0.4"
 review = "2.0.2"
 robolectric = "4.14"
@@ -39,23 +38,14 @@ tracingPerfetto = "1.0.0"
 tracingPerfettoBinary = "1.0.0"
 ucrop = "2.2.8"
 uiTextGoogleFonts = "1.8.3"
-firebaseBom = "33.15.0"
+firebaseBom = "33.16.0"
 firebaseAuth = "23.2.1"
 credentials = "1.5.0"
 credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 accompanist = "0.36.0"
-coreKtxVersion = "1.6.1"
-uiTestJunit4Android = "1.8.3"
 jetbrainsKotlinJvm = "2.1.10"
-appcompat = "1.7.1"
-material = "1.12.0"
-material3Android = "1.3.2"
-foundationAndroid = "1.8.3"
-uiToolingPreviewAndroid = "1.8.3"
 coreSplashscreen = "1.0.1"
-runtimeAndroid = "1.8.3"
-browser = "1.8.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -82,9 +72,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3",  version.ref = "material3" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
@@ -99,7 +87,6 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -112,17 +99,8 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
-androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
-androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
-androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
-androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -134,4 +112,3 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-compose-compiler = { id = "androidx.compose.compiler", version = "1.5.0" }
