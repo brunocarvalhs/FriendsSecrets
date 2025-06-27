@@ -73,7 +73,7 @@ class PerformanceManagerTest {
         val name = "traceTest"
         var executed = false
 
-        val result = manager.trace(name) { perfEvent ->
+        val result: String = manager.trace(name) { _ ->
             verify { event.start(name) }
             executed = true
             "result"

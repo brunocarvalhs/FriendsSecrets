@@ -77,7 +77,7 @@
     <string name="settings_screen_support">지원</string>
     <string name="group_details_description">설명</string>
     <string name="group_details_members">회원</string>
-    <string name="draw_screen_title">당신의 시크릿 친구는...</string>
+    <string name="draw_screen_title">당신의 시크릿 친구는…</string>
     <string name="draw_screen_action_title">내 시크릿 친구 공개</string>
     <string name="draw_screen_action_generative">선물 아이디어</string>
     <string name="draw_screen_code_secret">시크릿 코드</string>
@@ -93,7 +93,7 @@
     <string name="empty_group_component_button_create_grup">그룹 만들기</string>
     <string name="chat_generative_title_chat">채팅</string>
     <string name="empty_group_component_button_enter_grup">그룹에 들어가기</string>
-    <string name="chat_generative_textfield_message">메시지를 입력하세요...</string>
+    <string name="chat_generative_textfield_message">메시지를 입력하세요…</string>
     <string name="chat_generative_button_send">보내기</string>
     <string name="empty_group_title">어이구</string>
     <string name="empty_group_message">그룹을 찾을 수 없습니다</string>

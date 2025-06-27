@@ -78,7 +78,7 @@
     <string name="settings_screen_support">Support</string>
     <string name="group_details_description">Description</string>
     <string name="group_details_members">Members</string>
-    <string name="draw_screen_title">Your secret friend is...</string>
+    <string name="draw_screen_title">Your secret friend is…</string>
     <string name="draw_screen_action_title">Reveal my secret friend</string>
     <string name="draw_screen_action_generative">Gift suggestions</string>
     <string name="draw_screen_code_secret">Secret code</string>
@@ -94,7 +94,7 @@
     <string name="empty_group_component_button_create_grup">Create a group</string>
     <string name="chat_generative_title_chat">Chat</string>
     <string name="empty_group_component_button_enter_grup">Enter a group</string>
-    <string name="chat_generative_textfield_message">Type a message...</string>
+    <string name="chat_generative_textfield_message">Type a message…</string>
     <string name="chat_generative_button_send">Send</string>
     <string name="empty_group_title">Uh-oh!</string>
     <string name="empty_group_message">No group found</string>

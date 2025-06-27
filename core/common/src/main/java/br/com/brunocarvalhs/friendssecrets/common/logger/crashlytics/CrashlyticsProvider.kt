@@ -3,6 +3,9 @@ package br.com.brunocarvalhs.friendssecrets.common.logger.crashlytics
 class CrashlyticsProvider(
     private val event: CrashlyticsEvent
 ) {
+    init {
+        instance = this
+    }
 
     fun report(throwable: Throwable, params: Map<String, String>? = null) {
         params?.forEach { (key, value) -> setCustomKey(key, value) }
@@ -23,5 +26,15 @@ class CrashlyticsProvider(
         fun log(message: String)
         fun parameter(key: String, value: String)
         fun setUserId(id: String)
+    }
+
+    companion object {
+        @Volatile
+        private var instance: CrashlyticsProvider? = null
+
+        @JvmStatic
+        fun getInstance(): CrashlyticsProvider {
+            return instance ?: throw IllegalStateException("CrashlyticsProvider not initialized")
+        }
     }
 }

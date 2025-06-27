@@ -6,11 +6,13 @@ import android.content.res.Resources
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -46,9 +48,9 @@ class ThemeManagerTest {
     }
 
     @Test
-    fun `should return system theme when no theme is saved`() {
-        every { storage.load<String>("theme_key") } returns null
-        every { storage.load<Boolean>("dynamic_theme_key") } returns null
+    fun `should return system theme when no theme is saved`() = runTest {
+        coEvery { storage.load("theme_key", String::class.java) } returns null
+        coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns null
 
         themeManager = ThemeManager(context, storage)
 
@@ -56,21 +58,26 @@ class ThemeManagerTest {
     }
 
     @Test
-    fun `should save selected theme`() {
-        every { storage.load<String>("theme_key") } returns null
-        every { storage.load<Boolean>("dynamic_theme_key") } returns null
-        every { storage.save<String>(any(), any()) } just Runs
+    fun `should save selected theme`() = runTest {
+        coEvery { storage.load("theme_key", String::class.java) } returns null
+        coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns null
+        coEvery { storage.save(any<String>(), String::class.java) } just Runs
 
         themeManager = ThemeManager(context, storage)
-        themeManager.theme = ThemeManager.Theme.DARK
+        themeManager.setTheme(ThemeManager.Theme.DARK)
 
         assertEquals(ThemeManager.Theme.DARK, themeManager.theme)
     }
 
     @Test
-    fun `should use system theme logic when theme is set to SYSTEM`() {
-        every { storage.load<String>("theme_key") } returns ThemeManager.Theme.SYSTEM.value
-        every { storage.load<Boolean>("dynamic_theme_key") } returns false
+    fun `should use system theme logic when theme is set to SYSTEM`() = runTest {
+        coEvery {
+            storage.load(
+                "theme_key",
+                String::class.java
+            )
+        } returns ThemeManager.Theme.SYSTEM.type
+        coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns false
 
         configuration.uiMode = Configuration.UI_MODE_NIGHT_YES
         themeManager = ThemeManager(context, storage)
@@ -82,25 +89,25 @@ class ThemeManagerTest {
     }
 
     @Test
-    fun `should correctly report dynamic theme enabled`() {
-        every { storage.load<String>("theme_key") } returns null
-        every { storage.load<Boolean>("dynamic_theme_key") } returns true
+    fun `should correctly report dynamic theme enabled`() = runTest {
+        coEvery { storage.load("theme_key", String::class.java) } returns null
+        coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns true
 
         themeManager = ThemeManager(context, storage)
 
-        assertTrue(themeManager.isDynamicThemeEnabled())
+        assertTrue(themeManager.isDynamicThemeEnabled.value)
     }
 
     @Test
-    fun `should update dynamic theme flag`() {
-        every { storage.load<String>("theme_key") } returns null
-        every { storage.load<Boolean>("dynamic_theme_key") } returns false
-        every { storage.save<Boolean>(any(), any()) } just Runs
+    fun `should update dynamic theme flag`() = runTest {
+        coEvery { storage.load("theme_key", String::class.java) } returns null
+        coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns false
+        coEvery { storage.save(any<String>(), Boolean::class.java) } just Runs
 
         themeManager = ThemeManager(context, storage)
         themeManager.setDynamicThemeEnabled(true)
 
-        assertTrue(themeManager.isDynamicThemeEnabled())
-        verify { storage.save("dynamic_theme_key", true) }
+        assertTrue(themeManager.isDynamicThemeEnabled.value)
+        coVerify { storage.save("dynamic_theme_key", true) }
     }
 }

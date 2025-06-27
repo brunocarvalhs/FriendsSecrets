@@ -26,7 +26,7 @@ class ToggleManagerTest {
         doNothing().`when`(remoteProvider).default(anyMap())
         doNothing().`when`(remoteProvider).fetchAndActivate()
 
-        toggleManager = ToggleManager(context, remoteProvider)
+        toggleManager = ToggleManager(remoteProvider)
     }
 
     @Test

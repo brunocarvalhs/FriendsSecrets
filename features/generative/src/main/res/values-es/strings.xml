@@ -77,7 +77,7 @@
     <string name="settings_screen_support">Soporte</string>
     <string name="group_details_description">Descripción</string>
     <string name="group_details_members">Miembros</string>
-    <string name="draw_screen_title">Tu amigo secreto es...</string>
+    <string name="draw_screen_title">Tu amigo secreto es…</string>
     <string name="draw_screen_action_title">Revelar a mi amigo secreto</string>
     <string name="draw_screen_action_generative">Ideas de regalos</string>
     <string name="draw_screen_code_secret">Código secreto</string>

@@ -32,7 +32,7 @@
     <string name="group_details_share_member_simple">¡Hola! 👋\n\nHas sido invitado al grupo %1$s 🎉\n\nÚnete con el código %2$s.\n\n¡Comienza a planear tu regalo ahora! 🚀</string>
     <string name="group_details_description">Descripción</string>
     <string name="group_details_members">Miembros</string>
-    <string name="draw_screen_title">Tu amigo secreto es...</string>
+    <string name="draw_screen_title">Tu amigo secreto es…</string>
     <string name="draw_screen_action_title">Revelar mi amigo secreto</string>
     <string name="draw_screen_action_generative">Sugerencias de regalo</string>
     <string name="group_to_enter_button_text">Validar</string>
@@ -43,7 +43,7 @@
     <string name="empty_group_component_button_create_grup">Crear un grupo</string>
     <string name="chat_generative_title_chat">Chat</string>
     <string name="empty_group_component_button_enter_grup">Entrar a un grupo</string>
-    <string name="chat_generative_textfield_message">Escribe un mensaje...</string>
+    <string name="chat_generative_textfield_message">Escribe un mensaje…</string>
     <string name="chat_generative_button_send">Enviar</string>
     <string name="empty_group_title">¡Ups!</string>
     <string name="empty_group_message">No se encontraron grupos</string>

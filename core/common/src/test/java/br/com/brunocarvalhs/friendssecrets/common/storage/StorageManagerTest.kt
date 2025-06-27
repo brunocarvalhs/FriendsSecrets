@@ -1,9 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.common.storage
 
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -27,46 +28,46 @@ class StorageManagerTest {
     }
 
     @Test
-    fun `should save value`() {
+    fun `should save value`() = runTest {
         val key = "theme_key"
         val value = "DARK"
 
         storageManager.save(key, value)
 
-        verify { storageEvent.save(eq(key), eq(value)) }
+        coVerify { storageEvent.save(eq(key), eq(value)) }
     }
 
     @Test
-    fun `should load value`() {
+    fun `should load value`() = runTest {
         val key = "theme_key"
         val value = "LIGHT"
 
-        every { storageEvent.load<String>(key) } returns value
+        coEvery { storageEvent.load(key, String::class.java) } returns value
 
-        val result = storageManager.load<String>(key)
+        val result = storageManager.load(key, String::class.java)
 
         assertEquals(value, result)
-        verify { storageEvent.load<String>(key) }
+        coVerify { storageEvent.load(key, String::class.java) }
     }
 
     @Test
-    fun `should return null when value not found`() {
+    fun `should return null when value not found`() = runTest {
         val key = "non_existing_key"
 
-        every { storageEvent.load<String>(key) } returns null
+        coEvery { storageEvent.load(key, String::class.java) } returns null
 
-        val result = storageManager.load<String>(key)
+        val result = storageManager.load(key, String::class.java)
 
         assertNull(result)
-        verify { storageEvent.load<String>(key) }
+        coVerify { storageEvent.load(key, String::class.java) }
     }
 
     @Test
-    fun `should remove value`() {
+    fun `should remove value`() = runTest {
         val key = "theme_key"
 
         storageManager.remove(key)
 
-        verify { storageEvent.remove(eq(key)) }
+        coVerify { storageEvent.remove(eq(key)) }
     }
 }
