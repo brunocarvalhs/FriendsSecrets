@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -93,7 +94,8 @@ class ThemeManagerTest {
         coEvery { storage.load("theme_key", String::class.java) } returns null
         coEvery { storage.load("dynamic_theme_key", Boolean::class.java) } returns true
 
-        themeManager = ThemeManager(context, storage)
+        themeManager = ThemeManager(context, storage, dispatcher = StandardTestDispatcher(testScheduler))
+        testScheduler.advanceUntilIdle()
 
         assertTrue(themeManager.isDynamicThemeEnabled.value)
     }

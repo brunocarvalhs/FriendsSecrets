@@ -38,11 +38,9 @@ internal fun GroupDTO.toEntities(): GroupEntities {
         name = this.name,
         description = this.description,
         members = this.members.values.mapNotNull { member ->
-            try {
+            runCatching {
                 UserModel.fromMap(member)
-            } catch (e: Exception) {
-                null
-            }
+            }.getOrNull()
         },
         draws = this.draws,
         isOwner = this.isOwner,

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +16,10 @@ import javax.inject.Singleton
 @Singleton
 class ThemeManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val storage: StorageManager
+    private val storage: StorageManager,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val scope = CoroutineScope(dispatcher)
     private val _theme = MutableStateFlow(Theme.SYSTEM)
     val theme: StateFlow<Theme> = _theme
 
@@ -24,7 +27,7 @@ class ThemeManager @Inject constructor(
     val isDynamicThemeEnabled: StateFlow<Boolean> = _isDynamicThemeEnabled
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
+        scope.launch {
             init()
         }
     }

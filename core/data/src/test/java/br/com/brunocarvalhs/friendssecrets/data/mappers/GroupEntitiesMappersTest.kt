@@ -5,6 +5,9 @@ import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -80,6 +83,9 @@ class GroupEntitiesMappersTest {
 
     @Test
     fun `toEntities should handle invalid member map gracefully`() {
+        mockkObject(UserModel.Companion)
+        every { UserModel.fromMap(any()) } throws IllegalArgumentException("Invalid map")
+
         val members = mapOf(
             "User1" to mapOf(
                 GroupEntities.NAME to "User1",
@@ -96,6 +102,7 @@ class GroupEntitiesMappersTest {
             draws = emptyMap(),
             isOwner = false
         )
+
         val entities = dto.toEntities()
         assertTrue(entities.members.isEmpty())
     }
