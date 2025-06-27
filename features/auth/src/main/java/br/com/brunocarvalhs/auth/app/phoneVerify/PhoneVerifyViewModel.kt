@@ -3,7 +3,6 @@ package br.com.brunocarvalhs.auth.app.phoneVerify
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.auth.app.login.LoginUiState
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.VerifyPhoneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
