@@ -19,7 +19,7 @@ class AppearanceViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         AppearanceState(
             themeSelected = themeManager.theme.value.type,
-            isDynamicThemeEnabled = !themeManager.isDynamicThemeEnabled.value
+            isDynamicThemeEnabled = themeManager.isDynamicThemeEnabled.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
@@ -40,8 +40,8 @@ class AppearanceViewModel @Inject constructor(
 
     private fun setDynamicThemeEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            themeManager.setDynamicThemeEnabled(!enabled)
-            _state.update { it.copy(isDynamicThemeEnabled = !enabled) }
+            themeManager.setDynamicThemeEnabled(enabled)
+            _state.update { it.copy(isDynamicThemeEnabled = enabled) }
         }
     }
 }

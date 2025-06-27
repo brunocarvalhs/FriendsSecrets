@@ -2,9 +2,7 @@ package br.com.brunocarvalhs.settings.app.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.friendssecrets.common.security.BiometricManager
-import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,17 +14,12 @@ class SettingsViewModel @Inject constructor(
     private val biometricManager: BiometricManager
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SettingsState())
+    private val _state = MutableStateFlow(
+        SettingsState(
+            isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled()
+        )
+    )
     val state = _state.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            val isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled()
-            _state.value = _state.value.copy(
-                isBiometricPromptEnabled = isBiometricPromptEnabled
-            )
-        }
-    }
 
     fun onEvent(event: SettingsIntent) {
         when (event) {
