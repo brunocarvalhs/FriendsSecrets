@@ -46,7 +46,7 @@ fun ErrorComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Ops!",
+                text = stringResource(R.string.ops),
                 style = MaterialTheme.typography.headlineLarge,
             )
         }

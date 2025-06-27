@@ -44,9 +44,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.auth.commons.navigation.CreateProfileScreenRoute
 import br.com.brunocarvalhs.auth.commons.navigation.PhoneSendScreenRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
@@ -68,10 +70,10 @@ fun UserProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Perfil", style = MaterialTheme.typography.titleLarge) },
+                title = { Text(text = stringResource(R.string.perfil), style = MaterialTheme.typography.titleLarge) },
                 actions = {
                     IconButton(onClick = { navController.navigate(SettingsGraphRoute) }) {
-                        Icon(Icons.Filled.Settings, contentDescription = "Configurações")
+                        Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.configura_es))
                     }
                 }
             )
@@ -202,7 +204,7 @@ fun LikesSectionWithShowMore(likes: List<String>) {
             )
             .padding(16.dp)
     ) {
-        Text("Seus gostos", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.seus_gostos), style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(12.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -218,7 +220,7 @@ fun LikesSectionWithShowMore(likes: List<String>) {
                 onClick = { showAll = !showAll },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(if (showAll) "Mostrar menos" else "Mostrar mais")
+                Text(if (showAll) stringResource(R.string.mostrar_menos) else stringResource(R.string.mostrar_mais))
             }
         }
     }
@@ -239,13 +241,13 @@ fun ProfilePicture(photoUrl: String?) {
             if (photoUrl != null) {
                 AsyncImage(
                     model = photoUrl,
-                    contentDescription = "Foto do perfil",
+                    contentDescription = stringResource(R.string.foto_do_perfil),
                     modifier = Modifier.clip(CircleShape)
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Avatar padrão",
+                    contentDescription = stringResource(R.string.avatar_padr_o),
                     modifier = Modifier.size(110.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -258,11 +260,11 @@ fun ProfilePicture(photoUrl: String?) {
 fun ProfileNameAndStatus(name: String?, isAnonymous: Boolean) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = name ?: "Usuário Anônimo",
+            text = name ?: stringResource(R.string.usu_rio_an_nimo),
             style = MaterialTheme.typography.headlineMedium
         )
         Text(
-            text = if (isAnonymous) "Modo Anônimo" else "Usuário Verificado",
+            text = if (isAnonymous) stringResource(R.string.modo_an_nimo) else stringResource(R.string.usu_rio_verificado),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline
         )
@@ -272,10 +274,10 @@ fun ProfileNameAndStatus(name: String?, isAnonymous: Boolean) {
 @Composable
 fun ProfilePhone(phone: String) {
     OutlinedTextField(
-        value = phone,
+        value = phone.ifEmpty { stringResource(R.string.telefone) },
         onValueChange = {},
         enabled = false,
-        label = { Text("Telefone") },
+        label = { Text(stringResource(R.string.telefone)) },
         leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
         modifier = Modifier.fillMaxWidth(),
     )
@@ -296,7 +298,7 @@ fun ActionsSection(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text("Editar Perfil")
+                Text(stringResource(R.string.editar_perfil))
             }
 
             OutlinedButton(
@@ -304,7 +306,7 @@ fun ActionsSection(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text("Sair")
+                Text(stringResource(R.string.sair))
             }
 
             TextButton(
@@ -319,7 +321,10 @@ fun ActionsSection(
                         tint = MaterialTheme.colorScheme.error
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("Excluir Conta", color = MaterialTheme.colorScheme.error)
+                    Text(
+                        stringResource(R.string.excluir_conta),
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         } else {
@@ -329,7 +334,7 @@ fun ActionsSection(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Text(
-                    text = "Faça login para acessar recursos do perfil.",
+                    text = stringResource(R.string.fa_a_login_para_acessar_recursos_do_perfil),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
