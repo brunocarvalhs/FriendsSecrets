@@ -13,13 +13,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val toggleManager: ToggleManager,
-    private val themeManager: ThemeManager,
     private val biometricManager: BiometricManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled()
+            _state.value = _state.value.copy(
+                isBiometricPromptEnabled = isBiometricPromptEnabled
+            )
+        }
+    }
 
     fun onEvent(event: SettingsIntent) {
         when (event) {
