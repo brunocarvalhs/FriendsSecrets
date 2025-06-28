@@ -1,0 +1,17 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Home Flow
+---
+- launchApp
+- runFlow: anonymous_login_flow.yaml
+- assertVisible: "Bem-vindo"
+- tapOn:
+    id: ".*MoreVert.*"
+- assertVisible: "Entrar em um grupo"
+- assertVisible: "Configurações"
+- assertVisible: "Sair"
+- tapOn: "Entrar em um grupo"
+- assertVisible: "Código do grupo"
+- tapOn: "Código do grupo"
+- inputText: "123456"
+- tapOn: "Entrar"
+- back

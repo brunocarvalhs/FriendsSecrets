@@ -1,0 +1,22 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Create Group Flow
+---
+- launchApp
+- runFlow: anonymous_login_flow.yaml
+- tapOn:
+    id: ".*Add.*"
+- assertVisible: "Nome do grupo"
+- tapOn: "Nome do grupo"
+- inputText: "Grupo de Teste"
+- tapOn: "Descrição do grupo"
+- inputText: "Este é um grupo de teste criado pelo Maestro"
+- tapOn: "Adicionar membro"
+- assertVisible: "Nome do membro"
+- tapOn: "Nome do membro"
+- inputText: "Membro de Teste"
+- tapOn: "O que o membro gosta?"
+- inputText: "Chocolate, Livros, Música"
+- tapOn: "Adicionar"
+- tapOn:
+    id: ".*Check.*"
+- back

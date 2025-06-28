@@ -77,7 +77,7 @@
     <string name="settings_screen_support">Suporte</string>
     <string name="group_details_description">Descrição</string>
     <string name="group_details_members">Membros</string>
-    <string name="draw_screen_title">Seu amigo secreto é...</string>
+    <string name="draw_screen_title">Seu amigo secreto é…</string>
     <string name="draw_screen_action_title">Revelar meu amigo secreto</string>
     <string name="draw_screen_action_generative">Sugestões de presentes</string>
     <string name="draw_screen_code_secret">Código secreto</string>
@@ -89,11 +89,11 @@
     <string name="group_to_enter_button_enter_to_group">Entrar no grupo</string>
     <string name="group_to_enter_textfield_token_to_grup">Token do grupo</string>
     <string name="error_component_button_try_again">Tentar novamente</string>
-    <string name="error_component_button_to_home">Ir para o inicio</string>
+    <string name="error_component_button_to_home">Ir para o início</string>
     <string name="empty_group_component_button_create_grup">Criar um grupo</string>
     <string name="chat_generative_title_chat">Conversa</string>
     <string name="empty_group_component_button_enter_grup">Entrar em um grupo</string>
-    <string name="chat_generative_textfield_message">Digite uma mensagem...</string>
+    <string name="chat_generative_textfield_message">Digite uma mensagem…</string>
     <string name="chat_generative_button_send">Enviar</string>
     <string name="empty_group_title">Ops!</string>
     <string name="empty_group_message">Nenhum grupo encontrado</string>

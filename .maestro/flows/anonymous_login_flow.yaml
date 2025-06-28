@@ -1,0 +1,9 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Anonymous Login Flow
+---
+- launchApp
+- assertVisible: "Bem-vindo ao FriendsSecrets"
+- assertVisible: "Política de Privacidade"
+- assertVisible: "Termos de Uso"
+- tapOn: "Continuar sem cadastro"
+- assertVisible: "Bem-vindo"
