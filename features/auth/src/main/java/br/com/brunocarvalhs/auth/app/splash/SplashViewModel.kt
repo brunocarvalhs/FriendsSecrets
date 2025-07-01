@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.common.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,7 @@ class SplashViewModel @Inject constructor(
         checkSession()
     }
 
+    @AddTrace(name = "SplashViewModel.checkSession", enabled = true)
     private fun checkSession() {
         viewModelScope.launch {
             if (session.isUserLoggedIn()) {

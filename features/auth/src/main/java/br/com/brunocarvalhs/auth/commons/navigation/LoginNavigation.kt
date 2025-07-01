@@ -17,6 +17,7 @@ import br.com.brunocarvalhs.auth.app.profiler.UserProfileScreen
 import br.com.brunocarvalhs.auth.app.splash.SplashScreen
 import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
 import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
+import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -42,6 +43,7 @@ internal data object BiometricScreenRoute
 @Serializable
 internal data object CreateProfileScreenRoute
 
+@AddTrace(name = "NavGraphBuilder.loginGraph", enabled = true)
 internal fun NavGraphBuilder.loginGraph(
     activity: ComponentActivity,
     navController: NavHostController,

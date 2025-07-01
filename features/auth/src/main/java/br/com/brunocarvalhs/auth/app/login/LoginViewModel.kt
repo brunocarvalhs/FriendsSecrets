@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LoginAnonymousUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +18,11 @@ internal class LoginViewModel @Inject constructor(
     private val useCase: LoginAnonymousUseCase,
     private val session: SessionService<UserEntities>,
 ) : ViewModel() {
+
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState.Logged)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+    @AddTrace(name = "LoginViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: LoginIntent) = when (intent) {
         is LoginIntent.Accept -> {
             _uiState.value = LoginUiState.Register
@@ -39,10 +42,12 @@ internal class LoginViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "LoginViewModel.resetUiState", enabled = true)
     fun resetUiState() {
         _uiState.value = LoginUiState.Idle
     }
 
+    @AddTrace(name = "LoginViewModel.accept", enabled = true)
     private fun accept() {
         viewModelScope.launch {
             useCase.invoke().onSuccess {

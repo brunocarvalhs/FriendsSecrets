@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,7 @@ class PhoneSendViewModel @Inject constructor(
         MutableStateFlow(PhoneSendUiState.Idle)
     val uiState: StateFlow<PhoneSendUiState> = _uiState.asStateFlow()
 
+    @AddTrace(name = "PhoneSendViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: PhoneSendIntent) = when (intent) {
         is PhoneSendIntent.SendCode -> sendCode(
             activity = intent.activity,
@@ -28,10 +30,12 @@ class PhoneSendViewModel @Inject constructor(
         )
     }
 
+    @AddTrace(name = "PhoneSendViewModel.resetUiState", enabled = true)
     fun resetUiState() {
         _uiState.value = PhoneSendUiState.Idle
     }
 
+    @AddTrace(name = "PhoneSendViewModel.sendCode", enabled = true)
     private fun sendCode(activity: Activity, phone: String, countryCode: String) {
         _uiState.value = PhoneSendUiState.Loading
         viewModelScope.launch {
@@ -43,6 +47,5 @@ class PhoneSendViewModel @Inject constructor(
                     _uiState.value = PhoneSendUiState.Error(it.message.orEmpty())
                 }
         }
-
     }
 }
