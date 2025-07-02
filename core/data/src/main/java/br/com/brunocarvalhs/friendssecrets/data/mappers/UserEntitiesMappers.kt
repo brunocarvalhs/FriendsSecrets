@@ -3,7 +3,9 @@ package br.com.brunocarvalhs.friendssecrets.data.mappers
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.UserDTO
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 
+@AddTrace(name = "UserDTO.toEntities", enabled = true)
 internal fun UserDTO.toEntities(): UserEntities {
     return UserModel(
         id = this.id,
@@ -15,6 +17,7 @@ internal fun UserDTO.toEntities(): UserEntities {
     )
 }
 
+@AddTrace(name = "UserEntities.factory", enabled = true)
 fun UserEntities.factory(
     id: String = this.id,
     name: String = this.name,

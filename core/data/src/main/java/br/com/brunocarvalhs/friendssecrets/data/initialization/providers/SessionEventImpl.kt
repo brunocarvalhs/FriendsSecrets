@@ -9,6 +9,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -30,6 +31,7 @@ class SessionEventImpl(
         loadCachedUser()
     }
 
+    @AddTrace(name = "SessionEventImpl.getCurrentUser", enabled = true)
     override suspend fun getCurrentUserModel(): UserEntities? = withContext(Dispatchers.IO) {
         val firebaseUser = auth.currentUser
         if (firebaseUser != null) {
@@ -41,30 +43,38 @@ class SessionEventImpl(
         return@withContext loadUserFromStorage()
     }
 
+    @AddTrace(name = "SessionEventImpl.isUserLoggedIn", enabled = true)
     override suspend fun isUserLoggedIn(): Boolean = withContext(Dispatchers.IO) {
         mutex.withLock {
             auth.currentUser != null || hasLocalSession()
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.isProfileComplete", enabled = true)
     override suspend fun isProfileComplete(): Boolean = withContext(Dispatchers.IO) {
         auth.currentUser?.run { displayName != null && photoUrl != null } ?: false
     }
 
+    @AddTrace(name = "SessionEventImpl.isPhoneNumberVerified", enabled = true)
     override suspend fun isPhoneNumberVerified(): Boolean = withContext(Dispatchers.IO) {
         auth.currentUser?.phoneNumber != null
     }
 
+    @AddTrace(name = "SessionEventImpl.getUserName", enabled = true)
     override fun getUserName(): String? = auth.currentUser?.displayName
 
+    @AddTrace(name = "SessionEventImpl.getUserPhotoUrl", enabled = true)
     override fun getUserPhotoUrl(): String? = auth.currentUser?.photoUrl?.toString()
 
+    @AddTrace(name = "SessionEventImpl.getUserPhoneNumber", enabled = true)
     override fun getUserPhoneNumber(): String? = auth.currentUser?.phoneNumber
 
+    @AddTrace(name = "SessionEventImpl.setUserPhoneNumber", enabled = true)
     override suspend fun setUserAnonymous() {
         auth.signInAnonymously().await()
     }
 
+    @AddTrace(name = "SessionEventImpl.updateUserProfile", enabled = true)
     override suspend fun updateUserProfile(profile: UserEntities) {
         auth.currentUser?.apply {
             val updates = userProfileChangeRequest {
@@ -76,11 +86,13 @@ class SessionEventImpl(
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.signOut", enabled = true)
     override suspend fun signOut() = withContext(Dispatchers.IO) {
         auth.signOut()
         storageManager.remove(STORAGE_USER_KEY)
     }
 
+    @AddTrace(name = "SessionEventImpl.deleteAccount", enabled = true)
     override suspend fun deleteAccount() = withContext(Dispatchers.IO) {
         auth.currentUser?.run {
             delete().await()
@@ -89,10 +101,12 @@ class SessionEventImpl(
         storageManager.remove(STORAGE_USER_KEY)
     }
 
+    @AddTrace(name = "SessionEventImpl.hasLocalSession", enabled = true)
     private suspend fun hasLocalSession(): Boolean = withContext(Dispatchers.IO) {
         storageManager.load(USER_SESSION_KEY, UserModel::class.java) != null
     }
 
+    @AddTrace(name = "SessionEventImpl.observeAuthState", enabled = true)
     private fun observeAuthState() {
         auth.addAuthStateListener { firebaseAuth ->
             scope.launch {
@@ -102,12 +116,14 @@ class SessionEventImpl(
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.loadCachedUser", enabled = true)
     private fun loadCachedUser() {
         scope.launch {
             _currentUser.value = loadUserFromStorage()
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.loadUserFromStorage", enabled = true)
     private suspend fun loadUserFromStorage(): UserEntities? = withContext(Dispatchers.IO) {
         return@withContext try {
             storageManager.load(USER_SESSION_KEY, UserModel::class.java)
@@ -117,6 +133,7 @@ class SessionEventImpl(
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.syncFirebaseUserToCache", enabled = true)
     private suspend fun syncFirebaseUserToCache(user: FirebaseUser) = withContext(Dispatchers.IO) {
         try {
             val lastSync = storageManager.load(LAST_SYNC_KEY, Long::class.java) ?: 0L
@@ -128,6 +145,7 @@ class SessionEventImpl(
         }
     }
 
+    @AddTrace(name = "SessionEventImpl.saveUserSession", enabled = true)
     private suspend fun saveUserSession(user: UserEntities) = withContext(Dispatchers.IO) {
         mutex.withLock {
             try {
@@ -141,6 +159,7 @@ class SessionEventImpl(
         }
     }
 
+    @AddTrace(name = "FirebaseUser.toUserEntity", enabled = true)
     private fun FirebaseUser.toUserEntity(): UserEntities = UserEntities.create(
         id = uid,
         name = displayName.orEmpty(),

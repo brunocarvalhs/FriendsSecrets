@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 import android.os.Bundle
 import br.com.brunocarvalhs.friendssecrets.common.analytics.AnalyticsProvider
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.Lazy
 
 class AnalyticsEventImpl(
@@ -11,10 +12,12 @@ class AnalyticsEventImpl(
 
     private val analytics: FirebaseAnalytics by lazy { firebaseAnalytics.get() }
 
+    @AddTrace(name = "AnalyticsEventImpl.logEvent", enabled = true)
     override fun logEvent(event: String, params: Bundle) {
         analytics.logEvent(event, params)
     }
 
+    @AddTrace(name = "AnalyticsEventImpl.setUserId", enabled = true)
     override fun setUserId(id: String) {
         analytics.setUserId(id)
     }

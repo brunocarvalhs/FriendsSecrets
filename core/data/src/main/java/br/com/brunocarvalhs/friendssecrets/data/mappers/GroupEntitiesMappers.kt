@@ -5,8 +5,10 @@ import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 
+@AddTrace(name = "GroupEntities.toDTO", enabled = true)
 internal fun GroupEntities.toDTO(): GroupDTO {
     val membersMap = this.members.associate { user ->
         user.name to mapOf(
@@ -31,6 +33,7 @@ internal fun GroupEntities.toDTO(): GroupDTO {
     )
 }
 
+@AddTrace(name = "GroupDTO.toEntities", enabled = true)
 internal fun GroupDTO.toEntities(): GroupEntities {
     return GroupModel(
         id = this.id,

@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
@@ -17,14 +18,17 @@ internal data class UserModel(
     @SerializedName(UserEntities.IS_ACTIVE) override val isActive: Boolean = true
 ) : UserEntities {
 
+    @AddTrace(name = "UserModel.firstName", enabled = true)
     override fun firstName(): String {
         return name.split(" ").first()
     }
 
+    @AddTrace(name = "UserModel.lastName", enabled = true)
     override fun lastName(): String {
         return name.split(" ").last()
     }
 
+    @AddTrace(name = "UserModel.toMap", enabled = true)
     override fun toMap(): Map<String, Any> {
         return mapOf(
             UserEntities.ID to id,
@@ -39,10 +43,12 @@ internal data class UserModel(
         )
     }
 
+    @AddTrace(name = "UserModel.toJson", enabled = true)
     override fun toJson(): String {
         return gson.toJson(this)
     }
 
+    @AddTrace(name = "UserModel.toCopy", enabled = true)
     override fun toCopy(
         id: String,
         name: String,
@@ -68,6 +74,7 @@ internal data class UserModel(
     companion object {
         private val gson = Gson()
 
+        @AddTrace(name = "UserModel.fromMap", enabled = true)
         fun fromMap(map: Map<String, Any?>): UserEntities {
             return UserModel(
                 id = map[UserEntities.ID] as? String ?: UUID.randomUUID().toString(),
@@ -84,6 +91,7 @@ internal data class UserModel(
     }
 }
 
+@AddTrace(name = "UserEntities.create", enabled = true)
 fun UserEntities.Companion.create(
     id: String = UUID.randomUUID().toString(),
     name: String = "",
