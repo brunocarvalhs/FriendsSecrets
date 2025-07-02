@@ -8,6 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DrawRevelationUseCase
 import br.com.brunocarvalhs.group.R
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ class DrawViewModel @Inject constructor(
     val uiState: StateFlow<DrawUiState> =
         _uiState.asStateFlow()
 
+    @AddTrace(name = "DrawViewModel.eventIntent", enabled = true)
     fun eventIntent(intent: DrawIntent) {
         when (intent) {
             is DrawIntent.FetchDraw -> fetchDraw(group = intent.group, code = intent.code)
@@ -43,6 +45,7 @@ class DrawViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "DrawViewModel.generativeDraw", enabled = true)
     private fun generativeDraw(
         context: Context,
         navigation: NavController,
@@ -53,6 +56,7 @@ class DrawViewModel @Inject constructor(
         val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name)
     }
 
+    @AddTrace(name = "DrawViewModel.fetchDraw", enabled = true)
     private fun fetchDraw(group: String, code: String? = null) {
         _uiState.value = DrawUiState.Loading
         viewModelScope.launch {

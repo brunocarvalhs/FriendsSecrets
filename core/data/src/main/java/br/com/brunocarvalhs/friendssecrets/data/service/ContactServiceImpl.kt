@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.ContactService
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.UUID
 import javax.inject.Inject
@@ -17,6 +18,7 @@ class ContactServiceImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ContactService {
 
+    @AddTrace(name = "ContactServiceImpl.hasPermission", enabled = true)
     private fun hasPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -24,6 +26,7 @@ class ContactServiceImpl @Inject constructor(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    @AddTrace(name = "ContactServiceImpl.getPhoneNumbers", enabled = true)
     override fun getPhoneNumbers(): List<String> {
         if (!hasPermission(context)) return emptyList()
 
@@ -51,6 +54,7 @@ class ContactServiceImpl @Inject constructor(
         return numbers.distinct()
     }
 
+    @AddTrace(name = "ContactServiceImpl.getContacts", enabled = true)
     override fun getContacts(): List<UserEntities> {
         if (!hasPermission(context)) return emptyList()
 

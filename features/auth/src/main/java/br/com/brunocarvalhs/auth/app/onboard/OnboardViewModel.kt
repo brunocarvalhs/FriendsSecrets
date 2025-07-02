@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.auth.R
 import br.com.brunocarvalhs.friendssecrets.common.remote.RemoteProvider
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -45,6 +46,7 @@ class OnboardViewModel @Inject constructor(
         @SerializedName("description") val description: String = "",
     )
 
+    @AddTrace(name = "OnboardViewModel.ImageSourceDeserializer", enabled = true)
     private class ImageSourceDeserializer : JsonDeserializer<ImageSource> {
         override fun deserialize(
             json: JsonElement?,
@@ -66,12 +68,14 @@ class OnboardViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "OnboardViewModel.onEvent", enabled = true)
     fun onEvent(intent: OnboardViewIntent) {
         when (intent) {
             is OnboardViewIntent.FetchData -> fetchGroups()
         }
     }
 
+    @AddTrace(name = "OnboardViewModel.fetchGroups", enabled = true)
     private fun fetchGroups() {
         _uiState.value = OnboardUiState.Loading
         viewModelScope.launch {
@@ -95,6 +99,7 @@ class OnboardViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "OnboardViewModel.getSystemLanguage", enabled = true)
     private fun getSystemLanguage(): String {
         val systemLocale = Locale.getDefault()
         return systemLocale.language.takeIf { it.isNotEmpty() } ?: "en"

@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -13,10 +14,11 @@ class StorageEventImpl(
     private val context: Context,
 ) : StorageManager.StorageEvent {
 
-    private val gson = Gson()
+    private val gson by lazy { Gson() }
 
     private val Context.dataStore by preferencesDataStore(name = "${context.packageName}_storage")
 
+    @AddTrace(name = "StorageEventImpl.save", enabled = true)
     override suspend fun <T> save(key: String, value: T) {
         try {
             val preferencesKey = stringPreferencesKey(key)
@@ -35,6 +37,7 @@ class StorageEventImpl(
     }
 
     @Suppress("UNCHECKED_CAST")
+    @AddTrace(name = "StorageEventImpl.load", enabled = true)
     override suspend fun <T> load(key: String, clazz: Class<T>): T? {
         return try {
             val preferences = context.dataStore.data.first()
@@ -53,6 +56,7 @@ class StorageEventImpl(
         }
     }
 
+    @AddTrace(name = "StorageEventImpl.remove", enabled = true)
     override suspend fun remove(key: String) {
         try {
             context.dataStore.edit { preferences ->

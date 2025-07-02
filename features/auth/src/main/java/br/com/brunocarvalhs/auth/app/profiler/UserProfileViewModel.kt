@@ -9,6 +9,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,7 @@ class UserProfileViewModel @Inject constructor(
         fetchData()
     }
 
+    @AddTrace(name = "UserProfileViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: UserProfileIntent) = when (intent) {
         is UserProfileIntent.FetchData -> fetchData()
         is UserProfileIntent.SaveProfile -> saveProfile(intent.name, intent.photoUrl, intent.likes)
@@ -39,6 +41,7 @@ class UserProfileViewModel @Inject constructor(
         UserProfileIntent.Logout -> logout()
     }
 
+    @AddTrace(name = "UserProfileViewModel.fetchData", enabled = true)
     private fun fetchData() {
         _uiState.value = UserProfileUiState.Loading
         viewModelScope.launch {
@@ -51,6 +54,7 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "UserProfileViewModel.saveProfile", enabled = true)
     private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
         _uiState.value = UserProfileUiState.Loading
         viewModelScope.launch {
@@ -63,6 +67,7 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "UserProfileViewModel.deleteAccount", enabled = true)
     private fun deleteAccount() {
         _uiState.value = UserProfileUiState.Loading
         viewModelScope.launch {
@@ -74,6 +79,7 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "UserProfileViewModel.logout", enabled = true)
     private fun logout() {
         _uiState.value = UserProfileUiState.Loading
         viewModelScope.launch {

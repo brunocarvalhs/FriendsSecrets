@@ -12,6 +12,7 @@ import br.com.brunocarvalhs.group.app.details.GroupDetailsScreen
 import br.com.brunocarvalhs.group.app.draw.DrawScreen
 import br.com.brunocarvalhs.group.app.edit.GroupEditScreen
 import br.com.brunocarvalhs.group.app.list.HomeScreen
+import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,6 +30,7 @@ data class GroupEditScreenRoute(val groupId: String)
 @Serializable
 data class GroupRevelationScreenRoute(val groupId: String, val code: String? = null)
 
+@AddTrace(name = "NavGraphBuilder.groupGraph", enabled = true)
 fun NavGraphBuilder.groupGraph(
     navController: NavController,
 ) {

@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 
 import br.com.brunocarvalhs.friendssecrets.common.remote.RemoteProvider
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Lazy
 
@@ -11,6 +12,7 @@ class RemoteEventImpl(
 
     private val remote: FirebaseRemoteConfig by lazy { remoteConfig.get() }
 
+    @AddTrace(name = "RemoteEventImpl.getValue", enabled = true)
     override fun <T> getValue(key: String, defaultValue: T): T {
         return when (defaultValue) {
             is String -> remote.getString(key) as T
@@ -21,6 +23,7 @@ class RemoteEventImpl(
         }
     }
 
+    @AddTrace(name = "RemoteEventImpl.getValueAsync", enabled = true)
     override suspend fun <T> getValueAsync(key: String, defaultValue: T): T {
         return when (defaultValue) {
             is String -> remote.getString(key) as T
@@ -31,10 +34,12 @@ class RemoteEventImpl(
         }
     }
 
+    @AddTrace(name = "RemoteEventImpl.defaultValues", enabled = true)
     override fun defaultValues(defaultValues: Map<String, Any>) {
         remote.setDefaultsAsync(defaultValues)
     }
 
+    @AddTrace(name = "RemoteEventImpl.fetchAndActivate", enabled = true)
     override fun fetchAndActivate() {
         remote.fetchAndActivate()
     }
