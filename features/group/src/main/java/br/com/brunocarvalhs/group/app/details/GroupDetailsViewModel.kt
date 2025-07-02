@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.R
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +37,7 @@ class GroupDetailsViewModel @Inject constructor(
     val uiState: StateFlow<GroupDetailsUiState> =
         _uiState.asStateFlow()
 
+    @AddTrace(name = "GroupDetailsViewModel.eventIntent", enabled = true)
     fun eventIntent(intent: GroupDetailsIntent) {
         when (intent) {
             is GroupDetailsIntent.FetchGroup -> fetchGroup(
@@ -78,6 +80,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.shareGroup", enabled = true)
     private fun shareGroup(context: Context, group: GroupEntities) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -96,6 +99,7 @@ class GroupDetailsViewModel @Inject constructor(
         context.startActivity(shareIntent)
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.removeMember", enabled = true)
     private fun removeMember(
         entities: GroupEntities,
         member: UserEntities
@@ -113,6 +117,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.editMember", enabled = true)
     private fun editMember(
         entities: GroupEntities,
         member: UserEntities,
@@ -130,6 +135,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
     private fun deleteGroup(groupId: String) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {
@@ -141,6 +147,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.exitGroup", enabled = true)
     private fun exitGroup(groupId: String) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {
@@ -152,6 +159,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.shareMember", enabled = true)
     private fun shareMember(context: Context, member: UserEntities, secret: String, token: String) {
         val formattedToken = token.toCharArray().joinToString(" ")
         val emphasizedToken = "*$formattedToken*"
@@ -175,7 +183,7 @@ class GroupDetailsViewModel @Inject constructor(
         context.startActivity(shareIntent)
     }
 
-
+    @AddTrace(name = "GroupDetailsViewModel.drawMembers", enabled = true)
     private fun drawMembers(group: GroupEntities) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {
@@ -187,6 +195,7 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupDetailsViewModel.fetchGroup", enabled = true)
     private fun fetchGroup(groupId: String) {
         _uiState.value = GroupDetailsUiState.Loading
         viewModelScope.launch {

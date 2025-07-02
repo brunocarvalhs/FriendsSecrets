@@ -7,6 +7,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.CreateProfileUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.DeleteAccountUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetLikesProfileUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +25,7 @@ class CreateProfileViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<CreateProfileUiState> = MutableStateFlow(CreateProfileUiState.Idle())
     val uiState: StateFlow<CreateProfileUiState> = _uiState.asStateFlow()
 
+    @AddTrace(name = "CreateProfileViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: CreateProfileIntent) = when (intent) {
         is CreateProfileIntent.FetchData -> fetchLikes()
         is CreateProfileIntent.SaveCreateProfile -> saveProfile(
@@ -34,6 +36,7 @@ class CreateProfileViewModel @Inject constructor(
         CreateProfileIntent.DeleteAccount -> deleteAccount()
     }
 
+    @AddTrace(name = "CreateProfileViewModel.saveProfile", enabled = true)
     private fun saveProfile(name: String, photoUrl: String, likes: List<String>) {
         _uiState.value = CreateProfileUiState.Loading
         viewModelScope.launch {
@@ -46,6 +49,7 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "CreateProfileViewModel.fetchLikes", enabled = true)
     private fun fetchLikes() {
         _uiState.value = CreateProfileUiState.Loading
         viewModelScope.launch {
@@ -63,6 +67,7 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "CreateProfileViewModel.deleteAccount", enabled = true)
     private fun deleteAccount() {
         _uiState.value = CreateProfileUiState.Loading
         viewModelScope.launch {

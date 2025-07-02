@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.Lazy
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
@@ -17,6 +18,7 @@ class PhoneAuthServiceImpl(
     private val firebaseAuth: Lazy<FirebaseAuth>
 ) : PhoneAuthService {
 
+    @AddTrace(name = "PhoneAuthServiceImpl.sendVerificationCode", enabled = true)
     override suspend fun <T> sendVerificationCode(phoneNumber: String, activity: T): Result<Unit> {
         if (activity !is Activity) {
             return Result.failure(IllegalStateException("Provided parameter is not an Activity"))
@@ -57,6 +59,7 @@ class PhoneAuthServiceImpl(
         }
     }
 
+    @AddTrace(name = "PhoneAuthServiceImpl.signInWithCode", enabled = true)
     override suspend fun signInWithCode(code: String): Result<Unit> {
         val id = PhoneVerificationManager.get()
             ?: return Result.failure(IllegalStateException("Verification ID is missing"))

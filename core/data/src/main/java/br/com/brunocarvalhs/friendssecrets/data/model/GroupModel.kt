@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.data.model
 import br.com.brunocarvalhs.friendssecrets.data.extensions.token
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
+import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
@@ -22,6 +23,7 @@ data class GroupModel(
     @SerializedName(GroupEntities.TYPE) override val type: String? = null
 ) : GroupEntities {
 
+    @AddTrace(name = "GroupModel.toMap", enabled = true)
     override fun toMap(): Map<String, Any?> {
         return mapOf(
             GroupEntities.ID to id,
@@ -38,6 +40,7 @@ data class GroupModel(
         )
     }
 
+    @AddTrace(name = "GroupModel.toCopy", enabled = true)
     override fun toCopy(
         token: String,
         name: String,
@@ -67,6 +70,7 @@ data class GroupModel(
     companion object {
         private val gson = Gson()
 
+        @AddTrace(name = "GroupModel.fromMap", enabled = true)
         fun fromMap(map: Map<String, Any>): GroupModel {
             val id = map[GroupEntities.ID] as? String ?: UUID.randomUUID().toString()
             val token = map[GroupEntities.TOKEN] as? String ?: ""
@@ -112,6 +116,7 @@ data class GroupModel(
     }
 }
 
+@AddTrace(name = "GroupEntities.create", enabled = true)
 fun GroupEntities.Companion.create(
     id: String = UUID.randomUUID().toString(),
     token: String = Random.token(size = 8),
