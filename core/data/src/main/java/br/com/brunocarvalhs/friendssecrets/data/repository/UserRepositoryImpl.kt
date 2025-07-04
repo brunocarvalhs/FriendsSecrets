@@ -6,6 +6,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -15,6 +16,8 @@ class UserRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val cryptoService: CryptoService,
 ) : UserRepository {
+
+    @AddTrace(name = "UserRepositoryImpl.listUsersByPhoneNumber", enabled = true)
     override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities> =
         withContext(Dispatchers.IO) {
             val phoneNumberEncrypted = cryptoService.encrypt(phoneNumber)
@@ -31,6 +34,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
 
+    @AddTrace(name = "UserRepositoryImpl.listUsersByPhoneNumber", enabled = true)
     override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities> =
         withContext(Dispatchers.IO) {
             val phoneNumbersEncrypted = list.map { cryptoService.encrypt(it) }
@@ -57,6 +61,7 @@ class UserRepositoryImpl @Inject constructor(
             return@withContext allResults
         }
 
+    @AddTrace(name = "UserRepositoryImpl.createUser", enabled = true)
     override suspend fun createUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
@@ -66,6 +71,7 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
+    @AddTrace(name = "UserRepositoryImpl.updateUser", enabled = true)
     override suspend fun updateUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
         val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
 
@@ -75,6 +81,7 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
+    @AddTrace(name = "UserRepositoryImpl.getUserById", enabled = true)
     override suspend fun getUserById(userId: String): UserEntities? = withContext(Dispatchers.IO) {
         val documentSnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)
@@ -88,6 +95,7 @@ class UserRepositoryImpl @Inject constructor(
         UserDTO.fromMap(decryptedData).toEntities()
     }
 
+    @AddTrace(name = "UserRepositoryImpl.getUserByPhoneNumber", enabled = true)
     override suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities? =
         withContext(Dispatchers.IO) {
             val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
@@ -103,6 +111,7 @@ class UserRepositoryImpl @Inject constructor(
             return@withContext UserDTO.fromMap(decryptedData).toEntities()
         }
 
+    @AddTrace(name = "UserRepositoryImpl.deleteUser", enabled = true)
     override suspend fun deleteUser(userId: String): Unit = withContext(Dispatchers.IO) {
         firestore.collection(UserEntities.COLLECTION_NAME)
             .document(userId)

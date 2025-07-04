@@ -6,6 +6,7 @@ import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,7 @@ class GroupEditViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupEditViewModel.fetchGroup", enabled = true)
     private fun fetchGroup(groupId: String) {
         _uiState.value = GroupEditUiState.Loading
         viewModelScope.launch {
@@ -46,6 +48,7 @@ class GroupEditViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupEditViewModel.editGroup", enabled = true)
     private fun editGroup(group: GroupEntities) {
         _uiState.value = GroupEditUiState.Loading
         viewModelScope.launch {

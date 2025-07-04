@@ -3,12 +3,14 @@ package br.com.brunocarvalhs.friendssecrets.data.service
 import br.com.brunocarvalhs.friendssecrets.domain.exceptions.MinimumsMembersOfDrawException
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DrawService
+import com.google.firebase.perf.metrics.AddTrace
 import javax.inject.Inject
 
 class DrawServiceImpl @Inject constructor(
     private val crypto: CryptoService
 ) : DrawService {
 
+    @AddTrace(name = "DrawServiceImpl.drawMembers", enabled = true)
     override fun drawMembers(participants: MutableList<String>): Map<String, String> {
 
         if (participants.size < 3) {
@@ -31,6 +33,7 @@ class DrawServiceImpl @Inject constructor(
         return secretSantaMap
     }
 
+    @AddTrace(name = "DrawServiceImpl.revelation", enabled = true)
     override fun revelation(code: String): String {
         return crypto.decrypt(code)
     }

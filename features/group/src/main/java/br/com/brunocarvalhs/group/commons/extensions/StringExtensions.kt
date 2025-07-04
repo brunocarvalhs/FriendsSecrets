@@ -1,10 +1,12 @@
-package br.com.brunocarvalhs.auth.commons.extensions
+package br.com.brunocarvalhs.group.commons.extensions
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import com.google.firebase.perf.metrics.AddTrace
 
+@AddTrace(name = "String.toDateMask", enabled = true)
 internal fun String.toDateMask(): VisualTransformation {
     val trimmed = this.take(8)
     val masked = buildString {
@@ -21,6 +23,7 @@ internal fun String.toDateMask(): VisualTransformation {
     }
 }
 
+@AddTrace(name = "String.toCurrencyMask", enabled = true)
 fun String.toCurrencyMask(): VisualTransformation {
     val clean = filter { it.isDigit() }
     val padded = clean.padStart(3, '0')

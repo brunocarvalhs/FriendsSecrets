@@ -7,6 +7,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetListUsersByContactUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,7 @@ class GroupCreateViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(GroupCreateUiState())
     val uiState: StateFlow<GroupCreateUiState> = _uiState.asStateFlow()
 
+    @AddTrace(name = "GroupCreateViewModel.eventIntent", enabled = true)
     fun eventIntent(intent: GroupCreateIntent) {
         when (intent) {
             is GroupCreateIntent.CreateGroup -> createGroup()
@@ -46,30 +48,37 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateDrawDate", enabled = true)
     private fun updateDrawDate(date: String) {
         _uiState.update { it.copy(drawDate = date) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateMinValue", enabled = true)
     private fun updateMinValue(value: String) {
         _uiState.update { it.copy(minValue = value) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateMaxValue", enabled = true)
     private fun updateMaxValue(value: String) {
         _uiState.update { it.copy(maxValue = value) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateDrawType", enabled = true)
     private fun updateDrawType(type: String) {
         _uiState.update { it.copy(drawType = type) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateName", enabled = true)
     private fun updateName(name: String) {
         _uiState.update { it.copy(name = name) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateDescription", enabled = true)
     private fun updateDescription(description: String) {
         _uiState.update { it.copy(description = description) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.toggleMember", enabled = true)
     private fun toggleMember(member: UserEntities) {
         _uiState.update {
             val updated = if (member in it.members)
@@ -80,6 +89,7 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.fetchContacts", enabled = true)
     private fun fetchContacts() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -95,6 +105,7 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.createGroup", enabled = true)
     private fun createGroup() {
         val state = _uiState.value
         _uiState.update { it.copy(isLoading = true) }
@@ -122,6 +133,7 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.nextStep", enabled = true)
     private fun nextStep() {
         _uiState.update { current ->
             val next = (current.currentStep + 1).coerceAtMost(2)
@@ -129,14 +141,17 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.resetState", enabled = true)
     private fun resetState() {
         _uiState.value = GroupCreateUiState()
     }
 
+    @AddTrace(name = "GroupCreateViewModel.goToStep", enabled = true)
     private fun goToStep(step: Int) {
         _uiState.update { it.copy(currentStep = step) }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.isStepValid", enabled = true)
     fun isStepValid(uiState: GroupCreateUiState): Boolean {
         return when (uiState.currentStep) {
             0 -> {

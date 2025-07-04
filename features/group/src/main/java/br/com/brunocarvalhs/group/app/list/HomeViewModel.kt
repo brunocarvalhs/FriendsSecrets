@@ -8,6 +8,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,7 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> =
         _uiState.asStateFlow()
 
+    @AddTrace(name = "HomeViewModel.event", enabled = true)
     fun event(intent: HomeIntent) {
         when (intent) {
             HomeIntent.FetchGroups -> fetchGroups()
@@ -47,12 +49,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "HomeViewModel.logout", enabled = true)
     private fun logout() {
         viewModelScope.launch {
             logoutUseCase.invoke()
         }
     }
 
+    @AddTrace(name = "HomeViewModel.groupToEnter", enabled = true)
     private fun groupToEnter(token: String) {
         _uiState.value = HomeUiState.Loading
         viewModelScope.launch {
@@ -62,6 +66,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "HomeViewModel.fetchGroups", enabled = true)
     private fun fetchGroups() {
         _uiState.value = HomeUiState.Loading
         viewModelScope.launch {

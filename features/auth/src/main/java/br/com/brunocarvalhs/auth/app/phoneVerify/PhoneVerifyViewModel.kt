@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.VerifyPhoneUseCase
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ class PhoneVerifyViewModel @Inject constructor(
         MutableStateFlow(PhoneVerifyUiState.Idle)
     val uiState: StateFlow<PhoneVerifyUiState> = _uiState.asStateFlow()
 
+    @AddTrace(name = "PhoneVerifyViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: PhoneVerifyIntent) = when (intent) {
         is PhoneVerifyIntent.VerifyCode -> verifyCode(intent.code)
         is PhoneVerifyIntent.ResendCode -> resendCode(
@@ -31,10 +33,12 @@ class PhoneVerifyViewModel @Inject constructor(
         )
     }
 
+    @AddTrace(name = "PhoneVerifyViewModel.resetUiState", enabled = true)
     fun resetUiState() {
         _uiState.value = PhoneVerifyUiState.Idle
     }
 
+    @AddTrace(name = "PhoneVerifyViewModel.verifyCode", enabled = true)
     private fun verifyCode(code: String) {
         _uiState.value = PhoneVerifyUiState.Loading
         viewModelScope.launch {
@@ -46,6 +50,7 @@ class PhoneVerifyViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "PhoneVerifyViewModel.resendCode", enabled = true)
     private fun resendCode(activity: Activity, phone: String, countryCode: String) {
         _uiState.value = PhoneVerifyUiState.Loading
         viewModelScope.launch {
