@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 import android.os.Bundle
 import br.com.brunocarvalhs.friendssecrets.common.analytics.AnalyticsProvider
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.Lazy
 
 class AnalyticsEventImpl(
