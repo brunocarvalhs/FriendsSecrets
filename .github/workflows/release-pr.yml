@@ -11,6 +11,9 @@ jobs:
       new_name: ${{ steps.bump.outputs.new_name }}
       new_code: ${{ steps.bump.outputs.new_code }}
       updated: ${{ steps.bump.outputs.updated }}
+      feat: ${{ steps.count_feat.outputs.feat }}
+      fix: ${{ steps.count_fix.outputs.fix }}
+      breaking: ${{ steps.count_breaking.outputs.breaking }}
     steps:
       - name: Checkout develop
         uses: actions/checkout@v3
@@ -45,9 +48,23 @@ jobs:
       - name: Get current version
         id: version
         run: |
-          FILE=app/build.gradle
-          VERSION_NAME=$(grep "versionName" $FILE | sed 's/.*"\(.*\)"/\1/')
-          VERSION_CODE=$(grep "versionCode" $FILE | awk '{print $3}')
+          FILE_KTS="app/build.gradle.kts"
+          FILE_GRADLE="app/build.gradle"
+
+          if [ -f "$FILE_KTS" ]; then
+            FILE="$FILE_KTS"
+            VERSION_NAME=$(grep "versionName" "$FILE" | sed 's/.*"\(.*\)"/\1/')
+            VERSION_CODE=$(grep "versionCode" "$FILE" | awk '{print $2}' | tr -d '()')
+          elif [ -f "$FILE_GRADLE" ]; then
+            FILE="$FILE_GRADLE"
+            VERSION_NAME=$(grep "versionName" "$FILE" | sed 's/versionName "\(.*\)"/\1/')
+            VERSION_CODE=$(grep "versionCode" "$FILE" | awk '{print $2}')
+          else
+            echo "⚠️ Nenhum build.gradle(.kts) encontrado!"
+            VERSION_NAME="0.0.0"
+            VERSION_CODE="0"
+          fi
+
           echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
@@ -59,7 +76,12 @@ jobs:
           BREAKING=${{ steps.count_breaking.outputs.breaking }}
           VERSION=${{ steps.version.outputs.name }}
           CODE=${{ steps.version.outputs.code }}
+          
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+          if [ -z "$MAJOR" ]; then MAJOR=0; fi
+          if [ -z "$MINOR" ]; then MINOR=0; fi
+          if [ -z "$PATCH" ]; then PATCH=0; fi
 
           if [ $((FEAT + FIX + BREAKING)) -eq 0 ]; then
             NEW_VERSION="$VERSION"
@@ -99,31 +121,35 @@ jobs:
         run: |
           FILE_KTS="${GITHUB_WORKSPACE}/app/build.gradle.kts"
           FILE_GRADLE="${GITHUB_WORKSPACE}/app/build.gradle"
-          
+          UPDATED=false
+
           if [ -f "$FILE_KTS" ]; then
             FILE="$FILE_KTS"
-            echo "Atualizando $FILE..."
+          elif [ -f "$FILE_GRADLE" ]; then
+            FILE="$FILE_GRADLE"
+          else
+            echo "⚠️ Nenhum build.gradle(.kts) encontrado! Versão não será atualizada."
+            exit 0
+          fi
+
+          echo "Atualizando $FILE..."
+          if [[ "$FILE" == *.kts ]]; then
             sed -i "s/versionCode .*/versionCode(${{
               needs.version_manager.outputs.new_code
             }})/" "$FILE"
             sed -i "s/versionName \".*\"/versionName(\"${{ needs.version_manager.outputs.new_name }}\")/" "$FILE"
-          elif [ -f "$FILE_GRADLE" ]; then
-            FILE="$FILE_GRADLE"
-            echo "Atualizando $FILE..."
+          else
             sed -i "s/versionCode .*/versionCode ${{ needs.version_manager.outputs.new_code }}/" "$FILE"
             sed -i "s/versionName \".*\"/versionName \"${{ needs.version_manager.outputs.new_name }}\"/" "$FILE"
-          else
-            echo "⚠️ Nenhum arquivo build.gradle(.kts) encontrado! Versão não será atualizada."
-            exit 0
           fi
-          
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
           git add "$FILE"
           git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})" || echo "Nenhuma alteração para commitar"
           git push origin develop
-          
+
   pr_release_create:
     name: PR Release Create
     needs: update_version
@@ -135,26 +161,23 @@ jobs:
         with:
           fetch-depth: 0
           ref: develop
-  
+
       - name: Set release branch name
         run: echo "RELEASE_BRANCH=release-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-  
-      - name: Configure git with token
+
+      - name: Create release branch and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
-  
-      - name: Create release branch and push
-        run: |
           git checkout -b $RELEASE_BRANCH
           git push origin $RELEASE_BRANCH
-  
-      - name: Create Pull Request
+
+      - name: Create Pull Request via GH CLI
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
-          gh auth login --with-token <<< "${GITHUB_TOKEN}"
+          gh auth login --with-token <<< "$GITHUB_TOKEN"
           gh pr create \
             --title "Release ${{ needs.version_manager.outputs.new_name }}" \
             --body "$(echo "${{ needs.version_manager.outputs.new_name }}:
@@ -163,4 +186,3 @@ jobs:
               - Breaking Changes: ${{ needs.version_manager.outputs.breaking }}")" \
             --base master \
             --head $RELEASE_BRANCH
-  
