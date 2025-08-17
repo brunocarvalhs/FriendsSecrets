@@ -93,6 +93,9 @@ jobs:
           fetch-depth: 0
           submodules: recursive
           ref: develop
+
+      - name: List files
+        run: ls -R $GITHUB_WORKSPACE
   
       - name: Update build.gradle if version updated
         if: ${{ needs.version_manager.outputs.updated == 'true' }}
@@ -137,7 +140,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
           commit-message: "chore: bump version to ${{ needs.version_manager.outputs.new_name }}"
           branch: ${{ env.RELEASE_BRANCH }}
           base: master
