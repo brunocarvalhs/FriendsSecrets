@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,6 +54,7 @@ fun ContactItem(
     contact: UserEntities,
     isSelected: Boolean = false,
     isLikedExpanded: Boolean = false,
+    paddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
     action: @Composable ((UserEntities, Boolean) -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -71,7 +73,7 @@ fun ContactItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(paddingValues)
             .clickable(
                 enabled = filteredLikes.isNotEmpty(),
                 onClickLabel = stringResource(if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action),

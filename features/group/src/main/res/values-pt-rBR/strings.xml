@@ -120,4 +120,17 @@
     <string name="group_details_drop_menu_item_text_exit_to_group">Sair do grupo</string>
     <string name="group_details_drop_menu_item_text_exit_to_group_admin">Excluir o grupo</string>
     <string name="c_digo_de_acesso">Código de acesso</string>
+    <string name="group_info_title">Informações</string>
+    <string name="group_config_title">Configuração</string>
+    <string name="error_min_members">O grupo deve ter pelo menos 3 membros</string>
+    <string name="error_name_required">O nome do grupo é obrigatório</string>
+    <string name="error_description_required">A descrição do grupo é obrigatória</string>
+    <string name="error_draw_date_required">A data do sorteio é obrigatória</string>
+    <string name="error_draw_date_invalid">Data inválida ou anterior a hoje</string>
+    <string name="error_min_value_required">O valor mínimo é obrigatório</string>
+    <string name="error_min_value_invalid">Valor mínimo inválido</string>
+    <string name="error_max_value_required">O valor máximo é obrigatório</string>
+    <string name="error_max_value_invalid">Valor máximo inválido</string>
+    <string name="error_max_value_greater">O valor máximo deve ser maior ou igual ao mínimo</string>
+    <string name="error_draw_type_required">O tipo de sorteio é obrigatório</string>
 </resources>
