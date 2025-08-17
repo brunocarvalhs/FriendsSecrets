@@ -1,0 +1,49 @@
+name: Revert Pull Request
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Número do PR a ser revertido"
+        required: true
+        type: number
+
+jobs:
+  revert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: develop
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Buscar PR
+        id: pr
+        uses: actions-ecosystem/action-get-merged-pull-request@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_number: ${{ github.event.inputs.pr_number }}
+
+      - name: Criar branch de revert
+        run: |
+          BRANCH="revert-pr-${{ github.event.inputs.pr_number }}"
+          git checkout -b $BRANCH
+          git revert -m 1 ${{ steps.pr.outputs.merge_commit_sha }} || true
+          git push origin $BRANCH
+          echo "branch_name=$BRANCH" >> $GITHUB_ENV
+
+      - name: Criar PR de revert
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.branch_name }}
+          base: develop
+          title: "Revert PR #${{ github.event.inputs.pr_number }}"
+          body: "Este PR reverte as mudanças do PR #${{ github.event.inputs.pr_number }}"
