@@ -1,89 +1,11 @@
-name: Release to Master
+name: [ACTION] - Release to Master
 
 on:
   workflow_dispatch:
 
 jobs:
-  checkout_and_fetch:
-    runs-on: ubuntu-latest
-    outputs:
-      commit_sha: ${{ steps.checkout.outputs.commit }}
-    steps:
-      - name: Checkout develop
-        id: checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: develop
-
-      - name: Trazer master
-        run: git fetch origin master:master
-
-  count_feat:
-    needs: checkout_and_fetch
-    runs-on: ubuntu-latest
-    outputs:
-      feat: ${{ steps.count.outputs.feat }}
-    steps:
-      - name: Checkout develop
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: develop
-
-      - name: Contar commits feat
-        id: count
-        run: |
-          FEAT=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^feat' | wc -l || echo 0)
-          FEAT=${FEAT// /}
-          FEAT=${FEAT:-0}
-          echo "feat=$FEAT" >> $GITHUB_OUTPUT
-          echo "Commits feat encontrados: $FEAT"
-
-  count_fix:
-    needs: checkout_and_fetch
-    runs-on: ubuntu-latest
-    outputs:
-      fix: ${{ steps.count.outputs.fix }}
-    steps:
-      - name: Checkout develop
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: develop
-
-      - name: Contar commits fix/revert/perf/refactor
-        id: count
-        run: |
-          FIX=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
-          FIX=${FIX// /}
-          FIX=${FIX:-0}
-          echo "fix=$FIX" >> $GITHUB_OUTPUT
-          echo "Commits fix/revert/perf/refactor encontrados: $FIX"
-
-  count_breaking:
-    needs: checkout_and_fetch
-    runs-on: ubuntu-latest
-    outputs:
-      breaking: ${{ steps.count.outputs.breaking }}
-    steps:
-      - name: Checkout develop
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: develop
-
-      - name: Contar commits BREAKING CHANGE
-        id: count
-        run: |
-          BREAKING=$(git log master..develop --pretty=%b 2>/dev/null | grep -c 'BREAKING CHANGE' || true)
-          BREAKING=${BREAKING// /}
-          BREAKING=${BREAKING:-0}
-          echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
-          echo "Commits com BREAKING CHANGE encontrados: $BREAKING"
-
-  bump_version:
-    needs: [count_feat, count_fix, count_breaking]
+  version_manager:
+    name: Version Manager
     runs-on: ubuntu-latest
     outputs:
       new_name: ${{ steps.bump.outputs.new_name }}
@@ -96,6 +18,33 @@ jobs:
           fetch-depth: 0
           ref: develop
 
+      - name: Trazer master
+        run: git fetch origin master:master
+
+      - name: Contar commits feat
+        id: count_feat
+        run: |
+          FEAT=$(git log master..develop --pretty=%s | grep -E '^feat' | wc -l || echo 0)
+          FEAT=${FEAT// /}
+          FEAT=${FEAT:-0}
+          echo "feat=$FEAT" >> $GITHUB_OUTPUT
+
+      - name: Contar commits fix/revert/perf/refactor
+        id: count_fix
+        run: |
+          FIX=$(git log master..develop --pretty=%s | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
+          FIX=${FIX// /}
+          FIX=${FIX:-0}
+          echo "fix=$FIX" >> $GITHUB_OUTPUT
+
+      - name: Contar commits BREAKING CHANGE
+        id: count_breaking
+        run: |
+          BREAKING=$(git log master..develop --pretty=%b | grep -c 'BREAKING CHANGE' || true)
+          BREAKING=${BREAKING// /}
+          BREAKING=${BREAKING:-0}
+          echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
+
       - name: Obter versão atual
         id: version
         run: |
@@ -104,14 +53,13 @@ jobs:
           VERSION_CODE=$(grep "versionCode" $FILE | awk '{print $3}')
           echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
-          echo "Versão atual: $VERSION_NAME (code $VERSION_CODE)"
 
       - name: Calcular nova versão
         id: bump
         run: |
-          FEAT=${{ needs.count_feat.outputs.feat }}
-          FIX=${{ needs.count_fix.outputs.fix }}
-          BREAKING=${{ needs.count_breaking.outputs.breaking }}
+          FEAT=${{ steps.count_feat.outputs.feat }}
+          FIX=${{ steps.count_fix.outputs.fix }}
+          BREAKING=${{ steps.count_breaking.outputs.breaking }}
           VERSION=${{ steps.version.outputs.name }}
           CODE=${{ steps.version.outputs.code }}
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
@@ -119,8 +67,7 @@ jobs:
           if [ $((FEAT + FIX + BREAKING)) -eq 0 ]; then
             NEW_VERSION="$VERSION"
             NEW_CODE="$CODE"
-            echo "updated=false" >> $GITHUB_OUTPUT
-            echo "Nenhuma alteração encontrada. Mantendo versão atual: $NEW_VERSION (code $NEW_CODE)"
+            UPDATED=false
           else
             if [ $BREAKING -gt 0 ]; then
               MAJOR=$((MAJOR + 1))
@@ -130,21 +77,20 @@ jobs:
               MINOR=$((MINOR + FEAT))
               PATCH=$((PATCH + FIX))
             fi
-      
             NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             NEW_CODE=$((CODE + 1))
-            echo "updated=true" >> $GITHUB_OUTPUT
-            echo "Nova versão calculada: $NEW_VERSION (code $NEW_CODE)"
+            UPDATED=true
           fi
-      
-          # Sempre setar os outputs
+
           echo "new_name=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "new_code=$NEW_CODE" >> $GITHUB_OUTPUT
+          echo "updated=$UPDATED" >> $GITHUB_OUTPUT
 
-
-  update_build_and_push:
-    needs: bump_version
+  update_version:
+    name: Update Version
+    needs: version_manager
     runs-on: ubuntu-latest
+    if: ${{ needs.version_manager.outputs.updated == 'true' }}
     steps:
       - name: Checkout develop
         uses: actions/checkout@v3
@@ -152,36 +98,56 @@ jobs:
           fetch-depth: 0
           ref: develop
 
-      - name: Atualizar build.gradle se necessário
+      - name: Atualizar build.gradle
         run: |
-          if [ "${{ needs.bump_version.outputs.updated }}" = "true" ]; then
-            FILE=app/build.gradle
-            sed -i "s/versionCode .*/versionCode ${{ needs.bump_version.outputs.new_code }}/" $FILE
-            sed -i "s/versionName \".*\"/versionName \"${{ needs.bump_version.outputs.new_name }}\"/" $FILE
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add $FILE
-            git commit -m "chore: bump version to ${{ needs.bump_version.outputs.new_name }} (${{ needs.bump_version.outputs.new_code }})" || echo "No changes"
-            git push origin develop
-          else
-            echo "Nenhuma alteração na versão. Skip build.gradle update."
-          fi
+          FILE=app/build.gradle
+          sed -i "s/versionCode .*/versionCode ${{ needs.version_manager.outputs.new_code }}/" $FILE
+          sed -i "s/versionName \".*\"/versionName \"${{ needs.version_manager.outputs.new_name }}\"/" $FILE
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $FILE
+          git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})"
+          git push origin develop
+
+  pr_release_create:
+    name: PR Release Create
+    needs: update_version
+    runs-on: ubuntu-latest
+    if: ${{ needs.version_manager.outputs.updated == 'true' }}
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: develop
 
       - name: Configurar git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-      
-      - name: Criar branch de release e PR
+
+      - name: Criar branch de release
+        id: branch
         run: |
-          BRANCH="release-${{ needs.bump_version.outputs.new_name }}"
+          TIMESTAMP=$(date +'%Y%m%d-%H%M%S')
+          BRANCH="release-$TIMESTAMP"
           git checkout -b $BRANCH
           git push origin $BRANCH
-          gh pr create --title "Release $BRANCH" \
-                       --body "Release gerada automaticamente:
-                        - Feats: ${{ needs.count_feat.outputs.feat }}
-                        - Fix/Refactor/Perf/Revert: ${{ needs.count_fix.outputs.fix }}
-                        - Breaking Changes: ${{ needs.count_breaking.outputs.breaking }}" \
-                       --base master
+          echo "branch_name=$BRANCH" >> $GITHUB_OUTPUT
 
+      - name: Listar PRs entre master..develop
+        id: pr_list
+        run: |
+          PRS=$(gh pr list --base master --head develop --state merged --json number,title --jq '.[] | "- PR #\(.number) \(.title)"')
+          echo "prs<<EOF" >> $GITHUB_ENV
+          echo "$PRS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Criar PR de release
+        run: |
+          BODY="Versão: ${{ needs.version_manager.outputs.new_name }}\n\n$PRS"
+          gh pr create --title "Release ${{ steps.branch.outputs.branch_name }}" \
+                       --body "$BODY" \
+                       --base master \
+                       --head ${{ steps.branch.outputs.branch_name }}
