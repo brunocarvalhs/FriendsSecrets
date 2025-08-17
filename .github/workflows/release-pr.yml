@@ -123,12 +123,23 @@ jobs:
           fetch-depth: 0
           ref: develop
   
-      - name: Create release PR
+      # Step para criar variável de ambiente RELEASE_BRANCH com data
+      - name: Set release branch name
+        run: echo "RELEASE_BRANCH=release-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+  
+      - name: Create release branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b $RELEASE_BRANCH
+          git push origin $RELEASE_BRANCH
+  
+      - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: bump version to ${{ needs.version_manager.outputs.new_name }}"
-          branch: release-$(date +'%Y-%m-%d')
+          branch: ${{ env.RELEASE_BRANCH }}
           base: master
           title: "Release ${{ needs.version_manager.outputs.new_name }}"
           body: |
