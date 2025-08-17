@@ -13,7 +13,7 @@ object GroupValidator {
         val errors = mutableMapOf<String, Int>()
 
         // 1️⃣ Valida membros
-        if (uiState.members.size <= 3) {
+        if (uiState.members.size < 3) {
             errors[GroupEntities.MEMBERS] = R.string.error_min_members
         }
 

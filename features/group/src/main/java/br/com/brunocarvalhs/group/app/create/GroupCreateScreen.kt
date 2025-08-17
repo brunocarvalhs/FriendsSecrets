@@ -151,6 +151,14 @@ fun GroupCreateContent(
                         stringResource(R.string.group_create_members_title),
                         style = MaterialTheme.typography.titleMedium
                     )
+                    uiState.fieldErrors[GroupEntities.MEMBERS]?.let { error ->
+                        Text(
+                            text = stringResource(error),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                        )
+                    }
                 }
 
                 item {
