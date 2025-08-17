@@ -317,7 +317,7 @@ private fun StepMembers(
                 stringResource(R.string.group_create_members_title),
                 style = MaterialTheme.typography.titleMedium
             )
-            IconButton(onClick = { showBottomSheet() }) {
+            IconButton(onClick = showBottomSheet) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = stringResource(R.string.adicionar_membro)
@@ -325,7 +325,7 @@ private fun StepMembers(
             }
         }
 
-
+        Spacer(modifier = Modifier.height(8.dp))
 
         if (uiState.members.isEmpty()) {
             Text(
@@ -342,8 +342,7 @@ private fun StepMembers(
                 uiState.members.forEach { member ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .size(80.dp)
+                        modifier = Modifier.size(80.dp)
                     ) {
                         Box(
                             modifier = Modifier
@@ -360,16 +359,14 @@ private fun StepMembers(
                                         member.name
                                     ),
                                     modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape)
-                                        .background(Color.Gray.copy(alpha = 0.1f)),
+                                        .fillMaxSize()
+                                        .clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
                                 Box(
                                     modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape)
+                                        .fillMaxSize()
                                         .background(Color.Gray.copy(alpha = 0.1f)),
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -383,9 +380,7 @@ private fun StepMembers(
 
                             IconButton(
                                 onClick = { onIntent(GroupCreateIntent.ToggleMember(member)) },
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .align(Alignment.TopEnd)
+                                modifier = Modifier.size(24.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
@@ -407,6 +402,8 @@ private fun StepMembers(
             }
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -426,11 +423,10 @@ private fun StepMembers(
             style = MaterialTheme.typography.titleMedium
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         if (uiState.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         } else {
@@ -440,23 +436,24 @@ private fun StepMembers(
                     style = MaterialTheme.typography.bodyMedium
                 )
             } else {
-                filteredContacts.forEach { contact ->
-                    ContactItem(
-                        contact = contact,
-                        isSelected = uiState.members.contains(contact),
-                        action = { user, state ->
-                            Checkbox(
-                                checked = state,
-                                onCheckedChange = {
-                                    onIntent(GroupCreateIntent.ToggleMember(user))
-                                }
-                            )
-                        }
-                    )
+                Column {
+                    filteredContacts.forEach { contact ->
+                        ContactItem(
+                            contact = contact,
+                            isSelected = uiState.members.contains(contact),
+                            action = { user, state ->
+                                Checkbox(
+                                    checked = state,
+                                    onCheckedChange = {
+                                        onIntent(GroupCreateIntent.ToggleMember(user))
+                                    }
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
-
     }
 }
 
