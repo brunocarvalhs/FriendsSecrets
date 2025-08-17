@@ -37,7 +37,7 @@ jobs:
       - name: Count BREAKING CHANGE commits
         id: count_breaking
         run: |
-          BREAKING=$(git log origin/master..develop --pretty=%b | grep -c 'BREAKING CHANGE' || echo 0)
+          BREAKING=$(git log origin/master..develop --pretty=%b | grep -c 'BREAKING CHANGE' || true)
           BREAKING=${BREAKING// /}
           BREAKING=${BREAKING:-0}
           echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
