@@ -155,9 +155,9 @@ jobs:
           git push origin $BRANCH
           gh pr create --title "Release ${{ needs.bump_version.outputs.new_name }}" \
                        --body "Release gerada automaticamente:
-- Versão anterior: ${{ steps.bump.outputs.new_name }}
-- Nova versão: ${{ needs.bump_version.outputs.new_name }}
-- Feats: ${{ needs.count_feat.outputs.feat }}
-- Fix/Refactor/Perf/Revert: ${{ needs.count_fix.outputs.fix }}
-- Breaking Changes: ${{ needs.count_breaking.outputs.breaking }}" \
+                        - Versão anterior: ${{ steps.bump.outputs.new_name }}
+                        - Nova versão: ${{ needs.bump_version.outputs.new_name }}
+                        - Feats: ${{ needs.count_feat.outputs.feat }}
+                        - Fix/Refactor/Perf/Revert: ${{ needs.count_fix.outputs.fix }}
+                        - Breaking Changes: ${{ needs.count_breaking.outputs.breaking }}" \
                        --base master
