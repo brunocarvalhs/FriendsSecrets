@@ -1,4 +1,4 @@
-name: [ACTION] - Release to Master
+name: ACTION - Release to Master
 
 on:
   workflow_dispatch:
