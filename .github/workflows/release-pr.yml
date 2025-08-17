@@ -15,14 +15,15 @@ jobs:
           ref: develop
       
       - name: Trazer master
-        run: git fetch origin master:master
-      
+        run: |
+          git fetch origin master:master || echo "Branch master não encontrada, criando branch local vazia"
+          git branch --list master || git checkout --orphan master
+
       - name: Configurar Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # Extrai a versão atual do build.gradle (ou build.gradle.kts)
       - name: Obter versão atual
         id: version
         run: |
@@ -32,19 +33,28 @@ jobs:
           echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
-      # Conta commits relevantes entre master..develop
       - name: Contar commits por tipo
         id: count
         run: |
-          FEAT=$(git log master..develop --pretty=%s | grep -E '^feat' | wc -l || echo 0)
-          FIX=$(git log master..develop --pretty=%s | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
-          BREAKING=$(git log master..develop --pretty=%b | grep -c 'BREAKING CHANGE' || echo 0)
+          # Garantir que master existe
+          git rev-parse --verify master >/dev/null 2>&1 || git checkout --orphan master
+
+          # Contar commits entre master..develop
+          FEAT=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^feat' | wc -l)
+          FEAT=${FEAT// /}
+          FIX=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^(fix|revert|perf|refactor)' | wc -l)
+          FIX=${FIX// /}
+          BREAKING=$(git log master..develop --pretty=%b 2>/dev/null | grep -c 'BREAKING CHANGE')
+          BREAKING=${BREAKING// /}
+
+          FEAT=${FEAT:-0}
+          FIX=${FIX:-0}
+          BREAKING=${BREAKING:-0}
 
           echo "feat=$FEAT" >> $GITHUB_OUTPUT
           echo "fix=$FIX" >> $GITHUB_OUTPUT
           echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
 
-      # Calcula a nova versão semântica
       - name: Calcular nova versão
         id: bump
         run: |
@@ -66,7 +76,6 @@ jobs:
           echo "new_name=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "new_code=$NEW_CODE" >> $GITHUB_OUTPUT
 
-      # Atualiza build.gradle com nova versão
       - name: Atualizar versão no build.gradle
         run: |
           FILE=app/build.gradle
@@ -75,15 +84,13 @@ jobs:
           git add $FILE
           git commit -m "chore: bump version to ${{ steps.bump.outputs.new_name }} (${{ steps.bump.outputs.new_code }})" || echo "No changes"
 
-      # Cria branch de release
       - name: Push branch de release
         run: |
           BRANCH="release-${{ steps.bump.outputs.new_name }}"
-          git checkout -b $BRANCH
-          git push origin $BRANCH
+          git checkout -b $BRANCH || git checkout $BRANCH
+          git push origin $BRANCH --force
           echo "branch_name=$BRANCH" >> $GITHUB_ENV
 
-      # Abre PR para master
       - name: Criar PR develop → master
         uses: peter-evans/create-pull-request@v6
         with:
