@@ -94,25 +94,35 @@ jobs:
           submodules: recursive
           ref: develop
 
-      - name: List files
-        run: ls -R $GITHUB_WORKSPACE
-  
-      - name: Update build.gradle if version updated
+      - name: Update build.gradle(.kts) if version updated
         if: ${{ needs.version_manager.outputs.updated == 'true' }}
         run: |
-          FILE="${GITHUB_WORKSPACE}/app/build.gradle"
-          if [ -f "$FILE" ]; then
+          FILE_KTS="${GITHUB_WORKSPACE}/app/build.gradle.kts"
+          FILE_GRADLE="${GITHUB_WORKSPACE}/app/build.gradle"
+          
+          if [ -f "$FILE_KTS" ]; then
+            FILE="$FILE_KTS"
+            echo "Atualizando $FILE..."
+            sed -i "s/versionCode .*/versionCode(${{
+              needs.version_manager.outputs.new_code
+            }})/" "$FILE"
+            sed -i "s/versionName \".*\"/versionName(\"${{ needs.version_manager.outputs.new_name }}\")/" "$FILE"
+          elif [ -f "$FILE_GRADLE" ]; then
+            FILE="$FILE_GRADLE"
             echo "Atualizando $FILE..."
             sed -i "s/versionCode .*/versionCode ${{ needs.version_manager.outputs.new_code }}/" "$FILE"
             sed -i "s/versionName \".*\"/versionName \"${{ needs.version_manager.outputs.new_name }}\"/" "$FILE"
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add "$FILE"
-            git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})" || echo "Nenhuma alteração para commitar"
-            git push origin develop
           else
-            echo "⚠️ Arquivo $FILE não encontrado! Versão não será atualizada."
+            echo "⚠️ Nenhum arquivo build.gradle(.kts) encontrado! Versão não será atualizada."
+            exit 0
           fi
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
+          git add "$FILE"
+          git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})" || echo "Nenhuma alteração para commitar"
+          git push origin develop
           
   pr_release_create:
     name: PR Release Create
@@ -126,27 +136,31 @@ jobs:
           fetch-depth: 0
           ref: develop
   
-      # Step para criar variável de ambiente RELEASE_BRANCH com data
       - name: Set release branch name
         run: echo "RELEASE_BRANCH=release-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
   
-      - name: Create release branch
+      - name: Configure git with token
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
+  
+      - name: Create release branch and push
+        run: |
           git checkout -b $RELEASE_BRANCH
           git push origin $RELEASE_BRANCH
   
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.TOKEN }}
-          commit-message: "chore: bump version to ${{ needs.version_manager.outputs.new_name }}"
-          branch: ${{ env.RELEASE_BRANCH }}
-          base: master
-          title: "Release ${{ needs.version_manager.outputs.new_name }}"
-          body: |
-            ${{ needs.version_manager.outputs.new_name }}:
-            - Feats: ${{ needs.version_manager.outputs.feat }}
-            - Fix/Refactor/Perf/Revert: ${{ needs.version_manager.outputs.fix }}
-            - Breaking Changes: ${{ needs.version_manager.outputs.breaking }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          gh auth login --with-token <<< "${GITHUB_TOKEN}"
+          gh pr create \
+            --title "Release ${{ needs.version_manager.outputs.new_name }}" \
+            --body "$(echo "${{ needs.version_manager.outputs.new_name }}:
+              - Feats: ${{ needs.version_manager.outputs.feat }}
+              - Fix/Refactor/Perf/Revert: ${{ needs.version_manager.outputs.fix }}
+              - Breaking Changes: ${{ needs.version_manager.outputs.breaking }}")" \
+            --base master \
+            --head $RELEASE_BRANCH
+  
