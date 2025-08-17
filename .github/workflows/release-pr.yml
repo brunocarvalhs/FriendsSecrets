@@ -34,7 +34,7 @@ jobs:
       - name: Contar commits feat
         id: count
         run: |
-          FEAT=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^feat' | wc -l)
+          FEAT=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^feat' | wc -l || echo 0)
           FEAT=${FEAT// /}
           FEAT=${FEAT:-0}
           echo "feat=$FEAT" >> $GITHUB_OUTPUT
@@ -55,7 +55,7 @@ jobs:
       - name: Contar commits fix/revert/perf/refactor
         id: count
         run: |
-          FIX=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^(fix|revert|perf|refactor)' | wc -l)
+          FIX=$(git log master..develop --pretty=%s 2>/dev/null | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
           FIX=${FIX// /}
           FIX=${FIX:-0}
           echo "fix=$FIX" >> $GITHUB_OUTPUT
@@ -76,7 +76,7 @@ jobs:
       - name: Contar commits BREAKING CHANGE
         id: count
         run: |
-          BREAKING=$(git log master..develop --pretty=%b 2>/dev/null | grep -c 'BREAKING CHANGE')
+          BREAKING=$(git log master..develop --pretty=%b 2>/dev/null | grep -c 'BREAKING CHANGE' || echo 0)
           BREAKING=${BREAKING// /}
           BREAKING=${BREAKING:-0}
           echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
@@ -88,6 +88,7 @@ jobs:
     outputs:
       new_name: ${{ steps.bump.outputs.new_name }}
       new_code: ${{ steps.bump.outputs.new_code }}
+      updated: ${{ steps.bump.outputs.updated }}
     steps:
       - name: Checkout develop
         uses: actions/checkout@v3
@@ -108,24 +109,33 @@ jobs:
       - name: Calcular nova versão
         id: bump
         run: |
+          FEAT=${{ needs.count_feat.outputs.feat }}
+          FIX=${{ needs.count_fix.outputs.fix }}
+          BREAKING=${{ needs.count_breaking.outputs.breaking }}
           VERSION=${{ steps.version.outputs.name }}
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
-          if [ ${{ needs.count_breaking.outputs.breaking }} -gt 0 ]; then
-            MAJOR=$((MAJOR + 1))
-            MINOR=0
-            PATCH=0
+          if [ $((FEAT + FIX + BREAKING)) -eq 0 ]; then
+            echo "updated=false" >> $GITHUB_OUTPUT
+            echo "Nenhuma alteração encontrada. Branch será criada sem atualizar versão."
           else
-            MINOR=$((MINOR + ${{ needs.count_feat.outputs.feat }}))
-            PATCH=$((PATCH + ${{ needs.count_fix.outputs.fix }}))
+            if [ $BREAKING -gt 0 ]; then
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+            else
+              MINOR=$((MINOR + FEAT))
+              PATCH=$((PATCH + FIX))
+            fi
+
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+            NEW_CODE=$(( ${{ steps.version.outputs.code }} + 1 ))
+
+            echo "new_name=$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "new_code=$NEW_CODE" >> $GITHUB_OUTPUT
+            echo "updated=true" >> $GITHUB_OUTPUT
+            echo "Nova versão calculada: $NEW_VERSION (code $NEW_CODE)"
           fi
-
-          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-          NEW_CODE=$(( ${{ steps.version.outputs.code }} + 1 ))
-
-          echo "new_name=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "new_code=$NEW_CODE" >> $GITHUB_OUTPUT
-          echo "Nova versão calculada: $NEW_VERSION (code $NEW_CODE)"
 
   update_build_and_push:
     needs: bump_version
@@ -137,26 +147,28 @@ jobs:
           fetch-depth: 0
           ref: develop
 
-      - name: Atualizar build.gradle
+      - name: Atualizar build.gradle se necessário
         run: |
-          FILE=app/build.gradle
-          sed -i "s/versionCode .*/versionCode ${{ needs.bump_version.outputs.new_code }}/" $FILE
-          sed -i "s/versionName \".*\"/versionName \"${{ needs.bump_version.outputs.new_name }}\"/" $FILE
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add $FILE
-          git commit -m "chore: bump version to ${{ needs.bump_version.outputs.new_name }} (${{ needs.bump_version.outputs.new_code }})" || echo "No changes"
-          git push origin develop
+          if [ "${{ needs.bump_version.outputs.updated }}" = "true" ]; then
+            FILE=app/build.gradle
+            sed -i "s/versionCode .*/versionCode ${{ needs.bump_version.outputs.new_code }}/" $FILE
+            sed -i "s/versionName \".*\"/versionName \"${{ needs.bump_version.outputs.new_name }}\"/" $FILE
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add $FILE
+            git commit -m "chore: bump version to ${{ needs.bump_version.outputs.new_name }} (${{ needs.bump_version.outputs.new_code }})" || echo "No changes"
+            git push origin develop
+          else
+            echo "Nenhuma alteração na versão. Skip build.gradle update."
+          fi
 
       - name: Criar branch de release e PR
         run: |
-          BRANCH="release-${{ needs.bump_version.outputs.new_name }}"
+          BRANCH="release-${{ github.run_number }}"
           git checkout -b $BRANCH
           git push origin $BRANCH
-          gh pr create --title "Release ${{ needs.bump_version.outputs.new_name }}" \
+          gh pr create --title "Release $BRANCH" \
                        --body "Release gerada automaticamente:
-                        - Versão anterior: ${{ steps.bump.outputs.new_name }}
-                        - Nova versão: ${{ needs.bump_version.outputs.new_name }}
                         - Feats: ${{ needs.count_feat.outputs.feat }}
                         - Fix/Refactor/Perf/Revert: ${{ needs.count_fix.outputs.fix }}
                         - Breaking Changes: ${{ needs.count_breaking.outputs.breaking }}" \
