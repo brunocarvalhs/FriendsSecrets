@@ -120,4 +120,17 @@
     <string name="group_details_drop_menu_item_text_exit_to_group">그룹 나가기</string>
     <string name="group_details_drop_menu_item_text_exit_to_group_admin">그룹 삭제</string>
     <string name="c_digo_de_acesso">접근 코드</string>
+    <string name="group_info_title">정보</string>
+    <string name="group_config_title">설정</string>
+    <string name="error_min_members">그룹에는 최소 3명의 멤버가 있어야 합니다</string>
+    <string name="error_name_required">그룹 이름은 필수입니다</string>
+    <string name="error_description_required">그룹 설명은 필수입니다</string>
+    <string name="error_draw_date_required">추첨 날짜는 필수입니다</string>
+    <string name="error_draw_date_invalid">잘못된 날짜이거나 오늘 이전입니다</string>
+    <string name="error_min_value_required">최소 금액은 필수입니다</string>
+    <string name="error_min_value_invalid">잘못된 최소 금액입니다</string>
+    <string name="error_max_value_required">최대 금액은 필수입니다</string>
+    <string name="error_max_value_invalid">잘못된 최대 금액입니다</string>
+    <string name="error_max_value_greater">최대 금액은 최소 금액보다 크거나 같아야 합니다</string>
+    <string name="error_draw_type_required">추첨 유형은 필수입니다</string>
 </resources>
