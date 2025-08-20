@@ -54,6 +54,7 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCr_uiState.asStateFlowSearch", enabled = true)
     private fun updateSearch(query: String) = updateField { state ->
         val filtered = if (query.isBlank()) {
             state.contacts
@@ -63,15 +64,18 @@ class GroupCreateViewModel @Inject constructor(
         state.copy(searchQuery = query, filteredContacts = filtered)
     }
 
+    @AddTrace(name = "GroupCreateViewModel.updateField", enabled = true)
     private fun updateField(update: (GroupCreateUiState) -> GroupCreateUiState) {
         _uiState.update(update)
     }
 
+    @AddTrace(name = "GroupCreateViewModel.toggleMember", enabled = true)
     private fun toggleMember(member: UserEntities) = updateField { state ->
         val updated = if (member in state.members) state.members - member else state.members + member
         state.copy(members = updated)
     }
 
+    @AddTrace(name = "GroupCreateViewModel.fetchContacts", enabled = true)
     private fun fetchContacts() {
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -83,6 +87,7 @@ class GroupCreateViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupCreateViewModel.createGroup", enabled = true)
     private fun createGroup() {
         val state = uiState.value
 
