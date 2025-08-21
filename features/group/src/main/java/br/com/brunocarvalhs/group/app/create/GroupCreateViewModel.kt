@@ -7,6 +7,17 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GetListUsersByContactUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupCreateUseCase
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.CreateGroup
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.FetchContacts
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.ToggleMember
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateDescription
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateDrawDate
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateDrawType
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateMaxValue
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateMinValue
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateName
+import br.com.brunocarvalhs.group.app.create.GroupCreateIntent.UpdateSearch
+import br.com.brunocarvalhs.group.commons.validation.GroupValidator
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,10 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,159 +40,93 @@ class GroupCreateViewModel @Inject constructor(
     @AddTrace(name = "GroupCreateViewModel.eventIntent", enabled = true)
     fun eventIntent(intent: GroupCreateIntent) {
         when (intent) {
-            is GroupCreateIntent.CreateGroup -> createGroup()
-            is GroupCreateIntent.FetchContacts -> fetchContacts()
-            is GroupCreateIntent.UpdateName -> updateName(intent.name)
-            is GroupCreateIntent.UpdateDescription -> updateDescription(intent.description)
-            is GroupCreateIntent.ToggleMember -> toggleMember(intent.member)
-            is GroupCreateIntent.NextStep -> nextStep()
-            is GroupCreateIntent.Back -> resetState()
-            is GroupCreateIntent.UpdateDrawDate -> updateDrawDate(intent.date)
-            is GroupCreateIntent.UpdateMinValue -> updateMinValue(intent.value)
-            is GroupCreateIntent.UpdateMaxValue -> updateMaxValue(intent.value)
-            is GroupCreateIntent.UpdateDrawType -> updateDrawType(intent.type)
-            is GroupCreateIntent.GoToStep -> goToStep(intent.step)
+            is CreateGroup -> createGroup()
+            is FetchContacts -> fetchContacts()
+            is ToggleMember -> toggleMember(member = intent.member)
+            is UpdateSearch -> updateSearch(query = intent.value)
+            is UpdateName -> updateField { it.copy(name = intent.value) }
+            is UpdateDescription -> updateField { it.copy(description = intent.value) }
+            is UpdateDrawDate -> updateField { it.copy(drawDate = intent.value) }
+            is UpdateMinValue -> updateField { it.copy(minValue = intent.value) }
+            is UpdateMaxValue -> updateField { it.copy(maxValue = intent.value) }
+            is UpdateDrawType -> updateField { it.copy(drawType = intent.value) }
+            is GroupCreateIntent.ClearError -> { updateField { it.copy(errorMessage = null) } }
         }
     }
 
-    @AddTrace(name = "GroupCreateViewModel.updateDrawDate", enabled = true)
-    private fun updateDrawDate(date: String) {
-        _uiState.update { it.copy(drawDate = date) }
+    @AddTrace(name = "GroupCr_uiState.asStateFlowSearch", enabled = true)
+    private fun updateSearch(query: String) = updateField { state ->
+        val filtered = if (query.isBlank()) {
+            state.contacts
+        } else {
+            state.contacts.filter { it.name.contains(query, ignoreCase = true) }
+        }
+        state.copy(searchQuery = query, filteredContacts = filtered)
     }
 
-    @AddTrace(name = "GroupCreateViewModel.updateMinValue", enabled = true)
-    private fun updateMinValue(value: String) {
-        _uiState.update { it.copy(minValue = value) }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.updateMaxValue", enabled = true)
-    private fun updateMaxValue(value: String) {
-        _uiState.update { it.copy(maxValue = value) }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.updateDrawType", enabled = true)
-    private fun updateDrawType(type: String) {
-        _uiState.update { it.copy(drawType = type) }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.updateName", enabled = true)
-    private fun updateName(name: String) {
-        _uiState.update { it.copy(name = name) }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.updateDescription", enabled = true)
-    private fun updateDescription(description: String) {
-        _uiState.update { it.copy(description = description) }
+    @AddTrace(name = "GroupCreateViewModel.updateField", enabled = true)
+    private fun updateField(update: (GroupCreateUiState) -> GroupCreateUiState) {
+        _uiState.update(update)
     }
 
     @AddTrace(name = "GroupCreateViewModel.toggleMember", enabled = true)
-    private fun toggleMember(member: UserEntities) {
-        _uiState.update {
-            val updated = if (member in it.members)
-                it.members - member
-            else
-                it.members + member
-            it.copy(members = updated)
-        }
+    private fun toggleMember(member: UserEntities) = updateField { state ->
+        val updated = if (member in state.members) state.members - member else state.members + member
+        state.copy(members = updated)
     }
 
     @AddTrace(name = "GroupCreateViewModel.fetchContacts", enabled = true)
     private fun fetchContacts() {
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                getListUsersByContactUseCase.invoke().getOrNull().orEmpty()
-            }
-            _uiState.update {
-                it.copy(
-                    contacts = result,
-                    isLoading = false
-                )
-            }
+        setLoading(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = getListUsersByContactUseCase()
+                .getOrNull()
+                .orEmpty()
+
+            updateField { it.copy(contacts = result, isLoading = false) }
         }
     }
 
     @AddTrace(name = "GroupCreateViewModel.createGroup", enabled = true)
     private fun createGroup() {
-        val state = _uiState.value
-        _uiState.update { it.copy(isLoading = true) }
+        val state = uiState.value
 
-        viewModelScope.launch {
-            val group = GroupEntities.create(
-                name = state.name,
-                description = state.description,
-                members = state.members,
-                date = state.drawDate,
-                minPrice = state.minValue.toDoubleOrNull(),
-                maxPrice = state.maxValue.toDoubleOrNull(),
-                type = state.drawType
-            )
-            useCase.invoke(group).onSuccess {
-                _uiState.update { it.copy(isLoading = false, isSuccess = true) }
-            }.onFailure {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = it.errorMessage ?: "Erro ao criar grupo"
-                    )
-                }
+        val errors = GroupValidator.validate(state)
+        if (errors.isNotEmpty()) {
+            updateField { it.copy(fieldErrors = errors) }
+            return
+        }
+
+        updateField { it.copy(fieldErrors = emptyMap()) }
+        setLoading(true)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val group = GroupEntities.create(
+                    name = state.name,
+                    description = state.description,
+                    members = state.members,
+                    date = state.drawDate,
+                    minPrice = state.minValue.toDoubleOrNull(),
+                    maxPrice = state.maxValue.toDoubleOrNull(),
+                    type = state.drawType
+                )
+
+                useCase.invoke(group)
+                    .onSuccess {
+                        updateField { it.copy(isLoading = false, isSuccess = true) }
+                    }
+                    .onFailure { throwable ->
+                        updateField { it.copy(isLoading = false) }
+                        setError(throwable.message ?: "Erro ao criar grupo")
+                    }
+            } catch (e: Exception) {
+                updateField { it.copy(isLoading = false) }
+                setError(e.message ?: "Erro inesperado ao criar grupo")
             }
         }
     }
 
-    @AddTrace(name = "GroupCreateViewModel.nextStep", enabled = true)
-    private fun nextStep() {
-        _uiState.update { current ->
-            val next = (current.currentStep + 1).coerceAtMost(2)
-            current.copy(currentStep = next)
-        }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.resetState", enabled = true)
-    private fun resetState() {
-        _uiState.value = GroupCreateUiState()
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.goToStep", enabled = true)
-    private fun goToStep(step: Int) {
-        _uiState.update { it.copy(currentStep = step) }
-    }
-
-    @AddTrace(name = "GroupCreateViewModel.isStepValid", enabled = true)
-    fun isStepValid(uiState: GroupCreateUiState): Boolean {
-        return when (uiState.currentStep) {
-            0 -> {
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val today = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }
-
-                val drawDateValid = try {
-                    val drawDate = dateFormat.parse(uiState.drawDate)
-                    drawDate != null && !drawDate.before(today.time)
-                } catch (e: Exception) {
-                    false
-                }
-
-                val min = uiState.minValue.toDoubleOrNull()
-                val max = uiState.maxValue.toDoubleOrNull()
-                val valueRangeValid = min != null && max != null && min <= max
-
-                uiState.name.isNotBlank() &&
-                        uiState.description.isNotBlank() &&
-                        drawDateValid &&
-                        uiState.minValue.isNotBlank() &&
-                        uiState.maxValue.isNotBlank() &&
-                        valueRangeValid &&
-                        uiState.drawType.isNotBlank()
-            }
-
-            1 -> uiState.members.size >= 3
-
-            else -> true
-        }
-    }
+    private fun setLoading(isLoading: Boolean) = updateField { it.copy(isLoading = isLoading) }
+    private fun setError(message: String) = updateField { it.copy(isLoading = false, errorMessage = message) }
 }

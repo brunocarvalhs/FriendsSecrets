@@ -120,4 +120,17 @@
     <string name="group_details_drop_menu_item_text_exit_to_group">Exit the group</string>
     <string name="group_details_drop_menu_item_text_exit_to_group_admin">Delete the group</string>
     <string name="c_digo_de_acesso">Access code</string>
+    <string name="group_info_title">Information</string>
+    <string name="group_config_title">Configuration</string>
+    <string name="error_min_members">The group must have at least 3 members</string>
+    <string name="error_name_required">Group name is required</string>
+    <string name="error_description_required">Group description is required</string>
+    <string name="error_draw_date_required">Draw date is required</string>
+    <string name="error_draw_date_invalid">Invalid date or earlier than today</string>
+    <string name="error_min_value_required">Minimum value is required</string>
+    <string name="error_min_value_invalid">Invalid minimum value</string>
+    <string name="error_max_value_required">Maximum value is required</string>
+    <string name="error_max_value_invalid">Invalid maximum value</string>
+    <string name="error_max_value_greater">Maximum value must be greater than or equal to the minimum</string>
+    <string name="error_draw_type_required">Draw type is required</string>
 </resources>
