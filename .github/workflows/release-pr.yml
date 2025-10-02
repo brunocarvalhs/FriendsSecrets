@@ -3,6 +3,22 @@ name: Release to Master
 on:
   workflow_dispatch:
 
+env:
+  # Branches
+  DEVELOP_BRANCH: develop
+  MASTER_BRANCH: master
+
+  # Arquivos de versão
+  FILE_KTS: app/build.gradle.kts
+  FILE_GRADLE: app/build.gradle
+
+  # GitHub Bot
+  GIT_USER: github-actions[bot]
+  GIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+  # 🔑 Secrets
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
 jobs:
   version_manager:
     name: Version Manager
@@ -19,44 +35,38 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: develop
+          ref: ${{ env.DEVELOP_BRANCH }}
 
       - name: Count feat commits
         id: count_feat
         run: |
-          FEAT=$(git log origin/master..develop --pretty=%s | grep -E '^feat' | wc -l || echo 0)
+          FEAT=$(git log origin/${{ env.MASTER_BRANCH }}..${{ env.DEVELOP_BRANCH }} --pretty=%s | grep -E '^feat' | wc -l || echo 0)
           FEAT=${FEAT// /}
-          FEAT=${FEAT:-0}
-          echo "feat=$FEAT" >> $GITHUB_OUTPUT
+          echo "feat=${FEAT:-0}" >> $GITHUB_OUTPUT
 
       - name: Count fix/revert/perf/refactor commits
         id: count_fix
         run: |
-          FIX=$(git log origin/master..develop --pretty=%s | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
+          FIX=$(git log origin/${{ env.MASTER_BRANCH }}..${{ env.DEVELOP_BRANCH }} --pretty=%s | grep -E '^(fix|revert|perf|refactor)' | wc -l || echo 0)
           FIX=${FIX// /}
-          FIX=${FIX:-0}
-          echo "fix=$FIX" >> $GITHUB_OUTPUT
+          echo "fix=${FIX:-0}" >> $GITHUB_OUTPUT
 
       - name: Count BREAKING CHANGE commits
         id: count_breaking
         run: |
-          BREAKING=$(git log origin/master..develop --pretty=%b | grep -c 'BREAKING CHANGE' || true)
+          BREAKING=$(git log origin/${{ env.MASTER_BRANCH }}..${{ env.DEVELOP_BRANCH }} --pretty=%b | grep -c 'BREAKING CHANGE' || true)
           BREAKING=${BREAKING// /}
-          BREAKING=${BREAKING:-0}
-          echo "breaking=$BREAKING" >> $GITHUB_OUTPUT
+          echo "breaking=${BREAKING:-0}" >> $GITHUB_OUTPUT
 
       - name: Get current version
         id: version
         run: |
-          FILE_KTS="app/build.gradle.kts"
-          FILE_GRADLE="app/build.gradle"
-
-          if [ -f "$FILE_KTS" ]; then
-            FILE="$FILE_KTS"
+          if [ -f "${{ env.FILE_KTS }}" ]; then
+            FILE=${{ env.FILE_KTS }}
             VERSION_NAME=$(grep "versionName" "$FILE" | sed 's/.*"\(.*\)"/\1/')
             VERSION_CODE=$(grep "versionCode" "$FILE" | awk '{print $2}' | tr -d '()')
-          elif [ -f "$FILE_GRADLE" ]; then
-            FILE="$FILE_GRADLE"
+          elif [ -f "${{ env.FILE_GRADLE }}" ]; then
+            FILE=${{ env.FILE_GRADLE }}
             VERSION_NAME=$(grep "versionName" "$FILE" | sed 's/versionName "\(.*\)"/\1/')
             VERSION_CODE=$(grep "versionCode" "$FILE" | awk '{print $2}')
           else
@@ -64,7 +74,6 @@ jobs:
             VERSION_NAME="0.0.0"
             VERSION_CODE="0"
           fi
-
           echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
@@ -78,10 +87,9 @@ jobs:
           CODE=${{ steps.version.outputs.code }}
           
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
-
-          if [ -z "$MAJOR" ]; then MAJOR=0; fi
-          if [ -z "$MINOR" ]; then MINOR=0; fi
-          if [ -z "$PATCH" ]; then PATCH=0; fi
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
 
           if [ $((FEAT + FIX + BREAKING)) -eq 0 ]; then
             NEW_VERSION="$VERSION"
@@ -113,42 +121,36 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: recursive
-          ref: develop
+          ref: ${{ env.DEVELOP_BRANCH }}
 
       - name: Update build.gradle(.kts) if version updated
         if: ${{ needs.version_manager.outputs.updated == 'true' }}
         run: |
-          FILE_KTS="${GITHUB_WORKSPACE}/app/build.gradle.kts"
-          FILE_GRADLE="${GITHUB_WORKSPACE}/app/build.gradle"
-          UPDATED=false
-
-          if [ -f "$FILE_KTS" ]; then
-            FILE="$FILE_KTS"
-          elif [ -f "$FILE_GRADLE" ]; then
-            FILE="$FILE_GRADLE"
+          FILE=""
+          if [ -f "${{ env.FILE_KTS }}" ]; then
+            FILE=${{ env.FILE_KTS }}
+          elif [ -f "${{ env.FILE_GRADLE }}" ]; then
+            FILE=${{ env.FILE_GRADLE }}
           else
-            echo "⚠️ Nenhum build.gradle(.kts) encontrado! Versão não será atualizada."
+            echo "⚠️ Nenhum build.gradle(.kts) encontrado!"
             exit 0
           fi
 
           echo "Atualizando $FILE..."
           if [[ "$FILE" == *.kts ]]; then
-            sed -i "s/versionCode .*/versionCode(${{
-              needs.version_manager.outputs.new_code
-            }})/" "$FILE"
+            sed -i "s/versionCode .*/versionCode(${{ needs.version_manager.outputs.new_code }})/" "$FILE"
             sed -i "s/versionName \".*\"/versionName(\"${{ needs.version_manager.outputs.new_name }}\")/" "$FILE"
           else
             sed -i "s/versionCode .*/versionCode ${{ needs.version_manager.outputs.new_code }}/" "$FILE"
             sed -i "s/versionName \".*\"/versionName \"${{ needs.version_manager.outputs.new_name }}\"/" "$FILE"
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
+          git config user.name "${{ env.GIT_USER }}"
+          git config user.email "${{ env.GIT_EMAIL }}"
+          git remote set-url origin https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git add "$FILE"
-          git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})" || echo "Nenhuma alteração para commitar"
-          git push origin develop
+          git commit -m "chore: bump version to ${{ needs.version_manager.outputs.new_name }} (${{ needs.version_manager.outputs.new_code }})" || echo "Nenhuma alteração"
+          git push origin ${{ env.DEVELOP_BRANCH }}
 
   pr_release_create:
     name: PR Release Create
@@ -160,29 +162,29 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: develop
+          ref: ${{ env.DEVELOP_BRANCH }}
 
       - name: Set release branch name
         run: echo "RELEASE_BRANCH=release-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       - name: Create release branch and push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git
+          git config user.name "${{ env.GIT_USER }}"
+          git config user.email "${{ env.GIT_EMAIL }}"
+          git remote set-url origin https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git checkout -b $RELEASE_BRANCH
           git push origin $RELEASE_BRANCH
 
       - name: Create Pull Request via GH CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         run: |
           gh auth login --with-token <<< "$GITHUB_TOKEN"
           gh pr create \
             --title "Release ${{ needs.version_manager.outputs.new_name }}" \
-            --body "$(echo "${{ needs.version_manager.outputs.new_name }}:
+            --body "Release ${{ needs.version_manager.outputs.new_name }}:
               - Feats: ${{ needs.version_manager.outputs.feat }}
               - Fix/Refactor/Perf/Revert: ${{ needs.version_manager.outputs.fix }}
-              - Breaking Changes: ${{ needs.version_manager.outputs.breaking }}")" \
-            --base master \
+              - Breaking Changes: ${{ needs.version_manager.outputs.breaking }}" \
+            --base ${{ env.MASTER_BRANCH }} \
             --head $RELEASE_BRANCH

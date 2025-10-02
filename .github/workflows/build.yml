@@ -5,12 +5,29 @@ on:
     branches: [ develop ]
 
 env:
+  # Configurações Gerais
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   JDK_VERSION: 17
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
+
+  # Android
   BUILD_TOOLS_VERSION: "34.0.0"
+  ANDROID_LOCAL_PROPERTIES: local.properties
+
+  # Projeto
   APP_NAME: "FriendsSecrets"
+
+  # Caminhos
+  APK_DEBUG_PATH: app/build/outputs/apk/debug/*.apk
+  APK_RELEASE_PATH: app/build/outputs/apk/release/*.apk
+
+  # 🔑 Secrets (configurados no repo)
+  GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
+  FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
   FIREBASE_APP_ID: "1:212108336384:android:e74d22bacd5f156e2427e5"
+
+  # Variaveis
+  API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
   checkout-and-setup:
@@ -32,11 +49,11 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
+          echo "apiKey=${{ env.API_KEY }}" >> local.properties
 
       - name: Create google-services.json
         run: |
-          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+          echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Cache Gradle
         uses: actions/cache@v3
@@ -129,5 +146,5 @@ jobs:
           firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
             --release-notes "release automatica" \
-            --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
+            --token "${{ env.FIREBASE_AUTH_TOKEN }}"
 
