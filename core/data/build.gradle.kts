@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -40,6 +41,10 @@ android {
     lint {
         disable += "NullSafeMutableLiveData"
     }
+}
+
+detekt {
+    config.from(files("$rootDir/detekt.yml"))
 }
 
 dependencies {

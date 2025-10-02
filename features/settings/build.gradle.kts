@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.20"
     id("com.google.devtools.ksp")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -40,6 +41,10 @@ android {
         disable += "NullSafeMutableLiveData"
         baseline = file("lint-baseline.xml")
     }
+}
+
+detekt {
+    config.from(files("$rootDir/detekt.yml"))
 }
 
 dependencies {
