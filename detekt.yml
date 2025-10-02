@@ -1,0 +1,33 @@
+style:
+  MaxLineLength:
+    maxLineLength: 120
+    excludeCommentStatements: true
+
+complexity:
+  CyclomaticComplexMethod:
+    threshold: 15
+  LargeClass:
+    threshold: 600
+  LongParameterList:
+    functionThreshold: 6
+    constructorThreshold: 6
+  TooManyFunctions:
+    thresholdInClasses: 12
+
+performance:
+  active: true
+
+comments:
+  active: true
+
+coroutines:
+  active: true
+
+empty-blocks:
+  active: true
+
+exceptions:
+  active: true
+
+naming:
+  active: true
