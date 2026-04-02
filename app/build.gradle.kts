@@ -94,7 +94,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
 
-    implementation(project(":features:auth"))
     implementation(project(":features:group"))
     implementation(project(":features:settings"))
 

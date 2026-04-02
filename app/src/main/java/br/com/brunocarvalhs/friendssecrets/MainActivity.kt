@@ -57,7 +57,6 @@ class MainActivity : FragmentActivity() {
                 ) {
                     val navController = rememberNavController()
                     MainApp(
-                        activity = this,
                         toggleManager = toggleManager,
                         navController = navController,
                     )
