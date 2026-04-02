@@ -4,7 +4,6 @@ import br.com.brunocarvalhs.friendssecrets.data.mappers.toEntities
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.UserDTO
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
-import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.Dispatchers
@@ -12,58 +11,17 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Repository implementation for anonymous user data
+ * No personal data lookups - only ID-based access
+ */
 class UserRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val cryptoService: CryptoService,
 ) : UserRepository {
-
-    @AddTrace(name = "UserRepositoryImpl.listUsersByPhoneNumber", enabled = true)
-    override suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities> =
-        withContext(Dispatchers.IO) {
-            val phoneNumberEncrypted = cryptoService.encrypt(phoneNumber)
-
-            val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
-                .whereEqualTo(UserEntities.PHONE_NUMBER, phoneNumberEncrypted)
-                .get()
-                .await()
-
-            querySnapshot.documents.map { document ->
-                val encryptedData = document.data ?: emptyMap()
-                val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-                UserDTO.fromMap(decryptedData).toEntities()
-            }
-        }
-
-    @AddTrace(name = "UserRepositoryImpl.listUsersByPhoneNumber", enabled = true)
-    override suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities> =
-        withContext(Dispatchers.IO) {
-            val phoneNumbersEncrypted = list.map { cryptoService.encrypt(it) }
-
-            val chunks = phoneNumbersEncrypted.chunked(10)
-            val allResults = mutableListOf<UserEntities>()
-
-            for (chunk in chunks) {
-                val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
-                    .whereIn(UserEntities.PHONE_NUMBER, chunk)
-                    .get()
-                    .await()
-
-                val users = querySnapshot.documents.map { document ->
-                    val encryptedData = document.data ?: emptyMap()
-                    val decryptedData =
-                        cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-                    UserDTO.fromMap(decryptedData).toEntities()
-                }
-
-                allResults.addAll(users)
-            }
-
-            return@withContext allResults
-        }
 
     @AddTrace(name = "UserRepositoryImpl.createUser", enabled = true)
     override suspend fun createUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
-        val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
+        val data = user.toMap()
 
         firestore.collection(UserEntities.COLLECTION_NAME)
             .document(user.id)
@@ -73,7 +31,7 @@ class UserRepositoryImpl @Inject constructor(
 
     @AddTrace(name = "UserRepositoryImpl.updateUser", enabled = true)
     override suspend fun updateUser(user: UserEntities): Unit = withContext(Dispatchers.IO) {
-        val data = cryptoService.encryptMap(user.toMap(), setOf(UserEntities.ID))
+        val data = user.toMap()
 
         firestore.collection(UserEntities.COLLECTION_NAME)
             .document(user.id)
@@ -90,26 +48,9 @@ class UserRepositoryImpl @Inject constructor(
 
         if (!documentSnapshot.exists()) return@withContext null
 
-        val encryptedData = documentSnapshot.data ?: emptyMap()
-        val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-        UserDTO.fromMap(decryptedData).toEntities()
+        val data = documentSnapshot.data ?: emptyMap()
+        UserDTO.fromMap(data).toEntities()
     }
-
-    @AddTrace(name = "UserRepositoryImpl.getUserByPhoneNumber", enabled = true)
-    override suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities? =
-        withContext(Dispatchers.IO) {
-            val querySnapshot = firestore.collection(UserEntities.COLLECTION_NAME)
-                .whereEqualTo(UserEntities.PHONE_NUMBER, phoneNumber)
-                .get()
-                .await()
-
-            if (querySnapshot.isEmpty) return@withContext null
-
-            val document = querySnapshot.documents.first()
-            val encryptedData = document.data ?: emptyMap()
-            val decryptedData = cryptoService.decryptMap(encryptedData, setOf(UserEntities.ID))
-            return@withContext UserDTO.fromMap(decryptedData).toEntities()
-        }
 
     @AddTrace(name = "UserRepositoryImpl.deleteUser", enabled = true)
     override suspend fun deleteUser(userId: String): Unit = withContext(Dispatchers.IO) {
@@ -118,4 +59,14 @@ class UserRepositoryImpl @Inject constructor(
             .delete()
             .await()
     }
+
+    // ============================================================================
+    // REMOVED METHODS - Phone-based lookups no longer available
+    // ============================================================================
+    // suspend fun listUsersByPhoneNumber(phoneNumber: String): List<UserEntities>
+    // suspend fun listUsersByPhoneNumber(list: List<String>): List<UserEntities>
+    // suspend fun getUserByPhoneNumber(phoneNumber: String): UserEntities?
+    //
+    // Reason: These methods enabled PII (Personally Identifiable Information) lookups
+    // which contradicts the app's commitment to anonymity and privacy.
 }

@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.data.initialization.providers
 
-import android.net.Uri
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.model.create
@@ -8,7 +7,6 @@ import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,40 +48,36 @@ class SessionEventImpl(
         }
     }
 
+    @Deprecated("No profile complete check needed for anonymous users")
     @AddTrace(name = "SessionEventImpl.isProfileComplete", enabled = true)
-    override suspend fun isProfileComplete(): Boolean = withContext(Dispatchers.IO) {
-        auth.currentUser?.run { displayName != null && photoUrl != null } ?: false
-    }
+    override suspend fun isProfileComplete(): Boolean = true
 
+    @Deprecated("No phone verification for anonymous users")
     @AddTrace(name = "SessionEventImpl.isPhoneNumberVerified", enabled = true)
-    override suspend fun isPhoneNumberVerified(): Boolean = withContext(Dispatchers.IO) {
-        auth.currentUser?.phoneNumber != null
-    }
+    override suspend fun isPhoneNumberVerified(): Boolean = false
 
+    @Deprecated("No personal data stored")
     @AddTrace(name = "SessionEventImpl.getUserName", enabled = true)
-    override fun getUserName(): String? = auth.currentUser?.displayName
+    override fun getUserName(): String? = null
 
+    @Deprecated("No personal data stored")
     @AddTrace(name = "SessionEventImpl.getUserPhotoUrl", enabled = true)
-    override fun getUserPhotoUrl(): String? = auth.currentUser?.photoUrl?.toString()
+    override fun getUserPhotoUrl(): String? = null
 
+    @Deprecated("No personal data stored")
     @AddTrace(name = "SessionEventImpl.getUserPhoneNumber", enabled = true)
-    override fun getUserPhoneNumber(): String? = auth.currentUser?.phoneNumber
+    override fun getUserPhoneNumber(): String? = null
 
-    @AddTrace(name = "SessionEventImpl.setUserPhoneNumber", enabled = true)
+    @AddTrace(name = "SessionEventImpl.setUserAnonymous", enabled = true)
     override suspend fun setUserAnonymous() {
         auth.signInAnonymously().await()
     }
 
+    @Deprecated("Profile updates disabled - no personal data storage")
     @AddTrace(name = "SessionEventImpl.updateUserProfile", enabled = true)
     override suspend fun updateUserProfile(profile: UserEntities) {
-        auth.currentUser?.apply {
-            val updates = userProfileChangeRequest {
-                displayName = profile.name
-                photoUri = Uri.parse(profile.photoUrl)
-            }
-            updateProfile(updates).await()
-            storageManager.save(STORAGE_USER_KEY, profile)
-        }
+        // No-op: We don't store personal data anymore
+        // If only updating preferences (likes), use repository directly
     }
 
     @AddTrace(name = "SessionEventImpl.signOut", enabled = true)
@@ -162,13 +156,10 @@ class SessionEventImpl(
     @AddTrace(name = "FirebaseUser.toUserEntity", enabled = true)
     private fun FirebaseUser.toUserEntity(): UserEntities = UserEntities.create(
         id = uid,
-        name = displayName.orEmpty(),
-        photoUrl = photoUrl?.toString(),
-        phoneNumber = phoneNumber.orEmpty(),
-        isAnonymous = isAnonymous,
+        // NO personal data like name, photo, or phone
+        isAnonymous = true,
         lastLogin = System.currentTimeMillis(),
         isActive = true,
-        isPhoneNumberVerified = phoneNumber != null,
     )
 
     companion object {

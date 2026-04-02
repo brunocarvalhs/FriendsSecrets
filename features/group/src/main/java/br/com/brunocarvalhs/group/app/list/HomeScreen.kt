@@ -81,7 +81,7 @@ private fun HomeContent(
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
-    val scrollBehavior =
+a    val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     var showBottomSheet by remember { mutableStateOf(false) }
