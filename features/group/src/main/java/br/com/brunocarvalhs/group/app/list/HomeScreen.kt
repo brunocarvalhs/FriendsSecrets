@@ -81,8 +81,6 @@ private fun HomeContent(
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
-    var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Groups) }
-
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -96,22 +94,6 @@ private fun HomeContent(
                 scrollBehavior = scrollBehavior,
                 onAdd = { navController.navigate(GroupCreateScreenRoute) },
                 onNotification = { showBottomSheet = true },
-            )
-        },
-        bottomBar = {
-            NavigationComponent(
-                selectedItem = selectedItem,
-                onItemSelected = { menu ->
-                    selectedItem = menu
-                    val route: Any = when (menu) {
-                        is BottomNavItem.Groups -> GroupGraphRoute
-                        is BottomNavItem.Profile -> SettingsGraphRoute
-                    }
-                    navController.navigate(route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
             )
         }
     ) {
