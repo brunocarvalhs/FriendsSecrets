@@ -25,4 +25,6 @@
     <string name="add_like_description">Add like</string>
     <string name="remove_like_description">Remove like: %1$s</string>
     <string name="collapse_likes_action">likes gone</string>
+    <string name="options_menu">Menu</string>
+    <string name="options_home">Home</string>
 </resources>

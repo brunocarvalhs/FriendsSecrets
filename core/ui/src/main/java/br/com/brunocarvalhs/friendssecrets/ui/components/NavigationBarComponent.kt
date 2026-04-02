@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ViewTimeline
@@ -22,10 +23,10 @@ import br.com.brunocarvalhs.friendssecrets.ui.R
 
 sealed class BottomNavItem(val label: Int, val icon: ImageVector) {
     data object Groups :
-        BottomNavItem(R.string.home_drop_menu_item_text_profile, Icons.Outlined.GridView)
+        BottomNavItem(R.string.options_home, Icons.Outlined.GridView)
 
     data object Profile :
-        BottomNavItem(R.string.home_drop_menu_item_text_profile, Icons.Outlined.Person)
+        BottomNavItem(R.string.options_menu, Icons.Outlined.Menu)
 }
 
 

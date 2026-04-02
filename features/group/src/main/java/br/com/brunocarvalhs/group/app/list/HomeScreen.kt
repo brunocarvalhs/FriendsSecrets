@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.navigation.ProfileGraphRoute
+import br.com.brunocarvalhs.friendssecrets.common.navigation.SettingsGraphRoute
 import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.ui.components.BottomNavItem
@@ -105,7 +105,7 @@ private fun HomeContent(
                     selectedItem = menu
                     val route: Any = when (menu) {
                         is BottomNavItem.Groups -> GroupGraphRoute
-                        is BottomNavItem.Profile -> ProfileGraphRoute
+                        is BottomNavItem.Profile -> SettingsGraphRoute
                     }
                     navController.navigate(route) {
                         launchSingleTop = true
