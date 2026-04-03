@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
@@ -46,7 +45,7 @@ class DrawRevelationUseCase(
 
     private fun revealDraw(secret: String, group: GroupEntities): Map<String, String> {
         val memberKey = crypto.decrypt(secret)
-        val member = group.members.find { it.name == memberKey }
+        val member = group.members.find { it.id == memberKey }
 
         return mapOf(
             memberKey to (member?.likes?.joinToString(" | ")?.takeIf { it.isNotBlank() } ?: "")

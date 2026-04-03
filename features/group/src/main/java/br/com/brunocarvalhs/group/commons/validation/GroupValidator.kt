@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.group.commons.validation
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.group.R
 import br.com.brunocarvalhs.group.app.create.GroupCreateUiState
 import java.text.SimpleDateFormat

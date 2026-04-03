@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.ContactService
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.qualifiers.ApplicationContext

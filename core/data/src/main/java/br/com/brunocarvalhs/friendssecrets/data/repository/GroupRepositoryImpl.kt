@@ -4,7 +4,6 @@ import br.com.brunocarvalhs.friendssecrets.data.mappers.toDTO
 import br.com.brunocarvalhs.friendssecrets.data.mappers.toEntities
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import br.com.brunocarvalhs.friendssecrets.domain.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService

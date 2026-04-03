@@ -3,8 +3,6 @@ package br.com.brunocarvalhs.friendssecrets.data.mappers
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.mockkStatic

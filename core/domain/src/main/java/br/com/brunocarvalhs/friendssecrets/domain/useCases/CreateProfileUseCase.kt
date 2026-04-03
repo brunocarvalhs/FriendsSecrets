@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
@@ -19,8 +18,8 @@ class CreateProfileUseCase(
             session.getCurrentUserModel()?.let {
                 repository.updateUser(
                     it.toCopy(
-                        name = user.name,
-                        photoUrl = user.photoUrl,
+//                        name = user.name,
+//                        photoUrl = user.photoUrl,
                         likes = user.likes
                     )
                 )

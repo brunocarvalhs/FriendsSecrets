@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.data.di
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.GroupRepository
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.ContactService
@@ -22,10 +21,6 @@ import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupListUseCase
 import br.com.brunocarvalhs.friendssecrets.domain.useCases.GroupReadUseCase
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.LoginAnonymousUseCase
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.LogoutUseCase
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.SendPhoneUseCase
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.VerifyPhoneUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

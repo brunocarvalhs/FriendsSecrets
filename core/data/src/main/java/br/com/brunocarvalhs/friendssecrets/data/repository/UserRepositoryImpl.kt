@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets.data.repository
 
 import br.com.brunocarvalhs.friendssecrets.data.mappers.toEntities
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.UserDTO
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.perf.metrics.AddTrace

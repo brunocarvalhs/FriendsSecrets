@@ -1,10 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.data.repository.dto
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 
+@Deprecated("This class is deprecated and will be removed in future versions. Please use the GroupDTO class from the group feature module instead.")
 internal data class GroupDTO(
     @SerializedName(GroupEntities.ID) val id: String = UUID.randomUUID().toString(),
     @SerializedName(GroupEntities.TOKEN) val token: String = "",

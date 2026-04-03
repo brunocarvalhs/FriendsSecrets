@@ -3,8 +3,6 @@ package br.com.brunocarvalhs.friendssecrets.data.mappers
 import br.com.brunocarvalhs.friendssecrets.data.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
 import br.com.brunocarvalhs.friendssecrets.data.repository.dto.GroupDTO
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 

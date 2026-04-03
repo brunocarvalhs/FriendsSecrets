@@ -1,14 +1,13 @@
 package br.com.brunocarvalhs.friendssecrets.data.model
 
 import br.com.brunocarvalhs.friendssecrets.data.extensions.token
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import com.google.firebase.perf.metrics.AddTrace
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 import kotlin.random.Random
 
+@Deprecated("Use features.group.app.data.model.GroupModel instead")
 data class GroupModel(
     @SerializedName(GroupEntities.ID) override val id: String = UUID.randomUUID().toString(),
     @SerializedName(GroupEntities.TOKEN) override val token: String = Random.token(size = 8),
@@ -116,6 +115,7 @@ data class GroupModel(
     }
 }
 
+@Deprecated("Use GroupEntities.Companion.create instead")
 @AddTrace(name = "GroupEntities.create", enabled = true)
 fun GroupEntities.Companion.create(
     id: String = UUID.randomUUID().toString(),

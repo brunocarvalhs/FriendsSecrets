@@ -4,7 +4,6 @@ import br.com.brunocarvalhs.friendssecrets.common.performance.PerformanceManager
 import br.com.brunocarvalhs.friendssecrets.common.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.common.session.SessionManager
 import br.com.brunocarvalhs.friendssecrets.common.storage.StorageManager
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService

@@ -1,8 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.ui.fake
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-
 internal data class GroupFake(
     override val id: String,
     override val token: String,

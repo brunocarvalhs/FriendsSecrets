@@ -17,7 +17,6 @@ import br.com.brunocarvalhs.friendssecrets.data.initialization.providers.Session
 import br.com.brunocarvalhs.friendssecrets.data.initialization.providers.StorageEventImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.GenerativeServiceImpl
 import br.com.brunocarvalhs.friendssecrets.data.service.PhoneAuthServiceImpl
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.services.GenerativeService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PhoneAuthService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService

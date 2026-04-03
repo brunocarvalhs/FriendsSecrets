@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.ContactService
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService

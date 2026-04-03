@@ -1,7 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import com.google.gson.Gson
 import io.mockk.every
 import io.mockk.mockk

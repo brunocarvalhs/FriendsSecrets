@@ -8,7 +8,6 @@ import android.net.Uri
 import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import br.com.brunocarvalhs.friendssecrets.data.model.UserModel
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
 import io.mockk.*
 import org.junit.After
 import org.junit.Assert.assertEquals

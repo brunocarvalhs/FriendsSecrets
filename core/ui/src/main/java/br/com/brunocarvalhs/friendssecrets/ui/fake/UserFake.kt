@@ -1,7 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.ui.fake
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.UserEntities
-
 internal data class UserFake(
     override val id: String = "1",
     override val name: String = "John Doe",
