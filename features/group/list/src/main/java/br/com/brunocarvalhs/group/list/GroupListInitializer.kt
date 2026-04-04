@@ -5,8 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.group.list.app.presentation.GroupListScreen
-import br.com.brunocarvalhs.group.list.app.presentation.GroupListViewModel
+import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsScreen
+import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsViewModel
+import br.com.brunocarvalhs.group.list.app.presentation.list.GroupListScreen
+import br.com.brunocarvalhs.group.list.app.presentation.list.GroupListViewModel
+import br.com.brunocarvalhs.group.list.commons.navigation.DetailRouter
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
 import br.com.brunocarvalhs.group.list.commons.navigation.ListRouter
 import com.google.firebase.perf.metrics.AddTrace
@@ -17,12 +21,24 @@ class GroupListInitializer(private val builder: Builder) {
     @AddTrace(name = "GroupListInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
         return navGraphBuilder.navigation<GroupListRouter>(startDestination = ListRouter) {
-            composable<ListRouter>() {
+
+            composable<ListRouter> {
                 val viewModel = hiltViewModel<GroupListViewModel>()
                 GroupListScreen(
                     viewModel = viewModel,
-                    onGroupToEnter = { builder.onGroupToEnter(it) },
+                    onGroupToEnter = {
+                        builder.navController.navigate(route = DetailRouter(it))
+                    },
                     onGroupToCreate = { builder.onGroupToCreate() }
+                )
+            }
+
+            composable<DetailRouter>(typeMap = DetailRouter.typeMap) {
+                val viewModel = hiltViewModel<GroupDetailsViewModel>()
+                GroupDetailsScreen(
+                    viewModel = viewModel,
+                    onBack = { builder.navController.popBackStack() },
+                    onDraw = { }
                 )
             }
         }
@@ -30,17 +46,11 @@ class GroupListInitializer(private val builder: Builder) {
 
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
-        internal var onGroupToEnter: (String) -> Unit = {}
         internal var onGroupToCreate: () -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
             this.navController = navController
-        }
-
-        @AddTrace(name = "GroupListInitializer.Builder.onGroupToEnter", enabled = true)
-        fun onGroupToEnter(onGroupToEnter: (String) -> Unit) = apply {
-            this.onGroupToEnter = onGroupToEnter
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.onGroupToCreate", enabled = true)

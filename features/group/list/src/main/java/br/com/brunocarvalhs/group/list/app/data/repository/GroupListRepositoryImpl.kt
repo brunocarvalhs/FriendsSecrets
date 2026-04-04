@@ -63,6 +63,13 @@ class GroupListRepositoryImpl @Inject constructor(
         return GroupModel.fromMap(decryptedData)
     }
 
+    override suspend fun delete(groupId: String): Unit = withContext(Dispatchers.IO) {
+        firestore.collection(COLLECTION_NAME)
+            .document(groupId)
+            .delete()
+            .await()
+    }
+
     companion object {
         const val COLLECTION_NAME = "groups"
         const val TOKEN = "token"

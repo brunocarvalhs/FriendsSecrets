@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.group.list.app.domain.useCases
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel.Companion.STORAGE_KEY
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import br.com.brunocarvalhs.group.list.app.domain.services.StorageService
 import javax.inject.Inject
@@ -43,9 +44,5 @@ class GroupByTokenUseCase @Inject constructor(
             STORAGE_KEY,
             groupList.toMutableList().apply { add(token) }
         )
-    }
-
-    companion object {
-        private const val STORAGE_KEY = "group_tokens"
     }
 }

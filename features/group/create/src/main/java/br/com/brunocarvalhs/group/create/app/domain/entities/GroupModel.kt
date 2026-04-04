@@ -19,6 +19,9 @@ data class GroupModel(
     }
 
     companion object {
+        const val COLLECTION_NAME = "group_tokens"
+        const val COLLECTION_NAME_ADMINS = "group_admins"
+
         fun token(size: Int = 8): String {
             val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
             return (1..size)
