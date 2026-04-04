@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SettingsItem(
     title: String,
-    value: String? = null,
+    subtitle: String? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -40,9 +40,9 @@ fun SettingsItem(
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            if (value != null) {
+            if (subtitle != null) {
                 Text(
-                    text = value,
+                    text = subtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -63,7 +63,7 @@ fun SettingsItem(
 private fun SettingsItemPreview() {
     SettingsItem(
         title = "Mensagens temporárias",
-        value = "Desativadas",
+        subtitle = "Desativadas",
         onClick = {}
     )
 }

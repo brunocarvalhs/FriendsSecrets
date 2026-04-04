@@ -6,15 +6,23 @@ import kotlin.random.Random
 data class GroupModel(
     val id: String = UUID.randomUUID().toString(),
     val name: String,
+    val description: String = "",
     val members: List<ContactModel>,
-    val token: String = token()
+    val token: String = token(),
+    val minPrice: Int? = null,
+    val maxPrice: Int? = null,
+    val date: String? = null
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "id" to id,
             "name" to name,
+            "description" to description,
             "members" to members.map { it.toMap() },
-            "token" to token
+            "token" to token,
+            "minPrice" to minPrice,
+            "maxPrice" to maxPrice,
+            "date" to date
         )
     }
 

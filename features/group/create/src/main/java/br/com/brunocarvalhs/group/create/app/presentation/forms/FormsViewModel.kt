@@ -34,19 +34,29 @@ class FormsViewModel @Inject constructor(
 
     fun handleIntent(intent: FormsIntent) = when (intent) {
         is FormsIntent.CreateGroup -> createGroup(intent.onFinish)
-        is FormsIntent.UpdateName -> updateName(intent.name)
+        is FormsIntent.UpdateName -> _uiState.value = _uiState.value.copy(name = intent.name)
+        is FormsIntent.UpdateDescription -> _uiState.value = _uiState.value.copy(description = intent.description)
+        is FormsIntent.UpdateDate -> _uiState.value = _uiState.value.copy(date = intent.date)
+        is FormsIntent.UpdateMinPrice -> _uiState.value = _uiState.value.copy(minPrice = intent.minPrice)
+        is FormsIntent.UpdateMaxPrice -> _uiState.value = _uiState.value.copy(maxPrice = intent.maxPrice)
     }
 
     private fun createGroup(onFinish: (String) -> Unit) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             val currentState = _uiState.value
+            _uiState.value = currentState.copy(isLoading = true, error = null)
+            
             val group = GroupModel(
                 id = currentState.id,
                 name = currentState.name,
+                description = currentState.description,
                 members = currentState.members,
-                token = currentState.token
+                token = currentState.token,
+                minPrice = currentState.minPrice.toIntOrNull(),
+                maxPrice = currentState.maxPrice.toIntOrNull(),
+                date = currentState.date.ifBlank { null }
             )
+            
             groupCreateUseCase(group).onSuccess {
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 onFinish(group.token)
@@ -57,9 +67,5 @@ class FormsViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun updateName(name: String) {
-        _uiState.value = _uiState.value.copy(name = name)
     }
 }

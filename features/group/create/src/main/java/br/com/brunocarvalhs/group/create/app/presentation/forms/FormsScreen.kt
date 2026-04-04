@@ -16,13 +16,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.filled.PriceChange
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -44,14 +49,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.SettingsItem
+import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
 
 @Composable
 fun FormsScreen(
@@ -63,7 +68,15 @@ fun FormsScreen(
 
     FormsContent(
         name = uiState.name,
+        description = uiState.description,
+        date = uiState.date,
+        minPrice = uiState.minPrice,
+        maxPrice = uiState.maxPrice,
         onNameChange = { viewModel.handleIntent(FormsIntent.UpdateName(it)) },
+        onDescriptionChange = { viewModel.handleIntent(FormsIntent.UpdateDescription(it)) },
+        onDateChange = { viewModel.handleIntent(FormsIntent.UpdateDate(it)) },
+        onMinPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMinPrice(it)) },
+        onMaxPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMaxPrice(it)) },
         members = uiState.members,
         contacts = uiState.contacts,
         isLoading = uiState.isLoading,
@@ -77,7 +90,15 @@ fun FormsScreen(
 @Composable
 private fun FormsContent(
     name: String,
+    description: String,
+    date: String,
+    minPrice: String,
+    maxPrice: String,
     onNameChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onDateChange: (String) -> Unit,
+    onMinPriceChange: (String) -> Unit,
+    onMaxPriceChange: (String) -> Unit,
     members: List<ContactModel>,
     contacts: Int,
     onCreate: () -> Unit,
@@ -127,6 +148,7 @@ private fun FormsContent(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -137,60 +159,98 @@ private fun FormsContent(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .clickable { /* Ação de foto */ },
-                        contentAlignment = Alignment.Center
+                Column {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Box(
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                .clickable { /* Ação de foto */ },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CameraAlt,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
                         Icon(
-                            imageVector = Icons.Default.CameraAlt,
+                            imageVector = Icons.Default.Edit,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                            modifier = Modifier.size(28.dp)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        TextField(
+                            value = name,
+                            onValueChange = { onNameChange(it) },
+                            placeholder = {
+                                Text(
+                                    "Nome do grupo",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                cursorColor = MaterialTheme.colorScheme.secondary,
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(20.dp)
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    TextField(
-                        value = name,
-                        onValueChange = { onNameChange(it) },
-                        placeholder = {
-                            Text(
-                                "Nome do grupo",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = MaterialTheme.colorScheme.secondary,
-                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier.weight(1f),
-                        singleLine = true
-                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Description,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextField(
+                            value = description,
+                            onValueChange = { onDescriptionChange(it) },
+                            placeholder = {
+                                Text(
+                                    "Descrição",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
 
@@ -200,69 +260,162 @@ private fun FormsContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
-                    SettingsItem(
-                        title = "Mensagens temporárias",
-                        value = "Desativadas",
-                        onClick = {}
-                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextField(
+                            value = date,
+                            onValueChange = { onDateChange(it) },
+                            placeholder = {
+                                Text(
+                                    "Data do evento",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                    }
+
                     HorizontalDivider(
                         color = MaterialTheme.colorScheme.outlineVariant,
-                        modifier = Modifier.padding(start = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
-                    SettingsItem(
-                        title = "Permissões do grupo",
-                        onClick = {}
-                    )
+
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PriceChange,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextField(
+                            value = minPrice,
+                            onValueChange = { 
+                                val digits = it.filter { char -> char.isDigit() }
+                                onMinPriceChange(digits) 
+                            },
+                            placeholder = {
+                                Text(
+                                    "Preço Mín.",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            visualTransformation = CurrencyVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
+                        )
+                        
+                        Box(
+                            modifier = Modifier
+                                .height(24.dp)
+                                .width(1.dp)
+                                .background(MaterialTheme.colorScheme.outlineVariant)
+                        )
+                        
+                        TextField(
+                            value = maxPrice,
+                            onValueChange = { 
+                                val digits = it.filter { char -> char.isDigit() }
+                                onMaxPriceChange(digits) 
+                            },
+                            placeholder = {
+                                Text(
+                                    "Preço Máx.",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            visualTransformation = CurrencyVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
+                        )
+                    }
                 }
             }
 
             Column {
                 Text(
-                    text = "MEMBROS: ${members.size} DE ${contacts}",
-                    style = MaterialTheme.typography.labelMedium.copy(
+                    text = "Membros",
+                    style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.5.sp
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 12.dp)
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(members) { member ->
-                        MemberAvatarItem(member = member)
+                    Column(modifier = Modifier.padding(vertical = 12.dp)) {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(members) { member ->
+                                MemberAvatarItem(
+                                    name = member.name,
+                                    photoUrl = member.photoUrl
+                                )
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        
+                        SettingsItem(
+                            title = "Contatos selecionados",
+                            subtitle = "$contacts membros",
+                            onClick = { /* Navegar para seleção de contatos */ }
+                        )
                     }
                 }
             }
         }
     }
+
     if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)),
-            contentAlignment = Alignment.Center
-        ) {
-            LoadingProgress()
-        }
+        LoadingProgress()
     }
-}
-
-
-@Preview
-@Composable
-private fun FormsContentPreview() {
-    FormsContent(
-        contacts = 2,
-        members = listOf(
-            ContactModel(id = "1", name = "Alice", phoneNumber = "1234567890"),
-            ContactModel(id = "2", name = "Bob", phoneNumber = "0987654321")
-        ),
-        name = "Meu Grupo",
-        onNameChange = {},
-        onCreate = {},
-        onBack = {},
-    )
 }
