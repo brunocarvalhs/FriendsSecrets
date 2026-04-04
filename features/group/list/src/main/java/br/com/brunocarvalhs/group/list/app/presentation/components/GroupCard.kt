@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,14 +18,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.list.R
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -42,9 +38,8 @@ private val imagesBottom = listOf(
 @Composable
 fun GroupCard(
     modifier: Modifier = Modifier,
-    group: GroupEntities,
-    onClick: (GroupEntities) -> Unit,
-    shape: Shape = CircleShape,
+    name: String,
+    onClick: () -> Unit,
 ) {
     val image = rememberSaveable { imagesBottom.random() }
 
@@ -57,7 +52,7 @@ fun GroupCard(
 
     Card(
         modifier = modifier.height(200.dp),
-        onClick = { onClick(group) },
+        onClick = { onClick() },
     ) {
         Box(
             modifier = Modifier
@@ -79,7 +74,7 @@ fun GroupCard(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = group.name,
+                    text = name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -100,19 +95,10 @@ fun GroupCard(
     uiMode = UI_MODE_NIGHT_NO
 )
 private fun GroupCardPreview() {
-    FriendsSecretsTheme {
-        GroupCard(
-            group = GroupEntities.toFake(
-                name = "Living Room",
-                members = emptyList<UserEntities>().apply {
-                    repeat(10) {
-                        UserEntities.toFake("Member $it", "Secret Santa $it")
-                    }
-                },
-            ),
-            onClick = {}
-        )
-    }
+    GroupCard(
+        name = "Living Room",
+        onClick = {}
+    )
 }
 
 @Composable
@@ -127,17 +113,8 @@ private fun GroupCardPreview() {
     uiMode = UI_MODE_NIGHT_NO
 )
 private fun GroupCardPreviewTwo() {
-    FriendsSecretsTheme {
-        GroupCard(
-            group = GroupEntities.toFake(
-                name = "Living Room",
-                members = emptyList<UserEntities>().apply {
-                    repeat(10) {
-                        UserEntities.toFake("Member $it", "Secret Santa $it")
-                    }
-                },
-            ),
-            onClick = {}
-        )
-    }
+    GroupCard(
+        name = "Living Room",
+        onClick = {}
+    )
 }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
 }
@@ -46,11 +47,6 @@ detekt {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
-    implementation(project(":core:data"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:common"))
-
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -58,6 +54,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.firebase.firestore.ktx)
     debugImplementation(libs.androidx.runtime.tracing)
     debugImplementation(libs.androidx.tracing.perfetto)
     debugImplementation(libs.androidx.tracing.perfetto.binary)
@@ -79,12 +78,12 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    // Outros Comuns
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
     implementation(libs.gson)
+    implementation(libs.accompanist.permissions)
 
     // Testes
     testImplementation(libs.junit)
@@ -108,6 +107,7 @@ dependencies {
 
     // firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.perf)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)

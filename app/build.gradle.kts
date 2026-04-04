@@ -91,6 +91,7 @@ detekt {
 dependencies {
     implementation(project(":core:ui"))
 
+    implementation(project(":features:group:list"))
     implementation(project(":features:group:create"))
 //    implementation(project(":features:settings"))
 

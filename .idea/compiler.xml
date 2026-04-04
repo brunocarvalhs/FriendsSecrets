@@ -9,7 +9,6 @@
       <module name="FriendsSecrets.features.group.details" target="21" />
       <module name="FriendsSecrets.features.group.draw" target="21" />
       <module name="FriendsSecrets.features.group.edit" target="21" />
-      <module name="FriendsSecrets.features.group.list" target="21" />
       <module name="FriendsSecrets.features.home" target="21" />
       <module name="FriendsSecrets.features.profiler" target="21" />
     </bytecodeTargetLevel>

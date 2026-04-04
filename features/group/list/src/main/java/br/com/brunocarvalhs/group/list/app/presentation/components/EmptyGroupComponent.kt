@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -19,8 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.list.R
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -109,7 +108,5 @@ fun EmptyGroupComponent(
 )
 @Composable
 fun EmptyGroupComponentPreview() {
-    FriendsSecretsTheme {
-        EmptyGroupComponent()
-    }
+    EmptyGroupComponent()
 }

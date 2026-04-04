@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -16,14 +16,12 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.list.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun HeaderHomeComponent(
-    session: UserEntities? = null,
+    firstName: String? = null,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     onAdd: () -> Unit = {},
     onNotification: () -> Unit = {},
@@ -33,8 +31,8 @@ internal fun HeaderHomeComponent(
         containerColor = MaterialTheme.colorScheme.background,
         titleContentColor = MaterialTheme.colorScheme.onBackground,
     ), title = {
-        val text = session?.let {
-            "${stringResource(R.string.home_title)} ${it.firstName()}"
+        val text = firstName?.let {
+            "${stringResource(R.string.home_title)} $it"
         } ?: stringResource(R.string.home_title)
         Text(
             text = text, style = MaterialTheme.typography.titleLarge
@@ -66,15 +64,7 @@ internal fun HeaderHomeComponent(
 @Composable
 @Preview
 private fun HeaderHomeComponentPreview() {
-    FriendsSecretsTheme {
         HeaderHomeComponent(
-            session = UserEntities.toFake(
-                id = "1",
-                name = "John Doe",
-                photoUrl = null,
-                phoneNumber = "+5511999999999",
-                isPhoneNumberVerified = true
-            )
+            firstName = "Bruno",
         )
-    }
 }

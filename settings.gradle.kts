@@ -25,4 +25,5 @@ rootProject.name = "FriendsSecrets"
 include(":app")
 include(":core:ui")
 include(":features:group:create")
+include(":features:group:list")
 //include(":features:settings")

@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import br.com.brunocarvalhs.group.R
+import br.com.brunocarvalhs.group.list.R
 
 sealed class MenuItem(
     val title: @Composable () -> String,

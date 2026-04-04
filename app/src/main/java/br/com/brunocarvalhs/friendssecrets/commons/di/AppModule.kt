@@ -2,7 +2,9 @@ package br.com.brunocarvalhs.friendssecrets.commons.di
 
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.feature.groups.create.providers.GroupCreateCryptoImpl
+import br.com.brunocarvalhs.friendssecrets.feature.groups.list.providers.GroupListCryptoImpl
 import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateCrypto
+import br.com.brunocarvalhs.group.list.commons.providers.GroupListCrypto
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -91,5 +93,10 @@ object AppModule {
     @Singleton
     fun provideGroupCreateCrypto(crypto: CryptoManager): GroupCreateCrypto =
         GroupCreateCryptoImpl(crypto)
+
+    @Provides
+    @Singleton
+    fun provideGroupListCrypto(crypto: CryptoManager): GroupListCrypto =
+        GroupListCryptoImpl(crypto)
 }
 
