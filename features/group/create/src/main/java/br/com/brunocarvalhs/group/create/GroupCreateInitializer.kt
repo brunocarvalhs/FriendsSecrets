@@ -24,11 +24,7 @@ class GroupCreateInitializer(private val builder: Builder) {
     @AddTrace(name = "GroupCreateInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
         return navGraphBuilder.navigation<GroupCreateRouter>(startDestination = ContactsRouter) {
-            composable<FormsRouter>(
-                typeMap = mapOf(
-                    typeOf<List<ContactModel>>() to navTypeListSerializer<ContactModel>()
-                )
-            ) {
+            composable<FormsRouter>(typeMap = FormsRouter.typeMap) {
                 val viewModel = hiltViewModel<FormsViewModel>()
                 FormsScreen(
                     navController = builder.navController,
