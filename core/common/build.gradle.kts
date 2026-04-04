@@ -46,7 +46,7 @@ detekt {
 }
 
 dependencies {
-    api(project(":core:domain"))
+//    api(project(":core:domain"))
 
     implementation(libs.timber)
     implementation(libs.androidx.biometric)

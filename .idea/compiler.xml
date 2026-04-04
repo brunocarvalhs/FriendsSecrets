@@ -5,8 +5,9 @@
       <module name="FriendsSecrets.features.auth" target="21" />
       <module name="FriendsSecrets.features.generative" target="21" />
       <module name="FriendsSecrets.features.group.commons" target="21" />
-      <module name="FriendsSecrets.features.group.create" target="21" />
       <module name="FriendsSecrets.features.group.details" target="21" />
+      <module name="FriendsSecrets.features.group.draw" target="21" />
+      <module name="FriendsSecrets.features.group.edit" target="21" />
       <module name="FriendsSecrets.features.group.list" target="21" />
       <module name="FriendsSecrets.features.home" target="21" />
       <module name="FriendsSecrets.features.profiler" target="21" />

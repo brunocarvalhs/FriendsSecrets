@@ -90,11 +90,9 @@ detekt {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":core:data"))
     implementation(project(":core:common"))
-    implementation(project(":core:domain"))
 
-    implementation(project(":features:group"))
+    implementation(project(":features:group:create"))
     implementation(project(":features:settings"))
 
     implementation(libs.androidx.core.ktx)

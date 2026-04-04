@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.domain.useCases
 import br.com.brunocarvalhs.friendssecrets.domain.repositories.UserRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.PerformanceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.SessionService
+import br.com.brunocarvalhs.group.core.domain.entities.UserEntities
 
 class CreateProfileUseCase(
     private val session: SessionService<UserEntities>,

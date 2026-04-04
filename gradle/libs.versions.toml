@@ -47,6 +47,8 @@ googleid = "1.1.1"
 accompanist = "0.36.0"
 jetbrainsKotlinJvm = "2.1.10"
 coreSplashscreen = "1.0.1"
+datastoreCore = "1.2.1"
+firebaseFirestoreKtx = "26.1.2"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -103,6 +105,8 @@ googleid = { group = "com.google.android.libraries.identity.googleid", name = "g
 ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
