@@ -24,16 +24,18 @@ class GroupCreateInitializer(private val builder: Builder) {
             composable<FormsRouter>(typeMap = FormsRouter.typeMap) {
                 val viewModel = hiltViewModel<FormsViewModel>()
                 FormsScreen(
-                    navController = builder.navController,
                     viewModel = viewModel,
+                    onFinish = { builder.onFinish?.invoke(it) },
+                    onBack = { builder.navController.popBackStack() }
                 )
             }
 
             composable<ContactsRouter> {
                 val viewModel = hiltViewModel<ContactsViewModel>()
                 ContactsScreen(
-                    navController = builder.navController,
                     viewModel = viewModel,
+                    onBack = { builder.navController.popBackStack() },
+                    onNext = { builder.navController.navigate(it) }
                 )
             }
         }
@@ -42,6 +44,7 @@ class GroupCreateInitializer(private val builder: Builder) {
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
         internal var toggle: GroupCreateToggles? = null
+        internal var onFinish: ((String) -> Unit)? = null
 
         @AddTrace(name = "GroupCreateInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
@@ -51,6 +54,11 @@ class GroupCreateInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupCreateInitializer.Builder.toggleManager", enabled = true)
         fun toggle(toggleManager: GroupCreateToggles) = apply {
             this.toggle = toggleManager
+        }
+
+        @AddTrace(name = "GroupCreateInitializer.Builder.onFinish", enabled = true)
+        fun onFinish(onFinish: (String) -> Unit) = apply {
+            this.onFinish = onFinish
         }
 
         @AddTrace(name = "GroupCreateInitializer.Builder.build", enabled = true)

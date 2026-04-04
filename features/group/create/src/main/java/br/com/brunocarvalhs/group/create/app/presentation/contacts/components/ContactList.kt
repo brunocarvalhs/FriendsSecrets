@@ -19,8 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 @Composable
 fun ContactList(
@@ -59,7 +57,7 @@ fun ContactList(
                         contactsInGroup.forEachIndexed { index, contact ->
                             ContactListItem(
                                 contact = contact,
-                                isSelected = selectedMembers.any { it.id == contact.id },
+                                isSelected = selectedMembers.any { it.phoneNumber == contact.phoneNumber },
                                 onToggle = { onToggleMember(contact) }
                             )
                             if (index < contactsInGroup.size - 1) {

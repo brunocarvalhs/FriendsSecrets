@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/group" />
             <option value="$PROJECT_DIR$/features/group/create" />
+            <option value="$PROJECT_DIR$/features/group/details" />
             <option value="$PROJECT_DIR$/features/group/list" />
           </set>
         </option>

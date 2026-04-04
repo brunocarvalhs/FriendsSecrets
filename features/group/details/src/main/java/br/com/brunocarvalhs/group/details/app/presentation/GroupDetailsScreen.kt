@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.details
+package br.com.brunocarvalhs.group.details.app.presentation
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -37,6 +37,9 @@ import br.com.brunocarvalhs.group.app.details.components.GroupDetailsContentComp
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsErrorComponent
 import br.com.brunocarvalhs.group.app.details.components.GroupDetailsLoadingComponent
 import br.com.brunocarvalhs.group.app.details.components.HeaderComponent
+import br.com.brunocarvalhs.group.app.presentation.details.GroupDetailsIntent
+import br.com.brunocarvalhs.group.app.presentation.details.GroupDetailsUiState
+import br.com.brunocarvalhs.group.app.presentation.details.GroupDetailsViewModel
 import br.com.brunocarvalhs.group.commons.navigation.GroupEditScreenRoute
 import br.com.brunocarvalhs.group.commons.navigation.GroupRevelationScreenRoute
 import kotlin.collections.set

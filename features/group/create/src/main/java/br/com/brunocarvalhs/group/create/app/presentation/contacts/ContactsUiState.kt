@@ -9,5 +9,6 @@ data class ContactsUiState(
     val filteredContacts: List<ContactModel> = emptyList(),
     val searchQuery: String = "",
     val members: List<ContactModel> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val error: String? = null
 )

@@ -10,7 +10,7 @@ class GroupCreateUseCase @Inject constructor(
     private val storage: StorageService
 ) {
 
-    suspend fun invoke(group: GroupModel): Result<Unit> = runCatching {
+    suspend operator fun invoke(group: GroupModel): Result<Unit> = runCatching {
         repository.create(group)
         persistGroupToken(group.token)
         persistAdminToken(group.token)
@@ -20,11 +20,11 @@ class GroupCreateUseCase @Inject constructor(
         val groupList = storage.load(
             key = COLLECTION_NAME,
             value = Array<String>::class
-        )?.toList().orEmpty()
+        ) ?: emptyArray()
 
         storage.save(
             COLLECTION_NAME,
-            groupList.toMutableList().apply { add(token) }
+            groupList + token
         )
     }
 
@@ -32,11 +32,11 @@ class GroupCreateUseCase @Inject constructor(
         val adminList = storage.load(
             key = COLLECTION_NAME_ADMINS,
             value = Array<String>::class
-        )?.toList().orEmpty()
+        ) ?: emptyArray()
 
         storage.save(
             key = COLLECTION_NAME_ADMINS,
-            value = adminList.toMutableList().apply { add(token) }
+            value = adminList + token
         )
     }
 

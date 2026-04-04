@@ -1,6 +1,11 @@
 package br.com.brunocarvalhs.friendssecrets.commons.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
+import br.com.brunocarvalhs.friendssecrets.commons.storage.dataStore
 import br.com.brunocarvalhs.friendssecrets.feature.groups.create.providers.GroupCreateCryptoImpl
 import br.com.brunocarvalhs.friendssecrets.feature.groups.list.providers.GroupListCryptoImpl
 import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateCrypto
@@ -19,6 +24,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
@@ -87,6 +93,15 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideDatastore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> {
+        return context.dataStore
+    }
+
+
+    @Provides
+    @Singleton
     fun provideCryptoManager(): CryptoManager = CryptoManager()
 
     @Provides
@@ -99,4 +114,3 @@ object AppModule {
     fun provideGroupListCrypto(crypto: CryptoManager): GroupListCrypto =
         GroupListCryptoImpl(crypto)
 }
-

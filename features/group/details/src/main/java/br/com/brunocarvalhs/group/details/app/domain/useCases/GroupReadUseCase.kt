@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.details.domain.useCases
+package br.com.brunocarvalhs.group.details.app.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.core.domain.entities.GroupEntities

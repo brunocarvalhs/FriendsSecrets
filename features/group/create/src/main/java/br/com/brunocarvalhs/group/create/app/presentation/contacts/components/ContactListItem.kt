@@ -15,6 +15,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 
 @Composable
 fun ContactListItem(
@@ -30,6 +31,23 @@ fun ContactListItem(
     isSelected: Boolean,
     onToggle: () -> Unit
 ) {
+    val initials = remember(contact.name) {
+        val sanitized = contact.name.filter { it.isLetter() || it.isWhitespace() }
+        val words = sanitized.split(" ").filter { it.isNotBlank() }
+
+        when {
+            words.size >= 2 -> {
+                words.take(2).joinToString("") { it.first().uppercase() }
+            }
+
+            words.size == 1 -> {
+                words.first().take(2).uppercase()
+            }
+
+            else -> "?"
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,30 +55,20 @@ fun ContactListItem(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (!contact.photoUrl.isNullOrBlank()) {
-            AsyncImage(
-                model = contact.photoUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = contact.name.take(1).uppercase(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    style = MaterialTheme.typography.titleMedium
-                )
+        SubcomposeAsyncImage(
+            model = contact.photoUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop,
+            error = {
+                AvatarFallback(initials = initials)
+            },
+            loading = {
+                AvatarFallback(initials = initials)
             }
-        }
+        )
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -83,14 +91,29 @@ fun ContactListItem(
     }
 }
 
+@Composable
+private fun AvatarFallback(initials: String) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .background(MaterialTheme.colorScheme.secondaryContainer),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = initials,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+}
+
 @Preview
 @Composable
-fun ContactListItemPreview(
-) {
+fun ContactListItemPreview() {
     ContactListItem(
         contact = ContactModel(
             id = "1",
-            name = "John Doe",
+            name = "Bruno Carvalho",
             phoneNumber = "1234567890"
         ),
         isSelected = true,

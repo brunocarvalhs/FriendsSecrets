@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
+import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,26 +27,31 @@ class ContactsViewModel @Inject constructor(
         handleIntent(ContactsIntent.LoadContacts)
     }
 
-    fun handleIntent(intent: ContactsIntent) {
+    internal fun handleIntent(intent: ContactsIntent) {
         when (intent) {
             is ContactsIntent.LoadContacts -> loadContacts()
             is ContactsIntent.SearchContacts -> searchContacts(intent.query)
             is ContactsIntent.AddMember -> addMember(intent.contact)
             is ContactsIntent.RemoveMember -> removeMember(intent.contact)
+            is ContactsIntent.Next -> next(intent.callback)
         }
     }
 
     private fun loadContacts() {
+        _uiState.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
-            val contacts: List<ContactModel> = getContactsUseCase().getOrThrow()
-            _uiState.update { currentState ->
-                currentState.copy(
-                    contacts = contacts,
-                    filteredContacts = filterContacts(contacts, currentState.searchQuery)
-                )
+            getContactsUseCase().onSuccess { contacts ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        contacts = contacts,
+                        filteredContacts = filterContacts(contacts, currentState.searchQuery),
+                        isLoading = false
+                    )
+                }
+            }.onFailure { exception ->
+                _uiState.update { it.copy(isLoading = false, error = exception.message) }
             }
         }
-
     }
 
     private fun searchContacts(query: String) {
@@ -81,5 +87,26 @@ class ContactsViewModel @Inject constructor(
             it.name.contains(query, ignoreCase = true) ||
                     it.phoneNumber.contains(query)
         }
+    }
+
+    private fun next(callback: (FormsRouter) -> Unit) {
+        val members = _uiState.value.members
+        
+        if (members.isEmpty()) {
+            _uiState.update { it.copy(error = "Selecione ao menos um membro") }
+            return
+        }
+        
+        if (members.size < 3) {
+            _uiState.update { it.copy(error = "O grupo precisa de no mínimo 3 membros") }
+            return
+        }
+
+        callback(
+            FormsRouter(
+                members = members,
+                contacts = _uiState.value.contacts.size
+            )
+        )
     }
 }

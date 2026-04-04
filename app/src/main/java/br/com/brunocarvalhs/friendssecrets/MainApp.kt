@@ -13,6 +13,9 @@ fun NavHostController.MainApp() {
     NavHost(navController = this@MainApp, startDestination = GroupListRouter) {
         GroupCreateInitializer.Builder()
             .navController(navController = this@MainApp)
+            .onFinish {
+                this@MainApp.navigate(GroupListRouter)
+            }
             .build(navGraphBuilder = this)
 
         GroupListInitializer.Builder()

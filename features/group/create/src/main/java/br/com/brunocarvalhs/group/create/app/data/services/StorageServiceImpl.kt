@@ -24,21 +24,21 @@ class StorageServiceImpl @Inject constructor(
         ignoreUnknownKeys = true
         coerceInputValues = true
         encodeDefaults = true
-    }
+    },
+    private val dataStore: DataStore<Preferences>
 ) : StorageService {
-
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = context.packageName)
 
     override suspend fun <T> save(key: String, value: T) {
         val dataStoreKey = stringPreferencesKey(key)
-        val jsonValue = runCatching {
+        val jsonValue = run {
             @Suppress("UNCHECKED_CAST")
-            val serializer = json.serializersModule.serializer(value!!::class.java) as KSerializer<T>
+            val serializer =
+                json.serializersModule.serializer(value!!::class.java) as KSerializer<T>
             json.encodeToString(serializer, value)
-        }.getOrNull()
+        }
 
-        jsonValue?.let {
-            context.dataStore.edit { preferences ->
+        jsonValue.let {
+            dataStore.edit { preferences ->
                 preferences[dataStoreKey] = it
             }
         }
@@ -47,13 +47,13 @@ class StorageServiceImpl @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     override suspend fun <T : Any> load(key: String, value: KClass<T>): T? {
         val dataStoreKey = stringPreferencesKey(key)
-        val jsonValue = context.dataStore.data
+        val jsonValue = dataStore.data
             .map { preferences -> preferences[dataStoreKey] }
             .firstOrNull() ?: return null
 
-        return runCatching {
+        return run {
             val serializer = json.serializersModule.serializer(value.java) as KSerializer<T>
             json.decodeFromString(serializer, jsonValue)
-        }.getOrNull()
+        }
     }
 }

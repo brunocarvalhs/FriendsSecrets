@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -48,13 +49,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.SettingsItem
 
 @Composable
 fun FormsScreen(
-    navController: NavController,
-    viewModel: FormsViewModel
+    viewModel: FormsViewModel,
+    onFinish: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -63,10 +66,10 @@ fun FormsScreen(
         onNameChange = { viewModel.handleIntent(FormsIntent.UpdateName(it)) },
         members = uiState.members,
         contacts = uiState.contacts,
-        onBack = {
-            navController.popBackStack()
-        },
-        onCreate = { viewModel.handleIntent(FormsIntent.CreateGroup) },
+        isLoading = uiState.isLoading,
+        error = uiState.error,
+        onBack = onBack,
+        onCreate = { viewModel.handleIntent(FormsIntent.CreateGroup(onFinish)) },
         onToggleMember = { viewModel.handleIntent(FormsIntent.ToggleMember(it)) }
     )
 }
@@ -80,7 +83,9 @@ private fun FormsContent(
     contacts: Int,
     onCreate: () -> Unit,
     onBack: () -> Unit,
-    onToggleMember: (ContactModel) -> Unit
+    onToggleMember: (ContactModel) -> Unit,
+    isLoading: Boolean = false,
+    error: String? = null
 ) {
     Scaffold(
         topBar = {
@@ -235,6 +240,16 @@ private fun FormsContent(
                     }
                 }
             }
+        }
+    }
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingProgress()
         }
     }
 }
