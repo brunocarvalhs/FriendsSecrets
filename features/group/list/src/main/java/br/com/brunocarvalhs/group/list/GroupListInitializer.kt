@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
 import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsScreen
 import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsViewModel
 import br.com.brunocarvalhs.group.list.app.presentation.list.GroupListScreen

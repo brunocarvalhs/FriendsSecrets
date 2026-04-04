@@ -44,27 +44,9 @@ fun GroupDetailsScreen(
     onDraw: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    GroupDetailsContent(
-        onBack = onBack,
-        token = uiState.group.token,
-        description = uiState.group.description,
-        date = uiState.group.createdAt,
-        draws = uiState.group.draws,
-        isOwner = uiState.group.isOwner,
-        minPrice = uiState.group.minPrice,
-        maxPrice = uiState.group.maxPrice,
-        type = uiState.group.type,
-        members = uiState.group.members,
-        onShowBottomSheet = { },
-        onChangeName = { },
-        onChangeLikes = { },
-        onRemoveMember = { },
-        onEditMember = { },
-        onShareGroup = { }
-    )
 }
 
+@Deprecated("Use GroupDetailsScreen instead")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GroupDetailsContent(
