@@ -1,10 +1,13 @@
 package br.com.brunocarvalhs.group.create.app.presentation.forms
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.entities.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
+import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,10 +17,14 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 class FormsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val groupCreateUseCase: GroupCreateUseCase
 ) : ViewModel() {
-    
-    private val _uiState = MutableStateFlow(FormsUiState())
+
+    private val args = savedStateHandle.toRoute<FormsRouter>()
+    private val _uiState = MutableStateFlow(FormsUiState(
+        members = args.members
+    ))
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
     
     fun handleIntent(intent: FormsIntent) = when (intent) {

@@ -1,5 +1,8 @@
 package br.com.brunocarvalhs.group.create.app.domain.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ContactModel(
     val id: String,
     val photoUrl: String? = null,
