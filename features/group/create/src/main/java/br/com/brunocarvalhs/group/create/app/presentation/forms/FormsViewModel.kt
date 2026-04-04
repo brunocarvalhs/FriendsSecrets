@@ -21,7 +21,7 @@ class FormsViewModel @Inject constructor(
     private val groupCreateUseCase: GroupCreateUseCase
 ) : ViewModel() {
 
-    private val args = savedStateHandle.toRoute<FormsRouter>()
+    private val args = savedStateHandle.toRoute<FormsRouter>(FormsRouter.typeMap)
     private val _uiState = MutableStateFlow(FormsUiState(
         members = args.members
     ))
