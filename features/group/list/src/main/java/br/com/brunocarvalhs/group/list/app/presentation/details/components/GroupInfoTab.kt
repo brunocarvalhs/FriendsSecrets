@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.group.list.R
-import br.com.brunocarvalhs.group.list.app.presentation.details.ExpandableText
 
 @Composable
 fun GroupInfoTab(
@@ -392,6 +392,33 @@ fun DrawDetailCard(
                 Text(
                     text = value,
                     style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExpandableText(
+    text: String,
+    maxLines: Int = 3,
+    modifier: Modifier = Modifier,
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier) {
+        Text(
+            text = text,
+            maxLines = if (isExpanded) Int.MAX_VALUE else maxLines,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        if (text.length > 100) {
+            TextButton(onClick = { isExpanded = !isExpanded }) {
+                Text(
+                    stringResource(
+                        id = if (isExpanded) R.string.group_details_text_button_label_see_less
+                        else R.string.group_details_text_button_label_see_more
+                    )
                 )
             }
         }
