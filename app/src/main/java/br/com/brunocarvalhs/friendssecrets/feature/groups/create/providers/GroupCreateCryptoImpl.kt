@@ -9,7 +9,7 @@ class GroupCreateCryptoImpl @Inject constructor(
 ) : GroupCreateCrypto {
 
     override fun encrypt(input: Map<String, Any?>): Map<String, Any?> {
-        val excludedKeys = setOf("id")
+        val excludedKeys = setOf("id", "token")
         return crypto.encryptMap(input, excludedKeys)
     }
 }

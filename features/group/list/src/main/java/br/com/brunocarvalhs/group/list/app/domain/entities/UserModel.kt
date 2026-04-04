@@ -6,7 +6,7 @@ data class UserModel(
     companion object {
         fun fromMap(map: Map<String, Any>): UserModel {
             return UserModel(
-                name = map["name"] as String,
+                name = map["name"] as? String ?: "",
             )
         }
     }

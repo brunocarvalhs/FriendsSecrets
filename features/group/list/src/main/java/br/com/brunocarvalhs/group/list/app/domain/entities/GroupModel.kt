@@ -10,11 +10,11 @@ data class GroupModel(
     companion object {
         fun fromMap(map: Map<String, Any>): GroupModel {
             return GroupModel(
-                id = map["id"] as String,
-                name = map["name"] as String,
-                description = map["description"] as String,
-                token = map["token"] as String,
-                members = (map["members"] as List<Map<String, Any>>).map { UserModel.fromMap(it) },
+                id = map["id"] as? String ?: "",
+                name = map["name"] as? String ?: "",
+                description = map["description"] as? String ?: "",
+                token = map["token"] as? String ?: "",
+                members = (map["members"] as? List<Map<String, Any>>)?.map { UserModel.fromMap(it) } ?: emptyList(),
             )
         }
     }
