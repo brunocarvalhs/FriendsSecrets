@@ -48,7 +48,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -128,8 +127,8 @@ private fun EditMemberContent(
             if (name.text.isNotBlank()) {
                 addLike()
                 onMemberAdded.invoke(
-                        name.text,
-                        likes
+                    name.text,
+                    likes
                 )
             }
             name = TextFieldValue("", TextRange(0, 0))
@@ -257,13 +256,11 @@ private fun EditMemberContent(
 @Composable
 @Preview(showBackground = true)
 private fun AddMemberBottomSheetPreview() {
-    FriendsSecretsTheme {
-        EditMemberContent(
-            sheetState = rememberModalBottomSheetState(),
-            nameMember = "Bruno",
-            listLikes = listOf("Like 1", "Like 2"),
-            onDismiss = {},
-            onMemberAdded = { _, _ -> }
-        )
-    }
+    EditMemberContent(
+        sheetState = rememberModalBottomSheetState(),
+        nameMember = "Bruno",
+        listLikes = listOf("Like 1", "Like 2"),
+        onDismiss = {},
+        onMemberAdded = { _, _ -> }
+    )
 }

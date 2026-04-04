@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -96,31 +95,23 @@ fun ErrorComponent(
 @Composable
 @Preview(showBackground = true)
 private fun ErrorComponentPreview() {
-    FriendsSecretsTheme {
-        ErrorComponent(message = "Estamos com problema no momento")
-    }
+    ErrorComponent(message = "Estamos com problema no momento")
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun ErrorComponentButtonOnRefreshPreview() {
-    FriendsSecretsTheme {
-        ErrorComponent(message = "Estamos com problema no momento", onRefresh = {})
-    }
+    ErrorComponent(message = "Estamos com problema no momento", onRefresh = {})
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun ErrorComponentButtonOnBackPreview() {
-    FriendsSecretsTheme {
-        ErrorComponent(message = "Estamos com problema no momento", onBack = {})
-    }
+    ErrorComponent(message = "Estamos com problema no momento", onBack = {})
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun ErrorComponentButtonAllButtonPreview() {
-    FriendsSecretsTheme {
-        ErrorComponent(message = "Estamos com problema no momento", onBack = {}, onRefresh = {})
-    }
+    ErrorComponent(message = "Estamos com problema no momento", onBack = {}, onRefresh = {})
 }

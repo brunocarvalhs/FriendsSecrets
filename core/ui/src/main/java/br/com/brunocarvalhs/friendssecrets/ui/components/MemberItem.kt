@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun MemberItem(
@@ -103,71 +102,63 @@ fun MemberItem(
 @Composable
 @Preview
 private fun MemberItemPreview() {
-    FriendsSecretsTheme {
-        MemberItem(
-            participant = "Produto de Teste",
-            likes = listOf("Like 1", "Like 2", "Like 3"),
-            draws = mapOf(
-                "Participant 1" to "Secret Friend 1",
-                "Participant 2" to "Secret Friend 2"
-            ),
-            isAdministrator = false,
-            onEdit = {},
-            onRemove = {}
-        )
-    }
+    MemberItem(
+        participant = "Produto de Teste",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
+        draws = mapOf(
+            "Participant 1" to "Secret Friend 1",
+            "Participant 2" to "Secret Friend 2"
+        ),
+        isAdministrator = false,
+        onEdit = {},
+        onRemove = {}
+    )
 }
 
 @Composable
 @Preview
 private fun MemberItemEmptyPreview() {
-    FriendsSecretsTheme {
-        MemberItem(
-            participant = "Produto de Teste",
-            likes = listOf("Like 1", "Like 2", "Like 3"),
-            draws = mapOf(
-                "Participant 1" to "Secret Friend 1",
-                "Participant 2" to "Secret Friend 2"
-            ),
-            isAdministrator = false,
-            onEdit = {},
-            onRemove = {}
-        )
-    }
+    MemberItem(
+        participant = "Produto de Teste",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
+        draws = mapOf(
+            "Participant 1" to "Secret Friend 1",
+            "Participant 2" to "Secret Friend 2"
+        ),
+        isAdministrator = false,
+        onEdit = {},
+        onRemove = {}
+    )
 }
 
 @Composable
 @Preview
 private fun MemberItemBlankPreview() {
-    FriendsSecretsTheme {
-        MemberItem(
-            participant = "Produto de Teste",
-            likes = listOf("Like 1", "Like 2", "Like 3"),
-            draws = mapOf(
-                "Participant 1" to "Secret Friend 1",
-                "Participant 2" to "Secret Friend 2"
-            ),
-            isAdministrator = false,
-            onEdit = {},
-            onRemove = {}
-        )
-    }
+    MemberItem(
+        participant = "Produto de Teste",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
+        draws = mapOf(
+            "Participant 1" to "Secret Friend 1",
+            "Participant 2" to "Secret Friend 2"
+        ),
+        isAdministrator = false,
+        onEdit = {},
+        onRemove = {}
+    )
 }
 
 @Composable
 @Preview
 private fun MemberItemAdminPreview() {
-    FriendsSecretsTheme {
-        MemberItem(
-            participant = "Produto de Teste",
-            likes = listOf("Like 1", "Like 2", "Like 3"),
-            draws = mapOf(
-                "Participant 1" to "Secret Friend 1",
-                "Participant 2" to "Secret Friend 2"
-            ),
-            isAdministrator = true,
-            onEdit = {},
-            onRemove = {}
-        )
-    }
+    MemberItem(
+        participant = "Produto de Teste",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
+        draws = mapOf(
+            "Participant 1" to "Secret Friend 1",
+            "Participant 2" to "Secret Friend 2"
+        ),
+        isAdministrator = true,
+        onEdit = {},
+        onRemove = {}
+    )
 }

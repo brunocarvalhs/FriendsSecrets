@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.AsyncImage
 
 @Composable
@@ -198,13 +197,11 @@ private fun ContactItemPreview() {
     uiMode = UI_MODE_NIGHT_NO
 )
 private fun ContactItemSelectedPreview() {
-    FriendsSecretsTheme {
-        ContactItem(
-            name = "Produto de Teste",
-            photoUrl = "",
-            likes = listOf("Like 1", "Like 2", "Like 3"),
-            isSelected = true,
-            isLikedExpanded = true,
-        )
-    }
+    ContactItem(
+        name = "Produto de Teste",
+        photoUrl = "",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
+        isSelected = true,
+        isLikedExpanded = true,
+    )
 }

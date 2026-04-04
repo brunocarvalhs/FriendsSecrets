@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
     id("org.jetbrains.dokka") version "1.9.20"
-    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.10"
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
@@ -90,10 +90,11 @@ detekt {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":core:common"))
 
     implementation(project(":features:group:create"))
     implementation(project(":features:settings"))
+
+    implementation("androidx.startup:startup-runtime:1.2.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -106,6 +107,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.timber)
+    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)
@@ -115,4 +118,14 @@ dependencies {
     kspAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
+
+    implementation(libs.kotlinx.serialization.json)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.analytics)
 }

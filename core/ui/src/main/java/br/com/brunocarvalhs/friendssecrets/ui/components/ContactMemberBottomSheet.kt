@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,13 +74,11 @@ private fun ContactMemberItem(
 @Composable
 @Preview(showBackground = true)
 private fun ContactMemberBottomSheetPreview() {
-    FriendsSecretsTheme {
-        ContactMemberContent(
-            sheetState = rememberModalBottomSheetState(),
-            onDismiss = {},
-            onMemberAdded = { _, _ ->
+    ContactMemberContent(
+        sheetState = rememberModalBottomSheetState(),
+        onDismiss = {},
+        onMemberAdded = { _, _ ->
 
-            }
-        )
-    }
+        }
+    )
 }

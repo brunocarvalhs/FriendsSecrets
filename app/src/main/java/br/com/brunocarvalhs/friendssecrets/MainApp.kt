@@ -1,11 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.brunocarvalhs.friendssecrets.common.navigation.GroupGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
+import br.com.brunocarvalhs.friendssecrets.commons.navigation.GroupGraphRoute
+import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
 import br.com.brunocarvalhs.settings.SettingsInitializer
 
