@@ -10,24 +10,30 @@ import br.com.brunocarvalhs.group.create.app.domain.services.StorageService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import kotlin.reflect.KClass
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.reflect.KClass
 
 @Singleton
 class StorageServiceImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val json: Json
+    private val json: Json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        encodeDefaults = true
+    }
 ) : StorageService {
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = context.packageName)
 
-    override suspend fun <T : Any> save(key: String, value: KClass<T>) {
+    override suspend fun <T> save(key: String, value: T) {
         val dataStoreKey = stringPreferencesKey(key)
         val jsonValue = runCatching {
-            val serializer = json.serializersModule.serializer(value::class.java)
+            @Suppress("UNCHECKED_CAST")
+            val serializer = json.serializersModule.serializer(value!!::class.java) as KSerializer<T>
             json.encodeToString(serializer, value)
         }.getOrNull()
 
@@ -46,8 +52,8 @@ class StorageServiceImpl @Inject constructor(
             .firstOrNull() ?: return null
 
         return runCatching {
-            val serializer = json.serializersModule.serializer(value::class.java)
-            json.decodeFromString(serializer, jsonValue) as? T
+            val serializer = json.serializersModule.serializer(value.java) as KSerializer<T>
+            json.decodeFromString(serializer, jsonValue)
         }.getOrNull()
     }
 }

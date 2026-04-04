@@ -19,7 +19,7 @@ class GroupCreateUseCase @Inject constructor(
     private suspend fun persistGroupToken(token: String) {
         val groupList = storage.load(
             key = COLLECTION_NAME,
-            clazz = Array<String>::class.java
+            value = Array<String>::class
         )?.toList().orEmpty()
 
         storage.save(
@@ -31,12 +31,12 @@ class GroupCreateUseCase @Inject constructor(
     private suspend fun persistAdminToken(token: String) {
         val adminList = storage.load(
             key = COLLECTION_NAME_ADMINS,
-            clazz = Array<String>::class.java
+            value = Array<String>::class
         )?.toList().orEmpty()
 
         storage.save(
-            COLLECTION_NAME_ADMINS,
-            adminList.toMutableList().apply { add(token) }
+            key = COLLECTION_NAME_ADMINS,
+            value = adminList.toMutableList().apply { add(token) }
         )
     }
 

@@ -47,8 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import br.com.brunocarvalhs.group.app.presentation.create.GroupCreateIntent
-import br.com.brunocarvalhs.group.app.presentation.create.GroupCreateUiState
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.SettingsItem
