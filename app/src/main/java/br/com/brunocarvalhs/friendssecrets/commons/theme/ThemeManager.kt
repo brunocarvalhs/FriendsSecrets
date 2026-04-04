@@ -1,22 +1,16 @@
 package br.com.brunocarvalhs.friendssecrets.commons.theme
 
-import android.content.Context
 import android.content.res.Configuration
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ThemeManager @Inject constructor(
-    @param:ApplicationContext private val context: Context,
-    activity: ComponentActivity,
+class ThemeManager constructor(
+    private val activity: ComponentActivity,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _theme = MutableStateFlow(Theme.SYSTEM)
@@ -44,7 +38,7 @@ class ThemeManager @Inject constructor(
     }
 
     private fun getSystemTheme(): Theme {
-        return if ((context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+        return if ((activity.applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             Theme.DARK
         } else {
             Theme.LIGHT

@@ -21,15 +21,15 @@ class CryptoManager(
     }
 ) {
 
-     fun encryptMap(
-        inputMap: Map<String, Any>,
+    fun encryptMap(
+        inputMap: Map<String, Any?>,
         excludedKeys: Set<String>
-    ): Map<String, Any> = inputMap.mapValues { (key, value) ->
+    ): Map<String, Any?> = inputMap.filterValues { it != null }.mapValues { (key, value) ->
         if (key in excludedKeys) value
         else encrypt(json.encodeToString(value.toJsonElement()))
     }
 
-     fun decryptMap(
+    fun decryptMap(
         encodedMap: Map<String, Any>,
         excludedKeys: Set<String>
     ): Map<String, Any> = encodedMap.mapValues { (key, value) ->
@@ -43,12 +43,12 @@ class CryptoManager(
         }.getOrNull() ?: decrypted
     }
 
-     fun encrypt(input: String): String = base64Encoder.encodeToString(
+    fun encrypt(input: String): String = base64Encoder.encodeToString(
         input.toByteArray(),
         BASE64_FLAGS
     )
 
-     fun decrypt(encoded: String): String = runCatching {
+    fun decrypt(encoded: String): String = runCatching {
         val decodedBytes = base64Encoder.decode(encoded, BASE64_FLAGS)
         String(decodedBytes)
     }.getOrDefault(encoded)
@@ -70,6 +70,7 @@ class CryptoManager(
             if (isString) content
             else booleanOrNull ?: intOrNull ?: longOrNull ?: doubleOrNull ?: content
         }
+
         is JsonArray -> map { it.toAny() }
         is JsonObject -> mapValues { it.value.toAny() }
     }
@@ -83,10 +84,10 @@ class CryptoManager(
         private const val BASE64_FLAGS = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
 
         private object DefaultBase64Encoder : Base64Encoder {
-             override fun encodeToString(input: ByteArray, flags: Int): String =
+            override fun encodeToString(input: ByteArray, flags: Int): String =
                 Base64.encodeToString(input, flags)
 
-             override fun decode(input: String, flags: Int): ByteArray =
+            override fun decode(input: String, flags: Int): ByteArray =
                 Base64.decode(input, flags)
         }
     }

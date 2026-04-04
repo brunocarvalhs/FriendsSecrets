@@ -12,7 +12,6 @@ import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsViewModel
 import br.com.brunocarvalhs.group.create.commons.navigation.ContactsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
-import br.com.brunocarvalhs.group.create.app.domain.services.StorageService
 import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateToggles
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates

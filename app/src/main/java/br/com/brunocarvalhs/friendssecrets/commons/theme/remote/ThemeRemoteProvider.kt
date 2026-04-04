@@ -7,14 +7,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.serialization.json.Json
-import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ThemeRemoteProvider @Inject constructor(
-    @param:ApplicationContext private val context: Context,
+class ThemeRemoteProvider constructor(
     private val remoteProvider: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance(),
 ) {
 
