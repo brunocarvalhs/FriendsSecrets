@@ -4,23 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.friendssecrets.commons.navigation.GroupGraphRoute
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
-import br.com.brunocarvalhs.settings.SettingsInitializer
 
 @Composable
-fun MainApp(
-    toggleManager: ToggleManager,
-    navController: NavHostController,
-) {
-    NavHost(navController = navController, startDestination = GroupGraphRoute) {
+fun NavHostController.MainApp() {
+    NavHost(navController = this@MainApp, startDestination = GroupGraphRoute) {
         GroupCreateInitializer.Builder()
-            .navController(navController = navController)
-            .build(navGraphBuilder = this)
-
-        SettingsInitializer.Builder()
-            .navController(navController = navController)
-            .toggleManager(toggleManager = toggleManager)
+            .navController(navController = this@MainApp)
             .build(navGraphBuilder = this)
     }
 }

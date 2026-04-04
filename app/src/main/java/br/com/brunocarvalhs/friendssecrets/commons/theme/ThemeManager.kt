@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.friendssecrets.commons.theme
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.storage.StorageManager
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,8 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ThemeManager @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val storage: StorageManager,
+    @param:ApplicationContext private val context: Context,
     activity: ComponentActivity,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
@@ -34,16 +32,15 @@ class ThemeManager @Inject constructor(
     }
 
     private suspend fun init() {
-        val themeValue = storage.load(THEME_KEY, String::class.java) ?: Theme.SYSTEM.type
+        val themeValue = Theme.SYSTEM.type
         _theme.value = Theme.entries.firstOrNull { it.type == themeValue } ?: Theme.SYSTEM
 
-        val dynamic = storage.load(DYNAMIC_THEME_KEY, Boolean::class.java) ?: false
+        val dynamic = false
         _isDynamicThemeEnabled.value = dynamic
     }
 
     suspend fun setTheme(value: Theme) {
         _theme.value = value
-        storage.save(THEME_KEY, value.type)
     }
 
     private fun getSystemTheme(): Theme {
@@ -64,7 +61,6 @@ class ThemeManager @Inject constructor(
 
     suspend fun setDynamicThemeEnabled(enabled: Boolean) {
         _isDynamicThemeEnabled.value = enabled
-        storage.save(DYNAMIC_THEME_KEY, enabled)
     }
 
     enum class Theme(val type: String) {

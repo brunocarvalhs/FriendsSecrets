@@ -12,18 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
-import br.com.brunocarvalhs.friendssecrets.common.theme.remote.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
-
-    @Inject
-    lateinit var toggleManager: ToggleManager
 
     @Inject
     lateinit var themeManager: ThemeManager
@@ -52,10 +48,7 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
-                    MainApp(
-                        toggleManager = toggleManager,
-                        navController = navController,
-                    )
+                    navController.MainApp()
                 }
             }
         }

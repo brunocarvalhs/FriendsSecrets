@@ -92,7 +92,7 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(project(":features:group:create"))
-    implementation(project(":features:settings"))
+//    implementation(project(":features:settings"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
 
@@ -109,6 +109,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)
