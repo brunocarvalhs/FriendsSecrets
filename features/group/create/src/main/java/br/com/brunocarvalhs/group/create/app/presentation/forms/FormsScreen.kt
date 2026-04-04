@@ -1,5 +1,9 @@
 package br.com.brunocarvalhs.group.create.app.presentation.forms
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -63,6 +68,7 @@ import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
+import coil.compose.AsyncImage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -83,11 +89,13 @@ fun FormsScreen(
         date = uiState.date,
         minPrice = uiState.minPrice,
         maxPrice = uiState.maxPrice,
+        imageUri = uiState.imageUri,
         onNameChange = { viewModel.handleIntent(FormsIntent.UpdateName(it)) },
         onDescriptionChange = { viewModel.handleIntent(FormsIntent.UpdateDescription(it)) },
         onDateChange = { viewModel.handleIntent(FormsIntent.UpdateDate(it)) },
         onMinPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMinPrice(it)) },
         onMaxPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMaxPrice(it)) },
+        onImageChange = { viewModel.handleIntent(FormsIntent.UpdateImage(it)) },
         members = uiState.members,
         contacts = uiState.contacts,
         isLoading = uiState.isLoading,
@@ -107,11 +115,13 @@ private fun FormsContent(
     date: String,
     minPrice: String,
     maxPrice: String,
+    imageUri: Uri?,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateChange: (String) -> Unit,
     onMinPriceChange: (String) -> Unit,
     onMaxPriceChange: (String) -> Unit,
+    onImageChange: (Uri?) -> Unit,
     members: List<ContactModel>,
     contacts: Int,
     onCreate: () -> Unit,
@@ -123,6 +133,11 @@ private fun FormsContent(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> onImageChange(uri) }
+    )
+
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -228,15 +243,28 @@ private fun FormsContent(
                                 .size(64.dp)
                                 .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.secondaryContainer)
-                                .clickable { /* Ação de foto */ },
+                                .clickable { 
+                                    photoPickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                },
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.CameraAlt,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                                modifier = Modifier.size(28.dp)
-                            )
+                            if (imageUri != null) {
+                                AsyncImage(
+                                    model = imageUri,
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.CameraAlt,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.width(16.dp))

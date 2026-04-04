@@ -11,7 +11,8 @@ data class GroupModel(
     val token: String = token(),
     val minPrice: Int? = null,
     val maxPrice: Int? = null,
-    val date: String? = null
+    val date: String? = null,
+    val photo: String? = null
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -22,7 +23,8 @@ data class GroupModel(
             "token" to token,
             "minPrice" to minPrice,
             "maxPrice" to maxPrice,
-            "date" to date
+            "date" to date,
+            "photoBase64" to photo
         )
     }
 
