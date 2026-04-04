@@ -9,15 +9,12 @@ import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsScree
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsViewModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsViewModel
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.commons.navigation.ContactsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
-import br.com.brunocarvalhs.group.create.commons.navigation.navTypeListSerializer
 import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateToggles
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
-import kotlin.reflect.typeOf
 
 class GroupCreateInitializer(private val builder: Builder) {
 
