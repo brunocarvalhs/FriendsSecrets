@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,7 +42,7 @@ fun ContactList(
                     text = initial.toString(),
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -53,7 +52,7 @@ fun ContactList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    color = Color(0xFF1E1E1E),
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Column {
@@ -66,7 +65,7 @@ fun ContactList(
                             if (index < contactsInGroup.size - 1) {
                                 HorizontalDivider(
                                     modifier = Modifier.padding(start = 72.dp),
-                                    color = Color(0xFF333333),
+                                    color = MaterialTheme.colorScheme.outlineVariant,
                                     thickness = 0.5.dp
                                 )
                             }

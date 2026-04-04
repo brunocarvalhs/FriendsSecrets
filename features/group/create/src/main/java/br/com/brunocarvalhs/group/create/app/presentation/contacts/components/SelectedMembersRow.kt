@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +42,7 @@ fun SelectedMembersRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        color = Color(0xFF1E1E1E),
+        color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(12.dp)
     ) {
         LazyRow(
@@ -70,10 +69,13 @@ fun SelectedMembersRow(
                                 modifier = Modifier
                                     .size(56.dp)
                                     .clip(CircleShape)
-                                    .background(Color.Gray),
+                                    .background(MaterialTheme.colorScheme.secondaryContainer),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(member.name.take(1).uppercase(), color = Color.White)
+                                Text(
+                                    text = member.name.take(1).uppercase(),
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
                             }
                         }
 
@@ -82,14 +84,14 @@ fun SelectedMembersRow(
                                 .align(Alignment.TopEnd)
                                 .size(20.dp)
                                 .clip(CircleShape)
-                                .background(Color.Gray)
+                                .background(MaterialTheme.colorScheme.onSurfaceVariant)
                                 .clickable { onRemoveMember(member) },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Remover",
-                                tint = Color.White,
+                                tint = MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(12.dp)
                             )
                         }
@@ -98,7 +100,7 @@ fun SelectedMembersRow(
                     Text(
                         text = member.name,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         textAlign = TextAlign.Center
                     )

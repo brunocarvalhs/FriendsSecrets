@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,12 +51,12 @@ fun ContactListItem(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(Color.Gray.copy(alpha = 0.5f)),
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = contact.name.take(1).uppercase(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -68,7 +67,7 @@ fun ContactListItem(
         Text(
             text = contact.name,
             modifier = Modifier.weight(1f),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge
         )
 
@@ -76,9 +75,9 @@ fun ContactListItem(
             checked = isSelected,
             onCheckedChange = { onToggle() },
             colors = CheckboxDefaults.colors(
-                checkedColor = Color(0xFF4CAF50),
-                uncheckedColor = Color.Gray,
-                checkmarkColor = Color.White
+                checkedColor = MaterialTheme.colorScheme.secondary,
+                uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                checkmarkColor = MaterialTheme.colorScheme.onSecondary
             )
         )
     }

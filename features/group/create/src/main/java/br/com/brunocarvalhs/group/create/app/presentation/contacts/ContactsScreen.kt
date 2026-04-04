@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -75,12 +74,12 @@ private fun ContactsContent(
                         Text(
                             text = "Adicionar membros",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "${selectedMembers.size}/${contacts.size}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
@@ -89,7 +88,7 @@ private fun ContactsContent(
                         Icon(
                             imageVector = Icons.Default.ArrowBackIosNew,
                             contentDescription = "Voltar",
-                            tint = Color(0xFF4CAF50)
+                            tint = MaterialTheme.colorScheme.secondary
                         )
                     }
                 },
@@ -97,17 +96,17 @@ private fun ContactsContent(
                     TextButton(onClick = { onNext(selectedMembers) }) {
                         Text(
                             text = "Avançar",
-                            color = Color(0xFF4CAF50),
+                            color = MaterialTheme.colorScheme.secondary,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF121212)
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
-        containerColor = Color(0xFF121212)
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = Modifier
