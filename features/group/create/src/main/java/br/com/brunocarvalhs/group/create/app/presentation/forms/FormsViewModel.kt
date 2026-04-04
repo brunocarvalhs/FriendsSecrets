@@ -10,7 +10,6 @@ import br.com.brunocarvalhs.group.create.app.domain.entities.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +35,6 @@ class FormsViewModel @Inject constructor(
     fun handleIntent(intent: FormsIntent) = when (intent) {
         is FormsIntent.CreateGroup -> createGroup(intent.onFinish)
         is FormsIntent.UpdateName -> updateName(intent.name)
-        is FormsIntent.ToggleMember -> toggleMember(intent.contact)
     }
 
     private fun createGroup(onFinish: (String) -> Unit) {
@@ -63,15 +61,5 @@ class FormsViewModel @Inject constructor(
 
     private fun updateName(name: String) {
         _uiState.value = _uiState.value.copy(name = name)
-    }
-
-    private fun toggleMember(contact: ContactModel) {
-        val currentMembers = _uiState.value.members.toMutableList()
-        if (currentMembers.contains(contact)) {
-            currentMembers.remove(contact)
-        } else {
-            currentMembers.add(contact)
-        }
-        _uiState.value = _uiState.value.copy(members = currentMembers)
     }
 }

@@ -19,49 +19,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
-import coil.compose.AsyncImage
+import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactAvatar
 
 @Composable
 fun MemberAvatarItem(
     member: ContactModel,
-    onRemove: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier.width(64.dp)
     ) {
         Box(contentAlignment = Alignment.TopEnd) {
-            AsyncImage(
-                model = member.photoUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentScale = ContentScale.Crop
+            ContactAvatar(
+                name = member.name,
+                photoUrl = member.photoUrl,
+                size = 56.dp
             )
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .padding(1.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
-                    .clickable(onClick = onRemove),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Remover",
-                    tint = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.size(12.dp)
-                )
-            }
         }
         Spacer(modifier = Modifier.height(6.dp))
         Text(
@@ -83,6 +61,5 @@ private fun MemberAvatarItemPreview() {
             name = "John Doe",
             phoneNumber = "1234567890"
         ),
-        onRemove = {}
     )
 }

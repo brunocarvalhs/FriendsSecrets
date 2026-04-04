@@ -26,12 +26,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
-import coil.compose.AsyncImage
 
 @Composable
 fun SelectedMembersRow(
@@ -55,29 +53,11 @@ fun SelectedMembersRow(
                     modifier = Modifier.width(64.dp)
                 ) {
                     Box {
-                        if (!member.photoUrl.isNullOrBlank()) {
-                            AsyncImage(
-                                model = member.photoUrl,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = member.name.take(1).uppercase(),
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                                )
-                            }
-                        }
+                        ContactAvatar(
+                            name = member.name,
+                            photoUrl = member.photoUrl,
+                            size = 56.dp
+                        )
 
                         Box(
                             modifier = Modifier
@@ -117,7 +97,7 @@ private fun SelectedMembersRowPreview() {
         members = listOf(
             ContactModel(
                 id = "1",
-                name = "John Doe",
+                name = "Bruno Carvalho",
                 phoneNumber = "1234567890"
             ),
             ContactModel(

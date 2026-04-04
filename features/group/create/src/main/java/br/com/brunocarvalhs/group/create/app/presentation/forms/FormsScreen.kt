@@ -70,7 +70,6 @@ fun FormsScreen(
         error = uiState.error,
         onBack = onBack,
         onCreate = { viewModel.handleIntent(FormsIntent.CreateGroup(onFinish)) },
-        onToggleMember = { viewModel.handleIntent(FormsIntent.ToggleMember(it)) }
     )
 }
 
@@ -83,7 +82,6 @@ private fun FormsContent(
     contacts: Int,
     onCreate: () -> Unit,
     onBack: () -> Unit,
-    onToggleMember: (ContactModel) -> Unit,
     isLoading: Boolean = false,
     error: String? = null
 ) {
@@ -175,7 +173,7 @@ private fun FormsContent(
                         onValueChange = { onNameChange(it) },
                         placeholder = {
                             Text(
-                                "Nome do grupo (opcional)",
+                                "Nome do grupo",
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyLarge
                             )
@@ -234,9 +232,7 @@ private fun FormsContent(
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(members) { member ->
-                        MemberAvatarItem(member = member) {
-                            onToggleMember(member)
-                        }
+                        MemberAvatarItem(member = member)
                     }
                 }
             }
@@ -268,6 +264,5 @@ private fun FormsContentPreview() {
         onNameChange = {},
         onCreate = {},
         onBack = {},
-        onToggleMember = {}
     )
 }
