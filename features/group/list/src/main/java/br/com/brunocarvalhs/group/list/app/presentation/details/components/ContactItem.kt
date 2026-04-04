@@ -38,6 +38,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.list.R
@@ -46,6 +47,7 @@ import coil.compose.AsyncImage
 @Composable
 fun ContactItem(
     name: String = "",
+    subtitle: String? = null,
     photoUrl: String? = null,
     likes: List<String> = emptyList(),
     isSelected: Boolean = false,
@@ -131,8 +133,19 @@ fun ContactItem(
                 ) {
                     Text(
                         text = name,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    if (!subtitle.isNullOrBlank()) {
+                        Text(
+                            text = subtitle,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
 
                 Row(
@@ -160,45 +173,4 @@ fun ContactItem(
             }
         }
     }
-}
-
-@Composable
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
-)
-private fun ContactItemPreview() {
-    ContactItem(
-        name = "Produto de Teste",
-        photoUrl = "",
-        likes = listOf("Like 1", "Like 2", "Like 3"),
-        isLikedExpanded = true,
-    )
-}
-
-@Composable
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO
-)
-private fun ContactItemSelectedPreview() {
-    ContactItem(
-        name = "Produto de Teste",
-        photoUrl = "",
-        likes = listOf("Like 1", "Like 2", "Like 3"),
-        isSelected = true,
-        isLikedExpanded = true,
-    )
 }

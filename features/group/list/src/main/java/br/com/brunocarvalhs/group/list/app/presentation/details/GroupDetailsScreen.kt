@@ -1,15 +1,10 @@
 package br.com.brunocarvalhs.group.list.app.presentation.details
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.core.copy
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,64 +14,49 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.Casino
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.list.R
 import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
-import br.com.brunocarvalhs.group.list.app.domain.entities.UserModel
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.GroupInfoTab
 import br.com.brunocarvalhs.group.list.app.presentation.details.components.MemberItem
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.MembersTab
 import coil.compose.AsyncImage
 
 @Composable
@@ -84,12 +64,15 @@ fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
     onDraw: () -> Unit = {},
+    onReveal: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     GroupDetailsContent(
         group = uiState.group,
         onBack = onBack,
+        onDraw = onDraw,
+        onReveal = onReveal,
         onShareGroup = { },
         onAddMember = { },
         onSearch = { },
@@ -103,6 +86,8 @@ fun GroupDetailsScreen(
 private fun GroupDetailsContent(
     group: GroupModel,
     onBack: () -> Unit,
+    onDraw: () -> Unit,
+    onReveal: () -> Unit,
     onShareGroup: () -> Unit,
     onAddMember: () -> Unit,
     onSearch: () -> Unit,
@@ -120,10 +105,7 @@ private fun GroupDetailsContent(
                 },
                 actions = {
                     IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Default.MoreVert,
-                            contentDescription = null
-                        )
+                        Icon(Icons.Default.MoreVert, contentDescription = null)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -136,16 +118,16 @@ private fun GroupDetailsContent(
                 .padding(paddingValue),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header: Imagem, Nome e Subtítulo
+            // Header
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 AsyncImage(
-                    model = null, // Substituir pela URL da imagem do grupo se disponível
+                    model = null,
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape)
-                        .background(Color.Gray.copy(alpha = 0.2f)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -155,14 +137,14 @@ private fun GroupDetailsContent(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Grupo · ${group.members.size} membros",
+                    text = "Grupo · ${group.members.size} participantes",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Botões de Ação Rápidas
+            // Ações Principais
             item {
                 Row(
                     modifier = Modifier
@@ -170,14 +152,14 @@ private fun GroupDetailsContent(
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    ActionIconCard(Icons.Default.Mic, "Voz") {}
+                    ActionIconCard(Icons.Default.Share, "Convidar", onShareGroup)
                     ActionIconCard(Icons.Default.PersonAdd, "Adicionar", onAddMember)
                     ActionIconCard(Icons.Default.Search, "Pesquisar", onSearch)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Descrição e Data de Criação
+            // Descrição
             item {
                 Column(
                     modifier = Modifier
@@ -186,92 +168,133 @@ private fun GroupDetailsContent(
                 ) {
                     Text(
                         text = group.description.ifBlank { "Adicionar descrição ao grupo" },
-                        color = if (group.description.isBlank()) Color(0xFF00A884) else MaterialTheme.colorScheme.onSurface,
+                        color = if (group.description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
                         text = "Criado em ${group.createdAt ?: "Desconhecido"}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
-                Divider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
             }
 
-            // Seção de Mídia (Mockup)
+            // Card de Ação do Sorteio (Destaque)
             item {
-                SectionHeader(title = "Mídia, links e docs", trailing = "536 >")
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(5) { // Mockup de itens de mídia
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.Gray.copy(alpha = 0.3f))
-                        )
+                DrawStatusCard(
+                    isDrawn = group.draws.isNotEmpty(),
+                    onAction = if (group.draws.isNotEmpty()) onReveal else onDraw,
+                    isOwner = group.isOwner
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+            }
+
+            // Detalhes do Sorteio (Valores, Data, etc)
+            item {
+                SectionHeader(title = "Detalhes do sorteio")
+                group.createdAt?.let { SettingItem(Icons.Default.CalendarToday, "Data do sorteio", it) }
+                if (group.minPrice != null || group.maxPrice != null) {
+                    val priceRange = if (group.minPrice != null && group.maxPrice != null) {
+                        "Entre R$ ${group.minPrice} e R$ ${group.maxPrice}"
+                    } else if (group.minPrice != null) {
+                        "A partir de R$ ${group.minPrice}"
+                    } else {
+                        "Até R$ ${group.maxPrice}"
                     }
+                    SettingItem(Icons.Default.AttachMoney, "Faixa de preço", priceRange)
                 }
-                Divider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                group.type?.let { SettingItem(Icons.Default.CardGiftcard, "Tipo de presente", it) }
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
             }
 
-            // Configurações≈
-            item {
-                SettingItem(Icons.Default.Notifications, "Notificações", "Todas")
-                SettingItem(Icons.Default.Image, "Visibilidade de mídia")
-                SettingItem(Icons.Default.Lock, "Criptografia", "As mensagens são protegidas...")
-                Divider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
-            }
-
-            // Lista de Membros
+            // Lista de Participantes
             item {
                 SectionHeader(
-                    title = "${group.members.size} membros",
+                    title = "${group.members.size} participantes",
                     trailingIcon = Icons.Default.Search
                 )
-                SettingItem(
-                    Icons.Default.PersonAdd,
-                    "Adicionar membros",
-                    iconColor = Color(0xFF00A884),
-                    textColor = Color(0xFF00A884)
-                )
-                SettingItem(
-                    Icons.Default.Link,
-                    "Convidar via link",
-                    iconColor = Color(0xFF00A884),
-                    textColor = Color(0xFF00A884)
-                )
+                if (group.isOwner && group.draws.isEmpty()) {
+                    SettingItem(
+                        Icons.Default.PersonAdd,
+                        "Adicionar participantes",
+                        iconColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
             items(group.members) { member ->
                 MemberItem(
                     participant = member.name,
-                    isAdministrator = group.isOwner, // Simplificação
+                    draws = group.draws,
+                    isAdministrator = group.isOwner,
                     onRemove = onRemoveMember,
                     onEdit = onEditMember
                 )
             }
 
-            // Ações de Rodapé
+            // Opções Adicionais
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                SettingItem(Icons.Default.FavoriteBorder, "Adicionar aos favoritos")
-                SettingItem(
-                    Icons.Default.ExitToApp,
-                    "Sair do grupo",
-                    textColor = Color.Red,
-                    iconColor = Color.Red
-                )
-                SettingItem(
-                    Icons.Default.ThumbDown,
-                    "Denunciar grupo",
-                    textColor = Color.Red,
-                    iconColor = Color.Red
-                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                if (group.isOwner) {
+                    SettingItem(Icons.Default.Edit, "Editar informações do grupo")
+                    SettingItem(Icons.Default.Delete, "Apagar grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
+                } else {
+                    SettingItem(Icons.AutoMirrored.Filled.ExitToApp, "Sair do grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
+                }
+                SettingItem(Icons.Default.ThumbDown, "Denunciar grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
                 Spacer(modifier = Modifier.height(32.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawStatusCard(
+    isDrawn: Boolean,
+    isOwner: Boolean,
+    onAction: () -> Unit
+) {
+    val containerColor = if (isDrawn) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primaryContainer
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (isDrawn) Icons.Default.Casino else Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = if (isDrawn) "Sorteio realizado!" else "Pronto para o sorteio?",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = if (isDrawn) "Descubra agora quem é seu amigo secreto." else "Aguarde o administrador realizar o sorteio.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            if (isDrawn || isOwner) {
+                Button(
+                    onClick = onAction,
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(if (isDrawn) "Ver meu amigo" else "Sortear")
+                }
             }
         }
     }
@@ -282,18 +305,14 @@ fun ActionIconCard(icon: ImageVector, label: String, onClick: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .width(100.dp)
-            .border(
-                0.5.dp,
-                Color.Gray.copy(alpha = 0.3f),
-                androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
-            )
+            .border(0.5.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
             .clickable { onClick() }
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(icon, contentDescription = null, tint = Color(0xFF00A884))
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Color(0xFF00A884))
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -306,17 +325,12 @@ fun SectionHeader(title: String, trailing: String? = null, trailingIcon: ImageVe
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(title, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+        Text(title, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
         if (trailing != null) {
-            Text(trailing, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text(trailing, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if (trailingIcon != null) {
-            Icon(
-                trailingIcon,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                tint = Color.Gray
-            )
+            Icon(trailingIcon, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -341,38 +355,8 @@ fun SettingItem(
         Column {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = textColor)
             if (subtitle != null) {
-                Text(
-                    subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
-                    maxLines = 1
-                )
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
-}
-
-internal class GroupDetailsPreviewProvider : PreviewParameterProvider<GroupDetailsUiState> {
-    override val values = sequenceOf(
-        GroupDetailsUiState(
-            group = GroupModel()
-        )
-    )
-}
-
-@Composable
-@Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Preview(name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO)
-fun GroupDetailsScreenPreview(
-    @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState,
-) {
-    GroupDetailsContent(
-        group = state.group,
-        onBack = {},
-        onShareGroup = {},
-        onAddMember = {},
-        onSearch = {},
-        onRemoveMember = {},
-        onEditMember = {}
-    )
 }

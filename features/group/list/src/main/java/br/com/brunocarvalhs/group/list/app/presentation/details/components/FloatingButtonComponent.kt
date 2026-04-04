@@ -9,10 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import br.com.brunocarvalhs.group.list.R
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsPreviewProvider
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsUiState
 
 @Composable
 fun FloatingButtonComponent(
@@ -42,12 +39,10 @@ fun FloatingButtonComponent(
 
 @Composable
 @Preview(showBackground = true)
-fun FloatingButtonComponentPreview(
-    @PreviewParameter(GroupDetailsPreviewProvider::class) state: GroupDetailsUiState
-) {
+fun FloatingButtonComponentPreview() {
     FloatingButtonComponent(
-        draws = state.group.draws,
-        isOwner = state.group.isOwner,
+        draws = emptyMap(),
+        isOwner = true,
         onDraw = {},
         revelationDraw = {}
     )
