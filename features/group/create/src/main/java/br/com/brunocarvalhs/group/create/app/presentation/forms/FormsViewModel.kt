@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,16 +35,39 @@ class FormsViewModel @Inject constructor(
 
     fun handleIntent(intent: FormsIntent) = when (intent) {
         is FormsIntent.CreateGroup -> createGroup(intent.onFinish)
-        is FormsIntent.UpdateName -> _uiState.value = _uiState.value.copy(name = intent.name)
-        is FormsIntent.UpdateDescription -> _uiState.value = _uiState.value.copy(description = intent.description)
-        is FormsIntent.UpdateDate -> _uiState.value = _uiState.value.copy(date = intent.date)
-        is FormsIntent.UpdateMinPrice -> _uiState.value = _uiState.value.copy(minPrice = intent.minPrice)
-        is FormsIntent.UpdateMaxPrice -> _uiState.value = _uiState.value.copy(maxPrice = intent.maxPrice)
+        is FormsIntent.UpdateName -> updateState { copy(name = intent.name) }
+        is FormsIntent.UpdateDescription -> updateState { copy(description = intent.description) }
+        is FormsIntent.UpdateDate -> updateState { copy(date = intent.date) }
+        is FormsIntent.UpdateMinPrice -> updateState { copy(minPrice = intent.minPrice) }
+        is FormsIntent.UpdateMaxPrice -> updateState { copy(maxPrice = intent.maxPrice) }
+    }
+
+    private fun updateState(update: FormsUiState.() -> FormsUiState) {
+        _uiState.update { 
+            val newState = it.update()
+            validate(newState)
+        }
+    }
+
+    private fun validate(state: FormsUiState): FormsUiState {
+        val min = state.minPrice.toLongOrNull() ?: 0L
+        val max = state.maxPrice.toLongOrNull() ?: Long.MAX_VALUE
+        
+        val isPriceError = state.minPrice.isNotEmpty() && state.maxPrice.isNotEmpty() && min > max
+        val isNameValid = state.name.isNotBlank()
+        val isMembersValid = state.members.isNotEmpty()
+
+        return state.copy(
+            isPriceError = isPriceError,
+            isValid = isNameValid && isMembersValid && !isPriceError
+        )
     }
 
     private fun createGroup(onFinish: (String) -> Unit) {
         viewModelScope.launch {
             val currentState = _uiState.value
+            if (!currentState.isValid) return@launch
+            
             _uiState.value = currentState.copy(isLoading = true, error = null)
             
             val group = GroupModel(

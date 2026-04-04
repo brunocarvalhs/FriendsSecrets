@@ -16,5 +16,6 @@ data class FormsUiState(
     val contacts: Int = 0,
     val isLoading: Boolean = false,
     val error: String? = null,
+    val isPriceError: Boolean = false,
     val isValid: Boolean = false
 )

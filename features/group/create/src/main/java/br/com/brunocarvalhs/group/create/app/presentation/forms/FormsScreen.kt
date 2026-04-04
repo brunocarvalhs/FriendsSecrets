@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
-import br.com.brunocarvalhs.group.create.app.presentation.forms.components.SettingsItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -93,6 +92,8 @@ fun FormsScreen(
         contacts = uiState.contacts,
         isLoading = uiState.isLoading,
         error = uiState.error,
+        isValid = uiState.isValid,
+        isPriceError = uiState.isPriceError,
         onBack = onBack,
         onCreate = { viewModel.handleIntent(FormsIntent.CreateGroup(onFinish)) },
     )
@@ -116,7 +117,9 @@ private fun FormsContent(
     onCreate: () -> Unit,
     onBack: () -> Unit,
     isLoading: Boolean = false,
-    error: String? = null
+    error: String? = null,
+    isValid: Boolean = false,
+    isPriceError: Boolean = false
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     
@@ -181,11 +184,14 @@ private fun FormsContent(
                     }
                 },
                 actions = {
-                    TextButton(onClick = { onCreate() }) {
+                    TextButton(
+                        onClick = { onCreate() },
+                        enabled = isValid
+                    ) {
                         Text(
                             text = "Criar",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.secondary
+                            color = if (isValid) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
@@ -347,7 +353,7 @@ private fun FormsContent(
                         Icon(
                             imageVector = Icons.Default.PriceChange,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -357,10 +363,11 @@ private fun FormsContent(
                                 val digits = it.filter { char -> char.isDigit() }
                                 onMinPriceChange(digits) 
                             },
+                            isError = isPriceError,
                             placeholder = {
                                 Text(
                                     "Preço Mín.",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             },
@@ -389,10 +396,11 @@ private fun FormsContent(
                                 val digits = it.filter { char -> char.isDigit() }
                                 onMaxPriceChange(digits) 
                             },
+                            isError = isPriceError,
                             placeholder = {
                                 Text(
                                     "Preço Máx.",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             },
@@ -406,6 +414,14 @@ private fun FormsContent(
                             ),
                             modifier = Modifier.weight(1f),
                             singleLine = true
+                        )
+                    }
+                    if (isPriceError) {
+                        Text(
+                            text = "Preço mínimo não pode ser maior que o máximo",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
                         )
                     }
                 }
