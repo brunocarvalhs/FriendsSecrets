@@ -23,7 +23,8 @@ class FormsViewModel @Inject constructor(
 
     private val args = savedStateHandle.toRoute<FormsRouter>(FormsRouter.typeMap)
     private val _uiState = MutableStateFlow(FormsUiState(
-        members = args.members
+        members = args.members,
+        contacts = args.contacts
     ))
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
     

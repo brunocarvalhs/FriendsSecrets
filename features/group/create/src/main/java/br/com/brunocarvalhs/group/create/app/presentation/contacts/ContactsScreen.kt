@@ -46,7 +46,7 @@ fun ContactsScreen(
         onToggleMember = { viewModel.handleIntent(ContactsIntent.AddMember(it)) },
         onRemoveMember = { viewModel.handleIntent(ContactsIntent.RemoveMember(it)) },
         onBack = { navController.popBackStack() },
-        onNext = { navController.navigate(route = FormsRouter(members = it)) }
+        onNext = { navController.navigate(route = FormsRouter(members = it, contacts = uiState.contacts.size)) }
     )
 }
 

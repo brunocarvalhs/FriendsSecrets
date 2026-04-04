@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +43,7 @@ fun MemberAvatarItem(
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF2C3E46)),
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
                 contentScale = ContentScale.Crop
             )
             Box(
@@ -52,14 +51,14 @@ fun MemberAvatarItem(
                     .size(20.dp)
                     .padding(1.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF8696A0))
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
                     .clickable(onClick = onRemove),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Remover",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.surface,
                     modifier = Modifier.size(12.dp)
                 )
             }
@@ -67,7 +66,7 @@ fun MemberAvatarItem(
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = member.name,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

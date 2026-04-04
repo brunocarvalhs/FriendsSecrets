@@ -77,7 +77,7 @@ private fun FormsContent(
     name: String,
     onNameChange: (String) -> Unit,
     members: List<ContactModel>,
-    contacts: List<ContactModel>,
+    contacts: Int,
     onCreate: () -> Unit,
     onBack: () -> Unit,
     onToggleMember: (ContactModel) -> Unit
@@ -99,7 +99,7 @@ private fun FormsContent(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
-                            tint = Color(0xFF00A884)
+                            tint = MaterialTheme.colorScheme.secondary
                         )
                     }
                 },
@@ -108,17 +108,17 @@ private fun FormsContent(
                         Text(
                             text = "Criar",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF0B141B),
-                    titleContentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         },
-        containerColor = Color(0xFF0B141B)
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -130,7 +130,7 @@ private fun FormsContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             Surface(
-                color = Color(0xFF1F2C34),
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -142,14 +142,14 @@ private fun FormsContent(
                         modifier = Modifier
                             .size(64.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFF2C3E46))
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
                             .clickable { /* Ação de foto */ },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.CameraAlt,
                             contentDescription = null,
-                            tint = Color(0xFF8696A0),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.size(28.dp)
                         )
                     }
@@ -159,7 +159,7 @@ private fun FormsContent(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = null,
-                        tint = Color(0xFF8696A0),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
 
@@ -171,7 +171,7 @@ private fun FormsContent(
                         placeholder = {
                             Text(
                                 "Nome do grupo (opcional)",
-                                color = Color(0xFF8696A0),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         },
@@ -181,9 +181,9 @@ private fun FormsContent(
                             disabledContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = Color(0xFF00A884),
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            cursorColor = MaterialTheme.colorScheme.secondary,
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier.weight(1f),
                         singleLine = true
@@ -192,7 +192,7 @@ private fun FormsContent(
             }
 
             Surface(
-                color = Color(0xFF1F2C34),
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -203,7 +203,7 @@ private fun FormsContent(
                         onClick = {}
                     )
                     HorizontalDivider(
-                        color = Color(0xFF233138),
+                        color = MaterialTheme.colorScheme.outlineVariant,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                     SettingsItem(
@@ -215,12 +215,12 @@ private fun FormsContent(
 
             Column {
                 Text(
-                    text = "MEMBROS: ${members.size} DE ${contacts.size}",
+                    text = "MEMBROS: ${members.size} DE ${contacts}",
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp
                     ),
-                    color = Color(0xFF8696A0),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
 
@@ -244,10 +244,7 @@ private fun FormsContent(
 @Composable
 private fun FormsContentPreview() {
     FormsContent(
-        contacts = listOf(
-            ContactModel(id = "1", name = "Alice", phoneNumber = "1234567890"),
-            ContactModel(id = "2", name = "Bob", phoneNumber = "0987654321")
-        ),
+        contacts = 2,
         members = listOf(
             ContactModel(id = "1", name = "Alice", phoneNumber = "1234567890"),
             ContactModel(id = "2", name = "Bob", phoneNumber = "0987654321")
