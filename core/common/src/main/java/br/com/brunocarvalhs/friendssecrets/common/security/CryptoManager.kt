@@ -10,6 +10,13 @@ interface Base64Encoder {
     fun decode(input: String, flags: Int): ByteArray
 }
 
+interface CryptoService {
+    fun encryptMap(inputMap: Map<String, Any>, excludedKeys: Set<String>): Map<String, Any>
+    fun decryptMap(encodedMap: Map<String, Any>, excludedKeys: Set<String>): Map<String, Any>
+    fun encrypt(input: String): String
+    fun decrypt(encoded: String): String
+}
+
 @Suppress("UNCHECKED_CAST")
 class CryptoManager(
     private val base64Encoder: Base64Encoder = object : Base64Encoder {

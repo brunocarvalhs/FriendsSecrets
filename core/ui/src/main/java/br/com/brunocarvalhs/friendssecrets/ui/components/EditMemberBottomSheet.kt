@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -47,16 +48,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import kotlinx.coroutines.launch
+
+@Immutable
+data class MemberEdit(
+    val name: String,
+    val likes: List<String>
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMemberBottomSheet(
     onDismiss: () -> Unit,
-    member: UserEntities,
-    onMemberAdded: (UserEntities) -> Unit,
+    member: MemberEdit,
+    onMemberAdded: (MemberEdit) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -70,8 +76,16 @@ fun EditMemberBottomSheet(
         EditMemberContent(
             sheetState = sheetState,
             onDismiss = onDismiss,
-            member = member,
-            onMemberAdded = onMemberAdded
+            listLikes = member.likes,
+            nameMember = member.name,
+            onMemberAdded = { name, likes ->
+                onMemberAdded.invoke(
+                    MemberEdit(
+                        name = name,
+                        likes = likes
+                    )
+                )
+            }
         )
     }
 }
@@ -81,14 +95,15 @@ fun EditMemberBottomSheet(
 private fun EditMemberContent(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    member: UserEntities,
-    onMemberAdded: (UserEntities) -> Unit,
+    nameMember: String = "",
+    listLikes: List<String> = emptyList(),
+    onMemberAdded: (name: String, likes: List<String>) -> Unit,
 ) {
     val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
 
-    var name by remember { mutableStateOf(TextFieldValue(member.name, TextRange(0, 0))) }
+    var name by remember { mutableStateOf(TextFieldValue(nameMember, TextRange(0, 0))) }
     var isErrorName by remember { mutableStateOf(false) }
     var errorMessageName by remember { mutableStateOf("") }
 
@@ -113,10 +128,8 @@ private fun EditMemberContent(
             if (name.text.isNotBlank()) {
                 addLike()
                 onMemberAdded.invoke(
-                    member.toCopy(
-                        name = name.text,
-                        likes = likes
-                    )
+                        name.text,
+                        likes
                 )
             }
             name = TextFieldValue("", TextRange(0, 0))
@@ -130,7 +143,7 @@ private fun EditMemberContent(
     }
 
     LaunchedEffect(Unit) {
-        member.likes.forEach { likes.add(it) }
+        listLikes.forEach { likes.add(it) }
     }
 
     Column(
@@ -247,12 +260,10 @@ private fun AddMemberBottomSheetPreview() {
     FriendsSecretsTheme {
         EditMemberContent(
             sheetState = rememberModalBottomSheetState(),
-            member = UserEntities.toFake(
-                name = "Bruno",
-                likes = listOf("Like 1", "Like 2"),
-            ),
+            nameMember = "Bruno",
+            listLikes = listOf("Like 1", "Like 2"),
             onDismiss = {},
-            onMemberAdded = { }
+            onMemberAdded = { _, _ -> }
         )
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 
+@Immutable
+data class MemberItem(
+    val name: String,
+    val photoUrl: String? = null
+)
+
 @Composable
 fun MembersAvatar(
     modifier: Modifier = Modifier,
-    members: List<UserEntities> = emptyList(),
+    members: List<MemberItem> = emptyList(),
     shape: Shape = CircleShape,
     size: Int = 40
 ) {

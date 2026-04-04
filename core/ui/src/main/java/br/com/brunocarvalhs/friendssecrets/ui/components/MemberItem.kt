@@ -12,26 +12,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun MemberItem(
-    participant: UserEntities,
-    group: GroupEntities? = null,
+    participant: String = "",
+    draws: Map<String, String>? = null,
+    likes: List<String> = emptyList(),
+    token: String = "",
     isAdministrator: Boolean = false,
-    onShare: (UserEntities, String, String) -> Unit = { _, _, _ -> },
+    onShare: (String, String, String) -> Unit = { _, _, _ -> },
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
 ) {
     // Determina se a ação de compartilhar está disponível
-    val canShare = isAdministrator && group?.draws?.isNotEmpty() == true
+    val canShare = isAdministrator && draws?.isNotEmpty() == true
     // Determina se o participante tem "likes" para exibir/ocultar
-    val hasLikes = participant.likes.any { it.isNotBlank() }
+    val hasLikes = likes.any { it.isNotBlank() }
 
 
     ContactItem(
-        contact = participant,
+        name = participant,
         action = { _, isLiked ->
 
             // Ícone para expandir/recolher likes, visível apenas se houver likes
@@ -46,13 +47,13 @@ fun MemberItem(
 
             // Botão de compartilhar, visível se 'canShare' for verdadeiro
             if (canShare) {
-                group?.draws?.get(participant.name)?.let { secretFriendName ->
+                draws[participant]?.let { secretFriendName ->
                     if (secretFriendName.isNotBlank()) {
                         IconButton(onClick = {
                             onShare(
                                 participant,
                                 secretFriendName,
-                                group.token
+                                token
                             )
                         }) {
                             Icon(
@@ -60,7 +61,7 @@ fun MemberItem(
                                 // Usar stringResource para acessibilidade
                                 contentDescription = stringResource(
                                     R.string.share_secret_friend_action,
-                                    participant.name
+                                    participant
                                 )
                             )
                         }
@@ -75,7 +76,7 @@ fun MemberItem(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = stringResource(
                             R.string.edit_participant_action,
-                            participant.name
+                            participant
                         )
                     )
                 }
@@ -89,7 +90,7 @@ fun MemberItem(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(
                                 R.string.remove_participant_action,
-                                participant.name
+                                participant
                             )
                         )
                     }
@@ -104,15 +105,12 @@ fun MemberItem(
 private fun MemberItemPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserEntities.toFake(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf("Like 1", "Like 2", "Like 3")
+            participant = "Produto de Teste",
+            likes = listOf("Like 1", "Like 2", "Like 3"),
+            draws = mapOf(
+                "Participant 1" to "Secret Friend 1",
+                "Participant 2" to "Secret Friend 2"
             ),
-            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -125,15 +123,12 @@ private fun MemberItemPreview() {
 private fun MemberItemEmptyPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserEntities.toFake(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf()
+            participant = "Produto de Teste",
+            likes = listOf("Like 1", "Like 2", "Like 3"),
+            draws = mapOf(
+                "Participant 1" to "Secret Friend 1",
+                "Participant 2" to "Secret Friend 2"
             ),
-            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -146,15 +141,12 @@ private fun MemberItemEmptyPreview() {
 private fun MemberItemBlankPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserEntities.toFake(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf(""),
+            participant = "Produto de Teste",
+            likes = listOf("Like 1", "Like 2", "Like 3"),
+            draws = mapOf(
+                "Participant 1" to "Secret Friend 1",
+                "Participant 2" to "Secret Friend 2"
             ),
-            group = GroupEntities.toFake(),
             isAdministrator = false,
             onEdit = {},
             onRemove = {}
@@ -167,15 +159,12 @@ private fun MemberItemBlankPreview() {
 private fun MemberItemAdminPreview() {
     FriendsSecretsTheme {
         MemberItem(
-            participant = UserEntities.toFake(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf(""),
+            participant = "Produto de Teste",
+            likes = listOf("Like 1", "Like 2", "Like 3"),
+            draws = mapOf(
+                "Participant 1" to "Secret Friend 1",
+                "Participant 2" to "Secret Friend 2"
             ),
-            group = GroupEntities.toFake(),
             isAdministrator = true,
             onEdit = {},
             onRemove = {}

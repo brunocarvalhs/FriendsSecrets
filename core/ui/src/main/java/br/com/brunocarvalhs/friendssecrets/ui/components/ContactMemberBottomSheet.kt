@@ -22,7 +22,7 @@ import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 @Composable
 fun ContactMemberBottomSheet(
     onDismiss: () -> Unit,
-    contacts: List<UserEntities> = emptyList(),
+    contacts: List<String> = emptyList(),
     onMemberAdded: (String, List<String>) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -47,27 +47,27 @@ fun ContactMemberBottomSheet(
 @Composable
 private fun ContactMemberContent(
     sheetState: SheetState,
-    contacts: List<UserEntities> = emptyList(),
+    contacts: List<String> = emptyList(),
     onDismiss: () -> Unit,
     onMemberAdded: (String, List<String>) -> Unit,
 ) {
     LazyColumn {
         items(contacts) {
-            ContactMemberItem(user = it)
+            ContactMemberItem(name = it)
         }
     }
 }
 
 @Composable
 private fun ContactMemberItem(
-    user: UserEntities,
+    name: String = "",
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(text = user.name)
+        Text(text = name)
     }
 }
 

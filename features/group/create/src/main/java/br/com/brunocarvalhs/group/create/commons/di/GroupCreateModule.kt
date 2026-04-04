@@ -23,9 +23,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class GroupCreateModule {
 
-    @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
-
     @Binds
     @Singleton
     abstract fun bindContactService(
@@ -47,14 +44,4 @@ abstract class GroupCreateModule {
     abstract fun bindStorageService(
         impl: StorageServiceImpl
     ): StorageService
-
-    companion object {
-        @Provides
-        @Singleton
-        fun provideJson(): Json = Json {
-            ignoreUnknownKeys = true
-            coerceInputValues = true
-            encodeDefaults = true
-        }
-    }
 }

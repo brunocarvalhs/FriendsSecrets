@@ -44,21 +44,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.ui.R
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
 import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import coil.compose.AsyncImage
 
 @Composable
 fun ContactItem(
-    contact: UserEntities,
+    name: String = "",
+    photoUrl: String? = null,
+    likes: List<String> = emptyList(),
     isSelected: Boolean = false,
     isLikedExpanded: Boolean = false,
     paddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-    action: @Composable ((UserEntities, Boolean) -> Unit)? = null,
+    action: @Composable ((HashMap<String?, String?>, Boolean) -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    val filteredLikes = remember(contact.likes) {
-        contact.likes.filter { it.isNotBlank() }
+    val filteredLikes = remember(likes) {
+        likes.filter { it.isNotBlank() }
     }
 
     val backgroundColor = if (isSelected) {
@@ -98,12 +99,12 @@ fun ContactItem(
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (!contact.photoUrl.isNullOrBlank()) {
+                if (!photoUrl.isNullOrBlank()) {
                     AsyncImage(
-                        model = contact.photoUrl,
+                        model = photoUrl,
                         contentDescription = stringResource(
                             R.string.contact_photo_description,
-                            contact.name
+                            name
                         ),
                         modifier = Modifier
                             .size(48.dp)
@@ -120,7 +121,7 @@ fun ContactItem(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = contact.name.take(1).uppercase(),
+                            text = name.take(1).uppercase(),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -133,7 +134,7 @@ fun ContactItem(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = contact.name,
+                        text = name,
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
                     )
                 }
@@ -141,7 +142,7 @@ fun ContactItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    action?.invoke(contact, isLiked)
+                    action?.invoke(hashMapOf("name" to name, "photoUrl" to photoUrl), isLiked)
                 }
             }
 
@@ -178,14 +179,9 @@ fun ContactItem(
 )
 private fun ContactItemPreview() {
     ContactItem(
-        contact = UserEntities.toFake(
-            name = "Produto de Teste",
-            id = "1",
-            phoneNumber = "123456789",
-            photoUrl = "",
-            isPhoneNumberVerified = false,
-            likes = listOf("Like 1", "Like 2", "Like 3")
-        ),
+        name = "Produto de Teste",
+        photoUrl = "",
+        likes = listOf("Like 1", "Like 2", "Like 3"),
         isLikedExpanded = true,
     )
 }
@@ -204,14 +200,9 @@ private fun ContactItemPreview() {
 private fun ContactItemSelectedPreview() {
     FriendsSecretsTheme {
         ContactItem(
-            contact = UserEntities.toFake(
-                name = "Produto de Teste",
-                id = "1",
-                phoneNumber = "123456789",
-                photoUrl = "",
-                isPhoneNumberVerified = false,
-                likes = listOf("Like 1", "Like 2", "Like 3")
-            ),
+            name = "Produto de Teste",
+            photoUrl = "",
+            likes = listOf("Like 1", "Like 2", "Like 3"),
             isSelected = true,
             isLikedExpanded = true,
         )
