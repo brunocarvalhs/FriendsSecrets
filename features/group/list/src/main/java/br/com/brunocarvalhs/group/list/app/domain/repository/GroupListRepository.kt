@@ -7,4 +7,5 @@ interface GroupListRepository {
     suspend fun read(groupId: String): GroupModel
     suspend fun searchByToken(token: String): GroupModel?
     suspend fun delete(groupId: String)
+    suspend fun drawMembers(groupId: String)
 }

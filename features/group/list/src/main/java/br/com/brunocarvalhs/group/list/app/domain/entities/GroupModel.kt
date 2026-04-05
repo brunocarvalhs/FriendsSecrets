@@ -2,7 +2,9 @@ package br.com.brunocarvalhs.group.list.app.domain.entities
 
 import kotlinx.serialization.Serializable
 import android.util.Base64
+import androidx.compose.runtime.Stable
 
+@Stable
 @Serializable
 data class GroupModel(
     val id: String = "",

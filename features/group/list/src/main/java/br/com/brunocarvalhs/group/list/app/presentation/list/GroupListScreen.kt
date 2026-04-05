@@ -15,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,13 +26,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.list.app.domain.entities.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGroupComponent
+import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.GroupCard
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.HeaderHomeComponent
-import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
-import br.com.brunocarvalhs.group.list.app.domain.entities.UserModel
-import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingProgress
 
 @Composable
@@ -44,8 +44,9 @@ fun GroupListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LifecycleResumeEffect(Unit) {
         viewModel.event(GroupListIntent.FetchGroups)
+        onPauseOrDispose { }
     }
 
     ListContent(

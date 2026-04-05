@@ -37,7 +37,6 @@ class GroupListInitializer(private val builder: Builder) {
                 GroupDetailsScreen(
                     viewModel = viewModel,
                     onBack = { builder.navController.popBackStack() },
-                    onDraw = { }
                 )
             }
         }
