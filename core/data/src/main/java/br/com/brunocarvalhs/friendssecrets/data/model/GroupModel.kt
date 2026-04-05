@@ -6,6 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 import kotlin.random.Random
+import br.com.brunocarvalhs.group.core.domain.entities.GroupEntities
+import br.com.brunocarvalhs.group.core.domain.entities.UserEntities
 
 @Deprecated("Use features.group.app.data.model.GroupModel instead")
 data class GroupModel(
@@ -19,7 +21,8 @@ data class GroupModel(
     @SerializedName(GroupEntities.DATE) override val date: String? = null,
     @SerializedName(GroupEntities.MIN_PRICE) override val minPrice: Double? = null,
     @SerializedName(GroupEntities.MAX_PRICE) override val maxPrice: Double? = null,
-    @SerializedName(GroupEntities.TYPE) override val type: String? = null
+    @SerializedName(GroupEntities.TYPE) override val type: String? = null,
+    @SerializedName(GroupEntities.PHOTO) override val photoBase64: String? = null
 ) : GroupEntities {
 
     @AddTrace(name = "GroupModel.toMap", enabled = true)
@@ -35,7 +38,8 @@ data class GroupModel(
             GroupEntities.TYPE to type,
             GroupEntities.MEMBERS to members.map { it.toMap() },
             GroupEntities.DRAWS to draws,
-            GroupEntities.IS_OWNER to isOwner
+            GroupEntities.IS_OWNER to isOwner,
+            GroupEntities.PHOTO to photoBase64
         )
     }
 
@@ -50,7 +54,8 @@ data class GroupModel(
         type: String?,
         members: List<UserEntities>,
         draws: Map<String, String>,
-        isOwner: Boolean
+        isOwner: Boolean,
+        photoBase64: String?
     ): GroupEntities {
         return this.copy(
             token = token,
@@ -62,7 +67,8 @@ data class GroupModel(
             type = type,
             members = members,
             draws = draws,
-            isOwner = isOwner
+            isOwner = isOwner,
+            photoBase64 = photoBase64
         )
     }
 
@@ -80,6 +86,7 @@ data class GroupModel(
             val maxPrice = (map[GroupEntities.MAX_PRICE] as? Number)?.toDouble()
             val type = map[GroupEntities.TYPE] as? String
             val isOwner = map[GroupEntities.IS_OWNER] as? Boolean ?: false
+            val photoBase64 = map[GroupEntities.PHOTO] as? String
 
             val draws = (map[GroupEntities.DRAWS] as? Map<*, *>)?.mapNotNull {
                 val key = it.key as? String
@@ -109,36 +116,9 @@ data class GroupModel(
                 type = type,
                 members = members,
                 draws = draws,
-                isOwner = isOwner
+                isOwner = isOwner,
+                photoBase64 = photoBase64
             )
         }
     }
 }
-
-@Deprecated("Use GroupEntities.Companion.create instead")
-@AddTrace(name = "GroupEntities.create", enabled = true)
-fun GroupEntities.Companion.create(
-    id: String = UUID.randomUUID().toString(),
-    token: String = Random.token(size = 8),
-    name: String = "",
-    description: String? = null,
-    date: String? = null,
-    minPrice: Double? = null,
-    maxPrice: Double? = null,
-    type: String? = null,
-    members: List<UserEntities> = emptyList(),
-    draws: Map<String, String> = emptyMap(),
-    isOwner: Boolean = false,
-): GroupEntities = GroupModel(
-    id = id,
-    token = token,
-    name = name,
-    description = description,
-    date = date,
-    minPrice = minPrice,
-    maxPrice = maxPrice,
-    type = type,
-    members = members,
-    draws = draws,
-    isOwner = isOwner
-)

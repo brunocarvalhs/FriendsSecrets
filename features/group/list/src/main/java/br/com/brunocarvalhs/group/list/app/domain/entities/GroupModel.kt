@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.list.app.domain.entities
 
 import kotlinx.serialization.Serializable
+import android.util.Base64
 
 @Serializable
 data class GroupModel(
@@ -15,7 +16,16 @@ data class GroupModel(
     val type: String? = null,
     val minPrice: Int? = null,
     val maxPrice: Int? = null,
+    val photoBase64: String? = null
 ) {
+    val photo: Any?
+        get() = try {
+            if (!photoBase64.isNullOrBlank() && photoBase64.length > 100) {
+                Base64.decode(photoBase64, Base64.NO_WRAP)
+            } else null
+        } catch (e: Exception) {
+            null
+        }
 
     fun toCopy(isOwner: Boolean): GroupModel {
         return copy(isOwner = isOwner)
@@ -34,11 +44,12 @@ data class GroupModel(
                 token = map["token"] as? String ?: "",
                 members = (map["members"] as? List<Map<String, Any>>)?.map { UserModel.fromMap(it) } ?: emptyList(),
                 draws = (map["draws"] as? Map<String, String>) ?: emptyMap(),
-                isOwner = map["isOwner"] as? Boolean ?: false,
-                createdAt = map["createdAt"] as? String,
+                isOwner = map["is_owner"] as? Boolean ?: false,
+                createdAt = map["date"] as? String,
                 type = map["type"] as? String,
-                minPrice = (map["minPrice"] as? Number)?.toInt(),
-                maxPrice = (map["maxPrice"] as? Number)?.toInt(),
+                minPrice = (map["min_price"] as? Number)?.toInt(),
+                maxPrice = (map["max_price"] as? Number)?.toInt(),
+                photoBase64 = map["photo_base64"] as? String
             )
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarToday
@@ -54,8 +55,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.list.app.domain.entities.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.details.components.MemberItem
 import coil.compose.AsyncImage
 
@@ -65,6 +68,7 @@ fun GroupDetailsScreen(
     onBack: () -> Unit = {},
     onDraw: () -> Unit = {},
     onReveal: () -> Unit = {},
+    onChat: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -73,6 +77,7 @@ fun GroupDetailsScreen(
         onBack = onBack,
         onDraw = onDraw,
         onReveal = onReveal,
+        onChat = onChat,
         onShareGroup = { },
         onAddMember = { },
         onSearch = { },
@@ -88,6 +93,7 @@ private fun GroupDetailsContent(
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onReveal: () -> Unit,
+    onChat: () -> Unit,
     onShareGroup: () -> Unit,
     onAddMember: () -> Unit,
     onSearch: () -> Unit,
@@ -122,7 +128,7 @@ private fun GroupDetailsContent(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 AsyncImage(
-                    model = null,
+                    model = group.photo,
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
@@ -144,7 +150,6 @@ private fun GroupDetailsContent(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Ações Principais
             item {
                 Row(
                     modifier = Modifier
@@ -153,13 +158,18 @@ private fun GroupDetailsContent(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ActionIconCard(Icons.Default.Share, "Convidar", onShareGroup)
-                    ActionIconCard(Icons.Default.PersonAdd, "Adicionar", onAddMember)
-                    ActionIconCard(Icons.Default.Search, "Pesquisar", onSearch)
+                    ActionIconCard(Icons.AutoMirrored.Filled.Chat, "Chat", onChat)
+                    if (group.isOwner && group.draws.isEmpty()) {
+                        ActionIconCard(Icons.Default.Casino, "Sortear", onDraw)
+                    } else if (group.draws.isNotEmpty()) {
+                        ActionIconCard(Icons.Default.Casino, "Revelar", onReveal)
+                    } else {
+                        ActionIconCard(Icons.Default.PersonAdd, "Adicionar", onAddMember)
+                    }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Descrição
             item {
                 Column(
                     modifier = Modifier
@@ -171,6 +181,7 @@ private fun GroupDetailsContent(
                         color = if (group.description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Criado em ${group.createdAt ?: "Desconhecido"}",
                         style = MaterialTheme.typography.bodySmall,
@@ -181,20 +192,15 @@ private fun GroupDetailsContent(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
             }
 
-            // Card de Ação do Sorteio (Destaque)
-            item {
-                DrawStatusCard(
-                    isDrawn = group.draws.isNotEmpty(),
-                    onAction = if (group.draws.isNotEmpty()) onReveal else onDraw,
-                    isOwner = group.isOwner
-                )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
-            }
-
-            // Detalhes do Sorteio (Valores, Data, etc)
             item {
                 SectionHeader(title = "Detalhes do sorteio")
-                group.createdAt?.let { SettingItem(Icons.Default.CalendarToday, "Data do sorteio", it) }
+                group.createdAt?.let {
+                    SettingItem(
+                        Icons.Default.CalendarToday,
+                        "Data do sorteio",
+                        it
+                    )
+                }
                 if (group.minPrice != null || group.maxPrice != null) {
                     val priceRange = if (group.minPrice != null && group.maxPrice != null) {
                         "Entre R$ ${group.minPrice} e R$ ${group.maxPrice}"
@@ -209,11 +215,9 @@ private fun GroupDetailsContent(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
             }
 
-            // Lista de Participantes
             item {
                 SectionHeader(
                     title = "${group.members.size} participantes",
-                    trailingIcon = Icons.Default.Search
                 )
                 if (group.isOwner && group.draws.isEmpty()) {
                     SettingItem(
@@ -235,16 +239,24 @@ private fun GroupDetailsContent(
                 )
             }
 
-            // Opções Adicionais
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
                 if (group.isOwner) {
                     SettingItem(Icons.Default.Edit, "Editar informações do grupo")
-                    SettingItem(Icons.Default.Delete, "Apagar grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
+                    SettingItem(
+                        Icons.Default.Delete,
+                        "Apagar grupo",
+                        textColor = MaterialTheme.colorScheme.error,
+                        iconColor = MaterialTheme.colorScheme.error
+                    )
                 } else {
-                    SettingItem(Icons.AutoMirrored.Filled.ExitToApp, "Sair do grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
+                    SettingItem(
+                        Icons.AutoMirrored.Filled.ExitToApp,
+                        "Sair do grupo",
+                        textColor = MaterialTheme.colorScheme.error,
+                        iconColor = MaterialTheme.colorScheme.error
+                    )
                 }
-                SettingItem(Icons.Default.ThumbDown, "Denunciar grupo", textColor = MaterialTheme.colorScheme.error, iconColor = MaterialTheme.colorScheme.error)
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -257,7 +269,8 @@ fun DrawStatusCard(
     isOwner: Boolean,
     onAction: () -> Unit
 ) {
-    val containerColor = if (isDrawn) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primaryContainer
+    val containerColor =
+        if (isDrawn) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primaryContainer
 
     Card(
         modifier = Modifier
@@ -312,7 +325,11 @@ fun ActionIconCard(icon: ImageVector, label: String, onClick: () -> Unit = {}) {
     ) {
         Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+        Text(
+            label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -325,12 +342,26 @@ fun SectionHeader(title: String, trailing: String? = null, trailingIcon: ImageVe
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(title, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
+        Text(
+            title,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.SemiBold
+        )
         if (trailing != null) {
-            Text(trailing, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                trailing,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
         if (trailingIcon != null) {
-            Icon(trailingIcon, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(
+                trailingIcon,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -355,8 +386,75 @@ fun SettingItem(
         Column {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = textColor)
             if (subtitle != null) {
-                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GroupDetailsPreview() {
+    GroupDetailsContent(
+        group = GroupModel(
+            id = "1",
+            name = "Amigo Secreto da Família",
+            description = "Troca de presentes de Natal 2024. Vamos fazer algo bem legal este ano!",
+            members = listOf(
+                UserModel("Bruno", listOf("Tecnologia", "Livros")),
+                UserModel("João", listOf("Esportes")),
+                UserModel("Maria", listOf("Culinária")),
+                UserModel("Ana", listOf("Música")),
+            ),
+            isOwner = true,
+            createdAt = "20/10/2024",
+            type = "Qualquer coisa",
+            minPrice = 50,
+            maxPrice = 200
+        ),
+        onBack = {},
+        onDraw = {},
+        onReveal = {},
+        onChat = {},
+        onShareGroup = {},
+        onAddMember = {},
+        onSearch = {},
+        onRemoveMember = {},
+        onEditMember = {}
+    )
+}
+
+@Preview(showBackground = true, name = "Sorteio Realizado")
+@Composable
+private fun GroupDetailsDrawnPreview() {
+    GroupDetailsContent(
+        group = GroupModel(
+            id = "1",
+            name = "Amigo Secreto da Família",
+            description = "Troca de presentes de Natal 2024",
+            members = listOf(
+                UserModel("Bruno", listOf("Tecnologia")),
+                UserModel("João", listOf("Esportes")),
+            ),
+            draws = mapOf("Bruno" to "João"),
+            isOwner = false,
+            createdAt = "20/10/2024",
+            type = "Qualquer coisa",
+            minPrice = 50,
+            maxPrice = 200
+        ),
+        onBack = {},
+        onDraw = {},
+        onReveal = {},
+        onChat = {},
+        onShareGroup = {},
+        onAddMember = {},
+        onSearch = {},
+        onRemoveMember = {},
+        onEditMember = {}
+    )
 }

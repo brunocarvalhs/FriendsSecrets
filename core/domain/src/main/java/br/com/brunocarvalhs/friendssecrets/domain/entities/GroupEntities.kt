@@ -12,6 +12,7 @@ interface GroupEntities {
     val members: List<UserEntities>
     val draws: Map<String, String>
     val isOwner: Boolean
+    val photoBase64: String?
 
     fun toMap(): Map<String, Any?>
 
@@ -26,6 +27,7 @@ interface GroupEntities {
         members: List<UserEntities> = this.members,
         draws: Map<String, String> = this.draws,
         isOwner: Boolean = this.isOwner,
+        photoBase64: String? = this.photoBase64,
     ): GroupEntities
 
     companion object {
@@ -43,6 +45,6 @@ interface GroupEntities {
         const val MEMBERS = "members"
         const val DRAWS = "draws"
         const val IS_OWNER = "is_owner"
+        const val PHOTO = "photo_base64"
     }
 }
-

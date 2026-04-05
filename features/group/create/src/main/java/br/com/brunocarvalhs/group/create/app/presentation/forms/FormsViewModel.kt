@@ -91,7 +91,7 @@ class FormsViewModel @Inject constructor(
                 minPrice = currentState.minPrice.toIntOrNull(),
                 maxPrice = currentState.maxPrice.toIntOrNull(),
                 date = currentState.date.ifBlank { null },
-                photo = photoBase64
+                photoBase64 = photoBase64
             )
             
             groupCreateUseCase(group).onSuccess {
