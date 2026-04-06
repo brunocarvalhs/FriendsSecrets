@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.list.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.toVanillaMap
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.data.UserListDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,7 +18,8 @@ data class GroupListDTO(
     @SerialName(GroupModel.DATE) val date: String? = null,
     @SerialName(GroupModel.PHOTO) val photo: String? = null,
     @SerialName(GroupModel.MEMBERS) val members: List<UserListDTO> = emptyList(),
-    @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false
+    @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false,
+    @SerialName(GroupModel.CREATED_AT) val createdAt: Long = 0L
 ) {
     fun toDomain() = GroupModel(
         id = id,
@@ -29,7 +29,8 @@ data class GroupListDTO(
         date = date,
         photo = photo,
         members = members.map { it.toDomain() },
-        isOwner = isOwner
+        isOwner = isOwner,
+        createdAt = createdAt
     )
 
     fun toMap(): Map<String, Any?> {
@@ -46,7 +47,8 @@ data class GroupListDTO(
             date = model.date,
             photo = model.photo,
             members = model.members.map { UserListDTO.fromDomain(it) },
-            isOwner = model.isOwner
+            isOwner = model.isOwner,
+            createdAt = model.createdAt
         )
     }
 }

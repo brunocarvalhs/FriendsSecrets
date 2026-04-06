@@ -17,7 +17,8 @@ data class GroupModel(
     val members: List<UserModel> = emptyList(),
     val draws: Map<String, String> = emptyMap(),
     val isOwner: Boolean = false,
-    val photo: String? = null
+    val photo: String? = null,
+    val createdAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
         const val COLLECTION_NAME = "groups"
@@ -35,6 +36,7 @@ data class GroupModel(
         const val DRAWS = "draws"
         const val IS_OWNER = "is_owner"
         const val PHOTO = "photo_base64"
+        const val CREATED_AT = "created_at"
 
         fun generateToken(size: Int = 8): String {
             val charPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')

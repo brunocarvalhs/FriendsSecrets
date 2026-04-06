@@ -24,10 +24,12 @@ class GroupDetailsInitializer(private val builder: Builder) {
         ) {
             composable<DetailRouter>(
                 typeMap = DetailRouter.typeMap
-            ) { 
+            ) {
                 val viewModel = hiltViewModel<GroupDetailsViewModel>()
                 GroupDetailsScreen(
                     viewModel = viewModel,
+                    onBack = builder.onBack,
+                    onDraw = { builder.onDraw(viewModel.uiState.value.group) }
                 )
             }
         }

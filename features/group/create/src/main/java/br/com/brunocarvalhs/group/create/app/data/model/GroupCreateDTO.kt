@@ -21,7 +21,8 @@ data class GroupCreateDTO(
     @SerialName(GroupModel.MEMBERS) val members: List<UserCreateDTO>,
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String>,
     @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean,
-    @SerialName(GroupModel.PHOTO) val photo: String?
+    @SerialName(GroupModel.PHOTO) val photo: String?,
+    @SerialName(GroupModel.CREATED_AT) val createdAt: Long
 ) {
     fun toMap(): Map<String, Any?> {
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
@@ -41,7 +42,8 @@ data class GroupCreateDTO(
             members = model.members.map { UserCreateDTO.fromDomain(it) },
             draws = model.draws,
             isOwner = model.isOwner,
-            photo = model.photo
+            photo = model.photo,
+            createdAt = model.createdAt
         )
     }
 }

@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,7 +17,8 @@ data class GroupDetailsDTO(
     @SerialName(GroupModel.MEMBERS) val members: List<UserDetailsDTO> = emptyList(),
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String> = emptyMap(),
     @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false,
-    @SerialName(GroupModel.PHOTO) val photo: String? = null
+    @SerialName(GroupModel.PHOTO) val photo: String? = null,
+    @SerialName(GroupModel.CREATED_AT) val createdAt: Long = 0L
 ) {
     fun toDomain() = GroupModel(
         id = id,
@@ -32,6 +32,7 @@ data class GroupDetailsDTO(
         members = members.map { it.toDomain() },
         draws = draws,
         isOwner = isOwner,
-        photo = photo
+        photo = photo,
+        createdAt = createdAt
     )
 }
