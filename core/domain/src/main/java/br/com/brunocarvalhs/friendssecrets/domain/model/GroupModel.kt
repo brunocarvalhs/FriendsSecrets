@@ -17,6 +17,7 @@ data class GroupModel(
     val members: List<UserModel> = emptyList(),
     val draws: Map<String, String> = emptyMap(),
     val isOwner: Boolean = false,
+    val ownerId: String? = null,
     val photo: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
 ) {
@@ -35,6 +36,7 @@ data class GroupModel(
         const val MEMBERS = "members"
         const val DRAWS = "draws"
         const val IS_OWNER = "is_owner"
+        const val OWNER_ID = "owner_id"
         const val PHOTO = "photo_base64"
         const val CREATED_AT = "created_at"
 

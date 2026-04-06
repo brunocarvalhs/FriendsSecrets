@@ -1,17 +1,21 @@
 package br.com.brunocarvalhs.group.create.app.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import javax.inject.Inject
 
 class GroupCreateUseCase @Inject constructor(
     private val repository: GroupCreateRepository,
-    private val storage: StorageService
+    private val storage: StorageService,
+    private val deviceService: DeviceService
 ) {
 
     suspend operator fun invoke(group: GroupModel): Result<Unit> = runCatching {
-        repository.create(group)
+        val owner = deviceService.getDeviceId()
+        val groupWithId = group.copy(ownerId = owner)
+        repository.create(groupWithId)
         persistGroupToken(group.token)
         persistAdminToken(group.token)
     }

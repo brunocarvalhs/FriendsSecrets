@@ -52,7 +52,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.extensions.toFormattedDate
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
@@ -68,9 +68,22 @@ fun GroupDetailsScreen(
     onDraw: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val group = uiState.group
 
     GroupDetailsContent(
-        uiState = uiState,
+        name = group.name,
+        description = group.description.orEmpty(),
+        photoUrl = group.photo,
+        memberCount = group.members.size,
+        createdAtTimestamp = group.createdAt,
+        isOwner = group.isOwner,
+        isDrawn = group.draws.isNotEmpty(),
+        drawDate = group.date,
+        minPrice = group.minPrice,
+        maxPrice = group.maxPrice,
+        giftType = group.type,
+        members = group.members,
+        draws = group.draws,
         onBack = onBack,
         onDraw = onDraw,
         onChat = onChat,
@@ -83,7 +96,19 @@ fun GroupDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GroupDetailsContent(
-    uiState: GroupDetailsUiState,
+    name: String,
+    description: String,
+    photoUrl: String?,
+    memberCount: Int,
+    createdAtTimestamp: Long,
+    isOwner: Boolean,
+    isDrawn: Boolean,
+    drawDate: String?,
+    minPrice: Double?,
+    maxPrice: Double?,
+    giftType: String?,
+    members: List<UserModel>,
+    draws: Map<String, String>,
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onChat: () -> Unit,
@@ -91,9 +116,7 @@ private fun GroupDetailsContent(
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
 ) {
-    val group = uiState.group
     var showMenu by remember { mutableStateOf(false) }
-    val isDrawn = group.draws.isNotEmpty()
 
     Scaffold(
         topBar = {
@@ -113,7 +136,7 @@ private fun GroupDetailsContent(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
-                            if (group.isOwner) {
+                            if (isOwner) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(
@@ -171,7 +194,7 @@ private fun GroupDetailsContent(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 AsyncImage(
-                    model = group.photo,
+                    model = photoUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .size(120.dp)
@@ -181,12 +204,12 @@ private fun GroupDetailsContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = group.name,
+                    text = name.ifBlank { "Grupo sem nome" },
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Grupo · ${group.members.size} participantes",
+                    text = "Grupo · $memberCount participantes",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -211,57 +234,69 @@ private fun GroupDetailsContent(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Text(
-                        text = group.description?.ifBlank { "Adicionar descrição ao grupo" }
-                            ?: "Adicionar descrição ao grupo",
-                        color = if (group.description?.isBlank() == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Criado em ${group.date ?: "Desconhecido"}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
-            }
-
-            item {
-                SectionHeader(title = "Detalhes do sorteio")
-                group.date?.let {
-                    SettingItem(
-                        Icons.Default.CalendarToday,
-                        "Data do sorteio",
-                        it
-                    )
-                }
-                if (group.minPrice != null || group.maxPrice != null) {
-                    val priceRange = if (group.minPrice != null && group.maxPrice != null) {
-                        "Entre R$ ${group.minPrice} e R$ ${group.maxPrice}"
-                    } else if (group.minPrice != null) {
-                        "A partir de R$ ${group.minPrice}"
-                    } else {
-                        "Até R$ ${group.maxPrice}"
+            // Descrição e Data de Criação
+            val showDescription = description.isNotBlank() || isOwner
+            if (showDescription) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        if (description.isNotBlank() || isOwner) {
+                            Text(
+                                text = description.ifBlank { "Adicionar descrição ao grupo" },
+                                color = if (description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                        
+                        if (createdAtTimestamp > 0) {
+                            Text(
+                                text = "Criado em ${createdAtTimestamp.toFormattedDate()}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
                     }
-                    SettingItem(Icons.Default.AttachMoney, "Faixa de preço", priceRange)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
                 }
-                group.type?.let { SettingItem(Icons.Default.CardGiftcard, "Tipo de presente", it) }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
             }
 
+            // Detalhes do Sorteio (Apenas se houver dados)
+            val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
+            if (hasDrawDetails) {
+                item {
+                    SectionHeader(title = "Detalhes do sorteio")
+                    drawDate?.let {
+                        SettingItem(
+                            Icons.Default.CalendarToday,
+                            "Data do sorteio",
+                            it
+                        )
+                    }
+                    if (minPrice != null || maxPrice != null) {
+                        val priceRange = if (minPrice != null && maxPrice != null) {
+                            "Entre R$ $minPrice e R$ $maxPrice"
+                        } else if (minPrice != null) {
+                            "A partir de R$ $minPrice"
+                        } else {
+                            "Até R$ $maxPrice"
+                        }
+                        SettingItem(Icons.Default.AttachMoney, "Faixa de preço", priceRange)
+                    }
+                    giftType?.let { SettingItem(Icons.Default.CardGiftcard, "Tipo de presente", it) }
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                }
+            }
+
+            // Participantes
             item {
                 SectionHeader(
-                    title = "${group.members.size} participantes",
+                    title = "$memberCount participantes",
                 )
-                if (group.isOwner && group.draws.isEmpty()) {
+                if (isOwner && !isDrawn) {
                     SettingItem(
                         Icons.Default.PersonAdd,
                         "Adicionar participantes",
@@ -271,25 +306,25 @@ private fun GroupDetailsContent(
                 }
             }
 
-            items(group.members) { member ->
+            items(members) { member ->
                 MemberItem(
                     participant = member.name,
-                    draws = group.draws,
-                    isAdministrator = group.isOwner,
+                    draws = draws,
+                    isAdministrator = isOwner,
                 )
             }
 
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
-                if (group.isOwner) {
+                if (isOwner) {
                     SettingItem(Icons.Default.Edit, "Editar informações do grupo")
                 }
                 SettingItem(
-                    icon = if (group.isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
-                    title = if (group.isOwner) "Apagar grupo" else "Sair do grupo",
+                    icon = if (isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
+                    title = if (isOwner) "Apagar grupo" else "Sair do grupo",
                     textColor = MaterialTheme.colorScheme.error,
                     iconColor = MaterialTheme.colorScheme.error,
-                    onClick = if (group.isOwner) onDelete else onExit
+                    onClick = if (isOwner) onDelete else onExit
                 )
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -301,52 +336,19 @@ private fun GroupDetailsContent(
 @Composable
 private fun GroupDetailsPreview() {
     GroupDetailsContent(
-        uiState = GroupDetailsUiState(
-            group = GroupModel(
-                name = "Amigo Secreto da Família",
-                description = "Troca de presentes de Natal 2024. Vamos fazer algo bem legal este ano!",
-                members = listOf(
-                    UserModel(name = "Bruno", likes = listOf("Tecnologia", "Livros")),
-                    UserModel(name = "João", likes = listOf("Esportes")),
-                    UserModel(name = "Maria", likes = listOf("Culinária")),
-                    UserModel(name = "Ana", likes = listOf("Música")),
-                ),
-                isOwner = true,
-                date = "20/10/2024",
-                type = "Qualquer coisa",
-                minPrice = 50.0,
-                maxPrice = 200.0
-            )
-        ),
-        onBack = {},
-        onDraw = {},
-        onChat = {},
-        onDelete = {},
-        onExit = {},
-        onShareGroup = {},
-    )
-}
-
-@Preview(showBackground = true, name = "Sorteio Realizado")
-@Composable
-private fun GroupDetailsDrawnPreview() {
-    GroupDetailsContent(
-        uiState = GroupDetailsUiState(
-            group = GroupModel(
-                name = "Amigo Secreto da Família",
-                description = "Troca de presentes de Natal 2024",
-                members = listOf(
-                    UserModel(name = "Bruno", likes = listOf("Tecnologia")),
-                    UserModel(name = "João", likes = listOf("Esportes")),
-                ),
-                draws = mapOf("Bruno" to "João"),
-                isOwner = false,
-                date = "20/10/2024",
-                type = "Qualquer coisa",
-                minPrice = 50.0,
-                maxPrice = 200.0
-            )
-        ),
+        name = "Amigo Secreto da Família",
+        description = "Troca de presentes de Natal 2024. Vamos fazer algo bem legal este ano!",
+        photoUrl = null,
+        memberCount = 4,
+        createdAtTimestamp = System.currentTimeMillis(),
+        isOwner = true,
+        isDrawn = false,
+        drawDate = "20/12/2024",
+        minPrice = 50.0,
+        maxPrice = 200.0,
+        giftType = "Qualquer coisa",
+        members = emptyList(),
+        draws = emptyMap(),
         onBack = {},
         onDraw = {},
         onChat = {},

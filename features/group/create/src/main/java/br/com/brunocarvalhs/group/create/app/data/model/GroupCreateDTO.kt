@@ -21,6 +21,7 @@ data class GroupCreateDTO(
     @SerialName(GroupModel.MEMBERS) val members: List<UserCreateDTO>,
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String>,
     @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean,
+    @SerialName(GroupModel.OWNER_ID) val ownerId: String?,
     @SerialName(GroupModel.PHOTO) val photo: String?,
     @SerialName(GroupModel.CREATED_AT) val createdAt: Long
 ) {
@@ -42,6 +43,7 @@ data class GroupCreateDTO(
             members = model.members.map { UserCreateDTO.fromDomain(it) },
             draws = model.draws,
             isOwner = model.isOwner,
+            ownerId = model.ownerId,
             photo = model.photo,
             createdAt = model.createdAt
         )

@@ -116,6 +116,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.lifecycle.process)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     androidTestImplementation (libs.hilt.android.testing)

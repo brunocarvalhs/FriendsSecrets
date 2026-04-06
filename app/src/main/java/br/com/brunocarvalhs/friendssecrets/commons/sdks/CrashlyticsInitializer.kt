@@ -15,7 +15,7 @@ class CrashlyticsInitializer : Initializer<FirebaseCrashlytics> {
             setCustomKey("app_build_type", BuildConfig.BUILD_TYPE)
             setCustomKey("app_package_name", BuildConfig.APPLICATION_ID)
             setCustomKey("app_build_number", BuildConfig.VERSION_CODE.toString())
-            setUserId(DeviceManager.getDeviceIdentifier(context))
+            DeviceManager.setCallbackDeviceId(context) { deviceId -> setUserId(deviceId) }
         }
     }
 
