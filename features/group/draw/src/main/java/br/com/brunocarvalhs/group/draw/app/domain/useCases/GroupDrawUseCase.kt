@@ -1,13 +1,13 @@
-package br.com.brunocarvalhs.group.draw.domain.useCases
+package br.com.brunocarvalhs.group.draw.app.domain.useCases
 
-import br.com.brunocarvalhs.group.core.domain.entities.GroupEntities
-import br.com.brunocarvalhs.group.core.domain.entities.UserEntities
-import br.com.brunocarvalhs.group.core.domain.repositories.GroupRepository
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository
 
-internal class GroupDrawUseCase(
-    private val repository: GroupRepository
+class GroupDrawUseCase(
+    private val repository: DrawRepository
 ) {
-    suspend fun invoke(group: GroupEntities): Result<Unit> {
+    suspend fun invoke(group: GroupModel): Result<Unit> {
         return try {
             runCatching {
                 validateMembers(group.members)
@@ -19,7 +19,7 @@ internal class GroupDrawUseCase(
         }
     }
 
-    private fun validateMembers(members: List<UserEntities>) {
+    private fun validateMembers(members: List<UserModel>) {
         require(members.size > 2)
     }
 
@@ -27,4 +27,3 @@ internal class GroupDrawUseCase(
         require(draw.isEmpty())
     }
 }
-

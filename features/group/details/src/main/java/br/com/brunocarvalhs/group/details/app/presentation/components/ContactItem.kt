@@ -1,7 +1,5 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details.components
+package br.com.brunocarvalhs.group.details.app.presentation.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,9 +37,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.list.R
+import br.com.brunocarvalhs.group.details.R
 import coil.compose.AsyncImage
 
 @Composable

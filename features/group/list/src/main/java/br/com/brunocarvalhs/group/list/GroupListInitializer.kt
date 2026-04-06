@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.presentation.GroupListScreen
 import br.com.brunocarvalhs.group.list.app.presentation.GroupListViewModel
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
@@ -35,7 +35,7 @@ class GroupListInitializer(private val builder: Builder) {
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
         internal var onGroupToCreate: () -> Unit = {}
-        internal var onGroupToDetails: (GroupEntities) -> Unit = {}
+        internal var onGroupToDetails: (GroupModel) -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
@@ -45,6 +45,11 @@ class GroupListInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupListInitializer.Builder.onGroupToCreate", enabled = true)
         fun onGroupToCreate(onGroupToCreate: () -> Unit) = apply {
             this.onGroupToCreate = onGroupToCreate
+        }
+
+        @AddTrace(name = "GroupListInitializer.Builder.onGroupToDetails", enabled = true)
+        fun onGroupToDetails(onGroupToDetails: (GroupModel) -> Unit) = apply {
+            this.onGroupToDetails = onGroupToDetails
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.build", enabled = true)

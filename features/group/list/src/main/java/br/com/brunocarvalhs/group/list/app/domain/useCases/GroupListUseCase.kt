@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.group.list.app.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import javax.inject.Inject
 
@@ -14,7 +14,10 @@ class GroupListUseCase @Inject constructor(
         return try {
             runCatching {
                 val groupTokens = loadGroupTokens()
-                if (groupTokens.isEmpty()) emptyList() else repository.list(groupTokens)
+                if (groupTokens.isNotEmpty()) {
+                    repository.list(groupTokens)
+                        .map { it.toDomain() }
+                } else emptyList()
             }
         } catch (e: Exception) {
             Result.failure(e)

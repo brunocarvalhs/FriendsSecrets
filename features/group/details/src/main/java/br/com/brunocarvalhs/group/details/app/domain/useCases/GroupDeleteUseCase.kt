@@ -1,13 +1,13 @@
-package br.com.brunocarvalhs.group.list.app.domain.useCases
+package br.com.brunocarvalhs.group.details.app.domain.useCases
 
-import br.com.brunocarvalhs.group.details.app.domain.entities.GroupModel.Companion.COLLECTION_NAME_ADMINS
-import br.com.brunocarvalhs.group.details.app.domain.entities.GroupModel.Companion.COLLECTION_NAME
-import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
-import br.com.brunocarvalhs.group.details.app.domain.services.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME_ADMIN
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
+import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
 import javax.inject.Inject
 
 class GroupDeleteUseCase @Inject constructor(
-    private val repository: GroupListRepository,
+    private val repository: GroupDetailsRepository,
     private val storage: StorageService
 ) {
     suspend fun invoke(groupId: String): Result<Unit> {
@@ -16,7 +16,7 @@ class GroupDeleteUseCase @Inject constructor(
             val token = group.token
 
             removeToken(COLLECTION_NAME, token)
-            removeToken(COLLECTION_NAME_ADMINS, token)
+            removeToken(COLLECTION_NAME_ADMIN, token)
 
             repository.delete(groupId)
             

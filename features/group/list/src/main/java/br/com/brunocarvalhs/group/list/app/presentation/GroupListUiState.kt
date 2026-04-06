@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.list.app.presentation
 
 import androidx.compose.runtime.Stable
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 
 @Stable
 sealed interface GroupListUiState {

@@ -7,8 +7,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.R
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
 
 @Composable
 internal fun HomeFloatingActionButton(

@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details.components
+package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

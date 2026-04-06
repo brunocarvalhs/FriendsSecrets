@@ -1,10 +1,10 @@
 package br.com.brunocarvalhs.group.list.app.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import javax.inject.Inject
 
@@ -36,7 +36,8 @@ class GroupByTokenUseCase @Inject constructor(
     }
 
     private suspend fun fetchGroupByToken(token: String): GroupModel {
-        return repository.searchByToken(token) ?: throw GroupNotFoundException()
+        val data =  repository.searchByToken(token) ?: throw GroupNotFoundException()
+        return data.toDomain()
     }
 
     private suspend fun storeToken(token: String, groupList: List<String>) {

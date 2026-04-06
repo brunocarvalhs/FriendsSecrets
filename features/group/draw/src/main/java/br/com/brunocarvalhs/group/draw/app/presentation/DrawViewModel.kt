@@ -1,73 +1,40 @@
-package br.com.brunocarvalhs.group.app.presentation.draw
+package br.com.brunocarvalhs.group.draw.app.presentation
 
-import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import br.com.brunocarvalhs.friendssecrets.common.extensions.report
-import br.com.brunocarvalhs.friendssecrets.domain.useCases.DrawRevelationUseCase
-import br.com.brunocarvalhs.group.R
+import androidx.navigation.toRoute
+import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DrawViewModel @Inject constructor(
-    private val drawRevelationUseCase: DrawRevelationUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    private val args = savedStateHandle.toRoute<DrawGraphRouter>(DrawGraphRouter.typeMap)
+
     private val _uiState: MutableStateFlow<DrawUiState> =
-        MutableStateFlow(DrawUiState.Idle)
+        MutableStateFlow(DrawUiState(
+            groupModel = args.group
+        ))
 
     val uiState: StateFlow<DrawUiState> =
         _uiState.asStateFlow()
 
     @AddTrace(name = "DrawViewModel.eventIntent", enabled = true)
-    fun eventIntent(intent: DrawIntent) {
-        when (intent) {
-            is DrawIntent.FetchDraw -> fetchDraw(group = intent.group, code = intent.code)
-            DrawIntent.Refresh -> {
-                _uiState.value = DrawUiState.Idle
-            }
+    fun handleIntent(intent: DrawIntent) = when (intent) {
+        else -> {
 
-            is DrawIntent.GenerativeDraw -> generativeDraw(
-                context = intent.context,
-                navigation = intent.navigation,
-                group = intent.group,
-                secret = intent.secret,
-                likes = intent.likes
-            )
         }
-    }
-
-    @AddTrace(name = "DrawViewModel.generativeDraw", enabled = true)
-    private fun generativeDraw(
-        context: Context,
-        navigation: NavController,
-        group: GroupEntities,
-        secret: String,
-        likes: List<String> = emptyList(),
-    ) {
-        val prompt = context.getString(R.string.ai_prompt, secret, likes.toString(), group.name)
     }
 
     @AddTrace(name = "DrawViewModel.fetchDraw", enabled = true)
     private fun fetchDraw(group: String, code: String? = null) {
-        _uiState.value = DrawUiState.Loading
-        viewModelScope.launch {
-            drawRevelationUseCase.invoke(group, code).onSuccess {
-                it?.let {
-                    _uiState.value = DrawUiState.Success(group = it.first, draw = it.second)
-                } ?: run {
-                    _uiState.value = DrawUiState.Idle
-                }
-            }.onFailure {
-                _uiState.value = DrawUiState.Error(it.report()?.message.orEmpty())
-            }
-        }
+
     }
 }

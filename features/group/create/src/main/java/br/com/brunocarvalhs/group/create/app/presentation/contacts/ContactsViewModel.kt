@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.group.create.app.presentation.contacts
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
@@ -63,7 +64,7 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
-    private fun addMember(contact: ContactModel) {
+    private fun addMember(contact: UserModel) {
         _uiState.update { currentState ->
             if (currentState.members.any { it.phoneNumber == contact.phoneNumber }) {
                 currentState
@@ -73,7 +74,7 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
-    private fun removeMember(contact: ContactModel) {
+    private fun removeMember(contact: UserModel) {
         _uiState.update { currentState ->
             currentState.copy(
                 members = currentState.members.filterNot { it.phoneNumber == contact.phoneNumber }
@@ -81,7 +82,7 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
-    private fun filterContacts(contacts: List<ContactModel>, query: String): List<ContactModel> {
+    private fun filterContacts(contacts: List<UserModel>, query: String): List<UserModel> {
         if (query.isBlank()) return contacts
         return contacts.filter {
             it.name.contains(query, ignoreCase = true) ||

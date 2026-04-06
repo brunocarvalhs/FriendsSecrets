@@ -8,31 +8,19 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-inline fun <reified T : Any> navTypeSerializer() = object : NavType<T>(isNullableAllowed = false) {
-    override fun get(bundle: Bundle, key: String): T? {
-        return bundle.getString(key)?.let { Json.decodeFromString(it) }
-    }
-
-    override fun parseValue(value: String): T {
-        return Json.decodeFromString(URLDecoder.decode(value, StandardCharsets.UTF_8.name()))
-    }
-
-    override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putString(key, Json.encodeToString(value))
-    }
-
-    override fun serializeAsValue(value: T): String {
-        return URLEncoder.encode(Json.encodeToString(value), StandardCharsets.UTF_8.name())
-    }
+private val navJson = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+    explicitNulls = false
 }
 
-inline fun <reified T : Any> navTypeListSerializer() = object : NavType<List<T>>(isNullableAllowed = false) {
+internal inline fun <reified T : Any> navTypeListSerializer() = object : NavType<List<T>>(isNullableAllowed = false) {
     override fun get(bundle: Bundle, key: String): List<T>? {
-        return bundle.getString(key)?.let { Json.decodeFromString(it) }
+        return bundle.getString(key)?.let { navJson.decodeFromString(it) }
     }
 
     override fun parseValue(value: String): List<T> {
-        return Json.decodeFromString(URLDecoder.decode(value, StandardCharsets.UTF_8.name()))
+        return navJson.decodeFromString(URLDecoder.decode(value, StandardCharsets.UTF_8.name()))
     }
 
     override fun put(bundle: Bundle, key: String, value: List<T>) {
@@ -40,6 +28,6 @@ inline fun <reified T : Any> navTypeListSerializer() = object : NavType<List<T>>
     }
 
     override fun serializeAsValue(value: List<T>): String {
-        return URLEncoder.encode(Json.encodeToString(value), StandardCharsets.UTF_8.name())
+        return URLEncoder.encode(navJson.encodeToString(value), StandardCharsets.UTF_8.name())
     }
 }

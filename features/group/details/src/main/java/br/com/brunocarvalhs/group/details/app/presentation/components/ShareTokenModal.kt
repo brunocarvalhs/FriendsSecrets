@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details.components
+package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import br.com.brunocarvalhs.group.list.R
+import br.com.brunocarvalhs.group.details.R
 
 @Composable
 fun ShareTokenModal(

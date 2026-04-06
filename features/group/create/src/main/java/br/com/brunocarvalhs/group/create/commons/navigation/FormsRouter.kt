@@ -1,17 +1,17 @@
 package br.com.brunocarvalhs.group.create.commons.navigation
 
-import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
 @Serializable
 internal data class FormsRouter(
-    val members: List<ContactModel>,
+    val members: List<UserModel>,
     val contacts: Int
 ) {
     companion object {
         val typeMap = mapOf(
-            typeOf<List<ContactModel>>() to navTypeListSerializer<ContactModel>()
+            typeOf<List<UserModel>>() to navTypeListSerializer<UserModel>()
         )
     }
 }

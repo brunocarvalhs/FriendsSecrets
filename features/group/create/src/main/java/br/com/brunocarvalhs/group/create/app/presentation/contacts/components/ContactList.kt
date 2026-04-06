@@ -18,13 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
 fun ContactList(
-    contacts: List<ContactModel>,
-    selectedMembers: List<ContactModel>,
-    onToggleMember: (ContactModel) -> Unit
+    contacts: List<UserModel>,
+    selectedMembers: List<UserModel>,
+    onToggleMember: (UserModel) -> Unit
 ) {
     val grouped = remember(contacts) {
         contacts.groupBy { it.name.firstOrNull()?.uppercaseChar() ?: '#' }
@@ -84,17 +85,17 @@ fun ContactList(
 private fun ContactListPreview() {
     ContactList(
         contacts = listOf(
-            ContactModel(
+            UserModel(
                 name = "John Doe",
                 phoneNumber = "1234567890"
             ),
-            ContactModel(
+            UserModel(
                 name = "Jane Smith",
                 phoneNumber = "9876543210"
             )
         ),
         selectedMembers = listOf(
-            ContactModel(
+            UserModel(
                 name = "John Doe",
                 phoneNumber = "1234567890"
             )

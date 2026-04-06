@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details.components
+package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.list.R
-import br.com.brunocarvalhs.group.list.app.domain.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.details.R
 
 @Composable
 fun MembersTab(

@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.group.list.app.domain.repository
 
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
+import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
 
 interface GroupListRepository {
-    suspend fun list(groupTokens: List<String>): List<GroupModel>
-    suspend fun searchByToken(token: String): GroupModel?
+    suspend fun list(groupTokens: List<String>): List<GroupListDTO>
+    suspend fun searchByToken(token: String): GroupListDTO?
 }

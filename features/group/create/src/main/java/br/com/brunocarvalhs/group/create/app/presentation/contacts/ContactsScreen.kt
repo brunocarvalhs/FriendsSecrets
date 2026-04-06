@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactList
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SearchField
@@ -63,18 +64,18 @@ internal fun ContactsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContactsContent(
-    contacts: List<ContactModel>,
-    selectedMembers: List<ContactModel>,
-    filteredContacts: List<ContactModel>,
+    contacts: List<UserModel>,
+    selectedMembers: List<UserModel>,
+    filteredContacts: List<UserModel>,
     searchQuery: String,
     isLoading: Boolean,
     error: String?,
     onQueryChange: (String) -> Unit,
-    onToggleMember: (ContactModel) -> Unit,
-    onRemoveMember: (ContactModel) -> Unit,
+    onToggleMember: (UserModel) -> Unit,
+    onRemoveMember: (UserModel) -> Unit,
     onRefresh: () -> Unit,
     onBack: () -> Unit,
-    onNext: (List<ContactModel>) -> Unit
+    onNext: (List<UserModel>) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -176,15 +177,15 @@ private fun ContactsContent(
 private fun ContactsContentPreview() {
     ContactsContent(
         contacts = listOf(
-            ContactModel(name = "John Doe", phoneNumber = "1234567890"),
-            ContactModel(name = "Jane Smith", phoneNumber = "9876543210")
+            UserModel(name = "John Doe", phoneNumber = "1234567890"),
+            UserModel(name = "Jane Smith", phoneNumber = "9876543210")
         ),
         selectedMembers = listOf(
-            ContactModel(name = "John Doe", phoneNumber = "1234567890")
+            UserModel(name = "John Doe", phoneNumber = "1234567890")
         ),
         filteredContacts = listOf(
-            ContactModel(name = "John Doe", phoneNumber = "1234567890"),
-            ContactModel(name = "Jane Smith", phoneNumber = "9876543210")
+            UserModel(name = "John Doe", phoneNumber = "1234567890"),
+            UserModel(name = "Jane Smith", phoneNumber = "9876543210")
         ),
         searchQuery = "",
         isLoading = false,

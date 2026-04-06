@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details.components
+package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.People
@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.group.list.R
+import br.com.brunocarvalhs.group.details.R
 
 @Composable
 fun FloatingButtonComponent(

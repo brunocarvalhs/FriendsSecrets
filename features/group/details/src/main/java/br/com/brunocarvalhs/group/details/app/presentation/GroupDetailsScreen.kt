@@ -1,7 +1,6 @@
-package br.com.brunocarvalhs.group.list.app.presentation.details
+package br.com.brunocarvalhs.group.details.app.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,8 +27,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,7 +34,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -56,12 +52,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.details.app.domain.entities.GroupModel
-import br.com.brunocarvalhs.group.list.app.domain.model.UserModel
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.ActionIconCard
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.MemberItem
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.SectionHeader
-import br.com.brunocarvalhs.group.list.app.presentation.details.components.SettingItem
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
+import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
+import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
+import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
 import coil.compose.AsyncImage
 
 @Composable
@@ -69,22 +65,18 @@ fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
     onChat: () -> Unit = {},
+    onDraw: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     GroupDetailsContent(
         uiState = uiState,
         onBack = onBack,
-        onDraw = { viewModel.handleIntent(GroupDetailsIntent.Draw) },
-        onReveal = { viewModel.handleIntent(GroupDetailsIntent.Reveal) },
+        onDraw = onDraw,
         onChat = onChat,
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
-        onSelectMember = { viewModel.handleIntent(GroupDetailsIntent.SelectMember(it)) },
-        onCodeChange = { viewModel.handleIntent(GroupDetailsIntent.ChangeCode(it)) },
-        onConfirmReveal = { viewModel.handleIntent(GroupDetailsIntent.ConfirmReveal(it)) },
-        onDismissReveal = { viewModel.handleIntent(GroupDetailsIntent.DismissReveal) }
     )
 }
 
@@ -94,15 +86,10 @@ private fun GroupDetailsContent(
     uiState: GroupDetailsUiState,
     onBack: () -> Unit,
     onDraw: () -> Unit,
-    onReveal: () -> Unit,
     onChat: () -> Unit,
     onDelete: () -> Unit,
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
-    onSelectMember: (String) -> Unit,
-    onCodeChange: (String) -> Unit,
-    onConfirmReveal: (String) -> Unit,
-    onDismissReveal: () -> Unit,
 ) {
     val group = uiState.group
     var showMenu by remember { mutableStateOf(false) }
@@ -218,7 +205,7 @@ private fun GroupDetailsContent(
                     ActionIconCard(
                         icon = Icons.Default.Casino,
                         label = if (isDrawn) "Revelar" else "Sortear",
-                        onClick = if (isDrawn) onReveal else onDraw
+                        onClick = onDraw
                     )
                 }
                 Spacer(modifier = Modifier.height(24.dp))
@@ -231,13 +218,14 @@ private fun GroupDetailsContent(
                         .padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = group.description.ifBlank { "Adicionar descrição ao grupo" },
-                        color = if (group.description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        text = group.description?.ifBlank { "Adicionar descrição ao grupo" }
+                            ?: "Adicionar descrição ao grupo",
+                        color = if (group.description?.isBlank() == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Criado em ${group.createdAt ?: "Desconhecido"}",
+                        text = "Criado em ${group.date ?: "Desconhecido"}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
@@ -248,7 +236,7 @@ private fun GroupDetailsContent(
 
             item {
                 SectionHeader(title = "Detalhes do sorteio")
-                group.createdAt?.let {
+                group.date?.let {
                     SettingItem(
                         Icons.Default.CalendarToday,
                         "Data do sorteio",
@@ -307,95 +295,6 @@ private fun GroupDetailsContent(
             }
         }
     }
-
-    if (uiState.showRevealModal) {
-        RevealDialog(
-            uiState = uiState,
-            onDismiss = onDismissReveal,
-            onSelectMember = onSelectMember,
-            onCodeChange = onCodeChange,
-            onConfirm = onConfirmReveal
-        )
-    }
-}
-
-@Composable
-fun RevealDialog(
-    uiState: GroupDetailsUiState,
-    onDismiss: () -> Unit,
-    onSelectMember: (String) -> Unit,
-    onCodeChange: (String) -> Unit,
-    onConfirm: (String) -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = if (uiState.revealedFriend != null) "Seu Amigo Secreto" else "Revelar Amigo Secreto") },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                if (uiState.revealedFriend != null) {
-                    Text(
-                        text = "Seu amigo secreto é:",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = uiState.revealedFriend,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                } else if (uiState.selectedMember == null) {
-                    Text(text = "Selecione quem você é no grupo:")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    LazyColumn(modifier = Modifier.height(200.dp)) {
-                        items(uiState.group.members) { member ->
-                            Text(
-                                text = member.name,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onSelectMember(member.name) }
-                                    .padding(vertical = 12.dp),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            HorizontalDivider(thickness = 0.5.dp)
-                        }
-                    }
-                } else {
-                    Text(text = "Olá ${uiState.selectedMember}, digite o código do grupo para revelar:")
-                    Spacer(modifier = Modifier.height(16.dp))
-                    OutlinedTextField(
-                        value = uiState.revelationCode,
-                        onValueChange = onCodeChange,
-                        label = { Text("Código do Grupo") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            if (uiState.revealedFriend != null) {
-                Button(onClick = onDismiss) {
-                    Text("Fechar")
-                }
-            } else if (uiState.selectedMember != null) {
-                Button(
-                    onClick = { onConfirm(uiState.selectedMember) },
-                    enabled = uiState.revelationCode == uiState.group.token
-                ) {
-                    Text("Revelar")
-                }
-            }
-        },
-        dismissButton = {
-            if (uiState.revealedFriend == null) {
-                Button(onClick = onDismiss) {
-                    Text("Cancelar")
-                }
-            }
-        }
-    )
 }
 
 @Preview(showBackground = true)
@@ -404,33 +303,27 @@ private fun GroupDetailsPreview() {
     GroupDetailsContent(
         uiState = GroupDetailsUiState(
             group = GroupModel(
-                id = "1",
                 name = "Amigo Secreto da Família",
                 description = "Troca de presentes de Natal 2024. Vamos fazer algo bem legal este ano!",
                 members = listOf(
-                    UserModel("Bruno", listOf("Tecnologia", "Livros")),
-                    UserModel("João", listOf("Esportes")),
-                    UserModel("Maria", listOf("Culinária")),
-                    UserModel("Ana", listOf("Música")),
+                    UserModel(name = "Bruno", likes = listOf("Tecnologia", "Livros")),
+                    UserModel(name = "João", likes = listOf("Esportes")),
+                    UserModel(name = "Maria", likes = listOf("Culinária")),
+                    UserModel(name = "Ana", likes = listOf("Música")),
                 ),
                 isOwner = true,
-                createdAt = "20/10/2024",
+                date = "20/10/2024",
                 type = "Qualquer coisa",
-                minPrice = 50,
-                maxPrice = 200
+                minPrice = 50.0,
+                maxPrice = 200.0
             )
         ),
         onBack = {},
         onDraw = {},
-        onReveal = {},
         onChat = {},
         onDelete = {},
         onExit = {},
         onShareGroup = {},
-        onSelectMember = {},
-        onCodeChange = {},
-        onConfirmReveal = {},
-        onDismissReveal = {}
     )
 }
 
@@ -440,31 +333,25 @@ private fun GroupDetailsDrawnPreview() {
     GroupDetailsContent(
         uiState = GroupDetailsUiState(
             group = GroupModel(
-                id = "1",
                 name = "Amigo Secreto da Família",
                 description = "Troca de presentes de Natal 2024",
                 members = listOf(
-                    UserModel("Bruno", listOf("Tecnologia")),
-                    UserModel("João", listOf("Esportes")),
+                    UserModel(name = "Bruno", likes = listOf("Tecnologia")),
+                    UserModel(name = "João", likes = listOf("Esportes")),
                 ),
                 draws = mapOf("Bruno" to "João"),
                 isOwner = false,
-                createdAt = "20/10/2024",
+                date = "20/10/2024",
                 type = "Qualquer coisa",
-                minPrice = 50,
-                maxPrice = 200
+                minPrice = 50.0,
+                maxPrice = 200.0
             )
         ),
         onBack = {},
         onDraw = {},
-        onReveal = {},
         onChat = {},
         onDelete = {},
         onExit = {},
         onShareGroup = {},
-        onSelectMember = {},
-        onCodeChange = {},
-        onConfirmReveal = {},
-        onDismissReveal = {}
     )
 }

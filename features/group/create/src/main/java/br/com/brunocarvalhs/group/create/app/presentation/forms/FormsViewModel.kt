@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.group.create.app.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel

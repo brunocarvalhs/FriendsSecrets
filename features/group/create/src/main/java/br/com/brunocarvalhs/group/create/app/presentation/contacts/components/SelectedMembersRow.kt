@@ -29,12 +29,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
 fun SelectedMembersRow(
-    members: List<ContactModel>,
-    onRemoveMember: (ContactModel) -> Unit
+    members: List<UserModel>,
+    onRemoveMember: (UserModel) -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -95,11 +96,11 @@ fun SelectedMembersRow(
 private fun SelectedMembersRowPreview() {
     SelectedMembersRow(
         members = listOf(
-            ContactModel(
+            UserModel(
                 name = "Bruno Carvalho",
                 phoneNumber = "1234567890"
             ),
-            ContactModel(
+            UserModel(
                 name = "Jane Smith",
                 phoneNumber = "9876543210"
             )

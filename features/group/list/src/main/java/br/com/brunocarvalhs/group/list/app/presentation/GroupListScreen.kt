@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
-import br.com.brunocarvalhs.group.list.app.domain.model.UserModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.GroupCard

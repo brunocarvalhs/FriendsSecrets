@@ -1,8 +1,8 @@
-package br.com.brunocarvalhs.group.list.app.domain.useCases
+package br.com.brunocarvalhs.group.details.app.domain.useCases
 
 import android.content.Context
 import android.content.Intent
-import br.com.brunocarvalhs.group.details.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

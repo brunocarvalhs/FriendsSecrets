@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.domain.repository
 
-import br.com.brunocarvalhs.group.details.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 
 interface GroupDetailsRepository {
     suspend fun read(groupId: String): GroupModel

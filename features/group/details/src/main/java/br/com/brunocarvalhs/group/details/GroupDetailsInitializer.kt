@@ -5,10 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.commons.navigation.GroupDetailsRouter
 import br.com.brunocarvalhs.group.details.commons.navigation.DetailRouter
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsScreen
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsViewModel
+import br.com.brunocarvalhs.group.details.app.presentation.GroupDetailsScreen
+import br.com.brunocarvalhs.group.details.app.presentation.GroupDetailsViewModel
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
@@ -16,8 +18,13 @@ class GroupDetailsInitializer(private val builder: Builder) {
 
     @AddTrace(name = "GroupDetailsInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<GroupDetailsRouter>(startDestination = DetailRouter::class, typeMap = DetailRouter.typeMap) {
-            composable<DetailRouter> {
+        navGraphBuilder.navigation<GroupDetailsRouter>(
+            startDestination = DetailRouter::class,
+            typeMap = GroupDetailsRouter.typeMap
+        ) {
+            composable<DetailRouter>(
+                typeMap = DetailRouter.typeMap
+            ) { 
                 val viewModel = hiltViewModel<GroupDetailsViewModel>()
                 GroupDetailsScreen(
                     viewModel = viewModel,
@@ -29,7 +36,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
         internal var onBack: () -> Unit = {}
-        internal var onDraw: () -> Unit = {}
+        internal var onDraw: (GroupModel) -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
@@ -42,7 +49,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.onDraw", enabled = true)
-        fun onDraw(onDraw: () -> Unit) = apply {
+        fun onDraw(onDraw: (GroupModel) -> Unit) = apply {
             this.onDraw = onDraw
         }
 

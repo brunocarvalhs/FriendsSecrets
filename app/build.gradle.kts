@@ -92,7 +92,9 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(project(":features:group:list"))
+    implementation(project(":features:group:details"))
     implementation(project(":features:group:create"))
+    implementation(project(":features:group:draw"))
 //    implementation(project(":features:settings"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
