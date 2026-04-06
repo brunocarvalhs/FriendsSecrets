@@ -16,10 +16,12 @@ data class GroupListDTO(
     @SerialName(GroupModel.DESCRIPTION) val description: String? = null,
     @SerialName(GroupModel.TOKEN) val token: String = "",
     @SerialName(GroupModel.DATE) val date: String? = null,
-    @SerialName(GroupModel.PHOTO) val photo: String? = null,
+    @SerialName(GroupModel.PHOTO) val photo_base64: String? = null,
     @SerialName(GroupModel.MEMBERS) val members: List<UserListDTO> = emptyList(),
-    @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false,
-    @SerialName(GroupModel.CREATED_AT) val createdAt: Long = 0L
+    @SerialName(GroupModel.DRAWS) val draws: Map<String, String> = emptyMap(),
+    @SerialName(GroupModel.OWNER_ID) val owner_id: String? = null,
+    @SerialName(GroupModel.IS_OWNER) val is_owner: Boolean = false,
+    @SerialName(GroupModel.CREATED_AT) val created_at: Long = 0L
 ) {
     fun toDomain() = GroupModel(
         id = id,
@@ -27,10 +29,12 @@ data class GroupListDTO(
         description = description,
         token = token,
         date = date,
-        photo = photo,
+        photo = photo_base64,
         members = members.map { it.toDomain() },
-        isOwner = isOwner,
-        createdAt = createdAt
+        ownerId = owner_id,
+        draws = draws,
+        isOwner = is_owner,
+        createdAt = created_at
     )
 
     fun toMap(): Map<String, Any?> {
@@ -45,10 +49,12 @@ data class GroupListDTO(
             description = model.description,
             token = model.token,
             date = model.date,
-            photo = model.photo,
+            photo_base64 = model.photo,
             members = model.members.map { UserListDTO.fromDomain(it) },
-            isOwner = model.isOwner,
-            createdAt = model.createdAt
+            owner_id = model.ownerId,
+            draws = model.draws,
+            is_owner = model.isOwner,
+            created_at = model.createdAt
         )
     }
 }
