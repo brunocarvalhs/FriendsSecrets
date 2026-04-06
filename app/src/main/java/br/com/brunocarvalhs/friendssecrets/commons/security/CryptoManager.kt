@@ -11,6 +11,7 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
+import timber.log.Timber
 
 class CryptoManager(
     private val base64Encoder: Base64Encoder = DefaultBase64Encoder,
@@ -21,37 +22,62 @@ class CryptoManager(
     }
 ) {
 
+    private val TAG = "CryptoManager"
+
     fun encryptMap(
         inputMap: Map<String, Any?>,
         excludedKeys: Set<String>
-    ): Map<String, Any?> = inputMap.filterValues { it != null }.mapValues { (key, value) ->
-        if (key in excludedKeys) value
-        else encrypt(json.encodeToString(value.toJsonElement()))
+    ): Map<String, Any?> {
+        Timber.tag(TAG).d("--> ENCRYPT MAP | Excluded: %s", excludedKeys)
+        return inputMap.filterValues { it != null }.mapValues { (key, value) ->
+            if (key in excludedKeys) value
+            else encrypt(json.encodeToString(value.toJsonElement()))
+        }.also {
+            Timber.tag(TAG).d("<-- SUCCESS ENCRYPT MAP")
+        }
     }
 
     fun decryptMap(
         encodedMap: Map<String, Any>,
         excludedKeys: Set<String>
-    ): Map<String, Any> = encodedMap.mapValues { (key, value) ->
-        if (key in excludedKeys || value !is String) return@mapValues value
+    ): Map<String, Any> {
+        Timber.tag(TAG).d("--> DECRYPT MAP | Excluded: %s", excludedKeys)
+        return encodedMap.mapValues { (key, value) ->
+            if (key in excludedKeys || value !is String) return@mapValues value
 
-        val decrypted = decrypt(value)
-        if (decrypted == value) return@mapValues value
+            val decrypted = decrypt(value)
+            if (decrypted == value) return@mapValues value
 
-        runCatching {
-            json.parseToJsonElement(decrypted).toAny()
-        }.getOrNull() ?: decrypted
+            runCatching {
+                json.parseToJsonElement(decrypted).toAny()
+            }.getOrNull() ?: decrypted
+        }.also {
+            Timber.tag(TAG).d("<-- SUCCESS DECRYPT MAP")
+        }
     }
 
-    fun encrypt(input: String): String = base64Encoder.encodeToString(
-        input.toByteArray(),
-        BASE64_FLAGS
-    )
+    fun encrypt(input: String): String {
+        Timber.tag(TAG).v("--> ENCRYPT | Input: %s", input)
+        return base64Encoder.encodeToString(
+            input.toByteArray(),
+            BASE64_FLAGS
+        ).also {
+            Timber.tag(TAG).v("<-- RESULT ENCRYPT: %s", it)
+        }
+    }
 
-    fun decrypt(encoded: String): String = runCatching {
-        val decodedBytes = base64Encoder.decode(encoded, BASE64_FLAGS)
-        String(decodedBytes)
-    }.getOrDefault(encoded)
+    fun decrypt(encoded: String): String {
+        Timber.tag(TAG).v("--> DECRYPT | Input: %s", encoded)
+        return runCatching {
+            val decodedBytes = base64Encoder.decode(encoded, BASE64_FLAGS)
+            String(decodedBytes).also {
+                Timber.tag(TAG).v("<-- RESULT DECRYPT: %s", it)
+            }
+        }.getOrElse {
+            Timber.tag(TAG).e(it, "<-- FAILURE DECRYPT | Error: %s", it.message)
+            encoded
+        }
+    }
 
     private fun Any?.toJsonElement(): JsonElement = when (this) {
         null -> JsonNull

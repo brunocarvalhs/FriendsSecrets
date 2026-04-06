@@ -8,11 +8,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ThemeManager constructor(
     private val activity: ComponentActivity,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val TAG = "ThemeManager"
+
     private val _theme = MutableStateFlow(Theme.SYSTEM)
     val theme: StateFlow<Theme> = _theme
 
@@ -26,14 +29,17 @@ class ThemeManager constructor(
     }
 
     private suspend fun init() {
+        Timber.tag(TAG).d("--> INIT THEME")
         val themeValue = Theme.SYSTEM.type
         _theme.value = Theme.entries.firstOrNull { it.type == themeValue } ?: Theme.SYSTEM
 
         val dynamic = false
         _isDynamicThemeEnabled.value = dynamic
+        Timber.tag(TAG).d("<-- SUCCESS INIT | Theme: %s, Dynamic: %s", _theme.value, _isDynamicThemeEnabled.value)
     }
 
     suspend fun setTheme(value: Theme) {
+        Timber.tag(TAG).d("--> SET THEME: %s", value)
         _theme.value = value
     }
 
@@ -46,14 +52,17 @@ class ThemeManager constructor(
     }
 
     fun isDarkTheme(): Boolean {
-        return if (_theme.value == Theme.SYSTEM) {
+        val isDark = if (_theme.value == Theme.SYSTEM) {
             getSystemTheme() == Theme.DARK
         } else {
             _theme.value == Theme.DARK
         }
+        Timber.tag(TAG).v("isDarkTheme? %s (Current: %s)", isDark, _theme.value)
+        return isDark
     }
 
     suspend fun setDynamicThemeEnabled(enabled: Boolean) {
+        Timber.tag(TAG).d("--> SET DYNAMIC THEME: %s", enabled)
         _isDynamicThemeEnabled.value = enabled
     }
 

@@ -2,7 +2,9 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
 import android.os.StrictMode
+import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 /**
  * Application class with Hilt dependency injection setup.
@@ -19,6 +21,9 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+        else Timber.plant(CrashLoggerProvider())
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(

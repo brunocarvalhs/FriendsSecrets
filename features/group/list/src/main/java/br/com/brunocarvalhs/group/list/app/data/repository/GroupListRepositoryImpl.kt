@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.list.app.data.repository
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
@@ -13,9 +14,11 @@ class GroupListRepositoryImpl @Inject constructor(
 ) : GroupListRepository {
 
     override suspend fun list(groupTokens: List<String>): List<GroupListDTO> {
+        if (groupTokens.isEmpty()) return emptyList()
+        
         return withContext(Dispatchers.IO) {
             val response = network.make(
-                endpoint = "groups",
+                endpoint = COLLECTION_NAME,
                 query = mapOf(GroupModel.TOKEN to groupTokens),
                 method = NetworkService.Method.GET,
                 clazz = Array<GroupListDTO>::class
@@ -28,13 +31,13 @@ class GroupListRepositoryImpl @Inject constructor(
     override suspend fun searchByToken(token: String): GroupListDTO? {
         return withContext(Dispatchers.IO) {
             val response = network.make(
-                endpoint = "groups",
+                endpoint = COLLECTION_NAME,
                 query = mapOf(GroupModel.TOKEN to token),
                 method = NetworkService.Method.GET,
-                clazz = GroupListDTO::class
+                clazz = Array<GroupListDTO>::class
             )
 
-            return@withContext response
+            return@withContext response?.firstOrNull()
         }
     }
 }

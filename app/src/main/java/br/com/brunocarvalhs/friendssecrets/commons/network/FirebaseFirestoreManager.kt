@@ -4,6 +4,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.lang.reflect.Array
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -29,78 +30,61 @@ class FirebaseFirestoreManager @Inject constructor(
         query: Map<String, Any?>?,
         clazz: KClass<T>
     ): Any? {
-
         val parts = endpoint.split("/")
+        
+        val isArray = clazz.java.isArray
+        val targetClass = if (isArray) clazz.java.componentType!! else clazz.java
 
         if (parts.size == 2) {
             val (collection, documentId) = parts
-
-            val snapshot = firebaseFirestore
-                .collection(collection)
-                .document(documentId)
-                .get()
-                .await()
-
-            return snapshot.toObject(clazz.java)
+            val snapshot = firebaseFirestore.collection(collection).document(documentId).get().await()
+            return snapshot.toObject(targetClass)
         }
 
         var ref: Query = firebaseFirestore.collection(parts[0])
 
         query?.forEach { (key, value) ->
             ref = when (value) {
-                is List<*> -> {
-                    ref.whereIn(key, value)
-                }
-
-                else -> {
-                    ref.whereEqualTo(key, value)
-                }
+                is List<*> -> ref.whereIn(key, value)
+                else -> ref.whereEqualTo(key, value)
             }
         }
 
         val snapshot = ref.get().await()
+        val list = snapshot.documents.mapNotNull { it.toObject(targetClass) }
 
-        return snapshot.documents.mapNotNull {
-            it.toObject(clazz.java)
+        return if (isArray) {
+            val array = Array.newInstance(targetClass, list.size)
+            list.forEachIndexed { index, item ->
+                Array.set(array, index, item)
+            }
+            array
+        } else {
+            list
         }
     }
 
-    private suspend fun post(
-        endpoint: String, data: Map<String, Any?>?
-    ): String {
+    private suspend fun post(endpoint: String, data: Map<String, Any?>?): String {
         requireNotNull(data)
-
         val collection = endpoint.split("/")[0]
-
         val docRef = firebaseFirestore.collection(collection).add(data).await()
-
         return docRef.id
     }
 
-    private suspend fun put(
-        endpoint: String, data: Map<String, Any?>?
-    ): Boolean {
+    private suspend fun put(endpoint: String, data: Map<String, Any?>?): Boolean {
         requireNotNull(data)
-
-        val (collection, documentId) = endpoint.split("/").takeIf { it.size == 2 }
-            ?: throw IllegalArgumentException("PUT precisa de endpoint com ID")
-
-        firebaseFirestore.collection(collection)
-            .document(documentId).set(data).await()
-
+        val parts = endpoint.split("/")
+        val collection = parts[0]
+        val documentId = parts.getOrNull(1) ?: throw IllegalArgumentException("PUT precisa de endpoint com ID")
+        firebaseFirestore.collection(collection).document(documentId).set(data).await()
         return true
     }
 
-    private suspend fun delete(
-        endpoint: String
-    ): Boolean {
-
-        val (collection, documentId) = endpoint.split("/").takeIf { it.size == 2 }
-            ?: throw IllegalArgumentException("DELETE precisa de endpoint com ID")
-
-        firebaseFirestore.collection(collection)
-            .document(documentId).delete().await()
-
+    private suspend fun delete(endpoint: String): Boolean {
+        val parts = endpoint.split("/")
+        val collection = parts[0]
+        val documentId = parts.getOrNull(1) ?: throw IllegalArgumentException("DELETE precisa de endpoint com ID")
+        firebaseFirestore.collection(collection).document(documentId).delete().await()
         return true
     }
 }
