@@ -5,11 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsScreen
-import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsViewModel
-import br.com.brunocarvalhs.group.list.app.presentation.list.GroupListScreen
-import br.com.brunocarvalhs.group.list.app.presentation.list.GroupListViewModel
-import br.com.brunocarvalhs.group.list.commons.navigation.DetailRouter
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities
+import br.com.brunocarvalhs.group.list.app.presentation.GroupListScreen
+import br.com.brunocarvalhs.group.list.app.presentation.GroupListViewModel
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
 import br.com.brunocarvalhs.group.list.commons.navigation.ListRouter
 import com.google.firebase.perf.metrics.AddTrace
@@ -26,17 +24,9 @@ class GroupListInitializer(private val builder: Builder) {
                 GroupListScreen(
                     viewModel = viewModel,
                     onGroupToEnter = {
-                        builder.navController.navigate(route = DetailRouter(it))
+                        builder.onGroupToDetails(it)
                     },
                     onGroupToCreate = { builder.onGroupToCreate() }
-                )
-            }
-
-            composable<DetailRouter>(typeMap = DetailRouter.typeMap) {
-                val viewModel = hiltViewModel<GroupDetailsViewModel>()
-                GroupDetailsScreen(
-                    viewModel = viewModel,
-                    onBack = { builder.navController.popBackStack() },
                 )
             }
         }
@@ -45,6 +35,7 @@ class GroupListInitializer(private val builder: Builder) {
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
         internal var onGroupToCreate: () -> Unit = {}
+        internal var onGroupToDetails: (GroupEntities) -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {

@@ -1,15 +1,13 @@
 package br.com.brunocarvalhs.friendssecrets.commons.di
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
+import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseFirestoreManager
+import br.com.brunocarvalhs.friendssecrets.commons.network.NetworkManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
+import br.com.brunocarvalhs.friendssecrets.commons.storage.StorageManager
 import br.com.brunocarvalhs.friendssecrets.commons.storage.dataStore
-import br.com.brunocarvalhs.friendssecrets.feature.groups.create.providers.GroupCreateCryptoImpl
-import br.com.brunocarvalhs.friendssecrets.feature.groups.list.providers.GroupListCryptoImpl
-import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateCrypto
-import br.com.brunocarvalhs.group.list.commons.providers.GroupListCrypto
+import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -26,7 +24,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 /**
@@ -86,19 +83,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideJson(): Json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
-
-    @Provides
-    @Singleton
-    fun provideDatastore(
+    fun provideStorageManager(
         @ApplicationContext context: Context
-    ): DataStore<Preferences> {
-        return context.dataStore
+    ): StorageService {
+        return StorageManager(context.dataStore)
     }
-
 
     @Provides
     @Singleton
@@ -106,11 +95,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGroupCreateCrypto(crypto: CryptoManager): GroupCreateCrypto =
-        GroupCreateCryptoImpl(crypto)
-
-    @Provides
-    @Singleton
-    fun provideGroupListCrypto(crypto: CryptoManager): GroupListCrypto =
-        GroupListCryptoImpl(crypto)
+    fun provideNetworkManager(
+        firebaseFirestoreManager: FirebaseFirestoreManager
+    ): NetworkService = NetworkManager(firebaseFirestoreManager)
 }

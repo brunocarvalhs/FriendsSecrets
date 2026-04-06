@@ -64,7 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation

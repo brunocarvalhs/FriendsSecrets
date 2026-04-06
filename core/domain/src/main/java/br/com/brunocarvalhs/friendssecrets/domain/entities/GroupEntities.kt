@@ -1,22 +1,39 @@
-package br.com.brunocarvalhs.group.core.domain.entities
+package br.com.brunocarvalhs.friendssecrets.domain.entities
 
-interface GroupEntities {
-    val id: String
-    val token: String
-    val name: String
-    val description: String?
-    val date: String?
-    val minPrice: Double?
-    val maxPrice: Double?
-    val type: String?
-    val members: List<UserEntities>
-    val draws: Map<String, String>
-    val isOwner: Boolean
-    val photoBase64: String?
+import java.util.UUID
+import kotlin.random.Random
 
-    fun toMap(): Map<String, Any?>
+abstract class GroupEntities {
 
-    fun toCopy(
+    open val id: String = UUID.randomUUID().toString()
+    open val token: String = token()
+    open val name: String = ""
+    open val description: String? = null
+    open val date: String? = null
+    open val minPrice: Double? = null
+    open val maxPrice: Double? = null
+    open val type: String? = null
+    open val members: List<UserEntities> = emptyList()
+    open val draws: Map<String, String> = emptyMap()
+    open val isOwner: Boolean = false
+    open val photo: String? = null
+
+    open fun toMap(): Map<String, Any?> = mapOf(
+        ID to id,
+        TOKEN to token,
+        NAME to name,
+        DESCRIPTION to description,
+        DATE to date,
+        MIN_PRICE to minPrice,
+        MAX_PRICE to maxPrice,
+        TYPE to type,
+        MEMBERS to members,
+        DRAWS to draws,
+        IS_OWNER to isOwner,
+        PHOTO to photo
+    )
+
+    abstract fun toCopy(
         token: String = this.token,
         name: String = this.name,
         description: String? = this.description,
@@ -27,8 +44,15 @@ interface GroupEntities {
         members: List<UserEntities> = this.members,
         draws: Map<String, String> = this.draws,
         isOwner: Boolean = this.isOwner,
-        photoBase64: String? = this.photoBase64,
+        photo: String? = this.photo,
     ): GroupEntities
+
+    open fun token(size: Int = 8): String {
+        val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..size)
+            .map { charPool[Random.nextInt(charPool.size)] }
+            .joinToString("")
+    }
 
     companion object {
         const val COLLECTION_NAME = "groups"

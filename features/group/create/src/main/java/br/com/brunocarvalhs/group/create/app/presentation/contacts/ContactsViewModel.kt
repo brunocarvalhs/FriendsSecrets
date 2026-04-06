@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.group.create.app.presentation.contacts
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel

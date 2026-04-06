@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
 fun ContactList(
@@ -85,19 +85,16 @@ private fun ContactListPreview() {
     ContactList(
         contacts = listOf(
             ContactModel(
-                id = "1",
                 name = "John Doe",
                 phoneNumber = "1234567890"
             ),
             ContactModel(
-                id = "2",
                 name = "Jane Smith",
                 phoneNumber = "9876543210"
             )
         ),
         selectedMembers = listOf(
             ContactModel(
-                id = "1",
                 name = "John Doe",
                 phoneNumber = "1234567890"
             )

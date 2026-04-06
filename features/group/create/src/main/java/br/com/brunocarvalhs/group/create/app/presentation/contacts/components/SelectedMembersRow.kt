@@ -29,7 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
 fun SelectedMembersRow(
@@ -96,12 +96,10 @@ private fun SelectedMembersRowPreview() {
     SelectedMembersRow(
         members = listOf(
             ContactModel(
-                id = "1",
                 name = "Bruno Carvalho",
                 phoneNumber = "1234567890"
             ),
             ContactModel(
-                id = "2",
                 name = "Jane Smith",
                 phoneNumber = "9876543210"
             )

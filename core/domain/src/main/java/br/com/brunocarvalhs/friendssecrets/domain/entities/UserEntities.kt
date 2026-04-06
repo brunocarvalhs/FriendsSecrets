@@ -1,24 +1,27 @@
-package br.com.brunocarvalhs.group.core.domain.entities
+package br.com.brunocarvalhs.friendssecrets.domain.entities
 
-/**
- * User entity - Anonymous user without personal data
- * Note: All fields are intentionally minimal to ensure user privacy.
- * No PII (Personally Identifiable Information) like name, phone, or photos should be stored.
- */
-interface UserEntities {
-    val id: String
-    val name: String
-    val phoneNumber: String
-    val photoUrl: String?
-    val likes: List<String>
+import java.util.UUID
 
-    fun toMap(): Map<String, Any>
+abstract class UserEntities {
+    open val id: String = UUID.randomUUID().toString()
+    open val name: String = ""
+    open val phoneNumber: String = ""
+    open val photoUrl: String? = null
+    open val likes: List<String> = emptyList()
 
-    fun toJson(): String
+    open fun toMap(): Map<String, Any?> = mapOf(
+        ID to id,
+        NAME to name,
+        PHONE_NUMBER to phoneNumber,
+        PHOTO_URL to photoUrl,
+        LIKES to likes
+    )
 
-    fun toCopy(
-        id: String = this.id,
-        likes: List<String> = this.likes,
+    abstract fun toCopy(
+        photoUrl: String? = this.photoUrl,
+        name: String = this.name,
+        phoneNumber: String = this.phoneNumber,
+        likes: List<String> = this.likes
     ): UserEntities
 
     companion object {

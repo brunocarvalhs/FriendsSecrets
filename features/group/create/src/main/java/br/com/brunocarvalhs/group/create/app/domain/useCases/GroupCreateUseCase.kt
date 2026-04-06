@@ -1,8 +1,10 @@
 package br.com.brunocarvalhs.group.create.app.domain.useCases
 
-import br.com.brunocarvalhs.group.create.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME_ADMINS
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
+import br.com.brunocarvalhs.group.create.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
-import br.com.brunocarvalhs.group.create.app.domain.services.StorageService
 import javax.inject.Inject
 
 class GroupCreateUseCase @Inject constructor(
@@ -18,24 +20,24 @@ class GroupCreateUseCase @Inject constructor(
 
     private suspend fun persistGroupToken(token: String) {
         val groupList = storage.load(
-            key = GroupModel.COLLECTION_NAME,
+            key = COLLECTION_NAME,
             value = Array<String>::class
         ) ?: emptyArray()
 
         storage.save(
-            GroupModel.COLLECTION_NAME,
+            COLLECTION_NAME,
             groupList + token
         )
     }
 
     private suspend fun persistAdminToken(token: String) {
         val adminList = storage.load(
-            key = GroupModel.COLLECTION_NAME_ADMINS,
+            key = COLLECTION_NAME_ADMINS,
             value = Array<String>::class
         ) ?: emptyArray()
 
         storage.save(
-            key = GroupModel.COLLECTION_NAME_ADMINS,
+            key = COLLECTION_NAME_ADMINS,
             value = adminList + token
         )
     }

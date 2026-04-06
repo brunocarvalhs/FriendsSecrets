@@ -13,15 +13,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.group.create.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.create.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
@@ -83,15 +85,13 @@ class FormsViewModel @Inject constructor(
             val photoBase64 = currentState.imageUri?.toBase64(application)
 
             val group = GroupModel(
-                id = currentState.id,
                 name = currentState.name,
                 description = currentState.description,
                 members = currentState.members,
-                token = currentState.token,
-                minPrice = currentState.minPrice.toIntOrNull(),
-                maxPrice = currentState.maxPrice.toIntOrNull(),
+                minPrice = currentState.minPrice.toDoubleOrNull(),
+                maxPrice = currentState.maxPrice.toDoubleOrNull(),
                 date = currentState.date.ifBlank { null },
-                photoBase64 = photoBase64
+                photo = photoBase64
             )
             
             groupCreateUseCase(group).onSuccess {
@@ -106,59 +106,33 @@ class FormsViewModel @Inject constructor(
         }
     }
 
-    fun Uri.toBase64(context: Context, maxSize: Int = 512, quality: Int = 80): String? {
-        return try {
-            val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(context.contentResolver, this)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                context.contentResolver.openInputStream(this)?.use {
-                    BitmapFactory.decodeStream(it)
-                }
-            } ?: return null
+    suspend fun Uri.toBase64(context: Context, maxSize: Int = 512, quality: Int = 80): String? =
+        withContext(Dispatchers.IO) {
+            return@withContext runCatching {
+                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val source = ImageDecoder.createSource(context.contentResolver, this@toBase64)
+                    ImageDecoder.decodeBitmap(source)
+                } else {
+                    context.contentResolver.openInputStream(this@toBase64)?.use {
+                        BitmapFactory.decodeStream(it)
+                    }
+                } ?: return@withContext null
 
-            val ratio = minOf(
-                maxSize.toFloat() / bitmap.width,
-                maxSize.toFloat() / bitmap.height
-            ).coerceAtMost(1.0f)
+                val ratio = minOf(
+                    maxSize.toFloat() / bitmap.width,
+                    maxSize.toFloat() / bitmap.height
+                ).coerceAtMost(1.0f)
 
-            val width = (bitmap.width * ratio).toInt()
-            val height = (bitmap.height * ratio).toInt()
+                val width = (bitmap.width * ratio).toInt()
+                val height = (bitmap.height * ratio).toInt()
 
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
+                val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
 
-            val outputStream = ByteArrayOutputStream()
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-            val byteArray = outputStream.toByteArray()
+                val outputStream = ByteArrayOutputStream()
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+                val byteArray = outputStream.toByteArray()
 
-            Base64.encodeToString(byteArray, Base64.NO_WRAP)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    fun Uri.toDecodeBase64(): ByteArray? {
-        return try {
-            Base64.decode(this.toString(), Base64.NO_WRAP)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun Uri.toBitmap(context: Context): Bitmap? {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(context.contentResolver, this)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                context.contentResolver.openInputStream(this)?.use {
-                    BitmapFactory.decodeStream(it)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+                Base64.encodeToString(byteArray, Base64.NO_WRAP)
+            }.getOrThrow()
     }
 }

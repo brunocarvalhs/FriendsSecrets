@@ -1,11 +1,11 @@
 package br.com.brunocarvalhs.group.list.app.domain.useCases
 
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
-import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
-import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel.Companion.STORAGE_KEY
+import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
-import br.com.brunocarvalhs.group.list.app.domain.services.StorageService
 import javax.inject.Inject
 
 class GroupByTokenUseCase @Inject constructor(
@@ -30,7 +30,7 @@ class GroupByTokenUseCase @Inject constructor(
         if (token.isBlank()) throw IllegalArgumentException("Token cannot be blank")
     }
     private suspend fun ensureTokenNotExists(token: String): List<String> {
-        val groupList = storage.load(STORAGE_KEY, Array<String>::class)?.toList().orEmpty()
+        val groupList = storage.load(COLLECTION_NAME, Array<String>::class)?.toList().orEmpty()
         if (groupList.contains(token)) throw GroupAlreadyExistException()
         return groupList
     }
@@ -41,7 +41,7 @@ class GroupByTokenUseCase @Inject constructor(
 
     private suspend fun storeToken(token: String, groupList: List<String>) {
         storage.save(
-            STORAGE_KEY,
+            COLLECTION_NAME,
             groupList.toMutableList().apply { add(token) }
         )
     }

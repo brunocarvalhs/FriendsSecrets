@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.services.ContactService
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -57,7 +57,6 @@ class ContactServiceImpl @Inject constructor(
                 if (number.isNotBlank()) {
                     contactList.add(
                         ContactModel(
-                            id = UUID.randomUUID().toString(),
                             name = name,
                             phoneNumber = number,
                             photoUrl = photoUri.toString(),

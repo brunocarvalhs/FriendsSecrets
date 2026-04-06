@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.create.commons.navigation
 
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 

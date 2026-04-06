@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 
 

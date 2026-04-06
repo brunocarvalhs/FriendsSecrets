@@ -1,7 +1,10 @@
 package br.com.brunocarvalhs.group.list.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.entities.GroupEntities.Companion.TOKEN
+import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
-import br.com.brunocarvalhs.group.list.app.domain.entities.GroupModel
+import br.com.brunocarvalhs.group.list.app.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import br.com.brunocarvalhs.group.list.app.domain.services.GroupDrawService
 import br.com.brunocarvalhs.group.list.commons.providers.GroupListCrypto
@@ -12,91 +15,32 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GroupListRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val cryptoService: GroupListCrypto,
-    private val drawService: GroupDrawService,
+    private val network: NetworkService,
 ) : GroupListRepository {
 
     override suspend fun list(groupTokens: List<String>): List<GroupModel> {
         return withContext(Dispatchers.IO) {
-            val querySnapshot = firestore.collection(COLLECTION_NAME)
-                .whereIn(TOKEN, groupTokens)
-                .get()
-                .await()
+            val response = network.make(
+                endpoint = COLLECTION_NAME,
+                query = mapOf(TOKEN to groupTokens),
+                method = NetworkService.Method.GET,
+                clazz = Array<GroupModel>::class
+            )
 
-            querySnapshot.documents.map { documentSnapshot ->
-                val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
-                val decryptedData = cryptoService.decryptMap(
-                    encryptedData,
-                    setOf(TOKEN, ID)
-                )
-                GroupModel.fromMap(decryptedData)
-            }
+            return@withContext response?.toList() ?: emptyList()
         }
-    }
-
-    override suspend fun read(groupId: String): GroupModel = withContext(Dispatchers.IO) {
-        val documentSnapshot = firestore.collection(COLLECTION_NAME)
-            .document(groupId)
-            .get()
-            .await()
-        if (!documentSnapshot.exists()) {
-            throw GroupNotFoundException()
-        }
-        val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
-        val decryptedData =
-            cryptoService.decryptMap(encryptedData, setOf(TOKEN, ID))
-        GroupModel.fromMap(decryptedData)
     }
 
     override suspend fun searchByToken(token: String): GroupModel? {
-        val querySnapshot = firestore.collection(COLLECTION_NAME)
-            .whereEqualTo(TOKEN, token)
-            .get()
-            .await()
+        return withContext(Dispatchers.IO) {
+            val response = network.make(
+                endpoint = COLLECTION_NAME,
+                query = mapOf(TOKEN to token),
+                method = NetworkService.Method.GET,
+                clazz = GroupModel::class
+            )
 
-        if (querySnapshot.isEmpty) {
-            return null
+            return@withContext response
         }
-        val documentSnapshot = querySnapshot.documents.first()
-        val encryptedData = documentSnapshot.data ?: throw GroupNotFoundException()
-
-        val decryptedData = cryptoService.decryptMap(encryptedData, setOf(TOKEN, ID))
-        return GroupModel.fromMap(decryptedData)
-    }
-
-    override suspend fun delete(groupId: String): Unit = withContext(Dispatchers.IO) {
-        firestore.collection(COLLECTION_NAME)
-            .document(groupId)
-            .delete()
-            .await()
-    }
-
-    override suspend fun drawMembers(groupId: String) {
-        withContext(Dispatchers.IO) {
-            firestore.runTransaction { transaction ->
-                val groupDocRef = firestore.collection(COLLECTION_NAME).document(groupId)
-                val snapshot = transaction.get(groupDocRef)
-                
-                if (!snapshot.exists()) throw GroupNotFoundException()
-
-                val encryptedData = snapshot.data ?: throw GroupNotFoundException()
-                val decryptedData = cryptoService.decryptMap(encryptedData, setOf(TOKEN, ID))
-                val group = GroupModel.fromMap(decryptedData)
-
-                val participants = group.members.map { it.name }
-                val draws = drawService.draw(participants)
-                
-                transaction.update(groupDocRef, DRAWS, draws)
-                null
-            }.await()
-        }
-    }
-
-    companion object {
-        const val COLLECTION_NAME = "groups"
-        const val TOKEN = "token"
-        const val ID = "id"
-        const val DRAWS = "draws"
     }
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="21">
+    <bytecodeTargetLevel target="11">
       <module name="FriendsSecrets.core.data" target="21" />
       <module name="FriendsSecrets.features.auth" target="21" />
       <module name="FriendsSecrets.features.generative" target="21" />
       <module name="FriendsSecrets.features.group.commons" target="21" />
-      <module name="FriendsSecrets.features.group.draw" target="21" />
       <module name="FriendsSecrets.features.group.edit" target="21" />
       <module name="FriendsSecrets.features.home" target="21" />
       <module name="FriendsSecrets.features.profiler" target="21" />

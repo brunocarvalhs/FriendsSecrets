@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
 import br.com.brunocarvalhs.group.list.GroupListInitializer
-import br.com.brunocarvalhs.group.list.commons.navigation.DetailRouter
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
 
 @Composable

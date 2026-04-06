@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import br.com.brunocarvalhs.group.details.commons.navigation.GroupDetailsRouter
+import br.com.brunocarvalhs.group.details.commons.navigation.DetailRouter
+import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsScreen
+import br.com.brunocarvalhs.group.list.app.presentation.details.GroupDetailsViewModel
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
@@ -13,13 +16,11 @@ class GroupDetailsInitializer(private val builder: Builder) {
 
     @AddTrace(name = "GroupDetailsInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<GroupDetailsRouter>(startDestination = ListRouter) {
-            composable<ListRouter>() {
-                val viewModel = hiltViewModel<GroupListViewModel>()
-                GroupListScreen(
+        return navGraphBuilder.navigation<GroupDetailsRouter>(startDestination = DetailRouter::class, typeMap = DetailRouter.typeMap) {
+            composable<DetailRouter> {
+                val viewModel = hiltViewModel<GroupDetailsViewModel>()
+                GroupDetailsScreen(
                     viewModel = viewModel,
-                    onGroupToEnter = { builder.onGroupToEnter(it) },
-                    onGroupToCreate = { builder.onGroupToCreate() }
                 )
             }
         }

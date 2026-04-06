@@ -12,10 +12,13 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/group" />
             <option value="$PROJECT_DIR$/features/group/create" />
+            <option value="$PROJECT_DIR$/features/group/details" />
+            <option value="$PROJECT_DIR$/features/group/draw" />
             <option value="$PROJECT_DIR$/features/group/list" />
           </set>
         </option>

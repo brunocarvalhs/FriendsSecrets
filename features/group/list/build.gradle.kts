@@ -47,6 +47,8 @@ detekt {
 }
 
 dependencies {
+    api(project(":core:domain"))
+
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

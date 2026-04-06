@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactList
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SearchField
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SelectedMembersRow
@@ -176,15 +176,15 @@ private fun ContactsContent(
 private fun ContactsContentPreview() {
     ContactsContent(
         contacts = listOf(
-            ContactModel(id = "1", name = "John Doe", phoneNumber = "1234567890"),
-            ContactModel(id = "2", name = "Jane Smith", phoneNumber = "9876543210")
+            ContactModel(name = "John Doe", phoneNumber = "1234567890"),
+            ContactModel(name = "Jane Smith", phoneNumber = "9876543210")
         ),
         selectedMembers = listOf(
-            ContactModel(id = "1", name = "John Doe", phoneNumber = "1234567890")
+            ContactModel(name = "John Doe", phoneNumber = "1234567890")
         ),
         filteredContacts = listOf(
-            ContactModel(id = "1", name = "John Doe", phoneNumber = "1234567890"),
-            ContactModel(id = "2", name = "Jane Smith", phoneNumber = "9876543210")
+            ContactModel(name = "John Doe", phoneNumber = "1234567890"),
+            ContactModel(name = "Jane Smith", phoneNumber = "9876543210")
         ),
         searchQuery = "",
         isLoading = false,

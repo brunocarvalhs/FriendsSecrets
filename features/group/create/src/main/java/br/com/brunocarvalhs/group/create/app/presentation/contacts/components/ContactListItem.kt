@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
 fun ContactListItem(
@@ -61,7 +61,6 @@ fun ContactListItem(
 fun ContactListItemPreview() {
     ContactListItem(
         contact = ContactModel(
-            id = "1",
             name = "Bruno Carvalho",
             phoneNumber = "1234567890"
         ),

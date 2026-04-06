@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
 import androidx.compose.runtime.Stable
-import br.com.brunocarvalhs.group.create.app.domain.entities.ContactModel
+import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Stable
 data class ContactsUiState(
