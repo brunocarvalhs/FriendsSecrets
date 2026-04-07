@@ -44,7 +44,7 @@ class GroupDetailsViewModel @Inject constructor(
     private fun deleteGroup(callback: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            deleteUseCase.invoke(_uiState.value.group.id)
+            deleteUseCase.invoke(_uiState.value.group)
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false) }
                     callback()
@@ -60,7 +60,7 @@ class GroupDetailsViewModel @Inject constructor(
     private fun exitGroup(callback: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            exitUseCase.invoke(_uiState.value.group.id)
+            exitUseCase.invoke(_uiState.value.group)
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false) }
                     callback()

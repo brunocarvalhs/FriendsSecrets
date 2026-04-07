@@ -16,19 +16,17 @@ class GroupDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun read(groupId: String): GroupModel = withContext(Dispatchers.IO) {
         val response = network.make(
-            endpoint = "groups",
+            endpoint = "${GroupModel.COLLECTION_NAME}/$groupId",
             method = NetworkService.Method.GET,
-            query = mapOf("id" to groupId),
             clazz = GroupDetailsDTO::class
         )
         return@withContext response?.toDomain() ?: throw GroupNotFoundException()
     }
 
-    override suspend fun delete(groupId: String): Unit = withContext(Dispatchers.IO) {
+    override suspend fun delete(group: GroupModel): Unit = withContext(Dispatchers.IO) {
         val response = network.make(
-            endpoint = "groups",
+            endpoint = "${GroupModel.COLLECTION_NAME}/$group",
             method = NetworkService.Method.DELETE,
-            query = mapOf("id" to groupId),
             clazz = Boolean::class
         )
         if (response == false) throw GroupDeleteException()

@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.domain.useCases
 
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME_ADMIN
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
@@ -10,20 +11,16 @@ class GroupDeleteUseCase @Inject constructor(
     private val repository: GroupDetailsRepository,
     private val storage: StorageService
 ) {
-    suspend fun invoke(groupId: String): Result<Unit> {
-        return try {
-            val group = repository.read(groupId)
-            val token = group.token
+    suspend fun invoke(group: GroupModel): Result<Unit> = runCatching {
+        if (group.isOwner) { throw IllegalArgumentException("Owner cannot delete group") }
 
-            removeToken(COLLECTION_NAME, token)
-            removeToken(COLLECTION_NAME_ADMIN, token)
+        val group = repository.read(group.id)
+        val token = group.token
 
-            repository.delete(groupId)
-            
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        repository.delete(group)
+
+        removeToken(COLLECTION_NAME, token)
+        removeToken(COLLECTION_NAME_ADMIN, token)
     }
 
     private suspend fun removeToken(key: String, token: String) {

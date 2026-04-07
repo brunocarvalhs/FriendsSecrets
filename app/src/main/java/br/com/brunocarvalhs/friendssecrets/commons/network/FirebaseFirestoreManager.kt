@@ -37,8 +37,17 @@ class FirebaseFirestoreManager @Inject constructor(
 
         if (parts.size == 2) {
             val (collection, documentId) = parts
-            val snapshot = firebaseFirestore.collection(collection).document(documentId).get().await()
-            return snapshot.toObject(targetClass)
+
+            val snapshot = firebaseFirestore
+                .collection(collection)
+                .whereEqualTo("id", documentId)
+                .get()
+                .await()
+
+            val doc = snapshot.documents.firstOrNull()
+                ?: return null
+
+            return doc.toObject(targetClass)
         }
 
         var ref: Query = firebaseFirestore.collection(parts[0])
@@ -73,18 +82,51 @@ class FirebaseFirestoreManager @Inject constructor(
 
     private suspend fun put(endpoint: String, data: Map<String, Any?>?): Boolean {
         requireNotNull(data)
+
         val parts = endpoint.split("/")
         val collection = parts[0]
-        val documentId = parts.getOrNull(1) ?: throw IllegalArgumentException("PUT precisa de endpoint com ID")
-        firebaseFirestore.collection(collection).document(documentId).set(data).await()
+        val id = parts.getOrNull(1)
+            ?: throw IllegalArgumentException("PUT precisa de endpoint com ID")
+
+        val snapshot = firebaseFirestore
+            .collection(collection)
+            .whereEqualTo("id", id)
+            .get()
+            .await()
+
+        val document = snapshot.documents.firstOrNull()
+            ?: throw IllegalArgumentException("Documento não encontrado")
+
+        firebaseFirestore
+            .collection(collection)
+            .document(document.id)
+            .set(data)
+            .await()
+
         return true
     }
 
     private suspend fun delete(endpoint: String): Boolean {
         val parts = endpoint.split("/")
         val collection = parts[0]
-        val documentId = parts.getOrNull(1) ?: throw IllegalArgumentException("DELETE precisa de endpoint com ID")
-        firebaseFirestore.collection(collection).document(documentId).delete().await()
+        val id = parts.getOrNull(1)
+            ?: throw IllegalArgumentException("DELETE precisa de endpoint com ID")
+
+        val snapshot = firebaseFirestore
+            .collection(collection)
+            .whereEqualTo("id", id)
+            .get()
+            .await()
+
+        val document = snapshot.documents.firstOrNull()
+            ?: throw IllegalArgumentException("Documento não encontrado")
+
+        firebaseFirestore
+            .collection(collection)
+            .document(document.id)
+            .delete()
+            .await()
+
         return true
     }
 }

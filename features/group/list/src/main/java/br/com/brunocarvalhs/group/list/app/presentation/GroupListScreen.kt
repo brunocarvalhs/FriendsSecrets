@@ -45,15 +45,18 @@ fun GroupListScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LifecycleResumeEffect(Unit) {
-        viewModel.event(GroupListIntent.FetchGroups)
+        viewModel.handleEvent(GroupListIntent.FetchGroups)
         onPauseOrDispose { }
     }
 
     ListContent(
         uiState = uiState,
-        onFetchGroups = { viewModel.event(GroupListIntent.FetchGroups) },
+        onFetchGroups = { viewModel.handleEvent(GroupListIntent.FetchGroups) },
         onGroupToEnter = onGroupToEnter,
         onGroupToCreate = onGroupToCreate,
+        onJoinGroup = { token ->
+            viewModel.handleEvent(GroupListIntent.GroupToEnter(token))
+        }
     )
 }
 
@@ -64,6 +67,7 @@ private fun ListContent(
     onFetchGroups: () -> Unit = {},
     onGroupToEnter: (GroupModel) -> Unit = {},
     onGroupToCreate: () -> Unit = {},
+    onJoinGroup: (String) -> Unit = {},
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
@@ -112,9 +116,7 @@ private fun ListContent(
                             GroupCard(
                                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
                                 name = item.name,
-                                onClick = {
-                                    onGroupToEnter(item)
-                                }
+                                onClick = { onGroupToEnter(item) }
                             )
                         }
                         item {
@@ -130,7 +132,7 @@ private fun ListContent(
     if (showBottomSheet) {
         GroupToEnterBottomSheet(
             onDismiss = { showBottomSheet = false },
-            onToEnter = { /* Handle entering by ID if needed */ }
+            onToEnter = onJoinGroup
         )
     }
 }

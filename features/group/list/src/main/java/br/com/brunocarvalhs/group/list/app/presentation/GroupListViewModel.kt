@@ -21,11 +21,12 @@ class GroupListViewModel @Inject constructor(
     private val groupByTokenUseCase: GroupByTokenUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<GroupListUiState> = MutableStateFlow(GroupListUiState.Loading)
+    private val _uiState: MutableStateFlow<GroupListUiState> =
+        MutableStateFlow(GroupListUiState.Loading)
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
 
     @AddTrace(name = "HomeViewModel.event", enabled = true)
-    fun event(intent: GroupListIntent) {
+    fun handleEvent(intent: GroupListIntent) {
         when (intent) {
             GroupListIntent.FetchGroups -> fetchGroups()
             is GroupListIntent.GroupToEnter -> groupToEnter(intent.token)
@@ -36,10 +37,12 @@ class GroupListViewModel @Inject constructor(
     private fun groupToEnter(token: String) {
         _uiState.value = GroupListUiState.Loading
         viewModelScope.launch {
-            groupByTokenUseCase.invoke(token).onSuccess { fetchGroups() }.onFailure {
-                Timber.e(it)
-                _uiState.value = GroupListUiState.Error(it.message.orEmpty())
-            }
+            groupByTokenUseCase.invoke(token)
+                .onSuccess { fetchGroups() }
+                .onFailure { t ->
+                    Timber.e(t)
+                    _uiState.value = GroupListUiState.Error(t.message.orEmpty())
+                }
         }
     }
 
