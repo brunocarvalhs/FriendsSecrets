@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.list.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.toVanillaMap
+import br.com.brunocarvalhs.friendssecrets.domain.extensions.toVanillaMap
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.data.UserListDTO
 import kotlinx.serialization.SerialName

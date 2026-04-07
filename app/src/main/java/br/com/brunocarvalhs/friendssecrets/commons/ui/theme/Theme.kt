@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -106,9 +107,9 @@ fun FriendsSecretsTheme(
     val isInPreview = LocalInspectionMode.current
 
     val theme = if (!isInPreview) {
-        themeManager?.theme?.collectAsState()?.value ?: ThemeManager.Theme.SYSTEM
+        themeManager?.theme?.collectAsState()?.value ?: ThemeService.Theme.SYSTEM
     } else {
-        ThemeManager.Theme.SYSTEM
+        ThemeService.Theme.SYSTEM
     }
 
     val dynamicColorEnabled = if (!isInPreview) {
@@ -118,21 +119,9 @@ fun FriendsSecretsTheme(
     }
 
     val darkTheme = when (theme) {
-        ThemeManager.Theme.DARK -> true
-        ThemeManager.Theme.LIGHT -> false
-        ThemeManager.Theme.SYSTEM -> isSystemInDarkTheme()
-    }
-
-    val backgroundColor = if (darkTheme) Color.Black else Color.White
-    val useDarkIcons = !darkTheme
-
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = backgroundColor.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkIcons
-        }
+        ThemeService.Theme.DARK -> true
+        ThemeService.Theme.LIGHT -> false
+        ThemeService.Theme.SYSTEM -> isSystemInDarkTheme()
     }
 
     val colorScheme = when {

@@ -21,14 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager.Theme
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import br.com.brunocarvalhs.settings.R
 
 @Composable
 fun ThemeSelect(
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
-    selected: String = Theme.LIGHT.name,
+    selected: String = ThemeService.Theme.LIGHT.name,
 ) {
     val (selectedTheme, setSelectedTheme) = remember { mutableStateOf(selected) }
 
@@ -42,7 +42,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            theme = Theme.LIGHT,
+            theme = ThemeService.Theme.LIGHT,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -51,7 +51,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            theme = Theme.DARK,
+            theme = ThemeService.Theme.DARK,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -60,7 +60,7 @@ fun ThemeSelect(
         ThemeItem(
             modifier = Modifier.weight(1f),
             selected = selectedTheme,
-            theme = Theme.SYSTEM,
+            theme = ThemeService.Theme.SYSTEM,
             onClick = { theme ->
                 setSelectedTheme(theme)
                 onClick(theme)
@@ -73,22 +73,22 @@ fun ThemeSelect(
 private fun ThemeItem(
     modifier: Modifier = Modifier,
     selected: String,
-    theme: Theme,
+    theme: ThemeService.Theme,
     onClick: (String) -> Unit = {},
 ) {
     val imageRes = remember(theme) {
         when (theme) {
-            Theme.LIGHT -> R.drawable.ic_theme_light
-            Theme.DARK -> R.drawable.ic_theme_dark
-            Theme.SYSTEM -> R.drawable.ic_theme_system
+            ThemeService.Theme.LIGHT -> R.drawable.ic_theme_light
+            ThemeService.Theme.DARK -> R.drawable.ic_theme_dark
+            ThemeService.Theme.SYSTEM -> R.drawable.ic_theme_system
         }
     }
 
     val descriptionRes = remember(theme) {
         when (theme) {
-            Theme.LIGHT -> R.string.tema_claro
-            Theme.DARK -> R.string.tema_escuro
-            Theme.SYSTEM -> R.string.tema_do_sistema
+            ThemeService.Theme.LIGHT -> R.string.tema_claro
+            ThemeService.Theme.DARK -> R.string.tema_escuro
+            ThemeService.Theme.SYSTEM -> R.string.tema_do_sistema
         }
     }
 

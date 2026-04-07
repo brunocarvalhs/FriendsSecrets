@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
 fun SettingsListItemOptions(
@@ -57,12 +56,10 @@ fun SettingsListItemOptions(
 @Composable
 @Preview
 private fun SettingsListItemOptionsPreview() {
-    FriendsSecretsTheme {
-        SettingsListItemOptions(
-            selected = false,
-            icon = Icons.AutoMirrored.Filled.ForwardToInbox,
-            title = "Notifications",
-            onClick = {}
-        )
-    }
+    SettingsListItemOptions(
+        selected = false,
+        icon = Icons.AutoMirrored.Filled.ForwardToInbox,
+        title = "Notifications",
+        onClick = {}
+    )
 }

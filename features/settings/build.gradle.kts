@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "2.1.20"
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
 }
@@ -48,7 +48,8 @@ detekt {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
+    api(project(":core:domain"))
+    api(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

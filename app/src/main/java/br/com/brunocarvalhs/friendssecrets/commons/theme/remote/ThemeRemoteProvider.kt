@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.commons.theme.remote
 
-import android.content.Context
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -8,9 +7,10 @@ import androidx.compose.ui.graphics.Color
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import javax.inject.Inject
 
-class ThemeRemoteProvider constructor(
-    private val remoteProvider: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance(),
+class ThemeRemoteProvider @Inject constructor(
+    private val remoteProvider: FirebaseRemoteConfig
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }

@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.settings.R
 
 @Composable
@@ -43,11 +42,9 @@ fun SettingsListItemNavigation(
 @Composable
 @Preview
 private fun SettingsListItemNavigationPreview() {
-    FriendsSecretsTheme {
-        SettingsListItemNavigation(
-            title = R.string.settings_screen_security,
-            icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            onClick = { }
-        )
-    }
+    SettingsListItemNavigation(
+        title = R.string.settings_screen_security,
+        icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+        onClick = { }
+    )
 }

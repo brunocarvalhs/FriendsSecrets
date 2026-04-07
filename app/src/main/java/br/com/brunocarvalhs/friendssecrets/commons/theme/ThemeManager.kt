@@ -1,78 +1,93 @@
 package br.com.brunocarvalhs.friendssecrets.commons.theme
 
+import android.content.Context
 import android.content.res.Configuration
-import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Stable
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineDispatcher
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class ThemeManager constructor(
-    private val activity: ComponentActivity,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    private val TAG = "ThemeManager"
+@Stable
+class ThemeManager @Inject constructor(
+    @param:ApplicationContext private val context: Context,
+    private val storage: StorageService
+) : ThemeService {
 
-    private val _theme = MutableStateFlow(Theme.SYSTEM)
-    val theme: StateFlow<Theme> = _theme
+    private val _theme = MutableStateFlow(ThemeService.Theme.SYSTEM)
+    val theme: StateFlow<ThemeService.Theme> = _theme
 
     private val _isDynamicThemeEnabled = MutableStateFlow(false)
     val isDynamicThemeEnabled: StateFlow<Boolean> = _isDynamicThemeEnabled
 
     init {
-        activity.lifecycleScope.launch(dispatcher) {
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
             init()
         }
     }
 
     private suspend fun init() {
         Timber.tag(TAG).d("--> INIT THEME")
-        val themeValue = Theme.SYSTEM.type
-        _theme.value = Theme.entries.firstOrNull { it.type == themeValue } ?: Theme.SYSTEM
+        val themeValue = storage.load(THEME_KEY, String::class) ?: ThemeService.Theme.SYSTEM.type
+        _theme.value = ThemeService.Theme.entries.firstOrNull { it.type == themeValue }
+            ?: ThemeService.Theme.SYSTEM
 
-        val dynamic = false
+        val dynamic = storage.load(DYNAMIC_THEME_KEY, Boolean::class) ?: false
         _isDynamicThemeEnabled.value = dynamic
-        Timber.tag(TAG).d("<-- SUCCESS INIT | Theme: %s, Dynamic: %s", _theme.value, _isDynamicThemeEnabled.value)
+        Timber.tag(TAG).d(
+            "<-- SUCCESS INIT | Theme: %s, Dynamic: %s",
+            _theme.value,
+            _isDynamicThemeEnabled.value
+        )
     }
 
-    suspend fun setTheme(value: Theme) {
-        Timber.tag(TAG).d("--> SET THEME: %s", value)
-        _theme.value = value
+    override suspend fun setTheme(theme: ThemeService.Theme) {
+        Timber.tag(TAG).d("--> SET THEME: %s", theme)
+        _theme.value = theme
+        storage.save(THEME_KEY, theme.type)
     }
 
-    private fun getSystemTheme(): Theme {
-        return if ((activity.applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
-            Theme.DARK
+    override fun getTheme(): ThemeService.Theme {
+        Timber.tag(TAG).d("--> GET THEME: %s", _theme.value)
+        return _theme.value
+    }
+
+    private fun getSystemTheme(): ThemeService.Theme {
+        return if ((context.applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+            ThemeService.Theme.DARK
         } else {
-            Theme.LIGHT
+            ThemeService.Theme.LIGHT
         }
     }
 
     fun isDarkTheme(): Boolean {
-        val isDark = if (_theme.value == Theme.SYSTEM) {
-            getSystemTheme() == Theme.DARK
+        val isDark = if (_theme.value == ThemeService.Theme.SYSTEM) {
+            getSystemTheme() == ThemeService.Theme.DARK
         } else {
-            _theme.value == Theme.DARK
+            _theme.value == ThemeService.Theme.DARK
         }
         Timber.tag(TAG).v("isDarkTheme? %s (Current: %s)", isDark, _theme.value)
         return isDark
     }
 
-    suspend fun setDynamicThemeEnabled(enabled: Boolean) {
+    override suspend fun setDynamicThemeEnabled(enabled: Boolean) {
         Timber.tag(TAG).d("--> SET DYNAMIC THEME: %s", enabled)
         _isDynamicThemeEnabled.value = enabled
+        storage.save(DYNAMIC_THEME_KEY, enabled)
     }
 
-    enum class Theme(val type: String) {
-        LIGHT("Light"),
-        DARK("Dark"),
-        SYSTEM("System")
-    }
+    override fun isDynamicThemeEnabled(): Boolean = _isDynamicThemeEnabled.value
 
     companion object {
+        private val TAG = "ThemeManager"
+
         private const val THEME_KEY = "theme_key"
         private const val DYNAMIC_THEME_KEY = "dynamic_theme_key"
     }

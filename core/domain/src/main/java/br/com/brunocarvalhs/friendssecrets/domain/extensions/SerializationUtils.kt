@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.domain.model
+package br.com.brunocarvalhs.friendssecrets.domain.extensions
 
 import kotlinx.serialization.json.*
 

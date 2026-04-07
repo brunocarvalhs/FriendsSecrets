@@ -2,7 +2,11 @@ package br.com.brunocarvalhs.settings.app.faq
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,18 +21,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.settings.R
 
 @Composable
-fun FAQScreen(navController: NavHostController) {
-    FAQContent(navController = navController)
+fun FAQScreen(
+    onBack: () -> Unit
+) {
+    FAQContent(
+        onBack = onBack
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FAQContent(
-    navController: NavHostController
+    onBack: () -> Unit
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -44,7 +51,12 @@ private fun FAQContent(
                     Text(text = stringResource(R.string.title_faq))
                 },
                 navigationIcon = {
-                    NavigationBackIconButton(navController = navController)
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -52,7 +64,8 @@ private fun FAQContent(
     ) {
         Column(modifier = Modifier
             .padding(it)
-            .padding(16.dp)) {
+            .padding(16.dp)
+        ) {
 
         }
     }
@@ -61,9 +74,7 @@ private fun FAQContent(
 @Composable
 @Preview
 private fun FAQContentPreview() {
-    FriendsSecretsTheme {
-        FAQContent(
-            navController = rememberNavController()
-        )
-    }
+    FAQContent(
+        onBack = {}
+    )
 }

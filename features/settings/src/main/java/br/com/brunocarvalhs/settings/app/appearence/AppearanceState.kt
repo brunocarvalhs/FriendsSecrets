@@ -1,6 +1,8 @@
 package br.com.brunocarvalhs.settings.app.appearence
 
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
+
 data class AppearanceState(
-    val themeSelected: String = "Ligth",
+    val themeSelected: String = ThemeService.Theme.LIGHT.type,
     val isDynamicThemeEnabled: Boolean = false
 )

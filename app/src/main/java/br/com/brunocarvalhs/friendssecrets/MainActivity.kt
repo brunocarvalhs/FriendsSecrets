@@ -16,12 +16,16 @@ import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    private val themeRemoteProvider: ThemeRemoteProvider by lazy { ThemeRemoteProvider() }
-    private val themeManager by lazy { ThemeManager(this) }
+    @Inject
+    lateinit var themeManager: ThemeManager
+
+    @Inject
+    lateinit var themeRemoteProvider: ThemeRemoteProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

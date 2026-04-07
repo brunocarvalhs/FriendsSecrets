@@ -4,13 +4,18 @@ import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseCompatibilityConverter
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseFirestoreManager
 import br.com.brunocarvalhs.friendssecrets.commons.network.NetworkManager
+import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.DeviceManager
 import br.com.brunocarvalhs.friendssecrets.commons.storage.StorageManager
 import br.com.brunocarvalhs.friendssecrets.commons.storage.dataStore
+import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -112,4 +117,22 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDeviceService(service: DeviceManager): DeviceService = service
+
+    @Provides
+    @Singleton
+    fun provideThemeService(service: ThemeManager): ThemeService = service
+
+    @Provides
+    @Singleton
+    fun provideThemeRemoteProvider(
+        firebaseRemoteConfig: FirebaseRemoteConfig
+    ): ThemeRemoteProvider = ThemeRemoteProvider(
+        remoteProvider = firebaseRemoteConfig
+    )
+
+    @Provides
+    @Singleton
+    fun provideBiometricService(
+        storageService: StorageService
+    ): BiometricService = BiometricManager(storageService)
 }

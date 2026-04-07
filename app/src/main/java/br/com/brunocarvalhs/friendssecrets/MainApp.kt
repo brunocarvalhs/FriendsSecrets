@@ -11,6 +11,7 @@ import br.com.brunocarvalhs.group.draw.DrawInitializer
 import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import br.com.brunocarvalhs.group.list.GroupListInitializer
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
+import br.com.brunocarvalhs.settings.SettingsInitializer
 
 @Composable
 fun NavHostController.MainApp() {
@@ -33,6 +34,11 @@ fun NavHostController.MainApp() {
             .build(navGraphBuilder = this)
 
         DrawInitializer.Builder()
+            .navController(navController = this@MainApp)
+            .onBack { this@MainApp.popBackStack() }
+            .build(navGraphBuilder = this)
+
+        SettingsInitializer.Builder()
             .navController(navController = this@MainApp)
             .onBack { this@MainApp.popBackStack() }
             .build(navGraphBuilder = this)

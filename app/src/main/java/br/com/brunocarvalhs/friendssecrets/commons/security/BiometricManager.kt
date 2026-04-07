@@ -1,39 +1,35 @@
 package br.com.brunocarvalhs.friendssecrets.commons.security
 
-import android.content.Context
-import androidx.activity.ComponentActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
+import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BiometricManager(
-    @param:ApplicationContext private val context: Context,
-    activity: ComponentActivity,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+class BiometricManager @Inject constructor(
+    private val storage: StorageService,
+): BiometricService {
     private val _isBiometricPromptEnabled = MutableStateFlow(false)
-    private val isBiometricPromptEnabled: StateFlow<Boolean> = _isBiometricPromptEnabled
 
     init {
-        activity.lifecycleScope.launch(dispatcher) {
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
             init()
         }
     }
 
     private suspend fun init() {
-//        val biometric = storage.load(key = BIOMETRIC_KEY, clazz = Boolean::class.java) ?: false
-//        _isBiometricPromptEnabled.value = biometric
+        val biometric = storage.load(key = BIOMETRIC_KEY, value = Boolean::class) ?: false
+        _isBiometricPromptEnabled.value = biometric
     }
 
-    fun isBiometricPromptEnabled(): Boolean = _isBiometricPromptEnabled.value
+    override fun isBiometricPromptEnabled(): Boolean = _isBiometricPromptEnabled.value
 
-    suspend fun setBiometricPromptEnabled(enabled: Boolean) {
-//        storage.save(BIOMETRIC_KEY, enabled)
-//        _isBiometricPromptEnabled.value = enabled
+    override suspend fun setBiometricPromptEnabled(state: Boolean) {
+        storage.save(BIOMETRIC_KEY, state)
+        _isBiometricPromptEnabled.value = state
     }
 
     companion object {

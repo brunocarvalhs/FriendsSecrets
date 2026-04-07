@@ -1,8 +1,9 @@
 package br.com.brunocarvalhs.settings.app.appearence
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.friendssecrets.common.theme.ThemeManager
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,20 +12,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class AppearanceViewModel @Inject constructor(
-    private val themeManager: ThemeManager,
+    private val themeService: ThemeService,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
         AppearanceState(
-            themeSelected = themeManager.theme.value.type,
-            isDynamicThemeEnabled = themeManager.isDynamicThemeEnabled.value
+            themeSelected = themeService.getTheme().type,
+            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled()
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
 
-    fun onEvent(intent: AppearanceIntent) {
+    fun handleIntent(intent: AppearanceIntent) {
         when (intent) {
             is AppearanceIntent.SetTheme -> setTheme(intent.theme)
             is AppearanceIntent.SetDynamicThemeEnabled -> setDynamicThemeEnabled(intent.enabled)
@@ -33,14 +35,14 @@ class AppearanceViewModel @Inject constructor(
 
     private fun setTheme(theme: String) {
         viewModelScope.launch {
-            themeManager.setTheme(ThemeManager.Theme.valueOf(theme.uppercase()))
+            themeService.setTheme(ThemeService.Theme.valueOf(theme.uppercase()))
             _state.update { it.copy(themeSelected = theme) }
         }
     }
 
     private fun setDynamicThemeEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            themeManager.setDynamicThemeEnabled(enabled)
+            themeService.setDynamicThemeEnabled(enabled)
             _state.update { it.copy(isDynamicThemeEnabled = enabled) }
         }
     }
