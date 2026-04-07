@@ -24,43 +24,49 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 fun DrawItem(
     members: List<UserModel>,
     member: String,
-    onShared: () -> Unit
+    onShare: () -> Unit
 ) {
-    val draw = remember { members.find { it.name == member } }
+    val drawMember = remember(member, members) { members.find { it.name == member } }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onShared() }
+            .clickable { onShare() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ContactAvatar(
-            name = draw?.name ?: member,
-            photoUrl = draw?.photoUrl
+            name = drawMember?.name ?: member,
+            photoUrl = drawMember?.photoUrl
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Text(
-            text = draw?.name ?: member,
+            text = drawMember?.name ?: member,
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge
         )
 
-        IconButton(onClick = onShared) {
-            Icon(Icons.Default.Share, contentDescription = null)
+        IconButton(onClick = onShare) {
+            Icon(
+                imageVector = Icons.Default.Share,
+                contentDescription = "Share",
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun ContactListItemPreview() {
-    DrawItem(
-        members = listOf(),
-        member = "Bruno",
-        onShared = {}
-    )
+fun DrawItemPreview() {
+    MaterialTheme {
+        DrawItem(
+            members = listOf(UserModel(name = "Bruno")),
+            member = "Bruno",
+            onShare = {}
+        )
+    }
 }

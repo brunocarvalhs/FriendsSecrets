@@ -29,19 +29,19 @@ class DrawViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<DrawUiState> = MutableStateFlow(
         DrawUiState(
             members = args.group.members,
-            draw = args.group.draws,
-            isDraw = args.group.draws.isNotEmpty()
+            results = args.group.draws,
+            isDrawn = args.group.draws.isNotEmpty()
         )
     )
     val uiState: StateFlow<DrawUiState> = _uiState.asStateFlow()
 
     @AddTrace(name = "DrawViewModel.eventIntent", enabled = true)
     fun handleIntent(intent: DrawIntent) = when (intent) {
-        is DrawIntent.Share -> shared(intent.secret)
+        is DrawIntent.Share -> share(intent.secret)
         DrawIntent.Draw -> draw()
     }
 
-    private fun shared(secret: String) {
+    private fun share(secret: String) {
         shareSecretFriendsUseCase(group = args.group, secret = secret).onSuccess {
 
         }.onFailure {
@@ -52,7 +52,7 @@ class DrawViewModel @Inject constructor(
     private fun draw() {
         viewModelScope.launch {
             drawUseCase(group = args.group).onSuccess {
-
+                _uiState.value = _uiState.value.copy(isDrawn = true)
             }.onFailure {
 
             }
