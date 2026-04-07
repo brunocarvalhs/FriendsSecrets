@@ -50,7 +50,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupCard
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
-import br.com.brunocarvalhs.group.list.app.presentation.list.components.GroupToEnterBottomSheet
+import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingProgress
 
 @Composable

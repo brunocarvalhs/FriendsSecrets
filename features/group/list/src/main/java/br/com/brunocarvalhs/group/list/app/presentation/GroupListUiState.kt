@@ -11,7 +11,7 @@ data class GroupListUiState(
     val searchQuery: String = "",
     val selectedTag: String = "Todos"
 ) {
-    val tags: List<String> = listOf("Todos", "Ativos", "Finalizados", "Sorteados")
+    val tags: List<String> = listOf("Ativos", "Arquivados", "Sorteados", "Não sorteados")
 
     val filteredList: List<GroupModel>
         get() {
@@ -20,10 +20,10 @@ data class GroupListUiState(
                 val matchesSearch = group.name.contains(searchQuery, ignoreCase = true)
                 val groupDateLong = group.date?.toLongOrNull() ?: 0L
                 val matchesTag = when (selectedTag) {
-                    "Ativos" -> groupDateLong >= currentTime
-                    "Finalizados" -> groupDateLong < currentTime
+                    "Arquivados" -> groupDateLong < currentTime
                     "Sorteados" -> group.draws.isNotEmpty()
-                    else -> true
+                    "Não sorteados" -> group.draws.isEmpty()
+                    else -> groupDateLong >= currentTime
                 }
                 matchesSearch && matchesTag
             }

@@ -1,14 +1,13 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,14 +19,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,12 +52,12 @@ fun GroupToEnterBottomSheet(
     )
     val focusManager = LocalFocusManager.current
 
-    val tokenValues = remember { List(8) { mutableStateOf("") } }
-    val focusRequesters = remember { List(8) { FocusRequester() } }
+    var token by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(sheetState.isVisible) {
         if (sheetState.isVisible) {
-            focusRequesters[0].requestFocus()
+            focusRequester.requestFocus()
         }
     }
 
@@ -82,59 +88,37 @@ fun GroupToEnterBottomSheet(
                 style = MaterialTheme.typography.headlineSmall,
             )
 
-            repeat(2) { rowIndex ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    repeat(4) { colIndex ->
-                        val index = rowIndex * 4 + colIndex
-                        val value = tokenValues[index].value
-                        OutlinedTextField(
-                            value = value,
-                            onValueChange = { newChar ->
-                                if (newChar.length <= 1 && newChar.matches(Regex("[a-zA-Z0-9]?"))) {
-                                    tokenValues[index].value = newChar
-                                }
-                            },
-                            singleLine = true,
-                            enabled = if (index == 0) true else tokenValues[index - 1].value.isNotEmpty(),
-                            modifier = Modifier
-                                .weight(1f)
-                                .widthIn(min = 56.dp)
-                                .focusRequester(focusRequesters[index]),
-                            textStyle = LocalTextStyle.current.copy(
-                                textAlign = TextAlign.Center,
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize,
-                                letterSpacing = 4.sp
-                            ),
-                            maxLines = 1,
-                        )
-
-                        LaunchedEffect(value) {
-                            if (value.isNotEmpty() && index < 7) {
-                                focusRequesters[index + 1].requestFocus()
-                            } else if (value.isEmpty() && index > 0) {
-                                focusRequesters[index - 1].requestFocus()
-                            }
-                            val token = tokenValues.joinToString("") { it.value }
-                            if (token.length == 8 && token.all { it.isLetterOrDigit() }) {
-                                focusManager.clearFocus(force = true)
-                            }
+            OutlinedTextField(
+                value = token,
+                onValueChange = { newValue ->
+                    if (newValue.length <= 8 && newValue.all { it.isLetterOrDigit() }) {
+                        token = newValue.uppercase()
+                        if (token.length == 8) {
+                            focusManager.clearFocus()
                         }
                     }
-                }
-            }
-
-            val token = tokenValues.joinToString("") { it.value }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                textStyle = LocalTextStyle.current.copy(
+                    textAlign = TextAlign.Center,
+                    fontSize = 24.sp,
+                    letterSpacing = 8.sp
+                ),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Characters
+                ),
+                visualTransformation = TokenVisualTransformation()
+            )
 
             Button(
                 onClick = {
                     scope.launch {
                         sheetState.hide()
                         onToEnter(token)
-                        tokenValues.forEach { it.value = "" }
-                        focusRequesters[0].requestFocus()
+                        token = ""
                     }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
                             onDismiss()
@@ -148,5 +132,27 @@ fun GroupToEnterBottomSheet(
                 Text(stringResource(R.string.group_to_enter_button_text))
             }
         }
+    }
+}
+
+private class TokenVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val out = StringBuilder()
+        for (i in text.indices) {
+            out.append(text[i])
+            if (i == 3) out.append(" ")
+        }
+
+        val offsetMapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                return if (offset <= 3) offset else offset + 1
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                return if (offset <= 4) offset else offset - 1
+            }
+        }
+
+        return TransformedText(AnnotatedString(out.toString()), offsetMapping)
     }
 }
