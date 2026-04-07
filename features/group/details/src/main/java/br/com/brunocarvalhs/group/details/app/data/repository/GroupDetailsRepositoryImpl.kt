@@ -29,7 +29,7 @@ class GroupDetailsRepositoryImpl @Inject constructor(
             method = NetworkService.Method.DELETE,
             clazz = Boolean::class
         ) ?: throw GroupNotFoundException()
-        if (response == false) throw GroupDeleteException()
+        if (!response) throw GroupDeleteException()
         return@withContext
     }
 }
