@@ -31,5 +31,4 @@ abstract class GroupCreateModule {
     abstract fun bindGroupCreateRepository(
         impl: GroupCreateRepositoryImpl
     ): GroupCreateRepository
-
 }

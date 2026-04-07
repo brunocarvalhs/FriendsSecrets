@@ -34,6 +34,7 @@ fun NavHostController.MainApp() {
 
         DrawInitializer.Builder()
             .navController(navController = this@MainApp)
+            .onBack { this@MainApp.popBackStack() }
             .build(navGraphBuilder = this)
     }
 }

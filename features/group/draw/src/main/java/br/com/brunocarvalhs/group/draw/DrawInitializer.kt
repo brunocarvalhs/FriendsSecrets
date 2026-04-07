@@ -16,11 +16,15 @@ class DrawInitializer(private val builder: Builder) {
 
     @AddTrace(name = "DrawInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<DrawGraphRouter>(startDestination = DrawRouter, typeMap = DrawGraphRouter.typeMap) {
+        return navGraphBuilder.navigation<DrawGraphRouter>(
+            startDestination = DrawRouter,
+            typeMap = DrawGraphRouter.typeMap
+        ) {
             composable<DrawRouter> {
                 val viewModel = hiltViewModel<DrawViewModel>()
                 DrawScreen(
                     viewModel = viewModel,
+                    onBack = builder.onBack
                 )
             }
         }
@@ -28,10 +32,16 @@ class DrawInitializer(private val builder: Builder) {
 
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
+        internal var onBack: () -> Unit = { }
 
         @AddTrace(name = "DrawInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
             this.navController = navController
+        }
+
+        @AddTrace(name = "DrawInitializer.Builder.onBack", enabled = true)
+        fun onBack(onBack: () -> Unit) = apply {
+            this.onBack = onBack
         }
 
         @AddTrace(name = "DrawInitializer.Builder.build", enabled = true)
