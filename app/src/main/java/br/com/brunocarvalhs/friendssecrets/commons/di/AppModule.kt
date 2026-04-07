@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.di
 
 import android.content.Context
+import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseCompatibilityConverter
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseFirestoreManager
 import br.com.brunocarvalhs.friendssecrets.commons.network.NetworkManager
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
@@ -99,8 +100,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNetworkManager(
-        firebaseFirestoreManager: FirebaseFirestoreManager
-    ): NetworkService = NetworkManager(firebaseFirestoreManager)
+        firebaseFirestoreManager: FirebaseFirestoreManager,
+        cryptoManager: CryptoManager,
+        compatibilityConverter: FirebaseCompatibilityConverter
+    ): NetworkService = NetworkManager(
+        firebaseFirestoreManager = firebaseFirestoreManager,
+        cryptoManager = cryptoManager,
+        compatibilityConverter = compatibilityConverter
+    )
 
     @Provides
     @Singleton

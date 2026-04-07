@@ -31,9 +31,18 @@ class CryptoManager(
         Timber.tag(TAG).d("--> ENCRYPT MAP | Excluded: %s", excludedKeys)
         return inputMap.filterValues { it != null }.mapValues { (key, value) ->
             if (key in excludedKeys) value
-            else encrypt(json.encodeToString(value.toJsonElement()))
+            else encryptValue(value)
         }.also {
             Timber.tag(TAG).d("<-- SUCCESS ENCRYPT MAP")
+        }
+    }
+
+    private fun encryptValue(value: Any?): Any? {
+        return when (value) {
+            null -> null
+            is Map<*, *> -> (value as Map<String, Any?>).mapValues { encryptValue(it.value) }
+            is Iterable<*> -> value.map { encryptValue(it) }
+            else -> encrypt(json.encodeToString(value.toJsonElement()))
         }
     }
 
@@ -43,16 +52,30 @@ class CryptoManager(
     ): Map<String, Any> {
         Timber.tag(TAG).d("--> DECRYPT MAP | Excluded: %s", excludedKeys)
         return encodedMap.mapValues { (key, value) ->
-            if (key in excludedKeys || value !is String) return@mapValues value
-
-            val decrypted = decrypt(value)
-            if (decrypted == value) return@mapValues value
-
-            runCatching {
-                json.parseToJsonElement(decrypted).toAny()
-            }.getOrNull() ?: decrypted
+            if (key in excludedKeys) return@mapValues value
+            decryptValue(value)
         }.also {
             Timber.tag(TAG).d("<-- SUCCESS DECRYPT MAP")
+        }
+    }
+
+    private fun decryptValue(value: Any?): Any {
+        return when (value) {
+            is String -> {
+                val decrypted = decrypt(value)
+                if (decrypted == value) return value
+
+                runCatching {
+                    json.parseToJsonElement(decrypted).toAny() ?: decrypted
+                }.getOrElse { decrypted }
+            }
+            is Map<*, *> -> {
+                (value as Map<String, Any>).mapValues { decryptValue(it.value) }
+            }
+            is Iterable<*> -> {
+                value.map { decryptValue(it) }
+            }
+            else -> value ?: ""
         }
     }
 

@@ -4,113 +4,72 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
-import java.lang.reflect.Array
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 class FirebaseFirestoreManager @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) {
 
-    suspend fun <T : Any> execute(
+    suspend fun execute(
         endpoint: String,
         method: NetworkService.Method,
         data: Map<String, Any?>? = null,
         query: Map<String, Any?>? = null,
-        clazz: KClass<T>
     ): Any? = when (method) {
-        NetworkService.Method.GET -> get(endpoint, query, clazz)
+        NetworkService.Method.GET -> get(endpoint, query)
         NetworkService.Method.POST -> post(endpoint, data)
         NetworkService.Method.PUT -> put(endpoint, data)
         NetworkService.Method.DELETE -> delete(endpoint)
     }
 
-    private suspend fun <T : Any> get(
+    private suspend fun get(
         endpoint: String,
-        query: Map<String, Any?>?,
-        clazz: KClass<T>
+        query: Map<String, Any?>?
     ): Any? {
         val parts = endpoint.split("/")
         
-        val isArray = clazz.java.isArray
-        val targetClass = if (isArray) clazz.java.componentType!! else clazz.java
-
         if (parts.size == 2) {
             val (collection, documentId) = parts
-
             val snapshot = firebaseFirestore
                 .collection(collection)
-                .whereEqualTo("id", documentId)
+                .document(documentId)
                 .get()
                 .await()
 
-            val doc = snapshot.documents.firstOrNull() ?: return null
-            return doc.toObject(targetClass)
+            return snapshot.data?.toMutableMap()?.apply {
+                put("id", snapshot.id)
+            }
         }
 
         val collection = parts[0]
-
         val listEntry = query?.entries?.firstOrNull { it.value is List<*> }
         val normalFilters = query?.filterValues { it !is List<*> } ?: emptyMap()
 
-        val results = mutableListOf<Any>()
+        val results = mutableListOf<Map<String, Any>>()
 
         if (listEntry != null) {
-
             val key = listEntry.key
             val values = listEntry.value as List<*>
-
-            require(query.count { it.value is List<*> } <= 1) {
-                "Firestore não suporta múltiplos whereIn"
-            }
-
             val chunks = values.chunked(10)
 
             for (chunk in chunks) {
-                var ref: Query = firebaseFirestore.collection(collection)
-
-                ref = ref.whereIn(key, chunk)
-
-                normalFilters.forEach { (k, v) ->
-                    ref = ref.whereEqualTo(k, v)
-                }
-
+                var ref: Query = firebaseFirestore.collection(collection).whereIn(key, chunk)
+                normalFilters.forEach { (k, v) -> ref = ref.whereEqualTo(k, v) }
                 val snapshot = ref.get().await()
-
-                results.addAll(
-                    snapshot.documents.mapNotNull {
-                        it.toObject(targetClass)
-                    }
-                )
+                results.addAll(snapshot.documents.mapNotNull { doc ->
+                    doc.data?.toMutableMap()?.apply { put("id", doc.id) }
+                })
             }
-
         } else {
             var ref: Query = firebaseFirestore.collection(collection)
-
-            normalFilters.forEach { (k, v) ->
-                ref = ref.whereEqualTo(k, v)
-            }
-
+            normalFilters.forEach { (k, v) -> ref = ref.whereEqualTo(k, v) }
             val snapshot = ref.get().await()
-
-            results.addAll(
-                snapshot.documents.mapNotNull {
-                    it.toObject(targetClass)
-                }
-            )
+            results.addAll(snapshot.documents.mapNotNull { doc ->
+                doc.data?.toMutableMap()?.apply { put("id", doc.id) }
+            })
         }
 
-        val distinct = results.distinct()
-
-        return if (isArray) {
-            val array = Array.newInstance(targetClass, distinct.size)
-            distinct.forEachIndexed { index, item ->
-                Array.set(array, index, item)
-            }
-            array
-        } else {
-            distinct
-        }
+        return results.distinctBy { it["id"] }
     }
 
     private suspend fun post(endpoint: String, data: Map<String, Any?>?): String {
@@ -122,49 +81,14 @@ class FirebaseFirestoreManager @Inject constructor(
 
     private suspend fun put(endpoint: String, data: Map<String, Any?>?): Boolean {
         requireNotNull(data)
-
-        val parts = endpoint.split("/")
-        val collection = parts[0]
-        val id = parts.getOrNull(1)
-            ?: throw IllegalArgumentException("PUT precisa de endpoint com ID")
-
-        val snapshot = firebaseFirestore
-            .collection(collection)
-            .whereEqualTo("id", id)
-            .get()
-            .await()
-
-        val document = snapshot.documents.firstOrNull()
-            ?: throw IllegalArgumentException("Documento não encontrado")
-
-        firebaseFirestore
-            .collection(collection)
-            .document(document.id)
-            .set(data)
-            .await()
-
+        val (collection, id) = endpoint.split("/")
+        firebaseFirestore.collection(collection).document(id).set(data).await()
         return true
     }
 
     private suspend fun delete(endpoint: String): Boolean {
-        val parts = endpoint.split("/")
-        val (collection, documentId) = parts
-
-        val snapshot = firebaseFirestore
-            .collection(collection)
-            .whereEqualTo("id", documentId)
-            .get()
-            .await()
-
-        val document = snapshot.documents.firstOrNull()
-            ?: throw IllegalArgumentException("Documento não encontrado")
-
-        firebaseFirestore
-            .collection(collection)
-            .document(document.id)
-            .delete()
-            .await()
-
+        val (collection, id) = endpoint.split("/")
+        firebaseFirestore.collection(collection).document(id).delete().await()
         return true
     }
 }

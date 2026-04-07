@@ -1,13 +1,25 @@
 package br.com.brunocarvalhs.friendssecrets.commons.network
 
+import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class NetworkManager(
-    private val firebaseFirestoreManager: FirebaseFirestoreManager
+class NetworkManager @Inject constructor(
+    private val firebaseFirestoreManager: FirebaseFirestoreManager,
+    private val cryptoManager: CryptoManager,
+    private val compatibilityConverter: FirebaseCompatibilityConverter
 ) : NetworkService {
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+        encodeDefaults = true
+    }
 
     override suspend fun <T : Any> make(
         endpoint: String,
@@ -21,40 +33,66 @@ class NetworkManager(
         val finalPayload = getPayload(payload)
 
         Timber.tag(TAG).d("--> %s [%s]", method, finalEndpoint)
-        if (finalPayload != null) Timber.tag(TAG).d("Payload: %s", finalPayload)
-        if (!headers.isNullOrEmpty()) Timber.tag(TAG).d("Headers: %s", headers)
-        if (!query.isNullOrEmpty()) Timber.tag(TAG).d("Query: %s", query)
-        Timber.tag(TAG).d("Class: %s", clazz.simpleName)
 
         return runCatching {
-            firebaseFirestoreManager.execute(
+            val response = firebaseFirestoreManager.execute(
                 endpoint = finalEndpoint,
                 method = method,
                 data = finalPayload,
                 query = query,
-                clazz = clazz
             )
-        }.onSuccess { result ->
+
+            getResponse(response, clazz)
+        }.onSuccess {
             Timber.tag(TAG).d("<-- SUCCESS %s [%s]", method, finalEndpoint)
-            Timber.tag(TAG).d("Result: %s", result)
         }.onFailure {
             Timber.tag(TAG).e(it, "<-- FAILURE %s [%s] | Error: %s", method, finalEndpoint, it.message)
-        }.getOrNull() as? T
-    }
-
-    private fun getHeaders(headers: Map<String, String>): Map<String, String> {
-        return emptyMap<String, String>().plus(headers)
+        }.getOrNull()
     }
 
     private fun getPayload(payload: Map<String, Any?>?): Map<String, Any?>? {
-        return payload
+        return payload?.let {
+            cryptoManager.encryptMap(it, EXCLUDED_KEYS)
+        }
     }
 
-    private fun getEndpoint(endpoint: String): String {
-        return endpoint
+    private fun getEndpoint(endpoint: String): String = endpoint
+
+    @OptIn(InternalSerializationApi::class)
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any> getResponse(response: Any?, clazz: KClass<T>): T? {
+        if (response == null) return null
+
+        return try {
+            val serializer = json.serializersModule.serializer(clazz.java)
+
+            val decryptedData = when (response) {
+                is Map<*, *> -> cryptoManager.decryptMap(response as Map<String, Any>, EXCLUDED_KEYS)
+                is List<*> -> response.map { item ->
+                    if (item is Map<*, *>) cryptoManager.decryptMap(item as Map<String, Any>, EXCLUDED_KEYS)
+                    else item
+                }
+                else -> response
+            }
+
+            val jsonElement = compatibilityConverter.toJsonElement(decryptedData)
+
+            Timber.tag(TAG).v("Processing JSON for %s: %s", clazz.simpleName, jsonElement)
+
+            json.decodeFromJsonElement(serializer, jsonElement) as? T
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Compatibility Error on %s", clazz.simpleName)
+            
+            // Fallback para ClassCastException (ex: Array vs List) usando a nova classe
+            if (response is List<*> && clazz.java.isArray) {
+                return compatibilityConverter.listToTypedArray(response, clazz.java) as? T
+            }
+            null
+        }
     }
 
     companion object {
         private const val TAG = "NetworkManager"
+        private val EXCLUDED_KEYS = setOf("id", "token", "createdAt", "updatedAt", "timestamp")
     }
 }
