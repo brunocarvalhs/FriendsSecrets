@@ -108,13 +108,11 @@ class FirebaseFirestoreManager @Inject constructor(
 
     private suspend fun delete(endpoint: String): Boolean {
         val parts = endpoint.split("/")
-        val collection = parts[0]
-        val id = parts.getOrNull(1)
-            ?: throw IllegalArgumentException("DELETE precisa de endpoint com ID")
+        val (collection, documentId) = parts
 
         val snapshot = firebaseFirestore
             .collection(collection)
-            .whereEqualTo("id", id)
+            .whereEqualTo("id", documentId)
             .get()
             .await()
 

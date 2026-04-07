@@ -25,10 +25,10 @@ class GroupDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun delete(group: GroupModel): Unit = withContext(Dispatchers.IO) {
         val response = network.make(
-            endpoint = "${GroupModel.COLLECTION_NAME}/$group",
+            endpoint = "${GroupModel.COLLECTION_NAME}/${group.id}",
             method = NetworkService.Method.DELETE,
             clazz = Boolean::class
-        )
+        ) ?: throw GroupNotFoundException()
         if (response == false) throw GroupDeleteException()
         return@withContext
     }

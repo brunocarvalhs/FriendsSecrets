@@ -12,8 +12,6 @@ class GroupDeleteUseCase @Inject constructor(
     private val storage: StorageService
 ) {
     suspend fun invoke(group: GroupModel): Result<Unit> = runCatching {
-        if (group.isOwner) { throw IllegalArgumentException("Owner cannot delete group") }
-
         val group = repository.read(group.id)
         val token = group.token
 
