@@ -92,7 +92,7 @@ fun GroupToEnterBottomSheet(
                 value = token,
                 onValueChange = { newValue ->
                     if (newValue.length <= 8 && newValue.all { it.isLetterOrDigit() }) {
-                        token = newValue.uppercase()
+                        token = newValue
                         if (token.length == 8) {
                             focusManager.clearFocus()
                         }
@@ -108,7 +108,7 @@ fun GroupToEnterBottomSheet(
                 ),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Characters
+                    capitalization = KeyboardCapitalization.None
                 ),
                 visualTransformation = TokenVisualTransformation()
             )
