@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,8 +22,7 @@ class GroupListViewModel @Inject constructor(
     private val groupByTokenUseCase: GroupByTokenUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<GroupListUiState> =
-        MutableStateFlow(GroupListUiState.Loading)
+    private val _uiState = MutableStateFlow(GroupListUiState())
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
 
     @AddTrace(name = "HomeViewModel.event", enabled = true)
@@ -30,32 +30,53 @@ class GroupListViewModel @Inject constructor(
         when (intent) {
             GroupListIntent.FetchGroups -> fetchGroups()
             is GroupListIntent.GroupToEnter -> groupToEnter(intent.token)
+            is GroupListIntent.OnSearchQueryChange -> {
+                _uiState.update { it.copy(searchQuery = intent.query) }
+            }
+            is GroupListIntent.OnTagSelected -> {
+                _uiState.update { it.copy(selectedTag = intent.tag) }
+            }
         }
     }
 
     @AddTrace(name = "HomeViewModel.groupToEnter", enabled = true)
     private fun groupToEnter(token: String) {
-        _uiState.value = GroupListUiState.Loading
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupByTokenUseCase.invoke(token)
                 .onSuccess { fetchGroups() }
                 .onFailure { t ->
                     Timber.e(t)
-                    _uiState.value = GroupListUiState.Error(t.message.orEmpty())
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = t.message.orEmpty()
+                        )
+                    }
                 }
         }
     }
 
     @AddTrace(name = "HomeViewModel.fetchGroups", enabled = true)
     private fun fetchGroups() {
-        _uiState.value = GroupListUiState.Loading
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            groupListUseCase.invoke().onSuccess {
-                _uiState.value = GroupListUiState.Success(list = it)
-            }.onFailure {
-                Timber.e(it)
-                _uiState.value =
-                    GroupListUiState.Error(errorMessage = it.message.orEmpty())
+            groupListUseCase.invoke().onSuccess { result ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        list = result,
+                        errorMessage = null
+                    )
+                }
+            }.onFailure { t ->
+                Timber.e(t)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = t.message.orEmpty()
+                    )
+                }
             }
         }
     }

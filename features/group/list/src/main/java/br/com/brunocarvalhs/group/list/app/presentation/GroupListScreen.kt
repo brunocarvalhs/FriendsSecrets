@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.list.app.presentation
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.core.isFinished
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -67,7 +66,14 @@ fun GroupListScreen(
     }
 
     ListContent(
-        uiState = uiState,
+        isLoading = uiState.isLoading,
+        list = uiState.filteredList,
+        errorMessage = uiState.errorMessage,
+        searchQuery = uiState.searchQuery,
+        selectedTag = uiState.selectedTag,
+        tags = uiState.tags,
+        onSearchQueryChange = { viewModel.handleEvent(GroupListIntent.OnSearchQueryChange(it)) },
+        onTagSelected = { viewModel.handleEvent(GroupListIntent.OnTagSelected(it)) },
         onFetchGroups = { viewModel.handleEvent(GroupListIntent.FetchGroups) },
         onGroupToEnter = onGroupToEnter,
         onGroupToCreate = onGroupToCreate,
@@ -80,7 +86,14 @@ fun GroupListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ListContent(
-    uiState: GroupListUiState,
+    isLoading: Boolean,
+    list: List<GroupModel>,
+    errorMessage: String?,
+    searchQuery: String,
+    selectedTag: String,
+    tags: List<String>,
+    onSearchQueryChange: (String) -> Unit,
+    onTagSelected: (String) -> Unit,
     onFetchGroups: () -> Unit = {},
     onGroupToEnter: (GroupModel) -> Unit = {},
     onGroupToCreate: () -> Unit = {},
@@ -88,9 +101,6 @@ private fun ListContent(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedTag by remember { mutableStateOf("Todos") }
-    val tags = listOf("Todos", "Ativos", "Finalizados", "Sorteados")
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -99,9 +109,9 @@ private fun ListContent(
             GroupListTopBar(
                 scrollBehavior = scrollBehavior,
                 searchQuery = searchQuery,
-                onSearchQueryChange = { searchQuery = it },
+                onSearchQueryChange = onSearchQueryChange,
                 selectedTag = selectedTag,
-                onTagSelected = { selectedTag = it },
+                onTagSelected = onTagSelected,
                 tags = tags,
                 onJoinGroupClick = { showBottomSheet = true },
                 onMoreOptionsClick = { /* TODO: Adicionar ação */ }
@@ -113,9 +123,9 @@ private fun ListContent(
     ) { paddingValues ->
         GroupListContent(
             modifier = Modifier.padding(paddingValues),
-            uiState = uiState,
-            searchQuery = searchQuery,
-            selectedTag = selectedTag, // Adicione este parâmetro
+            isLoading = isLoading,
+            list = list,
+            errorMessage = errorMessage,
             onFetchGroups = onFetchGroups,
             onGroupToEnter = onGroupToEnter,
             onJoinGroupClick = { showBottomSheet = true },
@@ -205,9 +215,9 @@ private fun GroupListTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GroupListContent(
-    uiState: GroupListUiState,
-    searchQuery: String,
-    selectedTag: String, // Adicionado
+    isLoading: Boolean,
+    list: List<GroupModel>,
+    errorMessage: String?,
     onFetchGroups: () -> Unit,
     onGroupToEnter: (GroupModel) -> Unit,
     onJoinGroupClick: () -> Unit,
@@ -215,45 +225,31 @@ private fun GroupListContent(
     modifier: Modifier = Modifier
 ) {
     PullToRefreshBox(
-        isRefreshing = uiState is GroupListUiState.Loading,
+        isRefreshing = isLoading,
         onRefresh = onFetchGroups,
         modifier = modifier.fillMaxSize()
     ) {
-        when (uiState) {
-            is GroupListUiState.Loading -> {
+        when {
+            isLoading && list.isEmpty() -> {
                 LoadingProgress()
             }
 
-            is GroupListUiState.Error -> {
-                ErrorComponent(message = uiState.errorMessage, onRefresh = onFetchGroups)
+            errorMessage != null && list.isEmpty() -> {
+                ErrorComponent(
+                    message = errorMessage,
+                    onRefresh = onFetchGroups
+                )
             }
 
-            is GroupListUiState.Success -> {
-                val currentTime = System.currentTimeMillis()
-
-                val filteredList = remember(uiState.list, searchQuery, selectedTag) {
-                    uiState.list.filter { group ->
-                        val matchesSearch = group.name.contains(searchQuery, ignoreCase = true)
-                        val groupDateLong = group.date?.toLongOrNull() ?: 0L
-                        val matchesTag = when (selectedTag) {
-                            "Ativos" -> groupDateLong >= currentTime
-                            "Finalizados" -> groupDateLong < currentTime
-                            "Sorteados" -> group.draws.isNotEmpty()
-                            else -> true
-                        }
-
-                        matchesSearch && matchesTag
-                    }
-                }
-
-                if (filteredList.isEmpty()) {
+            else -> {
+                if (list.isEmpty() && !isLoading) {
                     EmptyGroupComponent(
                         onGroupToEnter = onJoinGroupClick,
                         onCreateGroup = onGroupToCreate
                     )
                 } else {
                     GroupListItems(
-                        groups = filteredList,
+                        groups = list,
                         onGroupToEnter = onGroupToEnter
                     )
                 }
@@ -303,23 +299,23 @@ private fun GroupListFab(
 
 private class HomePreviewProvider : PreviewParameterProvider<GroupListUiState> {
     override val values = sequenceOf(
-        GroupListUiState.Loading,
-        GroupListUiState.Success(list = listOf()),
-        GroupListUiState.Success(list = (1..10).map { it ->
-            GroupModel(
-                name = "Group $it",
-                description = "Description $it",
-                members = listOf<UserModel>().apply {
-                    repeat(10) {
+        GroupListUiState(isLoading = true),
+        GroupListUiState(list = emptyList()),
+        GroupListUiState(
+            list = (1..10).map { i ->
+                GroupModel(
+                    name = "Group $i",
+                    description = "Description $i",
+                    members = List(10) {
                         UserModel(
                             name = "Member $it",
                             likes = listOf("Like $it")
                         )
                     }
-                }
-            )
-        }),
-        GroupListUiState.Error(errorMessage = "Error")
+                )
+            }
+        ),
+        GroupListUiState(errorMessage = "Error")
     )
 }
 
@@ -338,6 +334,13 @@ fun ListContentPreview(
     @PreviewParameter(HomePreviewProvider::class) state: GroupListUiState,
 ) {
     ListContent(
-        uiState = state
+        isLoading = state.isLoading,
+        list = state.filteredList,
+        errorMessage = state.errorMessage,
+        searchQuery = state.searchQuery,
+        selectedTag = state.selectedTag,
+        tags = state.tags,
+        onSearchQueryChange = {},
+        onTagSelected = {}
     )
 }
