@@ -41,6 +41,11 @@ class StorageManager @Inject constructor(
                         val stringSet = value.filterIsInstance<String>().toSet()
                         preferences[stringSetPreferencesKey(key)] = stringSet
                     }
+                    
+                    is List<*> -> {
+                        val stringSet = value.filterIsInstance<String>().toSet()
+                        preferences[stringSetPreferencesKey(key)] = stringSet
+                    }
 
                     is String -> preferences[stringPreferencesKey(key)] = value
                     else -> {
@@ -76,6 +81,10 @@ class StorageManager @Inject constructor(
 
                 value == Array::class || value.java.isArray -> {
                     preferences[stringSetPreferencesKey(key)]?.toTypedArray() as? T
+                }
+                
+                value == List::class || value.java.isAssignableFrom(List::class.java) -> {
+                    preferences[stringSetPreferencesKey(key)]?.toList() as? T
                 }
 
                 value == String::class -> {

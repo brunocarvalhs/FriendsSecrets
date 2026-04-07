@@ -12,23 +12,20 @@ class GroupListUseCase @Inject constructor(
     private val storage: StorageService,
     private val deviceService: DeviceService
 ) {
-    suspend fun invoke(): Result<List<GroupModel>> {
-        return try {
-            runCatching {
-                val groupTokens = loadGroupTokens()
-                if (groupTokens.isNotEmpty()) {
-                    val ownerId = deviceService.getDeviceId()
-                    repository.list(groupTokens).map { group ->
-                        group.toDomain()
-                            .copy(isOwner = group.owner_id == ownerId)
-                    }
-                } else emptyList()
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+    suspend fun invoke(): Result<List<GroupModel>> = runCatching {
+        val groupTokens = loadGroupTokens()
+        
+        if (groupTokens.isEmpty()) {
+            return@runCatching emptyList()
+        }
+
+        val ownerId = deviceService.getDeviceId()
+        repository.list(groupTokens).map { group ->
+            group.toDomain().copy(isOwner = group.owner_id == ownerId)
         }
     }
 
-    private suspend fun loadGroupTokens(): List<String> =
-        storage.load(COLLECTION_NAME, Array<String>::class)?.toList().orEmpty()
+    private suspend fun loadGroupTokens(): List<String> {
+        return storage.load(COLLECTION_NAME, Array<String>::class)?.toList().orEmpty()
+    }
 }

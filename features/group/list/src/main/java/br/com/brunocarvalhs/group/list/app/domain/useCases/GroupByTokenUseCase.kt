@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.group.list.app.domain.useCases
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
@@ -10,13 +11,13 @@ import javax.inject.Inject
 
 class GroupByTokenUseCase @Inject constructor(
     private val repository: GroupListRepository,
-    private val storage: StorageService
+    private val storage: StorageService,
+    private val device: DeviceService
 ) {
     suspend fun invoke(token: String): Result<GroupModel> = runCatching {
         validateToken(token)
-        val groupList = ensureTokenNotExists(token)
         val group = fetchGroupByToken(token)
-        storeToken(token, groupList)
+        storeToken(group)
         group
     }
 
@@ -31,14 +32,17 @@ class GroupByTokenUseCase @Inject constructor(
     }
 
     private suspend fun fetchGroupByToken(token: String): GroupModel {
+        val ownerId = device.getDeviceId()
         val data = repository.searchByToken(token) ?: throw GroupNotFoundException()
-        return data.toDomain()
+        return data.toDomain().copy(isOwner = ownerId == data.owner_id)
     }
 
-    private suspend fun storeToken(token: String, groupList: List<String>) {
+    private suspend fun storeToken(group: GroupModel) {
+        val list = ensureTokenNotExists(group.token)
+        val newList = list.toMutableList().apply { add(group.token) }
         storage.save(
-            COLLECTION_NAME,
-            groupList.toMutableList().apply { add(token) }
+            key = COLLECTION_NAME,
+            value = newList.toTypedArray()
         )
     }
 }
