@@ -40,9 +40,6 @@ class GroupByTokenUseCase @Inject constructor(
     private suspend fun storeToken(group: GroupModel) {
         val list = ensureTokenNotExists(group.token)
         val newList = list.toMutableList().apply { add(group.token) }
-        storage.save(
-            key = COLLECTION_NAME,
-            value = newList.toTypedArray()
-        )
+        storage.save(key = COLLECTION_NAME, value = newList.toTypedArray())
     }
 }
