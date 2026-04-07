@@ -44,32 +44,74 @@ class FirebaseFirestoreManager @Inject constructor(
                 .get()
                 .await()
 
-            val doc = snapshot.documents.firstOrNull()
-                ?: return null
-
+            val doc = snapshot.documents.firstOrNull() ?: return null
             return doc.toObject(targetClass)
         }
 
-        var ref: Query = firebaseFirestore.collection(parts[0])
+        val collection = parts[0]
 
-        query?.forEach { (key, value) ->
-            ref = when (value) {
-                is List<*> -> ref.whereIn(key, value)
-                else -> ref.whereEqualTo(key, value)
+        val listEntry = query?.entries?.firstOrNull { it.value is List<*> }
+        val normalFilters = query?.filterValues { it !is List<*> } ?: emptyMap()
+
+        val results = mutableListOf<Any>()
+
+        if (listEntry != null) {
+
+            val key = listEntry.key
+            val values = listEntry.value as List<*>
+
+            require(query.count { it.value is List<*> } <= 1) {
+                "Firestore não suporta múltiplos whereIn"
             }
+
+            val chunks = values.chunked(10)
+
+            for (chunk in chunks) {
+                var ref: Query = firebaseFirestore.collection(collection)
+
+                // whereIn
+                ref = ref.whereIn(key, chunk)
+
+                // outros filtros
+                normalFilters.forEach { (k, v) ->
+                    ref = ref.whereEqualTo(k, v)
+                }
+
+                val snapshot = ref.get().await()
+
+                results.addAll(
+                    snapshot.documents.mapNotNull {
+                        it.toObject(targetClass)
+                    }
+                )
+            }
+
+        } else {
+            var ref: Query = firebaseFirestore.collection(collection)
+
+            normalFilters.forEach { (k, v) ->
+                ref = ref.whereEqualTo(k, v)
+            }
+
+            val snapshot = ref.get().await()
+
+            results.addAll(
+                snapshot.documents.mapNotNull {
+                    it.toObject(targetClass)
+                }
+            )
         }
 
-        val snapshot = ref.get().await()
-        val list = snapshot.documents.mapNotNull { it.toObject(targetClass) }
+        val distinct = results.distinct()
 
         return if (isArray) {
-            val array = Array.newInstance(targetClass, list.size)
-            list.forEachIndexed { index, item ->
+            val array = Array.newInstance(targetClass, distinct.size)
+            distinct.forEachIndexed { index, item ->
                 Array.set(array, index, item)
             }
             array
         } else {
-            list
+            distinct
         }
     }
 
