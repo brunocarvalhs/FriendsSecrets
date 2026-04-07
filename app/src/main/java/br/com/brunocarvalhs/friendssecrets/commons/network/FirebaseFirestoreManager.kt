@@ -69,10 +69,8 @@ class FirebaseFirestoreManager @Inject constructor(
             for (chunk in chunks) {
                 var ref: Query = firebaseFirestore.collection(collection)
 
-                // whereIn
                 ref = ref.whereIn(key, chunk)
 
-                // outros filtros
                 normalFilters.forEach { (k, v) ->
                     ref = ref.whereEqualTo(k, v)
                 }
