@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.brunocarvalhs.friendssecrets.ui.remembers.rememberReviewRequester
+import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
 import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemNavigation
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
@@ -65,6 +65,7 @@ private fun SettingsContent(
     onFAQ: () -> Unit = {},
 ) {
     val requestReview = rememberReviewRequester()
+
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 

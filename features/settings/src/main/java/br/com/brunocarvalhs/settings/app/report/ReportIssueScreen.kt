@@ -17,8 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.components.WebViewContainer
 import br.com.brunocarvalhs.settings.R
+import br.com.brunocarvalhs.settings.app.report.components.WebViewContainer
 
 @Composable
 fun ReportIssueScreen(

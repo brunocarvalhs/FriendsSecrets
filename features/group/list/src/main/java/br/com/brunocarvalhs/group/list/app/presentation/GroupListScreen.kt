@@ -16,6 +16,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
@@ -52,12 +55,15 @@ import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGro
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingProgress
+import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
+import kotlin.collections.isNotEmpty
 
 @Composable
 fun GroupListScreen(
     viewModel: GroupListViewModel,
     onGroupToCreate: () -> Unit = { },
     onGroupToEnter: (GroupModel) -> Unit = { },
+    moreOptions: List<OptionsMore> = emptyList(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -79,7 +85,8 @@ fun GroupListScreen(
         onGroupToCreate = onGroupToCreate,
         onJoinGroup = { token ->
             viewModel.handleEvent(GroupListIntent.GroupToEnter(token))
-        }
+        },
+        moreOptions = moreOptions
     )
 }
 
@@ -98,6 +105,7 @@ private fun ListContent(
     onGroupToEnter: (GroupModel) -> Unit = {},
     onGroupToCreate: () -> Unit = {},
     onJoinGroup: (String) -> Unit = {},
+    moreOptions: List<OptionsMore> = emptyList(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -114,7 +122,7 @@ private fun ListContent(
                 onTagSelected = onTagSelected,
                 tags = tags,
                 onJoinGroupClick = { showBottomSheet = true },
-                onMoreOptionsClick = { /* TODO: Adicionar ação */ }
+                moreOptions = moreOptions
             )
         },
         floatingActionButton = {
@@ -151,9 +159,11 @@ private fun GroupListTopBar(
     onTagSelected: (String) -> Unit,
     tags: List<String>,
     onJoinGroupClick: () -> Unit,
-    onMoreOptionsClick: () -> Unit,
+    moreOptions: List<OptionsMore> = emptyList(),
     modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Surface(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -169,8 +179,34 @@ private fun GroupListTopBar(
                     IconButton(onClick = onJoinGroupClick) {
                         Icon(Icons.Default.GroupAdd, contentDescription = "Entrar em Grupo")
                     }
-                    IconButton(onClick = onMoreOptionsClick) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Mais opções")
+
+                    if (moreOptions.isNotEmpty()) {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "Mais opções")
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            moreOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    leadingIcon = {
+                                        option.icon?.let {
+                                            Icon(
+                                                imageVector = option.icon,
+                                                contentDescription = option.contentDescription()
+                                            )
+                                        }
+                                    },
+                                    text = { Text(text = option.name()) },
+                                    onClick = {
+                                        expanded = false
+                                        option.lambda()
+                                    }
+                                )
+                            }
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior

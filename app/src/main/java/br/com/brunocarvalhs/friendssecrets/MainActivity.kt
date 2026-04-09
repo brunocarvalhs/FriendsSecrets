@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
+import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
@@ -23,9 +24,10 @@ class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var themeManager: ThemeManager
-
     @Inject
     lateinit var themeRemoteProvider: ThemeRemoteProvider
+    @Inject
+    lateinit var biometricManager: BiometricManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,7 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
-                    navController.MainApp()
+                    navController.MainApp(isBiometric = biometricManager.isBiometricPromptEnabled())
                 }
             }
         }

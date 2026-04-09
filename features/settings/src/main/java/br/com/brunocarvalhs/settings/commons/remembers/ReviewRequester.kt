@@ -1,18 +1,16 @@
-package br.com.brunocarvalhs.friendssecrets.ui.remembers
+package br.com.brunocarvalhs.settings.commons.remembers
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.random.Random
+import timber.log.Timber
 
 @Composable
 fun rememberReviewRequester(): () -> Unit {
@@ -40,7 +38,11 @@ fun rememberReviewRequester(): () -> Unit {
             val reviewManager = ReviewManagerFactory.create(activity)
             val request = reviewManager.requestReviewFlow().await()
             reviewManager.launchReviewFlow(activity, request).await()
-        } catch (e: Exception) {
+        } catch (t: kotlinx.coroutines.CancellationException) {
+            Timber.e(t)
+            openPlayStore(activity)
+        } catch (t: Exception) {
+            Timber.e(t)
             openPlayStore(activity)
         }
     }

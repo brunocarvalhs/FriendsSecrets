@@ -15,7 +15,7 @@ class BiometricManager @Inject constructor(
     private val _isBiometricPromptEnabled = MutableStateFlow(false)
 
     init {
-        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.Default) {
             init()
         }
     }

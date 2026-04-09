@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.ui.components
+package br.com.brunocarvalhs.settings.app.report.components
 
 import android.annotation.SuppressLint
 import android.webkit.WebView

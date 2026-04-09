@@ -1,6 +1,20 @@
 package br.com.brunocarvalhs.friendssecrets
 
+import android.R.attr.contentDescription
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
@@ -11,11 +25,24 @@ import br.com.brunocarvalhs.group.draw.DrawInitializer
 import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import br.com.brunocarvalhs.group.list.GroupListInitializer
 import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
+import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
 import br.com.brunocarvalhs.settings.SettingsInitializer
+import br.com.brunocarvalhs.settings.commons.navigation.SettingsGraphRoute
 
 @Composable
-fun NavHostController.MainApp() {
-    NavHost(navController = this@MainApp, startDestination = GroupListRouter) {
+fun NavHostController.MainApp(
+    isBiometric: Boolean = false,
+) {
+    val route = remember {
+        if (isBiometric) {
+            GroupListRouter
+        } else {
+            SettingsGraphRoute
+        }
+    }
+
+    NavHost(navController = this@MainApp, startDestination = route) {
+
         GroupCreateInitializer.Builder()
             .navController(navController = this@MainApp)
             .onFinish { this@MainApp.navigate(GroupListRouter) }
@@ -25,6 +52,19 @@ fun NavHostController.MainApp() {
             .navController(navController = this@MainApp)
             .onGroupToCreate { this@MainApp.navigate(GroupCreateRouter) }
             .onGroupToDetails { this@MainApp.navigate(GroupDetailsRouter(it)) }
+            .setMoreOptions(
+                options = listOf(
+                OptionsMore(
+                    lambda = { this@MainApp.navigate(SettingsGraphRoute) },
+                    icon = Icons.Default.Settings,
+                    contentDescription = {
+                        stringResource(br.com.brunocarvalhs.settings.R.string.title_settings)
+                    },
+                    name = {
+                        stringResource(br.com.brunocarvalhs.settings.R.string.title_settings)
+                    }
+                ),
+            ))
             .build(navGraphBuilder = this)
 
         GroupDetailsInitializer.Builder()

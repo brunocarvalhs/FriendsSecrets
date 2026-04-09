@@ -49,6 +49,7 @@ jetbrainsKotlinJvm = "2.1.10"
 coreSplashscreen = "1.0.1"
 datastoreCore = "1.2.1"
 lifecycleProcess = "2.10.0"
+coreKtxVersion = "1.10.3"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
