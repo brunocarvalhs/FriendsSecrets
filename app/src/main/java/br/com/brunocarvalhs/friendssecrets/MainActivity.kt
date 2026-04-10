@@ -13,9 +13,9 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MainActivity : FragmentActivity() {
 
     @Inject
-    lateinit var themeManager: ThemeManager
+    lateinit var themeService: ThemeService
     @Inject
     lateinit var themeRemoteProvider: ThemeRemoteProvider
     @Inject
@@ -40,7 +40,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             FriendsSecretsTheme(
-                themeManager = themeManager,
+                themeService = themeService,
                 themeRemoteProvider = themeRemoteProvider,
             ) {
                 Surface(

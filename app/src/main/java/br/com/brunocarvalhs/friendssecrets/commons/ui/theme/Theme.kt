@@ -1,23 +1,19 @@
 package br.com.brunocarvalhs.friendssecrets.commons.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
-import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 
@@ -100,22 +96,22 @@ private val darkScheme = darkColorScheme(
 @Composable
 fun FriendsSecretsTheme(
     isThemeRemote: Boolean = false,
-    themeManager: ThemeManager? = null,
+    themeService: ThemeService? = null,
     themeRemoteProvider: ThemeRemoteProvider? = null,
     content: @Composable () -> Unit,
 ) {
     val isInPreview = LocalInspectionMode.current
 
-    val theme = if (!isInPreview) {
-        themeManager?.theme?.collectAsState()?.value ?: ThemeService.Theme.SYSTEM
+    val theme by if (!isInPreview && themeService != null) {
+        themeService.theme.collectAsState()
     } else {
-        ThemeService.Theme.SYSTEM
+        remember { androidx.compose.runtime.mutableStateOf(ThemeService.Theme.SYSTEM) }
     }
 
-    val dynamicColorEnabled = if (!isInPreview) {
-        themeManager?.isDynamicThemeEnabled?.collectAsState()?.value ?: false
+    val dynamicColorEnabled by if (!isInPreview && themeService != null) {
+        themeService.isDynamicThemeEnabled.collectAsState()
     } else {
-        false
+        remember { androidx.compose.runtime.mutableStateOf(false) }
     }
 
     val darkTheme = when (theme) {

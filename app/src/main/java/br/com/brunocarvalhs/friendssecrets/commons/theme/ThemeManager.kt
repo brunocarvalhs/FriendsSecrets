@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @Stable
+@Singleton
 class ThemeManager @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val storage: StorageService
