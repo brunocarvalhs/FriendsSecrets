@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/biometric" />
+            <option value="$PROJECT_DIR$/features/chat" />
             <option value="$PROJECT_DIR$/features/group" />
             <option value="$PROJECT_DIR$/features/group/create" />
             <option value="$PROJECT_DIR$/features/group/details" />

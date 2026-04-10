@@ -94,6 +94,7 @@ dependencies {
     implementation(project(":features:group:create"))
     implementation(project(":features:group:draw"))
     implementation(project(":features:settings"))
+    implementation(project(":features:chat"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
 
