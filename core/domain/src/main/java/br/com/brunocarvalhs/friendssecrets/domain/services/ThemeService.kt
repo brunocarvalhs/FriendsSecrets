@@ -1,10 +1,14 @@
 package br.com.brunocarvalhs.friendssecrets.domain.services
 
+import kotlinx.coroutines.flow.StateFlow
+
 interface ThemeService {
+
+    val theme: StateFlow<Theme>
+    val isDynamicThemeEnabled: StateFlow<Boolean>
+
     suspend fun setDynamicThemeEnabled(enabled: Boolean)
     suspend fun setTheme(theme: Theme)
-    fun getTheme(): Theme
-    fun isDynamicThemeEnabled(): Boolean
 
     enum class Theme(val type: String) {
         LIGHT("Light"),

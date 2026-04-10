@@ -2,12 +2,13 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
     id("io.gitlab.arturbosch.detekt")
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.group.edit"
+    namespace = "br.com.brunocarvalhs.biometric"
     compileSdk = 35
 
     defaultConfig {
@@ -82,7 +83,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
     implementation(libs.gson)
-    implementation(libs.accompanist.permissions)
 
     // Testes
     testImplementation(libs.junit)

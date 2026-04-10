@@ -1,8 +1,11 @@
-package br.com.brunocarvalhs.group.app.presentation.edit
+package br.com.brunocarvalhs.group.edit.app.presentation
 
-interface GroupEditUiState {
-    data class Idle(val group: GroupEntities) : GroupEditUiState
-    data object Loading : GroupEditUiState
-    data object Success : GroupEditUiState
-    data class Error(val message: String) : GroupEditUiState
-}
+import androidx.compose.runtime.Stable
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+
+@Stable
+data class GroupEditUiState(
+    val group: GroupModel,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)

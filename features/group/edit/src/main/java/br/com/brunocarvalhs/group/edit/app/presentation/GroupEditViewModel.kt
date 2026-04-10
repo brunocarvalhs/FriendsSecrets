@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.group.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.app.domain.useCases.GroupReadUseCase
+import br.com.brunocarvalhs.group.edit.app.presentation.GroupEditUiState
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

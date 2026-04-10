@@ -1,20 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets
 
-import android.R.attr.contentDescription
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
@@ -37,7 +27,7 @@ fun NavHostController.MainApp(
         if (isBiometric) {
             GroupListRouter
         } else {
-            SettingsGraphRoute
+            GroupListRouter
         }
     }
 

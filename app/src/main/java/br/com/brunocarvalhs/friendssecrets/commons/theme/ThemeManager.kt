@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,10 +23,10 @@ class ThemeManager @Inject constructor(
 ) : ThemeService {
 
     private val _theme = MutableStateFlow(ThemeService.Theme.SYSTEM)
-    val theme: StateFlow<ThemeService.Theme> = _theme
+    override val theme: StateFlow<ThemeService.Theme> = _theme.asStateFlow()
 
     private val _isDynamicThemeEnabled = MutableStateFlow(false)
-    val isDynamicThemeEnabled: StateFlow<Boolean> = _isDynamicThemeEnabled
+    override val isDynamicThemeEnabled: StateFlow<Boolean> = _isDynamicThemeEnabled.asStateFlow()
 
     init {
         ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
@@ -54,11 +55,6 @@ class ThemeManager @Inject constructor(
         storage.save(THEME_KEY, theme.type)
     }
 
-    override fun getTheme(): ThemeService.Theme {
-        Timber.tag(TAG).d("--> GET THEME: %s", _theme.value)
-        return _theme.value
-    }
-
     private fun getSystemTheme(): ThemeService.Theme {
         return if ((context.applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             ThemeService.Theme.DARK
@@ -83,11 +79,8 @@ class ThemeManager @Inject constructor(
         storage.save(DYNAMIC_THEME_KEY, enabled)
     }
 
-    override fun isDynamicThemeEnabled(): Boolean = _isDynamicThemeEnabled.value
-
     companion object {
-        private val TAG = "ThemeManager"
-
+        private const val TAG = "ThemeManager"
         private const val THEME_KEY = "theme_key"
         private const val DYNAMIC_THEME_KEY = "dynamic_theme_key"
     }

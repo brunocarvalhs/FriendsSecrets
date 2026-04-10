@@ -50,7 +50,7 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
-                    navController.MainApp(isBiometric = biometricManager.isBiometricPromptEnabled())
+                    navController.MainApp(isBiometric = biometricManager.isBiometricPromptEnabled.value)
                 }
             }
         }

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.group.edit"
+    namespace = "br.com.brunocarvalhs.chat"
     compileSdk = 35
 
     defaultConfig {
@@ -82,7 +82,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
     implementation(libs.gson)
-    implementation(libs.accompanist.permissions)
 
     // Testes
     testImplementation(libs.junit)

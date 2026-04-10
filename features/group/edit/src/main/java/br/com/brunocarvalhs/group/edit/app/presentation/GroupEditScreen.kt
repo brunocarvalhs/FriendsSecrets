@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.app.presentation.edit
+package br.com.brunocarvalhs.group.edit.app.presentation
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,65 +40,52 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.ui.components.ErrorComponent
-import br.com.brunocarvalhs.friendssecrets.ui.components.LoadingProgress
-import br.com.brunocarvalhs.friendssecrets.ui.components.MemberItem
-import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.ui.components.SuccessComponent
-import br.com.brunocarvalhs.friendssecrets.ui.fake.toFake
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.group.R
-import br.com.brunocarvalhs.group.commons.navigation.GroupListScreenRoute
-import br.com.brunocarvalhs.group.commons.ui.components.AddMemberBottomSheet
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.app.presentation.edit.GroupEditViewModel
+import br.com.brunocarvalhs.group.edit.R
+import br.com.brunocarvalhs.group.edit.app.presentation.components.MemberItem
 
 @Composable
 fun GroupEditScreen(
-    navController: NavController = rememberNavController(),
     viewModel: GroupEditViewModel,
-    groupId: String,
+    onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.eventIntent(GroupEditIntent.FetchGroup(groupId))
-    }
-
-    GroupEditContent(
-        navController = navController,
-        uiState = uiState,
-        onHome = {
-            val destination = GroupListScreenRoute
-            navController.navigate(destination) {
-                popUpTo(destination) {
-                    inclusive = true
-                }
-            }
-        },
-        onBack = {
-            navController.popBackStack()
-        },
-        onEdit = { group ->
-            viewModel.eventIntent(
-                intent = GroupEditIntent.EditGroup(group)
-            )
-        }
-    )
+//    GroupEditContent(
+//        navController = navController,
+//        uiState = uiState,
+//        onHome = {
+//            val destination = GroupListScreenRoute
+//            navController.navigate(destination) {
+//                popUpTo(destination) {
+//                    inclusive = true
+//                }
+//            }
+//        },
+//        onBack = {
+//            navController.popBackStack()
+//        },
+//        onEdit = { group ->
+//            viewModel.eventIntent(
+//                intent = GroupEditIntent.EditGroup(group)
+//            )
+//        }
+//    )
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun GroupEditContent(
-    navController: NavController,
     uiState: GroupEditUiState,
     onHome: () -> Unit,
     onBack: () -> Unit,
-    onEdit: (GroupEntities) -> Unit,
+    onEdit: (GroupModel) -> Unit,
 ) {
     var name by remember { mutableStateOf(TextFieldValue()) }
     var description by remember { mutableStateOf(TextFieldValue()) }
-    val members = remember { mutableListOf<UserEntities>() }
+    val members = remember { mutableListOf<UserModel>() }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -109,81 +97,54 @@ private fun GroupEditContent(
 
             },
             navigationIcon = {
-                NavigationBackIconButton(navController = navController)
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             },
         )
     }, floatingActionButton = {
-        if (uiState is GroupEditUiState.Idle) {
-            ExtendedFloatingActionButton(onClick = {
-                onEdit.invoke(
-                    uiState.group.toCopy(
-                        name = name.text,
-                        description = description.text,
-                        members = members
-                    )
+        ExtendedFloatingActionButton(onClick = {
+            onEdit.invoke(
+                uiState.group.copy(
+                    name = name.text,
+                    description = description.text,
+                    members = members
                 )
-            }) {
-                Icon(Icons.Filled.Check, stringResource(R.string.group_create_action_save_group))
-                Text(stringResource(R.string.group_create_action_save_group))
-            }
+            )
+        }) {
+            Icon(Icons.Filled.Check, stringResource(R.string.save_group))
+            Text(stringResource(R.string.save_group))
         }
     }) { paddingValues ->
-        when (uiState) {
-            is GroupEditUiState.Idle -> {
-                GroupEditForm(
-                    modifier = Modifier.padding(paddingValues),
-                    uiState = uiState,
-                    name = name,
-                    onNameChange = { data -> name = data },
-                    description = description,
-                    onDescriptionChange = { data -> description = data },
-                    members = members,
-                    onMembersChange = { list ->
-                        members.clear()
-                        members.addAll(list)
-                    }
-                )
+        GroupEditForm(
+            modifier = Modifier.padding(paddingValues),
+            uiState = uiState,
+            name = name,
+            onNameChange = { data -> name = data },
+            description = description,
+            onDescriptionChange = { data -> description = data },
+            members = members,
+            onMembersChange = { list ->
+                members.clear()
+                members.addAll(list)
             }
-
-            GroupEditUiState.Loading -> {
-                LoadingProgress(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                )
-            }
-        }
-    }
-
-    when (uiState) {
-        is GroupEditUiState.Success -> {
-            SuccessComponent(
-                modifier = Modifier.fillMaxSize(),
-                redirectTo = { navController.popBackStack() }
-            )
-        }
-
-        is GroupEditUiState.Error -> {
-            ErrorComponent(
-                modifier = Modifier.fillMaxSize(),
-                message = uiState.message,
-                onBack = onHome,
-                onRefresh = onBack
-            )
-        }
+        )
     }
 }
 
 @Composable
 private fun GroupEditForm(
-    uiState: GroupEditUiState.Idle,
+    uiState: GroupEditUiState,
     modifier: Modifier = Modifier,
     name: TextFieldValue,
     onNameChange: (TextFieldValue) -> Unit = {},
     description: TextFieldValue,
     onDescriptionChange: (TextFieldValue) -> Unit = {},
-    members: MutableList<UserEntities>,
-    onMembersChange: (List<UserEntities>) -> Unit = { _ -> }
+    members: MutableList<UserModel>,
+    onMembersChange: (List<UserModel>) -> Unit = { _ -> }
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -201,7 +162,7 @@ private fun GroupEditForm(
                 OutlinedTextField(
                     value = name,
                     onValueChange = onNameChange,
-                    label = { Text(text = stringResource(R.string.group_create_input_name)) },
+                    label = { Text(text = stringResource(R.string.input_name)) },
                     modifier = Modifier.weight(1f),
                     singleLine = true
                 )
@@ -212,7 +173,7 @@ private fun GroupEditForm(
                 OutlinedTextField(
                     value = description,
                     onValueChange = onDescriptionChange,
-                    label = { Text(text = stringResource(R.string.group_create_input_description)) },
+                    label = { Text(text = stringResource(R.string.input_description)) },
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -226,12 +187,12 @@ private fun GroupEditForm(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextButton(onClick = { showBottomSheet = true }) {
-                    Text(text = stringResource(R.string.group_create_text_button_member))
+                    Text(text = stringResource(R.string.button_member))
                 }
                 IconButton(onClick = { showBottomSheet = true }) {
                     Icon(
                         Icons.Filled.Add,
-                        stringResource(R.string.group_create_text_button_member)
+                        stringResource(R.string.button_member)
                     )
                 }
             }
@@ -257,13 +218,13 @@ private fun GroupEditForm(
 
 private class GroupEditPreviewProvider : PreviewParameterProvider<GroupEditUiState> {
     override val values = sequenceOf(
-        GroupEditUiState.Idle(
-            group = GroupEntities.toFake(
+        GroupEditUiState(
+            group = GroupModel(
                 id = "1",
                 name = "Group",
                 description = "Description",
                 members = listOf(
-                    UserEntities.toFake(
+                    UserModel(
                         name = "Member 1",
                         likes = listOf(
                             "Like 1",
@@ -273,9 +234,41 @@ private class GroupEditPreviewProvider : PreviewParameterProvider<GroupEditUiSta
                 )
             )
         ),
-        GroupEditUiState.Loading,
-        GroupEditUiState.Success,
-        GroupEditUiState.Error(message = "Error")
+        GroupEditUiState(
+            group = GroupModel(
+                id = "1",
+                name = "Group",
+                description = "Description",
+                members = listOf(
+                    UserModel(
+                        name = "Member 1",
+                        likes = listOf(
+                            "Like 1",
+                            "Like 2"
+                        )
+                    )
+                )
+            ),
+            isLoading = true
+        ),
+        GroupEditUiState(
+            group = GroupModel(
+                id = "1",
+                name = "Group",
+                description = "Description",
+                members = listOf(
+                    UserModel(
+                        name = "Member 1",
+                        likes = listOf(
+                            "Like 1",
+                            "Like 2"
+                        )
+                    )
+                )
+            ),
+            isLoading = true,
+            error = "Error"
+        ),
     )
 }
 
@@ -294,13 +287,10 @@ private class GroupEditPreviewProvider : PreviewParameterProvider<GroupEditUiSta
 fun GroupCreateScreenPreview(
     @PreviewParameter(GroupEditPreviewProvider::class) state: GroupEditUiState,
 ) {
-    FriendsSecretsTheme {
-        GroupEditContent(
-            navController = rememberNavController(),
-            uiState = state,
-            onBack = { },
-            onHome = { },
-            onEdit = { _ -> }
-        )
-    }
+    GroupEditContent(
+        uiState = state,
+        onBack = { },
+        onHome = { },
+        onEdit = { _ -> }
+    )
 }

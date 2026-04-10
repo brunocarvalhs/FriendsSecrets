@@ -21,16 +21,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
 import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemNavigation
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
+import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
 
 @Composable
 fun SettingsScreen(
@@ -40,7 +40,7 @@ fun SettingsScreen(
     onReportIssue: () -> Unit = {},
     onFAQ: () -> Unit = {},
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsState()
 
     SettingsContent(
         isBiometricPromptEnabled = state.isBiometricPromptEnabled,

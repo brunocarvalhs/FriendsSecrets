@@ -17,8 +17,8 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        SettingsState(
-            isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled()
+        value = SettingsState(
+            isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled.value
         )
     )
     val state = _state.asStateFlow()

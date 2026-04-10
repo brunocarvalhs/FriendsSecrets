@@ -19,9 +19,9 @@ class AppearanceViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        AppearanceState(
-            themeSelected = themeService.getTheme().type,
-            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled()
+        value = AppearanceState(
+            themeSelected = themeService.theme.value.type,
+            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
