@@ -14,11 +14,12 @@ data class GroupDetailsDTO(
     @SerialName(GroupModel.MIN_PRICE) val minPrice: Double? = null,
     @SerialName(GroupModel.MAX_PRICE) val maxPrice: Double? = null,
     @SerialName(GroupModel.TYPE) val type: String? = null,
+    @SerialName(GroupModel.PHOTO) val photo_base64: String? = null,
     @SerialName(GroupModel.MEMBERS) val members: List<UserDetailsDTO> = emptyList(),
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String> = emptyMap(),
-    @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false,
-    @SerialName(GroupModel.PHOTO) val photo: String? = null,
-    @SerialName(GroupModel.CREATED_AT) val createdAt: Long = 0L
+    @SerialName(GroupModel.OWNER_ID) val owner_id: String? = null,
+    @SerialName(GroupModel.IS_OWNER) val is_owner: Boolean = false,
+    @SerialName(GroupModel.CREATED_AT) val created_at: Long = 0L
 ) {
     fun toDomain() = GroupModel(
         id = id,
@@ -31,8 +32,9 @@ data class GroupDetailsDTO(
         type = type,
         members = members.map { it.toDomain() },
         draws = draws,
-        isOwner = isOwner,
-        photo = photo,
-        createdAt = createdAt
+        ownerId = owner_id,
+        isOwner = is_owner,
+        photo = photo_base64,
+        createdAt = created_at
     )
 }

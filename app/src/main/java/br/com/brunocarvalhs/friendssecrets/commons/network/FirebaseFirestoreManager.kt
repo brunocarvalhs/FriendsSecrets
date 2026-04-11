@@ -82,7 +82,16 @@ class FirebaseFirestoreManager @Inject constructor(
     private suspend fun put(endpoint: String, data: Map<String, Any?>?): Boolean {
         requireNotNull(data)
         val (collection, id) = endpoint.split("/")
-        firebaseFirestore.collection(collection).document(id).set(data).await()
+        
+        val updateData = data.filterKeys { it != "id" }.filterValues { it != null }
+        
+        if (updateData.isNotEmpty()) {
+            @Suppress("UNCHECKED_CAST")
+            firebaseFirestore.collection(collection)
+                .document(id)
+                .update(updateData)
+                .await()
+        }
         return true
     }
 
