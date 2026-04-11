@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,12 +50,11 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupCard
+import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
-import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingProgress
 import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
-import kotlin.collections.isNotEmpty
 
 @Composable
 fun GroupListScreen(
@@ -97,10 +95,10 @@ private fun ListContent(
     list: List<GroupModel>,
     errorMessage: String?,
     searchQuery: String,
-    selectedTag: String,
-    tags: List<String>,
+    selectedTag: GroupFilterTag,
+    tags: List<GroupFilterTag>,
     onSearchQueryChange: (String) -> Unit,
-    onTagSelected: (String) -> Unit,
+    onTagSelected: (GroupFilterTag) -> Unit,
     onFetchGroups: () -> Unit = {},
     onGroupToEnter: (GroupModel) -> Unit = {},
     onGroupToCreate: () -> Unit = {},
@@ -155,9 +153,9 @@ private fun GroupListTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
-    selectedTag: String,
-    onTagSelected: (String) -> Unit,
-    tags: List<String>,
+    selectedTag: GroupFilterTag,
+    onTagSelected: (GroupFilterTag) -> Unit,
+    tags: List<GroupFilterTag>,
     onJoinGroupClick: () -> Unit,
     moreOptions: List<OptionsMore> = emptyList(),
     modifier: Modifier = Modifier
@@ -235,12 +233,11 @@ private fun GroupListTopBar(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(tags.size) { index ->
-                    val tag = tags[index]
+                items(tags) { tag ->
                     FilterChip(
                         selected = selectedTag == tag,
                         onClick = { onTagSelected(tag) },
-                        label = { Text(tag) }
+                        label = { Text(tag.description) }
                     )
                 }
             }
