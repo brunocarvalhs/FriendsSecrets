@@ -1,11 +1,12 @@
-package br.com.brunocarvalhs.group.app.presentation.edit
+package br.com.brunocarvalhs.group.edit.app.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.common.extensions.report
 import br.com.brunocarvalhs.group.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.app.domain.useCases.GroupReadUseCase
-import br.com.brunocarvalhs.group.edit.app.presentation.GroupEditUiState
+import br.com.brunocarvalhs.group.app.presentation.edit.GroupEditIntent
+import br.com.brunocarvalhs.group.edit.app.domain.useCases.GroupEditUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupEditViewModel @Inject constructor(
-    private val groupReadUseCase: GroupReadUseCase,
     private val groupEditUseCase: GroupEditUseCase,
 ) : ViewModel() {
 

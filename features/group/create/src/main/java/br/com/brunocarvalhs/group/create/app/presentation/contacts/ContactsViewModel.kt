@@ -66,7 +66,12 @@ class ContactsViewModel @Inject constructor(
 
     private fun addMember(contact: UserModel) {
         _uiState.update { currentState ->
-            if (currentState.members.any { it.phoneNumber == contact.phoneNumber }) {
+            val isDuplicate = currentState.members.any {
+                (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) ||
+                        (it.id == contact.id)
+            }
+
+            if (isDuplicate) {
                 currentState
             } else {
                 currentState.copy(members = currentState.members + contact)
@@ -77,7 +82,7 @@ class ContactsViewModel @Inject constructor(
     private fun removeMember(contact: UserModel) {
         _uiState.update { currentState ->
             currentState.copy(
-                members = currentState.members.filterNot { it.phoneNumber == contact.phoneNumber }
+                members = currentState.members.filterNot { it.id == contact.id }
             )
         }
     }
