@@ -63,7 +63,7 @@ fun NavHostController.MainApp(
             .navController(navController = this@MainApp)
             .onBack { this@MainApp.popBackStack() }
             .onDraw { this@MainApp.navigate(DrawGraphRouter(it)) }
-            .onChat { this@MainApp.navigate(ChatGraphRouter) }
+            .onChat { this@MainApp.navigate(ChatGraphRouter(it)) }
             .build(navGraphBuilder = this)
 
         DrawInitializer.Builder()

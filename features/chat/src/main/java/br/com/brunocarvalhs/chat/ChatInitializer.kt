@@ -1,9 +1,12 @@
 package br.com.brunocarvalhs.chat
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import br.com.brunocarvalhs.chat.app.presentation.ChatScreen
+import br.com.brunocarvalhs.chat.app.presentation.ChatViewModel
 import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.chat.commons.navigation.ChatRouter
 import com.google.firebase.perf.metrics.AddTrace
@@ -12,9 +15,16 @@ import kotlin.properties.Delegates
 class ChatInitializer(private val builder: Builder) {
 
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<ChatGraphRouter>(startDestination = ChatRouter) {
+        return navGraphBuilder.navigation<ChatGraphRouter>(
+            startDestination = ChatRouter,
+            typeMap = ChatGraphRouter.typeMap,
+        ) {
             composable<ChatRouter> {
-
+                val viewModel = hiltViewModel<ChatViewModel>()
+                ChatScreen(
+                    viewModel = viewModel,
+                    onBack = builder.onBack
+                )
             }
         }
     }
