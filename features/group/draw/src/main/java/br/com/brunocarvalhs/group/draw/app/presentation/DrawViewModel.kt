@@ -51,8 +51,11 @@ class DrawViewModel @Inject constructor(
 
     private fun draw() {
         viewModelScope.launch {
-            drawUseCase(group = args.group).onSuccess {
-                _uiState.value = _uiState.value.copy(isDrawn = true)
+            drawUseCase(group = args.group).onSuccess { results ->
+                _uiState.value = _uiState.value.copy(
+                    results = results,
+                    isDrawn = true
+                )
             }.onFailure {
 
             }

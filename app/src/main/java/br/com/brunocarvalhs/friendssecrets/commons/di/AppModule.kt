@@ -12,6 +12,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.storage.dataStore
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
@@ -27,7 +28,6 @@ import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.ktx.performance
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -135,4 +135,10 @@ object AppModule {
     fun provideBiometricService(
         storageService: StorageService
     ): BiometricService = BiometricManager(storageService)
+
+    @Provides
+    @Singleton
+    fun provideCryptoService(): CryptoService {
+        return CryptoManager()
+    }
 }

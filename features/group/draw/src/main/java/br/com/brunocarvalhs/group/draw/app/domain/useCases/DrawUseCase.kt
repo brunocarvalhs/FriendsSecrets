@@ -8,7 +8,7 @@ import javax.inject.Inject
 class DrawUseCase @Inject constructor(
     private val repository: DrawRepository
 ) {
-    suspend operator fun invoke(group: GroupModel): Result<Unit> = runCatching {
+    suspend operator fun invoke(group: GroupModel): Result<Map<String, String>> = runCatching {
         validateMembers(group.members)
         validateDraw(group.draws)
         repository.drawMembers(group)

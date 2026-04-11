@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.security
 
 import android.util.Base64
+import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -20,11 +21,8 @@ class CryptoManager(
         isLenient = true
         encodeDefaults = true
     }
-) {
-
-    private val TAG = "CryptoManager"
-
-    fun encryptMap(
+): CryptoService {
+    override fun encryptMap(
         inputMap: Map<String, Any?>,
         excludedKeys: Set<String>
     ): Map<String, Any?> {
@@ -46,7 +44,7 @@ class CryptoManager(
         }
     }
 
-    fun decryptMap(
+    override fun decryptMap(
         encodedMap: Map<String, Any>,
         excludedKeys: Set<String>
     ): Map<String, Any> {
@@ -79,7 +77,7 @@ class CryptoManager(
         }
     }
 
-    fun encrypt(input: String): String {
+    override fun encrypt(input: String): String {
         Timber.tag(TAG).v("--> ENCRYPT | Input: %s", input)
         return base64Encoder.encodeToString(
             input.toByteArray(),
@@ -89,7 +87,7 @@ class CryptoManager(
         }
     }
 
-    fun decrypt(encoded: String): String {
+    override fun decrypt(encoded: String): String {
         Timber.tag(TAG).v("--> DECRYPT | Input: %s", encoded)
         return runCatching {
             val decodedBytes = base64Encoder.decode(encoded, BASE64_FLAGS)
@@ -130,6 +128,7 @@ class CryptoManager(
     }
 
     private companion object {
+        private const val TAG = "CryptoManager"
         private const val BASE64_FLAGS = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
 
         private object DefaultBase64Encoder : Base64Encoder {

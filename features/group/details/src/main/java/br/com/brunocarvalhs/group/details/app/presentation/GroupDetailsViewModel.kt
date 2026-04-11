@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
-import br.com.brunocarvalhs.group.details.commons.navigation.DetailRouter
 import br.com.brunocarvalhs.group.details.commons.navigation.GroupDetailsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,17 +24,17 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val readUseCase: GroupReadUseCase,
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
 ) : ViewModel() {
-
     private val args = savedStateHandle.toRoute<GroupDetailsRouter>(GroupDetailsRouter.typeMap)
-
     private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
 
     fun handleIntent(intent: GroupDetailsIntent) = when (intent) {
+        is GroupDetailsIntent.Refresh -> readGroup()
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
@@ -76,6 +76,21 @@ class GroupDetailsViewModel @Inject constructor(
     private fun shareGroup() {
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.readGroup", enabled = true)
+    private fun readGroup() {
+        viewModelScope.launch {
+            readUseCase(_uiState.value.group.id)
+                .onSuccess { group ->
+                    if (group != _uiState.value.group) {
+                        _uiState.update { it.copy(group = group) }
+                        Timber.d("Dados atualizados: O grupo foi modificado em outra tela.")
+                    } else {
+                        Timber.d("Sem alterações detectadas no grupo.")
+                    }
+                }
         }
     }
 }
