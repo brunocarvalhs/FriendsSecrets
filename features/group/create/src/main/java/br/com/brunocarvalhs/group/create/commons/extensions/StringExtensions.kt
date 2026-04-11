@@ -5,7 +5,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
-class CurrencyVisualTransformation : VisualTransformation {
+internal class CurrencyVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val clean = text.text.filter { it.isDigit() }
         if (clean.isEmpty()) {

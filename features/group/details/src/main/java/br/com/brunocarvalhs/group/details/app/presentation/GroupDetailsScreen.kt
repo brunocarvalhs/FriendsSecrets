@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import br.com.brunocarvalhs.friendssecrets.domain.extensions.toCurrencyMask
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toFormattedDate
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
@@ -228,7 +229,6 @@ private fun GroupDetailsContent(
                 }
             }
 
-            // Detalhes do Sorteio (Apenas se houver dados)
             val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
             if (hasDrawDetails) {
                 item {
@@ -242,11 +242,11 @@ private fun GroupDetailsContent(
                     }
                     if (minPrice != null || maxPrice != null) {
                         val priceRange = if (minPrice != null && maxPrice != null) {
-                            "Entre R$ $minPrice e R$ $maxPrice"
+                            "Entre ${minPrice.toCurrencyMask()} e ${maxPrice.toCurrencyMask()}"
                         } else if (minPrice != null) {
-                            "A partir de R$ $minPrice"
+                            "A partir de ${minPrice.toCurrencyMask()}"
                         } else {
-                            "Até R$ $maxPrice"
+                            "Até ${maxPrice.toCurrencyMask()}"
                         }
                         SettingItem(Icons.Default.AttachMoney, "Faixa de preço", priceRange)
                     }
@@ -255,7 +255,6 @@ private fun GroupDetailsContent(
                 }
             }
 
-            // Participantes
             item {
                 SectionHeader(
                     title = "$memberCount participantes",
