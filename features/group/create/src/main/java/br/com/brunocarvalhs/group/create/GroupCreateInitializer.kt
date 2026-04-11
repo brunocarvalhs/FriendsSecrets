@@ -15,7 +15,6 @@ import br.com.brunocarvalhs.group.create.commons.navigation.ContactsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
-import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateToggles
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
@@ -54,7 +53,6 @@ class GroupCreateInitializer(private val builder: Builder) {
 
     class Builder {
         internal var navController: NavHostController by Delegates.notNull()
-        internal var toggle: GroupCreateToggles? = null
         internal var onFinish: ((String) -> Unit)? = null
 
         @AddTrace(name = "GroupCreateInitializer.Builder.navController", enabled = true)
