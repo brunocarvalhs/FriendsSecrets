@@ -20,7 +20,6 @@
             <option value="$PROJECT_DIR$/features/group/create" />
             <option value="$PROJECT_DIR$/features/group/details" />
             <option value="$PROJECT_DIR$/features/group/draw" />
-            <option value="$PROJECT_DIR$/features/group/edit" />
             <option value="$PROJECT_DIR$/features/group/list" />
             <option value="$PROJECT_DIR$/features/settings" />
           </set>

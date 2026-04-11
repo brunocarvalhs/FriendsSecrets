@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.details.app.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,11 +23,8 @@ import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -70,6 +66,7 @@ fun GroupDetailsScreen(
     onBack: () -> Unit = {},
     onChat: () -> Unit = {},
     onDraw: () -> Unit = {},
+    onEdit: () -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
@@ -109,6 +106,7 @@ fun GroupDetailsScreen(
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
+        onEdit = onEdit
     )
 }
 
@@ -134,6 +132,7 @@ private fun GroupDetailsContent(
     onDelete: () -> Unit,
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
+    onEdit: () -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -144,59 +143,6 @@ private fun GroupDetailsContent(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    Box {
-                        IconButton(onClick = { showMenu = !showMenu }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "Mais opções")
-                        }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            if (isOwner) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            "Excluir grupo",
-                                            color = MaterialTheme.colorScheme.error
-                                        )
-                                    },
-                                    onClick = {
-                                        showMenu = false
-                                        onDelete()
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Delete,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error
-                                        )
-                                    }
-                                )
-                            } else {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            "Sair do grupo",
-                                            color = MaterialTheme.colorScheme.error
-                                        )
-                                    },
-                                    onClick = {
-                                        showMenu = false
-                                        onExit()
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.AutoMirrored.Filled.ExitToApp,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error
-                                        )
-                                    }
-                                )
-                            }
-                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -253,7 +199,6 @@ private fun GroupDetailsContent(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Descrição e Data de Criação
             val showDescription = description.isNotBlank() || isOwner
             if (showDescription) {
                 item {
@@ -336,7 +281,7 @@ private fun GroupDetailsContent(
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
                 if (isOwner) {
-                    SettingItem(Icons.Default.Edit, "Editar informações do grupo")
+                    SettingItem(Icons.Default.Edit, "Editar informações do grupo", onClick = onEdit)
                 }
                 SettingItem(
                     icon = if (isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
@@ -374,5 +319,6 @@ private fun GroupDetailsPreview() {
         onDelete = {},
         onExit = {},
         onShareGroup = {},
+        onEdit = {}
     )
 }

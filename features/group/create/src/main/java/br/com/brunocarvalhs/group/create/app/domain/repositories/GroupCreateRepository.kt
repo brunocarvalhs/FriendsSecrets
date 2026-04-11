@@ -4,4 +4,5 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 
 interface GroupCreateRepository {
     suspend fun create(group: GroupModel): Result<Unit>
+    suspend fun update(group: GroupModel): Result<Unit>
 }

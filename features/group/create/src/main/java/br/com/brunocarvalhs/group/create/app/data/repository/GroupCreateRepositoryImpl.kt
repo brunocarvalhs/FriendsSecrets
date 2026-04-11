@@ -15,14 +15,29 @@ class GroupCreateRepositoryImpl @Inject constructor(
     override suspend fun create(group: GroupModel): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
             val dto = GroupCreateDTO.fromDomain(group)
-            
+
             network.make(
                 endpoint = "groups",
                 payload = dto.toMap(),
                 method = NetworkService.Method.POST,
                 clazz = GroupCreateDTO::class
             ) ?: throw Exception("Failed to create group")
-            
+
+            Unit
+        }
+    }
+
+    override suspend fun update(group: GroupModel): Result<Unit> = withContext(Dispatchers.IO) {
+        runCatching {
+            val dto = GroupCreateDTO.fromDomain(group)
+
+            network.make(
+                endpoint = "groups",
+                payload = dto.toMap(),
+                method = NetworkService.Method.PUT,
+                clazz = GroupCreateDTO::class
+            ) ?: throw Exception("Failed to create group")
+
             Unit
         }
     }

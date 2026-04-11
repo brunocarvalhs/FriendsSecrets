@@ -7,9 +7,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsViewModel
+import br.com.brunocarvalhs.group.create.app.presentation.editForm.EditFormsScreen
+import br.com.brunocarvalhs.group.create.app.presentation.editForm.EditFormsViewModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsViewModel
 import br.com.brunocarvalhs.group.create.commons.navigation.ContactsRouter
+import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
 import br.com.brunocarvalhs.group.create.commons.providers.GroupCreateToggles
@@ -26,6 +29,14 @@ class GroupCreateInitializer(private val builder: Builder) {
                 FormsScreen(
                     viewModel = viewModel,
                     onFinish = { builder.onFinish?.invoke(it) },
+                    onBack = { builder.navController.popBackStack() }
+                )
+            }
+
+            composable<EditFormsRouter>(typeMap = EditFormsRouter.typeMap) {
+                val viewModel = hiltViewModel<EditFormsViewModel>()
+                EditFormsScreen(
+                    viewModel = viewModel,
                     onBack = { builder.navController.popBackStack() }
                 )
             }
@@ -49,11 +60,6 @@ class GroupCreateInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupCreateInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
             this.navController = navController
-        }
-
-        @AddTrace(name = "GroupCreateInitializer.Builder.toggleManager", enabled = true)
-        fun toggle(toggleManager: GroupCreateToggles) = apply {
-            this.toggle = toggleManager
         }
 
         @AddTrace(name = "GroupCreateInitializer.Builder.onFinish", enabled = true)

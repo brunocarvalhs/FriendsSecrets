@@ -3,7 +3,6 @@ package br.com.brunocarvalhs.group.details.app.presentation.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
 import androidx.compose.material.icons.sharp.KeyboardArrowUp
 import androidx.compose.material3.Icon
@@ -19,7 +18,6 @@ fun MemberItem(
     draws: Map<String, String>? = null,
     likes: List<String> = emptyList(),
     isAdministrator: Boolean = false,
-    onShare: () -> Unit = { },
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
 ) {
@@ -37,22 +35,6 @@ fun MemberItem(
                         if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action
                     )
                 )
-            }
-
-            if (canShare) {
-                draws[participant]?.let { secretFriendName ->
-                    if (secretFriendName.isNotBlank()) {
-                        IconButton(onClick = onShare) {
-                            Icon(
-                                imageVector = Icons.Filled.Share,
-                                contentDescription = stringResource(
-                                    R.string.share_secret_friend_action,
-                                    participant
-                                )
-                            )
-                        }
-                    }
-                }
             }
 
             onEdit?.let {

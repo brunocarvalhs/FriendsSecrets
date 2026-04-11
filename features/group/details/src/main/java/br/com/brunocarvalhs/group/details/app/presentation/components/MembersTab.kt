@@ -44,7 +44,6 @@ fun MembersTab(
                     participant = members.find { it.name == participant }?.name.orEmpty(),
                     draws = draws,
                     isAdministrator = isOwner,
-                    onShare = onShare,
                 )
             }
         } else {
@@ -54,7 +53,6 @@ fun MembersTab(
                     isAdministrator = isOwner,
                     onEdit = onEdit,
                     onRemove = onRemove,
-                    onShare = onShare,
                 )
             }
         }

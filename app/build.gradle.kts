@@ -20,7 +20,6 @@ android {
     defaultConfig {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = 24
-        //noinspection OldTargetApi
         targetSdk = 35
         
         versionCode = 12

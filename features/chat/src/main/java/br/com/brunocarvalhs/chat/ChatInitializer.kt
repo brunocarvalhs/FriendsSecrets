@@ -9,6 +9,7 @@ import br.com.brunocarvalhs.chat.app.presentation.ChatScreen
 import br.com.brunocarvalhs.chat.app.presentation.ChatViewModel
 import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.chat.commons.navigation.ChatRouter
+import br.com.brunocarvalhs.chat.commons.navigation.GenerativeRouter
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
@@ -25,6 +26,9 @@ class ChatInitializer(private val builder: Builder) {
                     viewModel = viewModel,
                     onBack = builder.onBack
                 )
+            }
+            composable<GenerativeRouter> {
+
             }
         }
     }
