@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.brunocarvalhs.chat.ChatInitializer
+import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.group.create.GroupCreateInitializer
 import br.com.brunocarvalhs.group.create.commons.navigation.GroupCreateRouter
 import br.com.brunocarvalhs.group.details.GroupDetailsInitializer
@@ -62,6 +63,7 @@ fun NavHostController.MainApp(
             .navController(navController = this@MainApp)
             .onBack { this@MainApp.popBackStack() }
             .onDraw { this@MainApp.navigate(DrawGraphRouter(it)) }
+            .onChat { this@MainApp.navigate(ChatGraphRouter) }
             .build(navGraphBuilder = this)
 
         DrawInitializer.Builder()

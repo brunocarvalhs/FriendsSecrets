@@ -5,12 +5,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.group.details.commons.navigation.GroupDetailsRouter
-import br.com.brunocarvalhs.group.details.commons.navigation.DetailRouter
 import br.com.brunocarvalhs.group.details.app.presentation.GroupDetailsScreen
 import br.com.brunocarvalhs.group.details.app.presentation.GroupDetailsViewModel
+import br.com.brunocarvalhs.group.details.commons.navigation.DetailRouter
+import br.com.brunocarvalhs.group.details.commons.navigation.GroupDetailsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
@@ -29,7 +28,8 @@ class GroupDetailsInitializer(private val builder: Builder) {
                 GroupDetailsScreen(
                     viewModel = viewModel,
                     onBack = builder.onBack,
-                    onDraw = { builder.onDraw(viewModel.uiState.value.group) }
+                    onDraw = { builder.onDraw(viewModel.uiState.value.group) },
+                    onChat = { builder.onChat(viewModel.uiState.value.group) }
                 )
             }
         }
@@ -39,6 +39,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
         internal var navController: NavHostController by Delegates.notNull()
         internal var onBack: () -> Unit = {}
         internal var onDraw: (GroupModel) -> Unit = {}
+        internal var onChat: (GroupModel) -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
@@ -53,6 +54,11 @@ class GroupDetailsInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupListInitializer.Builder.onDraw", enabled = true)
         fun onDraw(onDraw: (GroupModel) -> Unit) = apply {
             this.onDraw = onDraw
+        }
+
+        @AddTrace(name = "GroupListInitializer.Builder.onChat", enabled = true)
+        fun onChat(onChat: (GroupModel) -> Unit) = apply {
+            this.onChat = onChat
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.build", enabled = true)
