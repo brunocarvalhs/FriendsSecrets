@@ -86,13 +86,16 @@ private fun DrawContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (isDrawn) "Draw Results" else "Secret Santa Draw",
+                        text = if (isDrawn) "Resultados do Sorteio" else "Sorteio de Amigo Secreto",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar"
+                        )
                     }
                 },
             )
@@ -125,7 +128,7 @@ private fun DrawContent(
                 ) {
                     item {
                         Text(
-                            text = "The draw is complete! Share the results with your friends.",
+                            text = "O sorteio foi concluído! Compartilhe os resultados com os membros do grupo.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -191,18 +194,18 @@ fun AnimatedDraw(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Ready to discover your Secret Santa?",
+            text = "Pronto para sortear?",
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             ),
             color = MaterialTheme.colorScheme.primary
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
-            text = "Tap the button below to start the magic!",
+            text = "Toque no botão abaixo para começar o sorteio!",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -244,7 +247,7 @@ fun AnimatedDraw(
             movingMembers.forEach { member ->
                 val scale by animateFloatAsState(
                     targetValue = if (member.user == selectedMember) 1.8f else 1f,
-                    label = "scale"
+                    label = "escala"
                 )
 
                 ContactAvatar(
@@ -284,7 +287,7 @@ fun AnimatedDraw(
             enabled = !isFalling
         ) {
             Text(
-                text = if (isFalling) "Drawing..." else "Start Draw",
+                text = if (isFalling) "Sorteando..." else "Sorteado Agora",
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         }
