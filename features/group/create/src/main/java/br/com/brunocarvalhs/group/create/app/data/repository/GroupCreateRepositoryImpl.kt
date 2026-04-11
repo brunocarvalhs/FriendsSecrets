@@ -32,7 +32,7 @@ class GroupCreateRepositoryImpl @Inject constructor(
             val dto = GroupCreateDTO.fromDomain(group)
 
             network.make(
-                endpoint = "groups",
+                endpoint = "groups/" + group.id,
                 payload = dto.toMap(),
                 method = NetworkService.Method.PUT,
                 clazz = GroupCreateDTO::class

@@ -14,7 +14,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -87,19 +86,19 @@ class EditFormsViewModel @Inject constructor(
             if (!currentState.isValid) return@launch
             
             _uiState.value = currentState.copy(isLoading = true, error = null)
-            
-            val photoBase64 = currentState.imageUri?.toBase64(application)
 
-            val group = GroupModel(
+            val group = args.group.copy(
+                id = args.group.id,
                 name = currentState.name,
                 description = currentState.description,
-                members = currentState.members,
+                date = currentState.date,
                 minPrice = currentState.minPrice.toDoubleOrNull(),
                 maxPrice = currentState.maxPrice.toDoubleOrNull(),
-                date = currentState.date.ifBlank { null },
-                photo = photoBase64
+                photo = currentState.imageUri?.toBase64(application),
+                members = currentState.members,
+                type = args.group.type,
             )
-            
+
             groupEditUseCase(group).onSuccess {
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 onFinish()

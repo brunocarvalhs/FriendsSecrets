@@ -86,7 +86,6 @@ class FirebaseFirestoreManager @Inject constructor(
         val updateData = data.filterKeys { it != "id" }.filterValues { it != null }
         
         if (updateData.isNotEmpty()) {
-            @Suppress("UNCHECKED_CAST")
             firebaseFirestore.collection(collection)
                 .document(id)
                 .update(updateData)
