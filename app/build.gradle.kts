@@ -94,6 +94,7 @@ dependencies {
     implementation(project(":features:group:draw"))
     implementation(project(":features:settings"))
     implementation(project(":features:chat"))
+    implementation(project(":features:biometric"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
 
@@ -111,6 +112,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.biometric)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)

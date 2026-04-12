@@ -133,8 +133,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBiometricService(
+        @ApplicationContext context: Context,
         storageService: StorageService
-    ): BiometricService = BiometricManager(storageService)
+    ): BiometricService = BiometricManager(context, storageService)
 
     @Provides
     @Singleton

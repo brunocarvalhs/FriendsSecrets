@@ -1,27 +1,45 @@
 package br.com.brunocarvalhs.settings.app.list
 
+import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Stable
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val biometricManager: BiometricService
+    @ApplicationContext private val context: Context,
+    private val biometricService: BiometricService,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(
-        value = SettingsState(
-            isBiometricPromptEnabled = biometricManager.isBiometricPromptEnabled.value
-        )
-    )
+    private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
+
+    init {
+        checkBiometricSupport()
+        observeBiometricStatus()
+    }
+
+    private fun checkBiometricSupport() {
+        val isSupported = biometricService.canAuthenticate()
+        _state.update { it.copy(isBiometricSupported = isSupported) }
+    }
+
+    private fun observeBiometricStatus() {
+        viewModelScope.launch {
+            biometricService.isBiometricPromptEnabled.collect { isEnabled ->
+                _state.update { it.copy(isBiometricPromptEnabled = isEnabled) }
+            }
+        }
+    }
 
     fun handleIntent(event: SettingsIntent) {
         when (event) {
@@ -29,10 +47,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun setBiometricPromptEnabled(state: Boolean) {
+    private fun setBiometricPromptEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            biometricManager.setBiometricPromptEnabled(state)
-            _state.value = _state.value.copy(isBiometricPromptEnabled = state)
+            biometricService.setBiometricPromptEnabled(enabled)
         }
     }
 }

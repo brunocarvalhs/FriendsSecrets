@@ -44,6 +44,7 @@ fun SettingsScreen(
 
     SettingsContent(
         isBiometricPromptEnabled = state.isBiometricPromptEnabled,
+        isBiometricSupported = state.isBiometricSupported,
         onBack = onBack,
         onBiometricPrompt = {
             viewModel.handleIntent(SettingsIntent.SetBiometricPromptEnabled(it))
@@ -58,6 +59,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsContent(
     isBiometricPromptEnabled: Boolean = false,
+    isBiometricSupported: Boolean = false,
     onBack: () -> Unit = {},
     onBiometricPrompt: (Boolean) -> Unit = {},
     onAppearance: () -> Unit = {},
@@ -96,12 +98,14 @@ private fun SettingsContent(
                     text = stringResource(R.string.settings_screen_general),
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                SettingsListItemOptions(
-                    selected = isBiometricPromptEnabled,
-                    title = stringResource(R.string.settings_screen_security),
-                    icon = Icons.Sharp.Fingerprint,
-                    onClick = onBiometricPrompt
-                )
+                if (isBiometricSupported) {
+                    SettingsListItemOptions(
+                        selected = isBiometricPromptEnabled,
+                        title = stringResource(R.string.settings_screen_security),
+                        icon = Icons.Sharp.Fingerprint,
+                        onClick = onBiometricPrompt
+                    )
+                }
                 SettingsListItemNavigation(
                     title = R.string.title_appearance,
                     icon = Icons.Outlined.Palette,
@@ -145,6 +149,7 @@ private fun SettingsContent(
 private fun SettingsContentPreview() {
     SettingsContent(
         isBiometricPromptEnabled = true,
+        isBiometricSupported = true,
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
@@ -163,6 +168,7 @@ private fun SettingsContentPreview() {
 private fun SettingsContentIsBiometricPromptDisabledPreview() {
     SettingsContent(
         isBiometricPromptEnabled = false,
+        isBiometricSupported = false,
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
