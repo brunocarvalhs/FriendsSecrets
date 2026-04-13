@@ -7,6 +7,7 @@ import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
 import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
+import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,9 @@ object ChatModule {
             context,
             ChatDatabase::class.java,
             "chat_database"
-        ).build()
+        )
+        .fallbackToDestructiveMigration()
+        .build()
     }
 
     @Provides
@@ -35,6 +38,7 @@ object ChatModule {
     @Singleton
     fun provideChatRepository(
         chatService: ChatService,
+        networkService: NetworkService,
         chatMessageDao: ChatMessageDao
-    ): ChatRepository = ChatRepositoryImpl(chatService, chatMessageDao)
+    ): ChatRepository = ChatRepositoryImpl(chatService, networkService, chatMessageDao)
 }

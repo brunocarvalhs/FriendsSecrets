@@ -6,8 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
-import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
+import br.com.brunocarvalhs.chat.app.domain.usecase.ClearMessagesUseCase
+import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
+import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
+import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
 import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,13 +22,21 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 @Stable
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: ChatRepository,
+    private val getMessagesUseCase: GetMessagesUseCase,
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val clearMessagesUseCase: ClearMessagesUseCase,
+    private val identifyUserUseCase: IdentifyUserUseCase,
     private val deviceService: DeviceService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<ChatGraphRouter>(ChatGraphRouter.typeMap)
@@ -37,7 +50,36 @@ class ChatViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
-            loadMessages()
+            
+            checkAndClearExpiredChat()
+
+            val cachedName = identifyUserUseCase.getNickname()
+            val member = _uiState.value.groupModel.members.find { it.phoneNumber == deviceId || it.id == deviceId }
+            val finalName = cachedName ?: member?.name ?: ""
+            
+            _uiState.update { it.copy(currentUserNickname = finalName) }
+
+            if (finalName.isBlank()) {
+                _uiState.update { it.copy(showIdentificationModal = true) }
+            }
+            
+            observeMessages()
+        }
+    }
+
+    private suspend fun checkAndClearExpiredChat() {
+        val groupDateString = _uiState.value.groupModel.date ?: return
+        try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val groupDate = sdf.parse(groupDateString) ?: return
+            val currentDate = Date()
+
+            if (currentDate.after(groupDate)) {
+                Timber.d("Chat expirado para o grupo ${_uiState.value.groupModel.id}. Limpando...")
+                clearMessagesUseCase(_uiState.value.groupModel.id)
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Erro ao validar data de expiração do chat")
         }
     }
 
@@ -45,10 +87,10 @@ class ChatViewModel @Inject constructor(
         when (intent) {
             is ChatIntent.UpdateInput -> updateInput(intent.text)
             is ChatIntent.SendMessage -> sendMessage()
-            is ChatIntent.LoadMessages -> loadMessages()
-            is ChatIntent.ClearChat -> {
-                // Clear chat locally or in repo if needed
-            }
+            is ChatIntent.LoadMessages -> observeMessages()
+            is ChatIntent.IdentifyUser -> identifyUser(intent.name)
+            is ChatIntent.DismissIdentification -> _uiState.update { it.copy(showIdentificationModal = false) }
+            is ChatIntent.ClearChat -> {}
         }
     }
 
@@ -56,35 +98,98 @@ class ChatViewModel @Inject constructor(
         _uiState.update { it.copy(inputText = text) }
     }
 
+    private fun identifyUser(name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch {
+            identifyUserUseCase.saveNickname(name)
+            _uiState.update { it.copy(currentUserNickname = name, showIdentificationModal = false) }
+            
+            val joinMessage = MessageModel(
+                id = UUID.randomUUID().toString(),
+                groupId = _uiState.value.groupModel.id,
+                text = "$name acessou o chat",
+                senderId = "system",
+                senderName = "Sistema",
+                timestamp = System.currentTimeMillis(),
+                status = MessageStatus.SENT
+            )
+            sendMessageUseCase(_uiState.value.groupModel.id, joinMessage)
+        }
+    }
+
     private fun sendMessage() {
         val messageText = _uiState.value.inputText
         if (messageText.isBlank()) return
 
-        val newMessage = ChatMessage(
+        if (_uiState.value.currentUserNickname.isBlank()) {
+            _uiState.update { it.copy(showIdentificationModal = true) }
+            return
+        }
+
+        val tempId = UUID.randomUUID().toString()
+        val newMessage = MessageModel(
+            id = tempId,
             groupId = _uiState.value.groupModel.id,
             text = messageText,
-            isFromMe = true,
             senderId = deviceId,
             senderName = _uiState.value.currentUserNickname,
-            timestamp = System.currentTimeMillis()
+            timestamp = System.currentTimeMillis(),
+            status = MessageStatus.SENDING
         )
 
+        _uiState.update { state ->
+            state.copy(
+                messages = state.messages + newMessage.toChatMessage(deviceId),
+                inputText = ""
+            )
+        }
+
         viewModelScope.launch {
-            _uiState.update { it.copy(inputText = "") }
-            repository.sendMessage(_uiState.value.groupModel.id, newMessage)
+            val result = sendMessageUseCase(_uiState.value.groupModel.id, newMessage)
+            
+            if (result.isFailure) {
+                _uiState.update { state ->
+                    state.copy(
+                        messages = state.messages.map { 
+                            if (it.id == tempId) it.copy(status = MessageStatus.ERROR) else it 
+                        }
+                    )
+                }
+            }
         }
     }
 
-    private fun loadMessages() {
-        repository.getMessages(_uiState.value.groupModel.id)
+    private fun observeMessages() {
+        getMessagesUseCase(_uiState.value.groupModel.id)
             .onEach { messages ->
                 _uiState.update { state ->
+                    val remoteIds = messages.map { it.id }.toSet()
+                    val pendingMessages = state.messages.filter { it.status == MessageStatus.SENDING && it.id !in remoteIds }
+                    
                     state.copy(
-                        messages = messages.map { it.copy(isFromMe = it.senderId == deviceId) },
+                        messages = (messages.map { it.toChatMessage(deviceId) } + pendingMessages)
+                            .sortedBy { it.timestamp },
                         isLoading = false
                     )
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun MessageModel.toChatMessage(currentDeviceId: String): ChatMessage {
+        val groupMembers = _uiState.value.groupModel.members
+        val member = groupMembers.find { it.phoneNumber == senderId || it.id == senderId }
+        val displayName = member?.name ?: senderName.ifBlank { senderId }
+
+        return ChatMessage(
+            id = id,
+            groupId = groupId,
+            text = text,
+            isFromMe = senderId == currentDeviceId,
+            senderId = senderId,
+            senderName = displayName,
+            timestamp = timestamp,
+            status = status
+        )
     }
 }

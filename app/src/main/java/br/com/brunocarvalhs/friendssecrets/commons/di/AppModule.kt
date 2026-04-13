@@ -64,7 +64,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseDatabase(): FirebaseDatabase = Firebase.database
+    fun provideFirebaseDatabase(): FirebaseDatabase = Firebase.database("https://friends-secrets-1642275671992-default-rtdb.asia-southeast1.firebasedatabase.app")
 
     /**
      * Provides Firebase Crashlytics instance.

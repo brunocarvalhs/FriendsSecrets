@@ -5,4 +5,6 @@ sealed class ChatIntent {
     object SendMessage : ChatIntent()
     object LoadMessages : ChatIntent()
     object ClearChat : ChatIntent()
+    data class IdentifyUser(val name: String) : ChatIntent()
+    object DismissIdentification : ChatIntent()
 }
