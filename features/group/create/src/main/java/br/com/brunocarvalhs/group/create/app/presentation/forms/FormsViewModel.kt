@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class FormsViewModel @Inject constructor(
     private val application: Application,
     savedStateHandle: SavedStateHandle,
-    private val groupCreateUseCase: GroupCreateUseCase
+    private val groupCreateUseCase: GroupCreateUseCase,
+    private val imageService: GroupImageService
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<FormsRouter>(FormsRouter.typeMap)
@@ -33,6 +36,19 @@ class FormsViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            imageService.availablePhotos.collectLatest { photos ->
+                _uiState.update { 
+                    it.copy(
+                        availablePhotos = photos,
+                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
+                    )
+                }
+            }
+        }
+    }
 
     fun handleIntent(intent: FormsIntent) = when (intent) {
         is FormsIntent.CreateGroup -> createGroup(intent.onFinish)

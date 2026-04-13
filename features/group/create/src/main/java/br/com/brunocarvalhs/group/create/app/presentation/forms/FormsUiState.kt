@@ -14,13 +14,6 @@ data class FormsUiState(
     val error: String? = null,
     val isPriceError: Boolean = false,
     val isValid: Boolean = false,
-    val availablePhotos: List<String> = listOf(
-        "https://cdn-icons-png.flaticon.com/512/3751/3751473.png", // Gift (Default)
-        "https://cdn-icons-png.flaticon.com/512/3751/3751475.png", // Christmas Tree
-        "https://cdn-icons-png.flaticon.com/512/3751/3751470.png", // Santa
-        "https://cdn-icons-png.flaticon.com/512/3751/3751467.png", // Snowman
-        "https://cdn-icons-png.flaticon.com/512/3751/3751483.png", // Candy
-        "https://cdn-icons-png.flaticon.com/512/3751/3751490.png"  // Ornament
-    ),
-    val selectedPhoto: String? = "https://cdn-icons-png.flaticon.com/512/3751/3751473.png"
+    val availablePhotos: List<String> = emptyList(),
+    val selectedPhoto: String? = null
 )
