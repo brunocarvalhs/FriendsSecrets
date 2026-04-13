@@ -106,10 +106,6 @@ dependencies {
     // firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.auth)
 
     // Room
     implementation(libs.room.runtime)

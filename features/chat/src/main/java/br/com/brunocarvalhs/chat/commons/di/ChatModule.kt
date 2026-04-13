@@ -6,7 +6,7 @@ import br.com.brunocarvalhs.chat.app.data.local.ChatDatabase
 import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
 import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
-import com.google.firebase.database.FirebaseDatabase
+import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,10 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ChatModule {
-
-    @Provides
-    @Singleton
-    fun provideFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
     @Provides
     @Singleton
@@ -38,7 +34,7 @@ object ChatModule {
     @Provides
     @Singleton
     fun provideChatRepository(
-        database: FirebaseDatabase,
+        chatService: ChatService,
         chatMessageDao: ChatMessageDao
-    ): ChatRepository = ChatRepositoryImpl(database, chatMessageDao)
+    ): ChatRepository = ChatRepositoryImpl(chatService, chatMessageDao)
 }

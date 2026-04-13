@@ -51,6 +51,7 @@ datastoreCore = "1.2.1"
 lifecycleProcess = "2.10.0"
 coreKtxVersion = "1.10.3"
 room = "2.6.1"
+firebaseDatabaseKtx = "22.0.1"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }

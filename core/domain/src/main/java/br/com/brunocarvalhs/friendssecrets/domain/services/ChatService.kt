@@ -1,9 +1,9 @@
-package br.com.brunocarvalhs.chat.app.domain.repository
+package br.com.brunocarvalhs.friendssecrets.domain.services
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import kotlinx.coroutines.flow.Flow
 
-interface ChatRepository {
+interface ChatService {
     fun getMessages(groupId: String): Flow<List<MessageModel>>
     suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit>
 }
