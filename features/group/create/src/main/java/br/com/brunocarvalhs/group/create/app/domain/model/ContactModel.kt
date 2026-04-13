@@ -1,11 +1,12 @@
 package br.com.brunocarvalhs.group.create.app.domain.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.create.app.domain.constants.EMPTY_STRING
 
 data class ContactModel(
-    val id: String = "",
-    val name: String = "",
-    val phoneNumber: String = "",
+    val id: String = EMPTY_STRING,
+    val name: String = EMPTY_STRING,
+    val phoneNumber: String = EMPTY_STRING,
     val photoUrl: String? = null,
     val email: String? = null,
     val isSelected: Boolean = false

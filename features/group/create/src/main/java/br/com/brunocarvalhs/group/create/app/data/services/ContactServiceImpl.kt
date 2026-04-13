@@ -30,7 +30,6 @@ class ContactServiceImpl @Inject constructor(
         val contactMap = mutableMapOf<String, ContactDTO>()
         val contentResolver = context.contentResolver
 
-        // 1. Query para telefones e dados básicos
         val phoneCursor = contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             arrayOf(
@@ -52,8 +51,8 @@ class ContactServiceImpl @Inject constructor(
 
             while (cursor.moveToNext()) {
                 val id = cursor.getString(idIndex)
-                val name = cursor.getString(nameIndex) ?: ""
-                val number = cursor.getString(numberIndex) ?: ""
+                val name = cursor.getString(nameIndex).orEmpty()
+                val number = cursor.getString(numberIndex).orEmpty()
                 val photoUri = cursor.getString(photoIndex)
 
                 if (number.isNotBlank()) {
@@ -67,7 +66,6 @@ class ContactServiceImpl @Inject constructor(
             }
         }
 
-        // 2. Query para E-mails
         val emailCursor = contentResolver.query(
             ContactsContract.CommonDataKinds.Email.CONTENT_URI,
             arrayOf(ContactsContract.CommonDataKinds.Email.CONTACT_ID, ContactsContract.CommonDataKinds.Email.ADDRESS),
@@ -84,11 +82,10 @@ class ContactServiceImpl @Inject constructor(
             }
         }
 
-        // 3. Query para Empresa e Cargo (Organization)
         val orgCursor = contentResolver.query(
             ContactsContract.Data.CONTENT_URI,
             arrayOf(ContactsContract.CommonDataKinds.Organization.CONTACT_ID, ContactsContract.CommonDataKinds.Organization.COMPANY, ContactsContract.CommonDataKinds.Organization.TITLE),
-            ContactsContract.Data.MIMETYPE + " = ?",
+            ContactsContract.Data.MIMETYPE + CURSOR_SELECTION,
             arrayOf(ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE),
             null
         )
@@ -107,7 +104,6 @@ class ContactServiceImpl @Inject constructor(
             }
         }
 
-        // 4. Query para Endereço
         val addressCursor = contentResolver.query(
             ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
             arrayOf(ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID, ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS),
@@ -128,5 +124,9 @@ class ContactServiceImpl @Inject constructor(
             .map { it.toDomain() }
             .distinctBy { it.phoneNumber }
             .sortedBy { it.name }
+    }
+
+    companion object {
+        private const val CURSOR_SELECTION = " = ?"
     }
 }

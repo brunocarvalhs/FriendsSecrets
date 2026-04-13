@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.group.create.app.data.repository
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
+import br.com.brunocarvalhs.group.create.app.data.exceptions.FailedCreateGroupException
 import br.com.brunocarvalhs.group.create.app.data.model.GroupCreateDTO
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ class GroupCreateRepositoryImpl @Inject constructor(
                 payload = dto.toMap(),
                 method = NetworkService.Method.POST,
                 clazz = GroupCreateDTO::class
-            ) ?: throw Exception("Failed to create group")
+            ) ?: throw FailedCreateGroupException()
 
             Unit
         }
@@ -36,7 +37,7 @@ class GroupCreateRepositoryImpl @Inject constructor(
                 payload = dto.toMap(),
                 method = NetworkService.Method.PUT,
                 clazz = GroupCreateDTO::class
-            ) ?: throw Exception("Failed to create group")
+            ) ?: throw FailedCreateGroupException()
 
             Unit
         }
