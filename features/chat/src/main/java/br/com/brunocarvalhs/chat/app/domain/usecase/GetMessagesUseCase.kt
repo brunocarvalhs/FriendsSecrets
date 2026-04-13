@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetMessagesUseCase @Inject constructor(
     private val repository: ChatRepository
 ) {
-    operator fun invoke(groupId: String): Flow<List<MessageModel>> {
+    suspend operator fun invoke(groupId: String): Flow<List<MessageModel>> {
         return repository.getMessages(groupId)
     }
 }

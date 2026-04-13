@@ -78,8 +78,10 @@ class ChatViewModel @Inject constructor(
                 Timber.d("Chat expirado para o grupo ${_uiState.value.groupModel.id}. Limpando...")
                 clearMessagesUseCase(_uiState.value.groupModel.id)
             }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            Timber.e(e)
         } catch (e: Exception) {
-            Timber.e(e, "Erro ao validar data de expiração do chat")
+            Timber.e(e)
         }
     }
 
@@ -160,20 +162,21 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun observeMessages() {
-        getMessagesUseCase(_uiState.value.groupModel.id)
-            .onEach { messages ->
-                _uiState.update { state ->
-                    val remoteIds = messages.map { it.id }.toSet()
-                    val pendingMessages = state.messages.filter { it.status == MessageStatus.SENDING && it.id !in remoteIds }
-                    
-                    state.copy(
-                        messages = (messages.map { it.toChatMessage(deviceId) } + pendingMessages)
-                            .sortedBy { it.timestamp },
-                        isLoading = false
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+        viewModelScope.launch {
+            getMessagesUseCase(_uiState.value.groupModel.id)
+                .onEach { messages ->
+                    _uiState.update { state ->
+                        val remoteIds = messages.map { it.id }.toSet()
+                        val pendingMessages = state.messages.filter { it.status == MessageStatus.SENDING && it.id !in remoteIds }
+
+                        state.copy(
+                            messages = (messages.map { it.toChatMessage(deviceId) } + pendingMessages)
+                                .sortedBy { it.timestamp },
+                            isLoading = false
+                        )
+                    }
+                }.launchIn(viewModelScope)
+        }
     }
 
     private fun MessageModel.toChatMessage(currentDeviceId: String): ChatMessage {

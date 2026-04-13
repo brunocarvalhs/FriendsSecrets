@@ -6,8 +6,7 @@ import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -21,64 +20,51 @@ class ChatRepositoryImpl @Inject constructor(
     private val chatMessageDao: ChatMessageDao
 ) : ChatRepository {
 
-    private val repositoryScope = CoroutineScope(Dispatchers.IO)
-
-    override fun getMessages(groupId: String): Flow<List<MessageModel>> {
-        // Carrega histórico do Firestore se necessário
-        repositoryScope.launch {
-            try {
-                val history = networkService.make(
-                    endpoint = "messages",
-                    query = mapOf("groupId" to groupId),
-                    method = NetworkService.Method.GET,
-                    clazz = Array<MessageModel>::class
-                )
-                history?.toList()?.let { list ->
-                    chatMessageDao.insertMessages(list.map { it.toEntity() })
-                }
-            } catch (e: Exception) {
-                // Silently fail or log
+    override suspend fun getMessages(groupId: String): Flow<List<MessageModel>> = coroutineScope {
+        launch {
+            val history = networkService.make(
+                endpoint = "messages",
+                query = mapOf("groupId" to groupId),
+                method = NetworkService.Method.GET,
+                clazz = Array<MessageModel>::class
+            )
+            history?.toList()?.let { list ->
+                chatMessageDao.insertMessages(list.map { it.toEntity() })
             }
         }
 
-        // Observa o Realtime Database para mensagens novas
         chatService.getMessages(groupId)
-            .onEach { messages ->
-                chatMessageDao.insertMessages(messages.map { it.toEntity() })
-            }
-            .launchIn(repositoryScope)
+            .onEach { messages -> chatMessageDao.insertMessages(messages.map { it.toEntity() }) }
+            .launchIn(this@coroutineScope)
 
-        return chatMessageDao.getMessages(groupId).map { list ->
+        return@coroutineScope chatMessageDao.getMessages(groupId).map { list ->
             list.map { it.toDomain() }
         }
     }
 
-    override suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit> {
-        // Salva no Firestore para histórico persistente
-        repositoryScope.launch {
-            networkService.make(
-                endpoint = "messages",
-                payload = message.toMap(),
-                method = NetworkService.Method.POST,
-                clazz = String::class
-            )
-        }
-        
-        // Envia via Realtime Database para sincronização imediata
-        return chatService.sendMessage(groupId, message)
-    }
+    override suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit> =
+        coroutineScope {
+            launch {
+                networkService.make(
+                    endpoint = "messages",
+                    payload = message.toMap(),
+                    method = NetworkService.Method.POST,
+                    clazz = String::class
+                )
+            }
 
-    override suspend fun clearMessages(groupId: String): Result<Unit> {
-        // Limpa o Firestore
-        repositoryScope.launch {
+            return@coroutineScope chatService.sendMessage(groupId, message)
+        }
+
+    override suspend fun clearMessages(groupId: String): Result<Unit> = coroutineScope {
+        launch {
             networkService.make(
                 endpoint = "messages/$groupId",
                 method = NetworkService.Method.DELETE,
                 clazz = Boolean::class
             )
         }
-        // Limpa o Realtime Database
-        return chatService.clearMessages(groupId)
+        return@coroutineScope chatService.clearMessages(groupId)
     }
 
     private fun MessageModel.toMap(): Map<String, Any?> = mapOf(

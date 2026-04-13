@@ -50,10 +50,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.brunocarvalhs.chat.R
 import br.com.brunocarvalhs.chat.app.data.extensions.toLocalDateTime
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
@@ -67,7 +69,6 @@ fun ChatScreen(
     val state by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
-    // Scroll para a última mensagem quando a lista mudar
     LaunchedEffect(state.messages.size) {
         if (state.messages.isNotEmpty()) {
             listState.animateScrollToItem(state.messages.size - 1)
@@ -79,7 +80,7 @@ fun ChatScreen(
             onConfirm = { viewModel.handleIntent(ChatIntent.IdentifyUser(it)) },
             onDismiss = { 
                 viewModel.handleIntent(ChatIntent.DismissIdentification)
-                onBack() // Volta a tela se cancelar ou dispensar
+                onBack()
             }
         )
     }
@@ -92,7 +93,7 @@ fun ChatScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },
@@ -136,18 +137,18 @@ fun IdentificationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Person, contentDescription = null) },
-        title = { Text("Identifique-se") },
+        title = { Text(stringResource(R.string.identify)) },
         text = {
             Column {
                 Text(
-                    "Você não está na lista de membros deste grupo. Como gostaria de ser chamado no chat?",
+                    text = stringResource(R.string.identify_message),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Seu Nome ou Apelido") },
+                    label = { Text(text = stringResource(R.string.identify_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -158,12 +159,12 @@ fun IdentificationDialog(
                 onClick = { onConfirm(name) },
                 enabled = name.isNotBlank()
             ) {
-                Text("Salvar")
+                Text(text = stringResource(R.string.identify_save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(text = stringResource(R.string.identify_cancela))
             }
         }
     )
@@ -269,7 +270,7 @@ fun ChatInputBar(
                 value = text,
                 onValueChange = onTextChange,
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Digite uma mensagem...") },
+                placeholder = { Text(text = stringResource(R.string.chat_input)) },
                 maxLines = 4,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 colors = TextFieldDefaults.colors(
@@ -288,7 +289,7 @@ fun ChatInputBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Enviar"
+                    contentDescription = stringResource(R.string.chat_button_send)
                 )
             }
         }
