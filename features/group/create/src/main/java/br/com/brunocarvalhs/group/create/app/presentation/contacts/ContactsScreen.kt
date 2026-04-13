@@ -71,7 +71,6 @@ internal fun ContactsScreen(
         }
     }
 
-    // Carrega contatos se a permissão for concedida
     LaunchedEffect(contactsPermissionState.status.isGranted) {
         if (contactsPermissionState.status.isGranted) {
             viewModel.handleIntent(ContactsIntent.LoadContacts)
@@ -129,7 +128,6 @@ private fun ContactsContent(
     onBack: () -> Unit,
     onNext: (List<UserModel>) -> Unit
 ) {
-    // Se não tiver permissão, começa mostrando o formulário manual
     var showManualForm by remember(isPermissionGranted) { mutableStateOf(!isPermissionGranted) }
 
     Scaffold(

@@ -42,9 +42,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
@@ -66,7 +69,6 @@ import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransf
 import coil.compose.AsyncImage
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
@@ -97,6 +99,7 @@ internal fun FormsContent(
     isPriceError: Boolean = false
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
@@ -112,19 +115,17 @@ internal fun FormsContent(
         }
     )
 
+    val timePickerState = rememberTimePickerState()
+
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                            .format(Date(it))
-                        onDateChange(formattedDate)
-                    }
                     showDatePicker = false
+                    showTimePicker = true
                 }) {
-                    Text("OK")
+                    Text("Próximo")
                 }
             },
             dismissButton = {
@@ -134,6 +135,58 @@ internal fun FormsContent(
             }
         ) {
             DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        Dialog(onDismissRequest = { showTimePicker = false }) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Selecione o horário",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    
+                    TimePicker(state = timePickerState)
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = { showTimePicker = false }) {
+                            Text("Cancelar")
+                        }
+                        TextButton(onClick = {
+                            val calendar = Calendar.getInstance().apply {
+                                datePickerState.selectedDateMillis?.let { utcMillis ->
+                                    val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                                        timeInMillis = utcMillis
+                                    }
+                                    set(Calendar.YEAR, utcCalendar.get(Calendar.YEAR))
+                                    set(Calendar.MONTH, utcCalendar.get(Calendar.MONTH))
+                                    set(Calendar.DAY_OF_MONTH, utcCalendar.get(Calendar.DAY_OF_MONTH))
+                                }
+                                set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                                set(Calendar.MINUTE, timePickerState.minute)
+                            }
+                            
+                            val formattedDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                                .format(calendar.time)
+                            onDateChange(formattedDate)
+                            showTimePicker = false
+                        }) {
+                            Text("OK")
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -188,7 +241,6 @@ internal fun FormsContent(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Seletor de Foto Pré-definida
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
@@ -235,8 +287,8 @@ internal fun FormsContent(
                             AsyncImage(
                                 model = photoUrl,
                                 contentDescription = null,
-                                modifier = Modifier.fillMaxSize().padding(8.dp),
-                                contentScale = ContentScale.Fit
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }

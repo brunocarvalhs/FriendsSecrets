@@ -17,12 +17,16 @@ class GroupImageManager @Inject constructor(
 ) : GroupImageService {
 
     private val defaultPhotos = listOf(
-        "https://cdn-icons-png.flaticon.com/512/2324/2324505.png",
-        "https://cdn-icons-png.flaticon.com/512/2666/2666778.png",
-        "https://cdn-icons-png.flaticon.com/512/2436/2436725.png",
-        "https://cdn-icons-png.flaticon.com/512/833/833472.png",
-        "https://cdn-icons-png.flaticon.com/512/3661/3661849.png",
-        "https://cdn-icons-png.flaticon.com/512/5323/5323490.png"
+        "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=400&h=400&fit=crop"
     )
 
     private val _availablePhotos = MutableStateFlow(defaultPhotos)
