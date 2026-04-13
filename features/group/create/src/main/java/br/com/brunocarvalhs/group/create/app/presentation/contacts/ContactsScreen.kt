@@ -4,13 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,7 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,6 +51,7 @@ import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -65,9 +64,9 @@ internal fun ContactsScreen(
     val context = LocalContext.current
     val contactsPermissionState = rememberPermissionState(Manifest.permission.READ_CONTACTS)
 
-    // Solicita permissão automaticamente ao abrir a tela
+    // Solicita permissão automaticamente ao abrir a tela apenas se for a primeira vez
     LaunchedEffect(Unit) {
-        if (!contactsPermissionState.status.isGranted) {
+        if (!contactsPermissionState.status.isGranted && !contactsPermissionState.status.shouldShowRationale) {
             contactsPermissionState.launchPermissionRequest()
         }
     }
@@ -87,6 +86,7 @@ internal fun ContactsScreen(
         isLoading = uiState.isLoading,
         error = uiState.error,
         isPermissionGranted = contactsPermissionState.status.isGranted,
+        shouldShowRationale = contactsPermissionState.status.shouldShowRationale,
         onRequestPermission = { contactsPermissionState.launchPermissionRequest() },
         onOpenSettings = {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -95,7 +95,7 @@ internal fun ContactsScreen(
             context.startActivity(intent)
         },
         onQueryChange = { viewModel.handleIntent(intent = ContactsIntent.SearchContacts(query = it)) },
-        onToggleMember = { viewModel.handleIntent(intent = ContactsIntent.AddMember(contact = it)) },
+        onToggleMember = { viewModel.handleIntent(intent = ContactsIntent.ToggleMember(contact = it)) },
         onRemoveMember = { viewModel.handleIntent(intent = ContactsIntent.RemoveMember(contact = it)) },
         onRefresh = { viewModel.handleIntent(intent = ContactsIntent.LoadContacts) },
         onBack = onBack,
@@ -119,6 +119,7 @@ private fun ContactsContent(
     isLoading: Boolean,
     error: String?,
     isPermissionGranted: Boolean,
+    shouldShowRationale: Boolean,
     onRequestPermission: () -> Unit,
     onOpenSettings: () -> Unit,
     onQueryChange: (String) -> Unit,
@@ -213,11 +214,15 @@ private fun ContactsContent(
                             Text(if (showManualForm) "Ver lista de contatos" else "Adicionar manualmente")
                         }
                     } else {
-                        // Se não tem permissão, oferece uma forma de pedir novamente ou abrir config
-                        TextButton(onClick = onRequestPermission) {
-                            Icon(Icons.Default.Contacts, contentDescription = null, modifier = Modifier.size(18.dp))
+                        // Se não tem permissão e o sistema NÃO permite pedir (Rationale é false após negação), levamos para settings
+                        val action = if (shouldShowRationale) onRequestPermission else onOpenSettings
+                        val label = if (shouldShowRationale) "Ativar acesso aos contatos" else "Liberar contatos nas Configurações"
+                        val icon = if (shouldShowRationale) Icons.Default.Contacts else Icons.Default.Settings
+
+                        TextButton(onClick = action) {
+                            Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Ativar acesso aos contatos")
+                            Text(label)
                         }
                     }
                 }

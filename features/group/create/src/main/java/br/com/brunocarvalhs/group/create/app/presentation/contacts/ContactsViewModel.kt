@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
-import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +31,7 @@ class ContactsViewModel @Inject constructor(
         when (intent) {
             is ContactsIntent.LoadContacts -> loadContacts()
             is ContactsIntent.SearchContacts -> searchContacts(intent.query)
-            is ContactsIntent.AddMember -> addMember(intent.contact)
+            is ContactsIntent.ToggleMember -> toggleMember(intent.contact)
             is ContactsIntent.RemoveMember -> removeMember(intent.contact)
             is ContactsIntent.Next -> next(intent.callback)
         }
@@ -64,16 +63,23 @@ class ContactsViewModel @Inject constructor(
         }
     }
 
-    private fun addMember(contact: UserModel) {
+    private fun toggleMember(contact: UserModel) {
         _uiState.update { currentState ->
-            val isDuplicate = currentState.members.any {
+            val isAlreadySelected = currentState.members.any {
                 (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) ||
                         (it.id == contact.id)
             }
 
-            if (isDuplicate) {
-                currentState
+            if (isAlreadySelected) {
+                // Se já estiver selecionado, removemos
+                currentState.copy(
+                    members = currentState.members.filterNot { 
+                        (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) || 
+                        it.id == contact.id 
+                    }
+                )
             } else {
+                // Se não estiver, adicionamos
                 currentState.copy(members = currentState.members + contact)
             }
         }
