@@ -1,10 +1,7 @@
 package br.com.brunocarvalhs.group.create.commons.components
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PriceChange
@@ -83,13 +79,14 @@ internal fun FormsContent(
     date: String,
     minPrice: String,
     maxPrice: String,
-    imageUri: Uri?,
+    selectedPhoto: String?,
+    availablePhotos: List<String> = emptyList(),
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateChange: (String) -> Unit,
     onMinPriceChange: (String) -> Unit,
     onMaxPriceChange: (String) -> Unit,
-    onImageChange: (Uri?) -> Unit,
+    onPhotoChange: (String) -> Unit,
     members: List<UserModel>,
     contacts: Int,
     onCreate: () -> Unit,
@@ -100,11 +97,6 @@ internal fun FormsContent(
     isPriceError: Boolean = false
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> onImageChange(uri) }
-    )
 
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
@@ -150,7 +142,7 @@ internal fun FormsContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Novo grupo",
+                        text = if (isEditing) "Editar grupo" else "Novo grupo",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp
@@ -196,6 +188,61 @@ internal fun FormsContent(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Seletor de Foto Pré-definida
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (selectedPhoto != null) {
+                        AsyncImage(
+                            model = selectedPhoto,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(availablePhotos) { photoUrl ->
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    width = if (selectedPhoto == photoUrl) 3.dp else 1.dp,
+                                    color = if (selectedPhoto == photoUrl) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outlineVariant,
+                                    shape = CircleShape
+                                )
+                                .clickable { onPhotoChange(photoUrl) }
+                        ) {
+                            AsyncImage(
+                                model = photoUrl,
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize().padding(8.dp),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
+                    }
+                }
+            }
+
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(12.dp),
@@ -206,37 +253,6 @@ internal fun FormsContent(
                         modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(64.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
-                                .clickable {
-                                    photoPickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                    )
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (imageUri != null) {
-                                AsyncImage(
-                                    model = imageUri,
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.CameraAlt,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    modifier = Modifier.size(28.dp)
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = null,

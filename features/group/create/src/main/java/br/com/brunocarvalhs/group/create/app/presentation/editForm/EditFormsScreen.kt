@@ -19,13 +19,14 @@ fun EditFormsScreen(
         date = uiState.date,
         minPrice = uiState.minPrice,
         maxPrice = uiState.maxPrice,
-        imageUri = uiState.imageUri,
+        selectedPhoto = uiState.selectedPhoto,
+        availablePhotos = uiState.availablePhotos,
         onNameChange = { viewModel.handleIntent(EditFormsIntent.UpdateName(it)) },
         onDescriptionChange = { viewModel.handleIntent(EditFormsIntent.UpdateDescription(it)) },
         onDateChange = { viewModel.handleIntent(EditFormsIntent.UpdateDate(it)) },
         onMinPriceChange = { viewModel.handleIntent(EditFormsIntent.UpdateMinPrice(it)) },
         onMaxPriceChange = { viewModel.handleIntent(EditFormsIntent.UpdateMaxPrice(it)) },
-        onImageChange = { viewModel.handleIntent(EditFormsIntent.UpdateImage(it)) },
+        onPhotoChange = { viewModel.handleIntent(EditFormsIntent.UpdatePhoto(it)) },
         members = uiState.members,
         contacts = uiState.contacts,
         isLoading = uiState.isLoading,
@@ -36,4 +37,3 @@ fun EditFormsScreen(
         onCreate = { viewModel.handleIntent(EditFormsIntent.SaveGroup(onBack)) },
     )
 }
-

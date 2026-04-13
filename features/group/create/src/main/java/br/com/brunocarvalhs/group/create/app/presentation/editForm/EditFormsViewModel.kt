@@ -1,15 +1,7 @@
 package br.com.brunocarvalhs.group.create.app.presentation.editForm
 
 import android.app.Application
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
-import android.util.Base64
 import androidx.compose.runtime.Stable
-import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,14 +9,11 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @Stable
@@ -44,7 +33,7 @@ class EditFormsViewModel @Inject constructor(
             minPrice = args.group.minPrice.toString(),
             maxPrice = args.group.maxPrice.toString(),
             members = args.group.members,
-            imageUri = args.group.photo?.toUri(),
+            selectedPhoto = args.group.photo,
         )
     )
     val uiState: StateFlow<EditFormsUiState> = _uiState.asStateFlow()
@@ -56,7 +45,7 @@ class EditFormsViewModel @Inject constructor(
         is EditFormsIntent.UpdateDate -> updateState { copy(date = intent.date) }
         is EditFormsIntent.UpdateMinPrice -> updateState { copy(minPrice = intent.minPrice) }
         is EditFormsIntent.UpdateMaxPrice -> updateState { copy(maxPrice = intent.maxPrice) }
-        is EditFormsIntent.UpdateImage -> updateState { copy(imageUri = intent.uri) }
+        is EditFormsIntent.UpdatePhoto -> updateState { copy(selectedPhoto = intent.photoUrl) }
     }
 
     private fun updateState(update: EditFormsUiState.() -> EditFormsUiState) {
@@ -94,7 +83,7 @@ class EditFormsViewModel @Inject constructor(
                 date = currentState.date,
                 minPrice = currentState.minPrice.toDoubleOrNull(),
                 maxPrice = currentState.maxPrice.toDoubleOrNull(),
-                photo = currentState.imageUri?.toBase64(application),
+                photo = currentState.selectedPhoto,
                 members = currentState.members,
                 type = args.group.type,
             )
@@ -109,35 +98,5 @@ class EditFormsViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    suspend fun Uri.toBase64(context: Context, maxSize: Int = 512, quality: Int = 80): String? =
-        withContext(Dispatchers.IO) {
-            return@withContext runCatching {
-                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    val source = ImageDecoder.createSource(context.contentResolver, this@toBase64)
-                    ImageDecoder.decodeBitmap(source)
-                } else {
-                    context.contentResolver.openInputStream(this@toBase64)?.use {
-                        BitmapFactory.decodeStream(it)
-                    }
-                } ?: return@withContext null
-
-                val ratio = minOf(
-                    maxSize.toFloat() / bitmap.width,
-                    maxSize.toFloat() / bitmap.height
-                ).coerceAtMost(1.0f)
-
-                val width = (bitmap.width * ratio).toInt()
-                val height = (bitmap.height * ratio).toInt()
-
-                val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
-
-                val outputStream = ByteArrayOutputStream()
-                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-                val byteArray = outputStream.toByteArray()
-
-                Base64.encodeToString(byteArray, Base64.NO_WRAP)
-            }.getOrThrow()
     }
 }

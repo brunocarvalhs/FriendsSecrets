@@ -19,13 +19,14 @@ fun FormsScreen(
         date = uiState.date,
         minPrice = uiState.minPrice,
         maxPrice = uiState.maxPrice,
-        imageUri = uiState.imageUri,
+        selectedPhoto = uiState.selectedPhoto,
+        availablePhotos = uiState.availablePhotos,
         onNameChange = { viewModel.handleIntent(FormsIntent.UpdateName(it)) },
         onDescriptionChange = { viewModel.handleIntent(FormsIntent.UpdateDescription(it)) },
         onDateChange = { viewModel.handleIntent(FormsIntent.UpdateDate(it)) },
         onMinPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMinPrice(it)) },
         onMaxPriceChange = { viewModel.handleIntent(FormsIntent.UpdateMaxPrice(it)) },
-        onImageChange = { viewModel.handleIntent(FormsIntent.UpdateImage(it)) },
+        onPhotoChange = { viewModel.handleIntent(FormsIntent.UpdatePhoto(it)) },
         members = uiState.members,
         contacts = uiState.contacts,
         isLoading = uiState.isLoading,
@@ -36,4 +37,3 @@ fun FormsScreen(
         onCreate = { viewModel.handleIntent(FormsIntent.CreateGroup(onFinish)) },
     )
 }
-

@@ -1,13 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.presentation.forms
 
 import android.app.Application
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
-import android.util.Base64
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -17,14 +10,11 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @Stable
@@ -51,7 +41,7 @@ class FormsViewModel @Inject constructor(
         is FormsIntent.UpdateDate -> updateState { copy(date = intent.date) }
         is FormsIntent.UpdateMinPrice -> updateState { copy(minPrice = intent.minPrice) }
         is FormsIntent.UpdateMaxPrice -> updateState { copy(maxPrice = intent.maxPrice) }
-        is FormsIntent.UpdateImage -> updateState { copy(imageUri = intent.uri) }
+        is FormsIntent.UpdatePhoto -> updateState { copy(selectedPhoto = intent.photoUrl) }
     }
 
     private fun updateState(update: FormsUiState.() -> FormsUiState) {
@@ -82,8 +72,6 @@ class FormsViewModel @Inject constructor(
             
             _uiState.value = currentState.copy(isLoading = true, error = null)
             
-            val photoBase64 = currentState.imageUri?.toBase64(application)
-
             val group = GroupModel(
                 name = currentState.name,
                 description = currentState.description,
@@ -91,7 +79,7 @@ class FormsViewModel @Inject constructor(
                 minPrice = currentState.minPrice.toDoubleOrNull(),
                 maxPrice = currentState.maxPrice.toDoubleOrNull(),
                 date = currentState.date.ifBlank { null },
-                photo = photoBase64
+                photo = currentState.selectedPhoto
             )
             
             groupCreateUseCase(group).onSuccess {
@@ -104,35 +92,5 @@ class FormsViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    suspend fun Uri.toBase64(context: Context, maxSize: Int = 512, quality: Int = 80): String? =
-        withContext(Dispatchers.IO) {
-            return@withContext runCatching {
-                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    val source = ImageDecoder.createSource(context.contentResolver, this@toBase64)
-                    ImageDecoder.decodeBitmap(source)
-                } else {
-                    context.contentResolver.openInputStream(this@toBase64)?.use {
-                        BitmapFactory.decodeStream(it)
-                    }
-                } ?: return@withContext null
-
-                val ratio = minOf(
-                    maxSize.toFloat() / bitmap.width,
-                    maxSize.toFloat() / bitmap.height
-                ).coerceAtMost(1.0f)
-
-                val width = (bitmap.width * ratio).toInt()
-                val height = (bitmap.height * ratio).toInt()
-
-                val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
-
-                val outputStream = ByteArrayOutputStream()
-                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-                val byteArray = outputStream.toByteArray()
-
-                Base64.encodeToString(byteArray, Base64.NO_WRAP)
-            }.getOrThrow()
     }
 }
