@@ -101,13 +101,18 @@ dependencies {
     // Hilt Testes
     testImplementation(libs.hilt.android.testing)
     androidTestImplementation(libs.hilt.android.testing)
-    kspTest(libs.hilt.compiler)
-    kspAndroidTest(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
-}
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+}
