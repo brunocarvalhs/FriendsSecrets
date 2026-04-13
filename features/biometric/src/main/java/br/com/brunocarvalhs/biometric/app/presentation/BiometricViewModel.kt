@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.biometric.R
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricResult
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,7 +54,7 @@ class BiometricViewModel @Inject constructor(
                             _state.update { it.copy(isAuthenticated = true, isLoading = false, failedAttemptMessage = null) }
                         }
                         is BiometricResult.FailedAttempt -> {
-                            _state.update { it.copy(failedAttemptMessage = "Digital não reconhecida. Tente novamente.") }
+                            _state.update { it.copy(failedAttemptMessage = activity.getString(R.string.biometric_not_found)) }
                         }
                         is BiometricResult.Error -> {
                             _state.update { it.copy(error = result.message, isLoading = false, failedAttemptMessage = null) }

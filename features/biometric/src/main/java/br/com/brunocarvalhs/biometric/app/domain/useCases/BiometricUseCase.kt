@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.biometric.app.domain.useCases
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import br.com.brunocarvalhs.biometric.R
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -44,8 +45,8 @@ class BiometricUseCase @Inject constructor(
         )
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Autenticação Segura")
-            .setSubtitle("Acesse usando biometria ou a senha do dispositivo")
+            .setTitle(activity.getString(R.string.title_biometric))
+            .setSubtitle(activity.getString(R.string.subtitle_biometric))
             .setAllowedAuthenticators(biometricManager.getAuthenticatorTypes())
             .build()
 

@@ -23,9 +23,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
+import br.com.brunocarvalhs.biometric.R
 
 @Composable
 fun BiometricScreen(
@@ -69,7 +71,7 @@ fun BiometricScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Autenticação Necessária",
+                text = stringResource(R.string.biometric_required),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
@@ -78,7 +80,7 @@ fun BiometricScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Use sua biometria para acessar o FriendsSecrets de forma segura.",
+                text = stringResource(R.string.biometric_message),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -113,7 +115,7 @@ fun BiometricScreen(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text("Autenticar")
+                    Text(stringResource(R.string.biometric_button_authentic))
                 }
             }
         }
