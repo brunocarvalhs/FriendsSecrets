@@ -19,8 +19,6 @@ class FirebaseRealtimeManager @Inject constructor(
 ) : ChatService {
 
     override fun getMessages(groupId: String): Flow<List<MessageModel>> = callbackFlow {
-        // Usamos limitToLast(50) para baixar apenas o essencial. 
-        // O histórico completo fica no Room local do usuário.
         val query = database.getReference("chats").child(groupId).limitToLast(50)
         val messages = mutableMapOf<String, MessageModel>()
 
@@ -56,27 +54,27 @@ class FirebaseRealtimeManager @Inject constructor(
         awaitClose { query.removeEventListener(listener) }
     }
 
-    override suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit> = runCatching {
-        val id = if (message.id.isBlank()) {
-            database.getReference("chats").child(groupId).push().key ?: java.util.UUID.randomUUID().toString()
-        } else {
-            message.id
+    override suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit> =
+        runCatching {
+            val id = message.id.ifBlank {
+                database.getReference("chats").child(groupId).push().key
+                    ?: java.util.UUID.randomUUID().toString()
+            }
+
+            val reference = database.getReference("chats").child(groupId).child(id)
+
+            val messageMap = mapOf(
+                "id" to id,
+                "groupId" to groupId,
+                "text" to message.text,
+                "senderId" to message.senderId,
+                "senderName" to message.senderName,
+                "timestamp" to message.timestamp,
+                "status" to MessageStatus.SENT.name
+            )
+
+            reference.setValue(messageMap).await()
         }
-        
-        val reference = database.getReference("chats").child(groupId).child(id)
-        
-        val messageMap = mapOf(
-            "id" to id,
-            "groupId" to groupId,
-            "text" to message.text,
-            "senderId" to message.senderId,
-            "senderName" to message.senderName,
-            "timestamp" to message.timestamp,
-            "status" to MessageStatus.SENT.name
-        )
-        
-        reference.setValue(messageMap).await()
-    }
 
     override suspend fun clearMessages(groupId: String): Result<Unit> = runCatching {
         database.getReference("chats").child(groupId).removeValue().await()

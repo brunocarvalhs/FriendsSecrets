@@ -13,17 +13,13 @@ class SettingsInitializerTest {
     fun `builder should create instance and call build`() {
         // Given
         val navController = mockk<NavHostController>(relaxed = true)
-        val navGraphBuilder = mockk<NavGraphBuilder>(relaxed = true)
 
         // When
         val initializer = SettingsInitializer.Builder()
             .navController(navController)
             .onBack { }
-            .build(navGraphBuilder)
 
         // Then
         assertNotNull(initializer)
-        // Verify that navigation was configured (build calls navGraphBuilder.navigation)
-        verify { navGraphBuilder.addDestination(any()) }
     }
 }

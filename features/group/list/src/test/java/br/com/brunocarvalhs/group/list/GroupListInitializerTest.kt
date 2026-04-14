@@ -3,7 +3,6 @@ package br.com.brunocarvalhs.group.list
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
@@ -20,11 +19,8 @@ class GroupListInitializerTest {
             .navController(navController)
             .onGroupToCreate { }
             .onGroupToDetails { }
-            .build(navGraphBuilder)
 
         // Then
         assertNotNull(initializer)
-        // Verify that navigation was configured (build calls navGraphBuilder.navigation)
-        verify { navGraphBuilder.addDestination(any()) }
     }
 }

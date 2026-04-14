@@ -3,6 +3,8 @@ package br.com.brunocarvalhs.friendssecrets
 import android.app.Application
 import android.os.StrictMode
 import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -22,8 +24,8 @@ class CustomApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashLoggerProvider())
+        if (BuildConfig.DEBUG) Timber.plant(tree = Timber.DebugTree())
+        else Timber.plant(tree = CrashLoggerProvider(Firebase.crashlytics))
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(

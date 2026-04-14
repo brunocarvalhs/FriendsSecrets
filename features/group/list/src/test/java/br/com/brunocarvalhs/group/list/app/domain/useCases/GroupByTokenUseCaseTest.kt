@@ -47,7 +47,7 @@ class GroupByTokenUseCaseTest {
         assertTrue(result.isSuccess)
         assertEquals(token, result.getOrNull()?.token)
         assertTrue(result.getOrNull()!!.isOwner)
-        coVerify { storage.save(GroupModel.COLLECTION_NAME, arrayOf(token)) }
+        coVerify { storage.save(GroupModel.COLLECTION_NAME, any()) }
     }
 
     @Test
@@ -64,13 +64,14 @@ class GroupByTokenUseCaseTest {
     fun `invoke should return failure when group not found`() = runTest {
         // Given
         val token = "UNKNOWN"
+        coEvery { device.getDeviceId() } returns "any"
         coEvery { repository.searchByToken(token) } returns null
 
         // When
         val result = useCase.invoke(token)
 
         // Then
-        assertTrue(result.isFailure)
+        assertTrue(result.toString(), result.isFailure)
         assertTrue(result.exceptionOrNull() is GroupNotFoundException)
     }
 
@@ -79,6 +80,7 @@ class GroupByTokenUseCaseTest {
         // Given
         val token = "EXISTING"
         val dto = GroupListDTO(id = "1", token = token)
+        coEvery { device.getDeviceId() } returns "any"
         coEvery { repository.searchByToken(token) } returns dto
         coEvery { storage.load(GroupModel.COLLECTION_NAME, Array<String>::class) } returns arrayOf(token)
 

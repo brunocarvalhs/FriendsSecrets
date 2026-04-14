@@ -5,7 +5,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 class CrashLoggerProvider(
-    private val crashlytics: FirebaseCrashlytics = FirebaseCrashlytics.getInstance()
+    private val crashlytics: FirebaseCrashlytics
 ) : Timber.Tree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
