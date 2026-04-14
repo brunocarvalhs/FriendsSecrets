@@ -6,36 +6,54 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class IdentifyUserUseCaseTest {
 
     private val storageService: StorageService = mockk()
-    private val useCase = IdentifyUserUseCase(storageService)
+    private lateinit var useCase: IdentifyUserUseCase
 
-    @Test
-    fun `saveNickname should call storageService save`() = runTest {
-        // Given
-        val name = "Bruno"
-        coEvery { storageService.save("user_nickname_cache", name) } returns Unit
-
-        // When
-        useCase.saveNickname(name)
-
-        // Then
-        coVerify { storageService.save("user_nickname_cache", name) }
+    @Before
+    fun setup() {
+        useCase = IdentifyUserUseCase(storageService)
     }
 
     @Test
-    fun `getNickname should return value from storageService`() = runTest {
+    fun `saveNickname should call storage service`() = runTest {
         // Given
-        val name = "Bruno"
-        coEvery { storageService.load("user_nickname_cache", String::class) } returns name
+        val nickname = "Bruno"
+        coEvery { storageService.save("user_nickname_cache", nickname) } returns Unit
+
+        // When
+        useCase.saveNickname(nickname)
+
+        // Then
+        coVerify { storageService.save("user_nickname_cache", nickname) }
+    }
+
+    @Test
+    fun `getNickname should return value from storage service`() = runTest {
+        // Given
+        val nickname = "Bruno"
+        coEvery { storageService.load("user_nickname_cache", String::class) } returns nickname
 
         // When
         val result = useCase.getNickname()
 
         // Then
-        assertEquals(name, result)
+        assertEquals(nickname, result)
+    }
+
+    @Test
+    fun `getNickname should return null when not found`() = runTest {
+        // Given
+        coEvery { storageService.load("user_nickname_cache", String::class) } returns null
+
+        // When
+        val result = useCase.getNickname()
+
+        // Then
+        assertEquals(null, result)
     }
 }

@@ -5,12 +5,18 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class IsBiometricEnabledUseCaseTest {
 
     private val service: BiometricService = mockk()
-    private val useCase = IsBiometricEnabledUseCase(service)
+    private lateinit var useCase: IsBiometricEnabledUseCase
+
+    @Before
+    fun setup() {
+        useCase = IsBiometricEnabledUseCase(service)
+    }
 
     @Test
     fun `invoke should return state flow from service`() {
@@ -23,5 +29,6 @@ class IsBiometricEnabledUseCaseTest {
 
         // Then
         assertEquals(expectedFlow, result)
+        assertEquals(true, result.value)
     }
 }

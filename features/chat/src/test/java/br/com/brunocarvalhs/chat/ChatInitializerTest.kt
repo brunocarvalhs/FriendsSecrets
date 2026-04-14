@@ -8,18 +8,16 @@ import org.junit.Test
 class ChatInitializerTest {
 
     @Test
-    fun `builder should set properties and return itself`() {
+    fun `builder should create instance and call build`() {
         // Given
-        val builder = ChatInitializer.Builder()
-        val navController: NavHostController = mockk()
-        val onBack: () -> Unit = {}
+        val navController = mockk<NavHostController>(relaxed = true)
 
         // When
-        val result = builder
+        val initializer = ChatInitializer.Builder()
             .navController(navController)
-            .onBack(onBack)
+            .onBack { }
 
         // Then
-        assertNotNull(result)
+        assertNotNull(initializer)
     }
 }

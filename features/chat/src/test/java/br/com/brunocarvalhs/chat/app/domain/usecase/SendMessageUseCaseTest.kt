@@ -6,18 +6,24 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class SendMessageUseCaseTest {
 
     private val repository: ChatRepository = mockk()
-    private val useCase = SendMessageUseCase(repository)
+    private lateinit var useCase: SendMessageUseCase
+
+    @Before
+    fun setup() {
+        useCase = SendMessageUseCase(repository)
+    }
 
     @Test
-    fun `invoke should return success from repository`() = runTest {
+    fun `invoke should call repository and return success`() = runTest {
         // Given
-        val groupId = "group123"
-        val message = MessageModel(text = "Hello")
+        val groupId = "group1"
+        val message = mockk<MessageModel>()
         coEvery { repository.sendMessage(groupId, message) } returns Result.success(Unit)
 
         // When
@@ -28,12 +34,11 @@ class SendMessageUseCaseTest {
     }
 
     @Test
-    fun `invoke should return failure from repository`() = runTest {
+    fun `invoke should return failure when repository fails`() = runTest {
         // Given
-        val groupId = "group123"
-        val message = MessageModel(text = "Hello")
-        val exception = Exception("Error")
-        coEvery { repository.sendMessage(groupId, message) } returns Result.failure(exception)
+        val groupId = "group1"
+        val message = mockk<MessageModel>()
+        coEvery { repository.sendMessage(groupId, message) } returns Result.failure(Exception("Error"))
 
         // When
         val result = useCase(groupId, message)
