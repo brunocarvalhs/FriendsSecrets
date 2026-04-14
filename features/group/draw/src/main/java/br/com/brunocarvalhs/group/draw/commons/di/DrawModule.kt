@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DrawModule {
+internal abstract class DrawModule {
 
     @Binds
     abstract fun bindDrawRepository(

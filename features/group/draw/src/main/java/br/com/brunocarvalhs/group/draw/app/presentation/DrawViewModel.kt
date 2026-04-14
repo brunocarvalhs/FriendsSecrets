@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class DrawViewModel @Inject constructor(
+internal class DrawViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val shareSecretFriendsUseCase: ShareSecretFriendsUseCase,
     private val drawUseCase: DrawUseCase

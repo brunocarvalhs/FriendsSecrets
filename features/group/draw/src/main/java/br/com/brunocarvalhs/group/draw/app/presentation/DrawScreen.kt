@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun DrawScreen(
+internal fun DrawScreen(
     viewModel: DrawViewModel,
     onBack: () -> Unit = {},
 ) {

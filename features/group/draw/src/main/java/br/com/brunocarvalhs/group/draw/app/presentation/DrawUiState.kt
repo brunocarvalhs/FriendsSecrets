@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.draw.app.presentation
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 
-data class DrawUiState(
+internal data class DrawUiState(
     val isLoading: Boolean = false,
     val members: List<UserModel> = emptyList(),
     val error: String? = null,

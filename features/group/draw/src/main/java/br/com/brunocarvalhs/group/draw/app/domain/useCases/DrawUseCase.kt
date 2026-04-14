@@ -5,7 +5,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository
 import javax.inject.Inject
 
-class DrawUseCase @Inject constructor(
+internal class DrawUseCase @Inject constructor(
     private val repository: DrawRepository
 ) {
     suspend operator fun invoke(group: GroupModel): Result<Map<String, String>> = runCatching {

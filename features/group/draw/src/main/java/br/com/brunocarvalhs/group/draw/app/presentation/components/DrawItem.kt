@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 
 @Composable
-fun DrawItem(
+internal fun DrawItem(
     members: List<UserModel>,
     member: String,
     onShare: () -> Unit

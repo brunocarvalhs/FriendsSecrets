@@ -8,7 +8,7 @@ import javax.inject.Inject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class ShareSecretFriendsUseCase @Inject constructor(
+internal class ShareSecretFriendsUseCase @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) {
     operator fun invoke(

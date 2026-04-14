@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DrawRepositoryImpl @Inject constructor(
+internal class DrawRepositoryImpl @Inject constructor(
     private val network: NetworkService,
     private val drawService: DrawManager,
 ) : DrawRepository {

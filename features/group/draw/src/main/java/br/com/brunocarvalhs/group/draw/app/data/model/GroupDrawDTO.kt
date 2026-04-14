@@ -9,7 +9,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 @Serializable
-data class GroupDrawDTO(
+internal data class GroupDrawDTO(
     @SerialName(GroupModel.ID) val id: String,
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String>,
 ) {

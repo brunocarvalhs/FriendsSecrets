@@ -4,7 +4,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DrawService
 import javax.inject.Inject
 
-class DrawManager @Inject constructor(
+internal class DrawManager @Inject constructor(
     private val crypto: CryptoService
 ): DrawService {
     override fun draw(participants: MutableList<String>): Map<String, String> {
