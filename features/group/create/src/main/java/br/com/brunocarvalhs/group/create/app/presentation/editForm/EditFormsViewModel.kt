@@ -1,17 +1,18 @@
 package br.com.brunocarvalhs.group.create.app.presentation.editForm
 
-import android.app.Application
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,9 +20,9 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class EditFormsViewModel @Inject constructor(
-    private val application: Application,
     savedStateHandle: SavedStateHandle,
-    private val groupEditUseCase: GroupEditUseCase
+    private val groupEditUseCase: GroupEditUseCase,
+    private val imageService: GroupImageService
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<EditFormsRouter>(EditFormsRouter.typeMap)
@@ -37,6 +38,19 @@ internal class EditFormsViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<EditFormsUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            imageService.availablePhotos.collectLatest { photos ->
+                _uiState.update {
+                    it.copy(
+                        availablePhotos = photos,
+                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
+                    )
+                }
+            }
+        }
+    }
 
     fun handleIntent(intent: EditFormsIntent) = when (intent) {
         is EditFormsIntent.SaveGroup -> saveGroup(intent.onFinish)

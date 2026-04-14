@@ -19,16 +19,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
-import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
+
+private const val HASHES: Char = '#'
 
 @Composable
-fun ContactList(
+internal fun ContactList(
     contacts: List<UserModel>,
     selectedMembers: List<UserModel>,
     onToggleMember: (UserModel) -> Unit
 ) {
     val grouped = remember(contacts) {
-        contacts.groupBy { it.name.firstOrNull()?.uppercaseChar() ?: '#' }
+        contacts.groupBy { it.name.firstOrNull()?.uppercaseChar() ?: HASHES }
             .toSortedMap()
     }
 
@@ -57,7 +58,8 @@ fun ContactList(
                     Column {
                         contactsInGroup.forEachIndexed { index, contact ->
                             ContactListItem(
-                                contact = contact,
+                                name = contact.name,
+                                photoUrl = contact.photoUrl,
                                 isSelected = selectedMembers.any { it.phoneNumber == contact.phoneNumber },
                                 onToggle = { onToggleMember(contact) }
                             )

@@ -57,12 +57,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.create.R
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
@@ -71,6 +73,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+
+private const val UTC = "UTC"
+private const val ZERO_INT = 0
+private const val DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,11 +96,9 @@ internal fun FormsContent(
     onMaxPriceChange: (String) -> Unit,
     onPhotoChange: (String) -> Unit,
     members: List<UserModel>,
-    contacts: Int,
     onCreate: () -> Unit,
     onBack: () -> Unit,
     isLoading: Boolean = false,
-    error: String? = null,
     isValid: Boolean = false,
     isPriceError: Boolean = false
 ) {
@@ -104,11 +108,11 @@ internal fun FormsContent(
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val today = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
+                val today = Calendar.getInstance(TimeZone.getTimeZone(UTC)).apply {
+                    set(Calendar.HOUR_OF_DAY, ZERO_INT)
+                    set(Calendar.MINUTE, ZERO_INT)
+                    set(Calendar.SECOND, ZERO_INT)
+                    set(Calendar.MILLISECOND, ZERO_INT)
                 }.timeInMillis
                 return utcTimeMillis >= today
             }
@@ -125,12 +129,12 @@ internal fun FormsContent(
                     showDatePicker = false
                     showTimePicker = true
                 }) {
-                    Text("Próximo")
+                    Text(stringResource(R.string.next))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -149,40 +153,45 @@ internal fun FormsContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Selecione o horário",
+                        text = stringResource(R.string.select_the_best_time),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-                    
+
                     TimePicker(state = timePickerState)
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
                         TextButton(onClick = { showTimePicker = false }) {
-                            Text("Cancelar")
+                            Text(stringResource(R.string.cancel))
                         }
                         TextButton(onClick = {
                             val calendar = Calendar.getInstance().apply {
                                 datePickerState.selectedDateMillis?.let { utcMillis ->
-                                    val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-                                        timeInMillis = utcMillis
-                                    }
+                                    val utcCalendar =
+                                        Calendar.getInstance(TimeZone.getTimeZone(UTC)).apply {
+                                            timeInMillis = utcMillis
+                                        }
                                     set(Calendar.YEAR, utcCalendar.get(Calendar.YEAR))
                                     set(Calendar.MONTH, utcCalendar.get(Calendar.MONTH))
-                                    set(Calendar.DAY_OF_MONTH, utcCalendar.get(Calendar.DAY_OF_MONTH))
+                                    set(
+                                        Calendar.DAY_OF_MONTH,
+                                        utcCalendar.get(Calendar.DAY_OF_MONTH)
+                                    )
                                 }
                                 set(Calendar.HOUR_OF_DAY, timePickerState.hour)
                                 set(Calendar.MINUTE, timePickerState.minute)
                             }
-                            
-                            val formattedDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                                .format(calendar.time)
+
+                            val formattedDate =
+                                SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault())
+                                    .format(calendar.time)
                             onDateChange(formattedDate)
                             showTimePicker = false
                         }) {
-                            Text("OK")
+                            Text(stringResource(R.string.ok))
                         }
                     }
                 }
@@ -195,7 +204,11 @@ internal fun FormsContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (isEditing) "Editar grupo" else "Novo grupo",
+                        text = if (isEditing) {
+                            stringResource(R.string.edit_group)
+                        } else {
+                            stringResource(R.string.new_group)
+                        },
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp
@@ -206,7 +219,7 @@ internal fun FormsContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar",
+                            contentDescription = stringResource(R.string.content_description_back),
                             tint = MaterialTheme.colorScheme.secondary
                         )
                     }
@@ -217,7 +230,11 @@ internal fun FormsContent(
                         enabled = isValid
                     ) {
                         Text(
-                            text = if (isEditing) "Salvar" else "Criar",
+                            text = if (isEditing) {
+                                stringResource(R.string.save)
+                            } else {
+                                stringResource(R.string.create)
+                            },
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = if (isValid) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -241,7 +258,10 @@ internal fun FormsContent(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Box(
                     modifier = Modifier
                         .size(100.dp)
@@ -265,9 +285,9 @@ internal fun FormsContent(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -279,7 +299,11 @@ internal fun FormsContent(
                                 .clip(CircleShape)
                                 .border(
                                     width = if (selectedPhoto == photoUrl) 3.dp else 1.dp,
-                                    color = if (selectedPhoto == photoUrl) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outlineVariant,
+                                    color = if (selectedPhoto == photoUrl) {
+                                        MaterialTheme.colorScheme.secondary
+                                    } else {
+                                        MaterialTheme.colorScheme.outlineVariant
+                                    },
                                     shape = CircleShape
                                 )
                                 .clickable { onPhotoChange(photoUrl) }
@@ -319,7 +343,7 @@ internal fun FormsContent(
                             onValueChange = { onNameChange(it) },
                             placeholder = {
                                 Text(
-                                    "Nome do grupo",
+                                    stringResource(R.string.group_name),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
@@ -360,7 +384,7 @@ internal fun FormsContent(
                             onValueChange = { onDescriptionChange(it) },
                             placeholder = {
                                 Text(
-                                    "Descrição",
+                                    stringResource(R.string.description),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
@@ -398,7 +422,7 @@ internal fun FormsContent(
                         Spacer(modifier = Modifier.width(16.dp))
 
                         Text(
-                            text = date.ifEmpty { "Data do evento" },
+                            text = date.ifEmpty { stringResource(R.string.event_date) },
                             color = if (date.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
@@ -430,7 +454,7 @@ internal fun FormsContent(
                             isError = isPriceError,
                             placeholder = {
                                 Text(
-                                    "Preço Mín.",
+                                    stringResource(R.string.minimum_price),
                                     color = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
@@ -463,8 +487,12 @@ internal fun FormsContent(
                             isError = isPriceError,
                             placeholder = {
                                 Text(
-                                    "Preço Máx.",
-                                    color = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    stringResource(R.string.maximum_price),
+                                    color = if (isPriceError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             },
@@ -482,7 +510,7 @@ internal fun FormsContent(
                     }
                     if (isPriceError) {
                         Text(
-                            text = "Preço mínimo não pode ser maior que o máximo",
+                            text = stringResource(R.string.minimum_price_cannot_be_greater_than_maximum),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
@@ -493,7 +521,7 @@ internal fun FormsContent(
 
             Column {
                 Text(
-                    text = "Membros",
+                    text = stringResource(R.string.members),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground

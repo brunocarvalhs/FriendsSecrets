@@ -12,11 +12,13 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.group.create.R
 
 @Composable
-fun SearchField(
+internal fun SearchField(
     query: String,
     onQueryChange: (String) -> Unit
 ) {
@@ -28,7 +30,7 @@ fun SearchField(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         placeholder = {
             Text(
-                text = "Pesquisar nome ou número",
+                text = stringResource(R.string.search_field_place),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },

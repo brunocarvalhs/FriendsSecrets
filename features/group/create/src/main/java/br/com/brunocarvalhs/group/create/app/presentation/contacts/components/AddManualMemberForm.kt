@@ -25,18 +25,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.create.R
+import br.com.brunocarvalhs.group.create.app.domain.constants.EMPTY_STRING
 
 @Composable
-fun AddManualMemberForm(
+internal fun AddManualMemberForm(
     modifier: Modifier = Modifier,
     onAddMember: (UserModel) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(value = EMPTY_STRING) }
+    var phone by remember { mutableStateOf(value = EMPTY_STRING) }
 
     Column(
         modifier = modifier
@@ -55,13 +58,13 @@ fun AddManualMemberForm(
         Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "Adicionar Manualmente",
+            text = stringResource(R.string.add_member_manual_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         
         Text(
-            text = "Parece que não temos acesso aos seus contatos ou a lista está vazia. Você pode adicionar as pessoas informando o nome abaixo.",
+            text = stringResource(R.string.add_member_manual_description),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -72,11 +75,11 @@ fun AddManualMemberForm(
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Nome do participante") },
-            placeholder = { Text("Ex: João Silva") },
+            label = { Text(stringResource(R.string.add_member_manual_input_name)) },
+            placeholder = { Text(stringResource(R.string.add_member_manual_input_name_place)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) }
+            leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -84,8 +87,8 @@ fun AddManualMemberForm(
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
-            label = { Text("Telefone (Opcional)") },
-            placeholder = { Text("(00) 00000-0000") },
+            label = { Text(stringResource(R.string.add_member_manual_input_phone)) },
+            placeholder = { Text(stringResource(R.string.add_member_manual_input_phone_place)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -103,8 +106,8 @@ fun AddManualMemberForm(
                             phoneNumber = phone
                         )
                     )
-                    name = ""
-                    phone = ""
+                    name = EMPTY_STRING
+                    phone = EMPTY_STRING
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -113,7 +116,7 @@ fun AddManualMemberForm(
         ) {
             Icon(Icons.Default.Add, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Adicionar ao Grupo")
+            Text(stringResource(R.string.add_member_manual_button))
         }
     }
 }

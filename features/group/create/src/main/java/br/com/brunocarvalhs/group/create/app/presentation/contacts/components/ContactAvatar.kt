@@ -15,8 +15,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 
+private const val EMPTY_STRING_SPACE = ""
+private const val SPACE = " "
+private const val QUESTION_MARK = "?"
+
 @Composable
-fun ContactAvatar(
+internal fun ContactAvatar(
     name: String,
     photoUrl: String?,
     modifier: Modifier = Modifier,
@@ -24,18 +28,16 @@ fun ContactAvatar(
 ) {
     val initials = remember(name) {
         val sanitized = name.filter { it.isLetter() || it.isWhitespace() }
-        val words = sanitized.split(" ").filter { it.isNotBlank() }
+        val words = sanitized.split(SPACE).filter { it.isNotBlank() }
 
         when {
             words.size >= 2 -> {
-                words.take(2)
-                    .map { it.first().uppercase() }
-                    .joinToString("")
+                words.take(2).joinToString(EMPTY_STRING_SPACE) { it.first().uppercase() }
             }
             words.size == 1 -> {
                 words.first().take(2).uppercase()
             }
-            else -> "?"
+            else -> QUESTION_MARK
         }
     }
 

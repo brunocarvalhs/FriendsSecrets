@@ -26,14 +26,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
-import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
+import br.com.brunocarvalhs.group.create.R
 
 @Composable
-fun SelectedMembersRow(
+internal fun SelectedMembersRow(
     members: List<UserModel>,
     onRemoveMember: (UserModel) -> Unit
 ) {
@@ -71,7 +72,7 @@ fun SelectedMembersRow(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Remover",
+                                contentDescription = stringResource(R.string.content_description_remove),
                                 tint = MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(12.dp)
                             )

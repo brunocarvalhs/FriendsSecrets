@@ -15,12 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
-import br.com.brunocarvalhs.group.create.app.domain.model.ContactModel
 
 @Composable
-fun ContactListItem(
-    contact: UserModel,
+internal fun ContactListItem(
+    name: String,
+    photoUrl: String? = null,
     isSelected: Boolean,
     onToggle: () -> Unit
 ) {
@@ -32,14 +31,14 @@ fun ContactListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ContactAvatar(
-            name = contact.name,
-            photoUrl = contact.photoUrl
+            name = name,
+            photoUrl = photoUrl
         )
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Text(
-            text = contact.name,
+            text = name,
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge
@@ -59,12 +58,10 @@ fun ContactListItem(
 
 @Preview
 @Composable
-fun ContactListItemPreview() {
+private fun ContactListItemPreview() {
     ContactListItem(
-        contact = UserModel(
-            name = "Bruno Carvalho",
-            phoneNumber = "1234567890"
-        ),
+        name = "Bruno Carvalho",
+        photoUrl = null,
         isSelected = true,
         onToggle = {}
     )

@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.group.create.app.presentation.forms
 
-import android.app.Application
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -22,7 +21,6 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class FormsViewModel @Inject constructor(
-    private val application: Application,
     savedStateHandle: SavedStateHandle,
     private val groupCreateUseCase: GroupCreateUseCase,
     private val imageService: GroupImageService
