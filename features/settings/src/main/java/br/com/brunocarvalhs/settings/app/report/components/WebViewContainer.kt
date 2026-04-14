@@ -9,7 +9,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebViewContainer(url: String, modifier: Modifier = Modifier) {
+internal fun WebViewContainer(url: String, modifier: Modifier = Modifier) {
     AndroidView(
         factory = { context ->
             WebView(context).apply {

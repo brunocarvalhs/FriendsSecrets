@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 @Composable
-fun rememberReviewRequester(): () -> Unit {
+internal fun rememberReviewRequester(): () -> Unit {
     val context = LocalContext.current
     val activity = context as? Activity
     val coroutineScope = rememberCoroutineScope()

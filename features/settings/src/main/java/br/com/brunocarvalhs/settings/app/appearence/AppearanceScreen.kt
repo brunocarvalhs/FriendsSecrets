@@ -30,7 +30,7 @@ import br.com.brunocarvalhs.settings.app.appearence.components.ThemeSelect
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 
 @Composable
-fun AppearanceScreen(
+internal fun AppearanceScreen(
     viewModel: AppearanceViewModel,
     onBack: () -> Unit
 ) {
@@ -75,7 +75,7 @@ private fun AppearanceContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },

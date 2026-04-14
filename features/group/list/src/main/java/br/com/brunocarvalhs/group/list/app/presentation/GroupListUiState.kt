@@ -6,7 +6,10 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-enum class GroupFilterTag(val description: String) {
+private const val DATE_FORMAT = "dd/MM/yyyy"
+private const val EMPTY_STRING = ""
+
+internal enum class GroupFilterTag(val description: String) {
     ACTIVE("Ativos"),
     ARCHIVED("Arquivados"),
     DRAWN("Sorteados"),
@@ -14,11 +17,11 @@ enum class GroupFilterTag(val description: String) {
 }
 
 @Stable
-data class GroupListUiState(
+internal data class GroupListUiState(
     val isLoading: Boolean = false,
     val list: List<GroupModel> = emptyList(),
     val errorMessage: String? = null,
-    val searchQuery: String = "",
+    val searchQuery: String = EMPTY_STRING,
     val selectedTag: GroupFilterTag = GroupFilterTag.ACTIVE
 ) {
     val tags: List<GroupFilterTag> = GroupFilterTag.entries
@@ -26,7 +29,7 @@ data class GroupListUiState(
     val filteredList: List<GroupModel>
         get() {
             val currentTime = System.currentTimeMillis()
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
 
             return list.filter { group ->
                 val matchesSearch = group.name.contains(searchQuery, ignoreCase = true)

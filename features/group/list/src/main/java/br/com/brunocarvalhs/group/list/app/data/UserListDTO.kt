@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserListDTO(
+internal data class UserListDTO(
     @SerialName(UserModel.ID) val id: String = "",
     @SerialName(UserModel.NAME) val name: String = "",
     @SerialName(UserModel.PHOTO_URL) val photoUrl: String? = null

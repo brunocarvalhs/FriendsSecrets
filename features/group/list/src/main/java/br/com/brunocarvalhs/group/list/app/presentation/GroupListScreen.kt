@@ -43,17 +43,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.list.R
+import br.com.brunocarvalhs.group.list.app.presentation.components.EmptyGroupComponent
+import br.com.brunocarvalhs.group.list.app.presentation.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupCard
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
-import br.com.brunocarvalhs.group.list.app.presentation.list.components.EmptyGroupComponent
-import br.com.brunocarvalhs.group.list.app.presentation.list.components.ErrorComponent
-import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingProgress
+import br.com.brunocarvalhs.group.list.app.presentation.components.LoadingProgress
 import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
 
 @Composable
@@ -175,12 +177,12 @@ private fun GroupListTopBar(
                 ),
                 actions = {
                     IconButton(onClick = onJoinGroupClick) {
-                        Icon(Icons.Default.GroupAdd, contentDescription = "Entrar em Grupo")
+                        Icon(Icons.Default.GroupAdd, contentDescription = stringResource(R.string.join_group))
                     }
 
                     if (moreOptions.isNotEmpty()) {
                         IconButton(onClick = { expanded = true }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "Mais opções")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
                         }
 
                         DropdownMenu(
@@ -216,7 +218,7 @@ private fun GroupListTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                placeholder = { Text("Pesquisar grupos...") },
+                placeholder = { Text(stringResource(R.string.search_groups)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
@@ -326,7 +328,10 @@ private fun GroupListFab(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ) {
-        Icon(Icons.Default.Add, contentDescription = "Novo Grupo")
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(R.string.new_group)
+        )
     }
 }
 
@@ -363,7 +368,7 @@ private class HomePreviewProvider : PreviewParameterProvider<GroupListUiState> {
     uiMode = UI_MODE_NIGHT_NO
 )
 @Composable
-fun ListContentPreview(
+private fun ListContentPreview(
     @PreviewParameter(HomePreviewProvider::class) state: GroupListUiState,
 ) {
     ListContent(

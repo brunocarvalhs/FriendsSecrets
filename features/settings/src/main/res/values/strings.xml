@@ -70,4 +70,6 @@
     <string name="tema_claro">Light theme</string>
     <string name="tema_escuro">Dark theme</string>
     <string name="tema_do_sistema">System theme</string>
+    <string name="back">Back</string>
+    <string name="localized_description">Localized description</string>
 </resources>

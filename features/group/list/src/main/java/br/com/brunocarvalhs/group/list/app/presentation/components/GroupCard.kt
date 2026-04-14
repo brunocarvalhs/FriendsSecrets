@@ -31,7 +31,7 @@ private val imagesBottom = listOf(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GroupCard(
+internal fun GroupCard(
     modifier: Modifier = Modifier,
     name: String,
     description: String? = null,
@@ -40,7 +40,6 @@ fun GroupCard(
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
 ) {
-    // Mantém a lógica da animação original
     val image = rememberSaveable { imagesBottom.random() }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(image))
     val progress by animateLottieCompositionAsState(
@@ -55,29 +54,26 @@ fun GroupCard(
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
-        shape = MaterialTheme.shapes.extraLarge // Bordas mais arredondadas combinam com o tema festivo
+        shape = MaterialTheme.shapes.extraLarge
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
 
-            // Background Animation (Mantida a sua lógica original de opacidade e posição)
             LottieAnimation(
                 composition = composition,
                 progress = progress,
                 modifier = Modifier
                     .size(180.dp)
-                    .alpha(0.15f) // Aumentei levemente a visibilidade
+                    .alpha(0.15f)
                     .align(Alignment.BottomEnd)
                     .offset(x = 30.dp, y = 30.dp)
             )
 
-            // Conteúdo do Card
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(20.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Topo: Nome e Descrição
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = name,
@@ -100,7 +96,6 @@ fun GroupCard(
                     }
                 }
 
-                // Rodapé: Metadados (Data e Membros)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),

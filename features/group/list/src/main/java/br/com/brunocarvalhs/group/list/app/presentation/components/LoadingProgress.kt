@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

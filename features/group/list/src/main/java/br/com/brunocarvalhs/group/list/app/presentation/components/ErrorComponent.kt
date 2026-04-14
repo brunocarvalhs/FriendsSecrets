@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun ErrorComponent(
+internal fun ErrorComponent(
     modifier: Modifier = Modifier,
     message: String,
     onRefresh: (() -> Unit)? = null,

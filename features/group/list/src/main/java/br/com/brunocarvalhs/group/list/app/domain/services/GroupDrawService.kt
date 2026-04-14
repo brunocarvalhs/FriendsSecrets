@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.list.app.domain.services
 
 import javax.inject.Inject
 
-class GroupDrawService @Inject constructor() {
+internal class GroupDrawService @Inject constructor() {
 
     fun draw(participants: List<String>): Map<String, String> {
         if (participants.size < 3) throw IllegalArgumentException("Mínimo de 3 participantes para o sorteio.")

@@ -1,12 +1,10 @@
 package br.com.brunocarvalhs.settings.app.list
 
-import android.content.Context
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -15,8 +13,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+internal class SettingsViewModel @Inject constructor(
     private val biometricService: BiometricService,
 ) : ViewModel() {
 

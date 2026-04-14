@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
+private const val MAX_VISIBLE_MEMBERS = 3
+
 @Composable
 internal fun MembersRow(
     members: List<String>,
@@ -40,7 +42,7 @@ internal fun MembersRow(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(overlapOffset)
         ) {
-            if (members.size > 3) {
+            if (members.size > MAX_VISIBLE_MEMBERS) {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -58,7 +60,7 @@ internal fun MembersRow(
                 }
             }
 
-            members.take(3).forEachIndexed { index, member ->
+            members.take(MAX_VISIBLE_MEMBERS).forEachIndexed { index, member ->
                 Box(
                     modifier = Modifier
                         .size(40.dp)

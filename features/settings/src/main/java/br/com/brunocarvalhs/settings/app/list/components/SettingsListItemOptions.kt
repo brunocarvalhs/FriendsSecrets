@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsListItemOptions(
+internal fun SettingsListItemOptions(
     selected: Boolean = false,
     title: String,
     icon: ImageVector,

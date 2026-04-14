@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.settings.R
 
 @Composable
-fun FAQScreen(
+internal fun FAQScreen(
     onBack: () -> Unit
 ) {
     FAQContent(
@@ -51,7 +51,7 @@ private fun FAQContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },

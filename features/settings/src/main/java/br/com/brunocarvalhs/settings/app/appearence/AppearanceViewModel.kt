@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class AppearanceViewModel @Inject constructor(
+internal class AppearanceViewModel @Inject constructor(
     private val themeService: ThemeService,
 ) : ViewModel() {
 

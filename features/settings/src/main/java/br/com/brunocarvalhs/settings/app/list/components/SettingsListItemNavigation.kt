@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.settings.R
 
 @Composable
-fun SettingsListItemNavigation(
+internal fun SettingsListItemNavigation(
     title: Int,
     icon: ImageVector,
     onClick: () -> Unit = {},
@@ -26,7 +26,7 @@ fun SettingsListItemNavigation(
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "Localized description",
+                contentDescription = stringResource(R.string.localized_description),
             )
         },
         leadingContent = {

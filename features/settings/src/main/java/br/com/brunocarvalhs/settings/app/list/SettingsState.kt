@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.settings.app.list
 
-data class SettingsState(
+internal data class SettingsState(
     val isBiometricPromptEnabled: Boolean = false,
     val isBiometricSupported: Boolean = false
 )

@@ -25,7 +25,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import br.com.brunocarvalhs.settings.R
 
 @Composable
-fun ThemeSelect(
+internal fun ThemeSelect(
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
     selected: String = ThemeService.Theme.LIGHT.name,

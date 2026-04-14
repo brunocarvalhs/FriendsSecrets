@@ -33,7 +33,7 @@ import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
 
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
     onAppearance: () -> Unit = {},

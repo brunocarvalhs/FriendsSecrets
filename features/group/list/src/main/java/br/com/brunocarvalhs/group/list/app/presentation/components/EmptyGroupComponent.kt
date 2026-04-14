@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -27,7 +27,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun EmptyGroupComponent(
+internal fun EmptyGroupComponent(
     modifier: Modifier = Modifier,
     message: String = stringResource(R.string.empty_group_message),
     onGroupToEnter: () -> Unit = {},

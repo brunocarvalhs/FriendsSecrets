@@ -21,7 +21,7 @@ import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.report.components.WebViewContainer
 
 @Composable
-fun ReportIssueScreen(
+internal fun ReportIssueScreen(
     onBack: () -> Unit
 ) {
     ReportIssueContent(
