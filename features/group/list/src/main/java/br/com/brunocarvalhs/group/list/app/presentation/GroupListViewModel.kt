@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class GroupListViewModel @Inject constructor(
+internal class GroupListViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
 ) : ViewModel() {

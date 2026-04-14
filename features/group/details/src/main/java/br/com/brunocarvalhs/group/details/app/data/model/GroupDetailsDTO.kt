@@ -1,15 +1,16 @@
 package br.com.brunocarvalhs.group.details.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.group.details.app.data.constants.EMPTY_STRING
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GroupDetailsDTO(
-    @SerialName(GroupModel.ID) val id: String = "",
-    @SerialName(GroupModel.NAME) val name: String = "",
+internal data class GroupDetailsDTO(
+    @SerialName(GroupModel.ID) val id: String = EMPTY_STRING,
+    @SerialName(GroupModel.NAME) val name: String = EMPTY_STRING,
     @SerialName(GroupModel.DESCRIPTION) val description: String? = null,
-    @SerialName(GroupModel.TOKEN) val token: String = "",
+    @SerialName(GroupModel.TOKEN) val token: String = EMPTY_STRING,
     @SerialName(GroupModel.DATE) val date: String? = null,
     @SerialName(GroupModel.MIN_PRICE) val minPrice: Double? = null,
     @SerialName(GroupModel.MAX_PRICE) val maxPrice: Double? = null,

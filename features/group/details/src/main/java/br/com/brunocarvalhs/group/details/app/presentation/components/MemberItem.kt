@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.brunocarvalhs.group.details.R
 
 @Composable
-fun MemberItem(
+internal fun MemberItem(
     participant: String = "",
     draws: Map<String, String>? = null,
     likes: List<String> = emptyList(),

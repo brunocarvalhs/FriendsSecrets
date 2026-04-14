@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class GroupListModule {
+internal abstract class GroupListModule {
     @Binds
     abstract fun bindGroupListRepository(
         impl: GroupListRepositoryImpl

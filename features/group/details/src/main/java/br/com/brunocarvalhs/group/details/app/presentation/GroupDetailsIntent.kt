@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.presentation
 
-sealed interface GroupDetailsIntent {
+internal sealed interface GroupDetailsIntent {
     data object Refresh : GroupDetailsIntent
     data class Delete(val callback: () -> Unit) : GroupDetailsIntent
     data object Share : GroupDetailsIntent

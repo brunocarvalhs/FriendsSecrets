@@ -5,7 +5,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
 import javax.inject.Inject
 
-class GroupReadUseCase @Inject constructor(
+internal class GroupReadUseCase @Inject constructor(
     private val repository: GroupDetailsRepository,
     private val deviceService: DeviceService
 ) {

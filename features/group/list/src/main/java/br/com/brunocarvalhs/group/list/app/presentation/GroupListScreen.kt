@@ -57,7 +57,7 @@ import br.com.brunocarvalhs.group.list.app.presentation.list.components.LoadingP
 import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
 
 @Composable
-fun GroupListScreen(
+internal fun GroupListScreen(
     viewModel: GroupListViewModel,
     onGroupToCreate: () -> Unit = { },
     onGroupToEnter: (GroupModel) -> Unit = { },

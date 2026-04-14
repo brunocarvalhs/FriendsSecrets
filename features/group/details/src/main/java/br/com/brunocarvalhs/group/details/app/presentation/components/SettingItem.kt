@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingItem(
+internal fun SettingItem(
     icon: ImageVector,
     title: String,
     subtitle: String? = null,

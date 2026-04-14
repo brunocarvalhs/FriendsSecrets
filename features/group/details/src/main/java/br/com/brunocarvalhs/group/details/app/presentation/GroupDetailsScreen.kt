@@ -62,7 +62,7 @@ import br.com.brunocarvalhs.group.details.app.presentation.components.SettingIte
 import coil.compose.AsyncImage
 
 @Composable
-fun GroupDetailsScreen(
+internal fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
     onChat: () -> Unit = {},

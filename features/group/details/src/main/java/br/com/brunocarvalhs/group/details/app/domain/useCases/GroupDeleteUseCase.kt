@@ -7,7 +7,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
 import javax.inject.Inject
 
-class GroupDeleteUseCase @Inject constructor(
+internal class GroupDeleteUseCase @Inject constructor(
     private val repository: GroupDetailsRepository,
     private val storage: StorageService
 ) {

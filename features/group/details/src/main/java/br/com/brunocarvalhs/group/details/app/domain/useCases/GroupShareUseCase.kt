@@ -6,7 +6,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class GroupShareUseCase @Inject constructor(
+internal class GroupShareUseCase @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) {
     operator fun invoke(group: GroupModel) {

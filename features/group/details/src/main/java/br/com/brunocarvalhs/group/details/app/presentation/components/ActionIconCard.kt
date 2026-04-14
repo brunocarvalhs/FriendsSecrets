@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ActionIconCard(icon: ImageVector, label: String, onClick: () -> Unit = {}) {
+internal fun ActionIconCard(icon: ImageVector, label: String, onClick: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .width(100.dp)

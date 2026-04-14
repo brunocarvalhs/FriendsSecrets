@@ -42,7 +42,7 @@ import br.com.brunocarvalhs.group.details.R
 import coil.compose.AsyncImage
 
 @Composable
-fun ContactItem(
+internal fun ContactItem(
     name: String = "",
     subtitle: String? = null,
     photoUrl: String? = null,

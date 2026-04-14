@@ -9,7 +9,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 @Serializable
-data class GroupCreateDTO(
+internal data class GroupCreateDTO(
     @SerialName(GroupModel.ID) val id: String,
     @SerialName(GroupModel.NAME) val name: String,
     @SerialName(GroupModel.DESCRIPTION) val description: String?,

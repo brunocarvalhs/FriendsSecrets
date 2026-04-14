@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
 @Serializable
-data class DetailRouter(val group: GroupModel) {
+internal data class DetailRouter(val group: GroupModel) {
     companion object {
         val typeMap = mapOf(
             typeOf<GroupModel>() to navTypeSerializer<GroupModel>()

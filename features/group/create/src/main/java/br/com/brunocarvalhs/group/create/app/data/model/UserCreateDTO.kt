@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserCreateDTO(
+internal data class UserCreateDTO(
     @SerialName(UserModel.ID) val id: String,
     @SerialName(UserModel.NAME) val name: String,
     @SerialName(UserModel.PHONE_NUMBER) val phoneNumber: String,

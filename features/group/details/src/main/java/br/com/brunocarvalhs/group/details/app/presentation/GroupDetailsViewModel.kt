@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class GroupDetailsViewModel @Inject constructor(
+internal class GroupDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val readUseCase: GroupReadUseCase,
     private val deleteUseCase: GroupDeleteUseCase,

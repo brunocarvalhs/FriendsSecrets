@@ -9,7 +9,7 @@ import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundExceptio
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import javax.inject.Inject
 
-class GroupByTokenUseCase @Inject constructor(
+internal class GroupByTokenUseCase @Inject constructor(
     private val repository: GroupListRepository,
     private val storage: StorageService,
     private val device: DeviceService
