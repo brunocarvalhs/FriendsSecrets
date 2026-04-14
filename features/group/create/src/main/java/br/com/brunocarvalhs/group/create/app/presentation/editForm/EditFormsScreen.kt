@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import br.com.brunocarvalhs.group.create.commons.components.FormsContent
 
 @Composable
-fun EditFormsScreen(
+internal fun EditFormsScreen(
     viewModel: EditFormsViewModel,
     onBack: () -> Unit
 ) {

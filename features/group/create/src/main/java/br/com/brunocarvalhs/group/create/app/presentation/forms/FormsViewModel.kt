@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class FormsViewModel @Inject constructor(
+internal class FormsViewModel @Inject constructor(
     private val application: Application,
     savedStateHandle: SavedStateHandle,
     private val groupCreateUseCase: GroupCreateUseCase,

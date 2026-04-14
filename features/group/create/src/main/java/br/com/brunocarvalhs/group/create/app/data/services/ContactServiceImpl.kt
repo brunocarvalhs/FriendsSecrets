@@ -12,7 +12,7 @@ import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ContactServiceImpl @Inject constructor(
+internal class ContactServiceImpl @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : ContactService {
 

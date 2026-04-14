@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class GroupCreateModule {
+internal abstract class GroupCreateModule {
 
     @Binds
     @Singleton

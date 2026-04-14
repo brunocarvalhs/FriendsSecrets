@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class ContactsViewModel @Inject constructor(
+internal class ContactsViewModel @Inject constructor(
     private val getContactsUseCase: GetContactsUseCase
 ) : ViewModel() {
 
@@ -27,7 +27,7 @@ class ContactsViewModel @Inject constructor(
         handleIntent(ContactsIntent.LoadContacts)
     }
 
-    internal fun handleIntent(intent: ContactsIntent) {
+    fun handleIntent(intent: ContactsIntent) {
         when (intent) {
             is ContactsIntent.LoadContacts -> loadContacts()
             is ContactsIntent.SearchContacts -> searchContacts(intent.query)

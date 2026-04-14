@@ -6,7 +6,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import javax.inject.Inject
 
-class GroupCreateUseCase @Inject constructor(
+internal class GroupCreateUseCase @Inject constructor(
     private val repository: GroupCreateRepository,
     private val storage: StorageService,
     private val deviceService: DeviceService

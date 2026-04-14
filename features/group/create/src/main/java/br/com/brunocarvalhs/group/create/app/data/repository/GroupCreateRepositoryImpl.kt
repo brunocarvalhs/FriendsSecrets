@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class GroupCreateRepositoryImpl @Inject constructor(
+internal class GroupCreateRepositoryImpl @Inject constructor(
     private val network: NetworkService,
 ) : GroupCreateRepository {
 

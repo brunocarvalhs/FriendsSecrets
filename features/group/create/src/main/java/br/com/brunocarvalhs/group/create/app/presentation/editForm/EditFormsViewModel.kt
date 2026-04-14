@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class EditFormsViewModel @Inject constructor(
+internal class EditFormsViewModel @Inject constructor(
     private val application: Application,
     savedStateHandle: SavedStateHandle,
     private val groupEditUseCase: GroupEditUseCase
