@@ -1,0 +1,41 @@
+package br.com.brunocarvalhs.chat.app.domain.usecase
+
+import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ClearMessagesUseCaseTest {
+
+    private val repository: ChatRepository = mockk()
+    private val useCase = ClearMessagesUseCase(repository)
+
+    @Test
+    fun `invoke should return success from repository`() = runTest {
+        // Given
+        val groupId = "group123"
+        coEvery { repository.clearMessages(groupId) } returns Result.success(Unit)
+
+        // When
+        val result = useCase(groupId)
+
+        // Then
+        assertTrue(result.isSuccess)
+    }
+
+    @Test
+    fun `invoke should return failure from repository`() = runTest {
+        // Given
+        val groupId = "group123"
+        val exception = Exception("Error")
+        coEvery { repository.clearMessages(groupId) } returns Result.failure(exception)
+
+        // When
+        val result = useCase(groupId)
+
+        // Then
+        assertTrue(result.isFailure)
+    }
+}
