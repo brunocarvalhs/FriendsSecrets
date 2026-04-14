@@ -31,4 +31,4 @@ internal class CurrencyVisualTransformation : VisualTransformation {
     }
 }
 
-fun String.toCurrencyMask(): VisualTransformation = CurrencyVisualTransformation()
+internal fun String.toCurrencyMask(): VisualTransformation = CurrencyVisualTransformation()

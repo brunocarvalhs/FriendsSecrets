@@ -24,7 +24,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.delay
 
 @Composable
-fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> Unit = {}) {
+internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> Unit = {}) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
 
     val progress by animateLottieCompositionAsState(

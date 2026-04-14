@@ -1,13 +1,14 @@
 package br.com.brunocarvalhs.group.create.app.presentation.forms
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.create.app.domain.constants.EMPTY_STRING
 
-data class FormsUiState(
-    val name: String = "",
-    val description: String = "",
-    val date: String = "",
-    val minPrice: String = "",
-    val maxPrice: String = "",
+internal data class FormsUiState(
+    val name: String = EMPTY_STRING,
+    val description: String = EMPTY_STRING,
+    val date: String = EMPTY_STRING,
+    val minPrice: String = EMPTY_STRING,
+    val maxPrice: String = EMPTY_STRING,
     val members: List<UserModel> = emptyList(),
     val contacts: Int = 0,
     val isLoading: Boolean = false,

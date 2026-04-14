@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsItem(
+internal fun SettingsItem(
     title: String,
     subtitle: String? = null,
     onClick: () -> Unit

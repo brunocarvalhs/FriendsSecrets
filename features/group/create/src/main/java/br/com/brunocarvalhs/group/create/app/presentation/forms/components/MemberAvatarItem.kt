@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactAvatar
 
 @Composable
-fun MemberAvatarItem(
+internal fun MemberAvatarItem(
     name: String,
     photoUrl: String? = null,
 ) {

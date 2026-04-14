@@ -23,7 +23,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun ErrorComponent(
+internal fun ErrorComponent(
     modifier: Modifier = Modifier,
     message: String,
     onRefresh: (() -> Unit)? = null,

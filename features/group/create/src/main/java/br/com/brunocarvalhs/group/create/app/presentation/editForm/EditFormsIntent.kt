@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.presentation.editForm
 
-sealed interface EditFormsIntent {
+internal sealed interface EditFormsIntent {
     data class SaveGroup(val onFinish: () -> Unit) : EditFormsIntent
     data class UpdateName(val name: String): EditFormsIntent
     data class UpdateDescription(val description: String): EditFormsIntent
