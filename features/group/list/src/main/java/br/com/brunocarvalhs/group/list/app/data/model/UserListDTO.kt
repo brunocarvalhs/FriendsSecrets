@@ -1,15 +1,14 @@
-package br.com.brunocarvalhs.group.list.app.data
+package br.com.brunocarvalhs.group.list.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal data class UserListDTO(
-    @SerialName(UserModel.ID) val id: String = "",
-    @SerialName(UserModel.NAME) val name: String = "",
-    @SerialName(UserModel.PHOTO_URL) val photoUrl: String? = null
+    @SerialName(UserModel.Companion.ID) val id: String = "",
+    @SerialName(UserModel.Companion.NAME) val name: String = "",
+    @SerialName(UserModel.Companion.PHOTO_URL) val photoUrl: String? = null
 ) {
     fun toDomain() = UserModel(
         id = id,

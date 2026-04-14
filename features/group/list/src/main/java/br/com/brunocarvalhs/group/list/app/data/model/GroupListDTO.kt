@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.list.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toVanillaMap
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.group.list.app.data.UserListDTO
+import br.com.brunocarvalhs.group.list.app.data.model.UserListDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
