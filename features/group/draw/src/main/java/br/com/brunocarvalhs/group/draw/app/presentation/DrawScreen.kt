@@ -42,12 +42,14 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.draw.R
 import br.com.brunocarvalhs.group.draw.app.presentation.components.ContactAvatar
 import br.com.brunocarvalhs.group.draw.app.presentation.components.DrawItem
 import kotlinx.coroutines.delay
@@ -86,7 +88,11 @@ private fun DrawContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (isDrawn) "Resultados do Sorteio" else "Sorteio de Amigo Secreto",
+                        text = if (isDrawn) {
+                            stringResource(R.string.draw_results)
+                        } else {
+                            stringResource(R.string.secret_santa_draw)
+                        },
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
@@ -94,7 +100,7 @@ private fun DrawContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },
@@ -128,7 +134,7 @@ private fun DrawContent(
                 ) {
                     item {
                         Text(
-                            text = "O sorteio foi concluído! Compartilhe os resultados com os membros do grupo.",
+                            text = stringResource(R.string.the_draw_has_been_completed_share_the_results_with_group_members),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -194,7 +200,7 @@ fun AnimatedDraw(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Pronto para sortear?",
+            text = stringResource(R.string.ready_to_draw),
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -205,7 +211,7 @@ fun AnimatedDraw(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Toque no botão abaixo para começar o sorteio!",
+            text = stringResource(R.string.tap_the_button_below_to_start_the_draw),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -247,7 +253,7 @@ fun AnimatedDraw(
             movingMembers.forEach { member ->
                 val scale by animateFloatAsState(
                     targetValue = if (member.user == selectedMember) 1.8f else 1f,
-                    label = "escala"
+                    label = stringResource(R.string.scale)
                 )
 
                 ContactAvatar(
@@ -287,7 +293,11 @@ fun AnimatedDraw(
             enabled = !isFalling
         ) {
             Text(
-                text = if (isFalling) "Sorteando..." else "Sorteado Agora",
+                text = if (isFalling) {
+                    stringResource(R.string.drawing)
+                } else {
+                    stringResource(R.string.just_drawn)
+                },
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Recolher curtidas</string>
+    <string name="expand_likes_action">Expandir curtidas</string>
+    <string name="likes_expanded_state">Expandido</string>
+    <string name="likes_collapsed_state">Recolhido</string>
+    <string name="contact_photo_description">Foto de contato de %1$s</string>
+    <string name="edit_participant_action">Editar participante %1$s</string>
+    <string name="remove_participant_action">Remover participante %1$s</string>
+    <string name="back">Voltar</string>
+    <string name="unnamed_group">Grupo sem nome</string>
+    <string name="group_participants">Grupo · %1$d participantes</string>
+    <string name="invite">Convidar</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Revelar</string>
+    <string name="draw">Sortear</string>
+    <string name="add_group_description">Adicionar descrição ao grupo</string>
+    <string name="created_at">Criado em %1$s</string>
+    <string name="draw_details">Detalhes do sorteio</string>
+    <string name="draw_date">Data do sorteio</string>
+    <string name="price_between_min_and_max">Entre %1$s e %2$s</string>
+    <string name="price_from_min">A partir de %1$s</string>
+    <string name="price_up_to">Até %1$s</string>
+    <string name="price_range">Faixa de preço</string>
+    <string name="gift_type">Tipo de presente</string>
+    <string name="participants">%1$d participantes</string>
+    <string name="add_participants">Adicionar participantes</string>
+    <string name="edit_group_information">Editar informações do grupo</string>
+    <string name="delete_group">Apagar grupo</string>
+    <string name="leave_group">Sair do grupo</string>
+</resources>
