@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.sharp.Fingerprint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +30,7 @@ import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemNavigation
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
+import androidx.compose.material.icons.sharp.Fingerprint
 
 @Composable
 internal fun SettingsScreen(
@@ -82,7 +82,7 @@ private fun SettingsContent(
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             }, scrollBehavior = scrollBehavior

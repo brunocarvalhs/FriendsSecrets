@@ -108,7 +108,7 @@ private fun ThemeItem(
             modifier = Modifier.height(200.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = theme.type)
+        Text(text = description)
         Spacer(modifier = Modifier.height(4.dp))
         RadioButton(
             selected = isSelected,
