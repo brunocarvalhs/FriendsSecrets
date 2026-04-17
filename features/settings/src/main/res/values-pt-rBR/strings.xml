@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Voltar</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Configurações</string>
+    <string name="settings_screen_general">Geral</string>
+    <string name="settings_screen_security">Impressão digital</string>
+    <string name="settings_screen_support">Suporte</string>
+    <string name="title_report_an_issue">Relatar um problema</string>
+    <string name="title_review">Avaliar App</string>
+    <string name="localized_description">Descrição localizada</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Aparência</string>
+    <string name="appearance_screen_title">Selecionar uma opção específica alterará a aparência (cor) do aplicativo de acordo com suas preferências.</string>
+    <string name="appearance_screen_title_description">Ativar o Tema Dinâmico permitirá que o aplicativo ajuste automaticamente suas cores com base no papel de parede do seu dispositivo.</string>
+    <string name="appearance_screen_dynamic_title">Tema Dinâmico</string>
+    <string name="light_theme">Claro</string>
+    <string name="dark_theme">Tema escuro</string>
+    <string name="system_theme">Tema do sistema</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">FAQ</string>
+</resources>

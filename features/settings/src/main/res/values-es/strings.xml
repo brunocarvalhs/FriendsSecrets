@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Volver</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Ajustes</string>
+    <string name="settings_screen_general">General</string>
+    <string name="settings_screen_security">Huella digital</string>
+    <string name="settings_screen_support">Soporte</string>
+    <string name="title_report_an_issue">Informar de un problema</string>
+    <string name="title_review">Calificar aplicación</string>
+    <string name="localized_description">Descripción localizada</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Apariencia</string>
+    <string name="appearance_screen_title">Seleccionar una opción específica cambiará la apariencia (color) de la aplicación de acuerdo con sus preferencias.</string>
+    <string name="appearance_screen_title_description">Habilitar el Tema dinámico permitirá que la aplicación ajuste automáticamente sus colores según el fondo de pantalla de su dispositivo.</string>
+    <string name="appearance_screen_dynamic_title">Tema dinámico</string>
+    <string name="light_theme">Claro</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="system_theme">Tema del sistema</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">FAQ</string>
+</resources>

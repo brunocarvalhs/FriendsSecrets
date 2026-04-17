@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">뒤로</string>
+
+    <!-- Settings -->
+    <string name="title_settings">설정</string>
+    <string name="settings_screen_general">일반</string>
+    <string name="settings_screen_security">지문</string>
+    <string name="settings_screen_support">지원</string>
+    <string name="title_report_an_issue">문제 신고</string>
+    <string name="title_review">앱 평가</string>
+    <string name="localized_description">현지화된 설명</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">테마</string>
+    <string name="appearance_screen_title">특정 옵션을 선택하면 기본 설정에 따라 앱의 모양(색상)이 변경됩니다.</string>
+    <string name="appearance_screen_title_description">동적 테마를 활성화하면 앱이 기기의 배경화면에 따라 색상을 자동으로 조정합니다.</string>
+    <string name="appearance_screen_dynamic_title">동적 테마</string>
+    <string name="light_theme">라이트</string>
+    <string name="dark_theme">다크 테마</string>
+    <string name="system_theme">시스템 테마</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">자주 묻는 질문</string>
+</resources>
