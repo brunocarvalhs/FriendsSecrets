@@ -1,0 +1,10 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Search and Filter Flow
+---
+- launchApp
+- runFlow: home_flow.yaml
+- tapOn: "Pesquisar grupos..."
+- inputText: "Grupo"
+- tapOn: "Arquivados"
+- tapOn: "Sorteados"
+- tapOn: "Ativos"

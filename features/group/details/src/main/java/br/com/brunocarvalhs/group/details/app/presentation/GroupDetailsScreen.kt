@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toCurrencyMask
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toFormattedDate
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
@@ -143,7 +145,12 @@ private fun GroupDetailsContent(
                 title = {},
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(
+                                R.string.back
+                            )
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -170,12 +177,12 @@ private fun GroupDetailsContent(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = name.ifBlank { "Grupo sem nome" },
+                    text = name.ifBlank { stringResource(R.string.unnamed_group) },
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Grupo · $memberCount participantes",
+                    text = stringResource(R.string.group_participants, memberCount),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -189,11 +196,21 @@ private fun GroupDetailsContent(
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    ActionIconCard(Icons.Default.Share, "Convidar", onShareGroup)
-                    ActionIconCard(Icons.AutoMirrored.Filled.Chat, "Chat", onChat)
+                    ActionIconCard(
+                        Icons.Default.Share,
+                        stringResource(R.string.invite), onShareGroup
+                    )
+                    ActionIconCard(
+                        Icons.AutoMirrored.Filled.Chat,
+                        stringResource(R.string.chat), onChat
+                    )
                     ActionIconCard(
                         icon = Icons.Default.Casino,
-                        label = if (isDrawn) "Revelar" else "Sortear",
+                        label = if (isDrawn) {
+                            stringResource(R.string.reveal)
+                        } else {
+                            stringResource(R.string.draw)
+                        },
                         onClick = onDraw
                     )
                 }
@@ -210,59 +227,80 @@ private fun GroupDetailsContent(
                     ) {
                         if (description.isNotBlank() || isOwner) {
                             Text(
-                                text = description.ifBlank { "Adicionar descrição ao grupo" },
+                                text = description.ifBlank { stringResource(R.string.add_group_description) },
                                 color = if (description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
-                        
+
                         if (createdAtTimestamp > 0) {
                             Text(
-                                text = "Criado em ${createdAtTimestamp.toFormattedDate()}",
+                                text = stringResource(
+                                    R.string.created_at,
+                                    createdAtTimestamp.toFormattedDate()
+                                ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                         }
                     }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        thickness = 0.5.dp
+                    )
                 }
             }
 
-            val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
+            val hasDrawDetails =
+                drawDate != null || minPrice != null || maxPrice != null || giftType != null
             if (hasDrawDetails) {
                 item {
-                    SectionHeader(title = "Detalhes do sorteio")
+                    SectionHeader(title = stringResource(R.string.draw_details))
                     drawDate?.let {
                         SettingItem(
                             Icons.Default.CalendarToday,
-                            "Data do sorteio",
+                            stringResource(R.string.draw_date),
                             it
                         )
                     }
                     if (minPrice != null || maxPrice != null) {
                         val priceRange = if (minPrice != null && maxPrice != null) {
-                            "Entre ${minPrice.toCurrencyMask()} e ${maxPrice.toCurrencyMask()}"
+                            stringResource(
+                                R.string.price_between_min_and_max,
+                                minPrice.toCurrencyMask(),
+                                maxPrice.toCurrencyMask()
+                            )
                         } else if (minPrice != null) {
-                            "A partir de ${minPrice.toCurrencyMask()}"
+                            stringResource(R.string.price_from_min, minPrice.toCurrencyMask())
                         } else {
-                            "Até ${maxPrice.toCurrencyMask()}"
+                            stringResource(R.string.price_up_to, maxPrice.toCurrencyMask())
                         }
-                        SettingItem(Icons.Default.AttachMoney, "Faixa de preço", priceRange)
+                        SettingItem(Icons.Default.AttachMoney,
+                            stringResource(R.string.price_range), priceRange)
                     }
-                    giftType?.let { SettingItem(Icons.Default.CardGiftcard, "Tipo de presente", it) }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+                    giftType?.let {
+                        SettingItem(
+                            Icons.Default.CardGiftcard,
+                            stringResource(R.string.gift_type),
+                            it
+                        )
+                    }
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        thickness = 0.5.dp
+                    )
                 }
             }
 
             item {
                 SectionHeader(
-                    title = "$memberCount participantes",
+                    title = stringResource(R.string.participants, memberCount),
                 )
                 if (isOwner && !isDrawn) {
                     SettingItem(
                         Icons.Default.PersonAdd,
-                        "Adicionar participantes",
+                        stringResource(R.string.add_participants),
                         iconColor = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.primary
                     )
@@ -280,11 +318,16 @@ private fun GroupDetailsContent(
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
                 if (isOwner) {
-                    SettingItem(Icons.Default.Edit, "Editar informações do grupo", onClick = onEdit)
+                    SettingItem(Icons.Default.Edit,
+                        stringResource(R.string.edit_group_information), onClick = onEdit)
                 }
                 SettingItem(
                     icon = if (isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
-                    title = if (isOwner) "Apagar grupo" else "Sair do grupo",
+                    title = if (isOwner) {
+                        stringResource(R.string.delete_group)
+                    } else {
+                        stringResource(R.string.leave_group)
+                    },
                     textColor = MaterialTheme.colorScheme.error,
                     iconColor = MaterialTheme.colorScheme.error,
                     onClick = if (isOwner) onDelete else onExit

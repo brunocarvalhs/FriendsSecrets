@@ -16,7 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun SectionHeader(title: String, trailing: String? = null, trailingIcon: ImageVector? = null) {
+internal fun SectionHeader(
+    title: String,
+    trailing: String? = null,
+    trailingIcon: ImageVector? = null
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

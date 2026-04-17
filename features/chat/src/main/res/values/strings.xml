@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="back">Voltar</string>
-    <string name="identify">Identifique-se</string>
-    <string name="identify_message">Você não está na lista de membros deste grupo. Como gostaria de ser chamado no chat?</string>
-    <string name="identify_name">Seu Nome ou Apelido</string>
-    <string name="identify_save">Salvar</string>
-    <string name="identify_cancela">Cancelar</string>
-    <string name="chat_input">Digite uma mensagem...</string>
-    <string name="chat_button_send">Enviar</string>
+    <string name="back">Back</string>
+    <string name="identify">Identify yourself</string>
+    <string name="identify_message">You are not in the member list of this group. How would you like to be called in the chat?</string>
+    <string name="identify_name">Your Name or Nickname</string>
+    <string name="identify_save">Save</string>
+    <string name="identify_cancela">Cancel</string>
+    <string name="chat_input">Type a message...</string>
+    <string name="chat_button_send">Send</string>
 </resources>

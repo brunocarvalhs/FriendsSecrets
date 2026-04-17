@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_biometric">Autenticação Segura</string>
-    <string name="subtitle_biometric">Acesse usando biometria ou a senha do dispositivo</string>
-    <string name="biometric_required">Autenticação Necessária</string>
-    <string name="biometric_message">Use sua biometria para acessar o FriendsSecrets de forma segura.</string>
-    <string name="biometric_button_authentic">Autenticar</string>
-    <string name="biometric_not_found">Digital não reconhecida. Tente novamente.</string>
+    <string name="title_biometric">Secure Authentication</string>
+    <string name="subtitle_biometric">Access using biometrics or device password</string>
+    <string name="biometric_required">Authentication Required</string>
+    <string name="biometric_message">Use your biometrics to access FriendsSecrets securely.</string>
+    <string name="biometric_button_authentic">Authenticate</string>
+    <string name="biometric_not_found">Fingerprint not recognized. Try again.</string>
 </resources>

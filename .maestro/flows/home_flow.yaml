@@ -2,16 +2,40 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Home Flow
 ---
 - launchApp
-- runFlow: anonymous_login_flow.yaml
-- assertVisible: "Bem-vindo"
-- tapOn:
-    id: ".*MoreVert.*"
-- assertVisible: "Entrar em um grupo"
-- assertVisible: "Configurações"
-- assertVisible: "Sair"
-- tapOn: "Entrar em um grupo"
-- assertVisible: "Código do grupo"
-- tapOn: "Código do grupo"
-- inputText: "123456"
-- tapOn: "Entrar"
+- assertVisible: "Friends Secrets"
+
+# Verifica se os elementos da tela inicial estão presentes
+- assertVisible: "Pesquisar grupos..."
+- assertVisible: "Ativos"
+- assertVisible: "Arquivados"
+- assertVisible: "Sorteados"
+- assertVisible: "Uh-oh!"
+- assertVisible: "No group found"
+- assertVisible: "Enter a group"
+- assertVisible: "Create a group"
+
+# Testa o fluxo de "Enter a group" (Botão no meio da tela)
+- tapOn: "Enter a group"
 - back
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa o fluxo de "Create a group" (Botão no meio da tela)
+- tapOn: "Create a group"
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa a navegação pelas abas (chips)
+- tapOn: "Arquivados"
+- tapOn: "Sorteados"
+- tapOn: "Ativos"
+
+# Testa o Floating Action Button (Novo Grupo)
+- tapOn: "Novo Grupo" # contentDescription stringResource(R.string.new_group)
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa o More Options (Configuração)
+- tapOn: "Mais opções" # contentDescription stringResource(R.string.new_group)
+- back
+- assertVisible: "Friends Secrets"

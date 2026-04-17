@@ -38,6 +38,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.R
 import coil.compose.AsyncImage
 
@@ -148,7 +149,10 @@ internal fun ContactItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    action?.invoke(hashMapOf("name" to name, "photoUrl" to photoUrl), isLiked)
+                    action?.invoke(
+                        hashMapOf(GroupModel.NAME to name, GroupModel.PHOTO to photoUrl),
+                        isLiked
+                    )
                 }
             }
 

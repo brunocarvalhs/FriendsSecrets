@@ -2,21 +2,68 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Create Group Flow
 ---
 - launchApp
-- runFlow: anonymous_login_flow.yaml
-- tapOn:
-    id: ".*Add.*"
-- assertVisible: "Nome do grupo"
-- tapOn: "Nome do grupo"
-- inputText: "Grupo de Teste"
-- tapOn: "Descrição do grupo"
-- inputText: "Este é um grupo de teste criado pelo Maestro"
-- tapOn: "Adicionar membro"
-- assertVisible: "Nome do membro"
-- tapOn: "Nome do membro"
-- inputText: "Membro de Teste"
-- tapOn: "O que o membro gosta?"
-- inputText: "Chocolate, Livros, Música"
-- tapOn: "Adicionar"
-- tapOn:
-    id: ".*Check.*"
+- tapOn: "Novo Grupo"
+- assertVisible: "Adicionar membros"
+
+# Tela de Adicionar Membros
+- assertVisible: "Adicionar membros"
+- assertVisible: "0 selecionados"
+- tapOn: "Adicionar manualmente"
+
+# Membro 1
+- tapOn: "Nome do participante"
+- inputText: "Bruno"
+- tapOn: "Telefone (Opcional)"
+- inputText: "11999999991"
 - back
+- tapOn: "Adicionar ao Grupo"
+
+# Membro 2
+- tapOn: "Nome do participante"
+- inputText: "Carla"
+- back
+- tapOn: "Telefone (Opcional)"
+- inputText: "11999999992"
+- back
+- tapOn: "Adicionar ao Grupo"
+
+# Membro 3
+- tapOn: "Nome do participante"
+- inputText: "Daniel"
+- back
+- tapOn: "Telefone (Opcional)"
+- inputText: "11999999993"
+- back
+- tapOn: "Adicionar ao Grupo"
+
+# Membro 4
+- tapOn: "Nome do participante"
+- inputText: "Erica"
+- back
+- tapOn: "Telefone (Opcional)"
+- inputText: "11999999994"
+- back
+- tapOn: "Adicionar ao Grupo"
+
+# Verifica se o contador atualizou para 4
+- assertVisible: "4 selecionados"
+- tapOn: "Avançar"
+
+# Preenche dados básicos do grupo
+- tapOn: "Nome do grupo"
+- inputText: "Grupo de Natal 2024"
+- back
+- tapOn: "Descrição"
+- inputText: "Amigo secreto da firma"
+- back
+- tapOn: "Data do evento"
+- tapOn: "Próximo"
+- tapOn: "OK"
+- tapOn: "Preço Mín."
+- inputText: "1000"
+- back
+- tapOn: "Preço Máx."
+- inputText: "2000"
+- back
+- assertVisible: "Membros"
+- tapOn: "Criar"
