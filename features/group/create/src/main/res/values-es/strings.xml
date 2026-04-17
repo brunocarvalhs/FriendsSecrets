@@ -15,7 +15,7 @@
     <string name="content_description_remove">Eliminar</string>
     <string name="contacts_adicional_members">Añadir miembros</string>
     <string name="contacts_adicional_members_subtitle_select">%1$d seleccionados</string>
-    <string name="content_description_back">Atrás</string>
+    <string name="content_description_back">Volver</string>
     <string name="content_description_next">Siguiente</string>
     <string name="view_contact_list">Ver lista de contactos</string>
     <string name="add_manually">Añadir manualmente</string>
@@ -23,7 +23,7 @@
     <string name="allow_contacts_in_settings">Permitir contactos en Ajustes</string>
     <string name="next">Siguiente</string>
     <string name="cancel">Cancelar</string>
-    <string name="select_the_best_time">Selecciona la hora</string>
+    <string name="select_the_best_time">Seleccionar la hora</string>
     <string name="ok">Aceptar</string>
     <string name="edit_group">Editar grupo</string>
     <string name="new_group">Nuevo grupo</string>

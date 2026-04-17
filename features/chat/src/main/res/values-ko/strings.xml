@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="back">뒤로 가기</string>
+    <string name="back">뒤로</string>
     <string name="identify">본인 확인</string>
     <string name="identify_message">이 그룹의 멤버 목록에 없습니다. 채팅에서 어떻게 불리고 싶으신가요?</string>
     <string name="identify_name">이름 또는 닉네임</string>

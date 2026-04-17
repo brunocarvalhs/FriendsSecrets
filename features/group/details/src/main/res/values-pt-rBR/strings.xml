@@ -4,7 +4,7 @@
     <string name="expand_likes_action">Expandir curtidas</string>
     <string name="likes_expanded_state">Expandido</string>
     <string name="likes_collapsed_state">Recolhido</string>
-    <string name="contact_photo_description">Foto de contato de %1$s</string>
+    <string name="contact_photo_description">Foto do contato de %1$s</string>
     <string name="edit_participant_action">Editar participante %1$s</string>
     <string name="remove_participant_action">Remover participante %1$s</string>
     <string name="back">Voltar</string>
@@ -14,7 +14,7 @@
     <string name="chat">Chat</string>
     <string name="reveal">Revelar</string>
     <string name="draw">Sortear</string>
-    <string name="add_group_description">Adicionar descrição ao grupo</string>
+    <string name="add_group_description">Adicionar descrição do grupo</string>
     <string name="created_at">Criado em %1$s</string>
     <string name="draw_details">Detalhes do sorteio</string>
     <string name="draw_date">Data do sorteio</string>
@@ -26,6 +26,6 @@
     <string name="participants">%1$d participantes</string>
     <string name="add_participants">Adicionar participantes</string>
     <string name="edit_group_information">Editar informações do grupo</string>
-    <string name="delete_group">Apagar grupo</string>
+    <string name="delete_group">Excluir grupo</string>
     <string name="leave_group">Sair do grupo</string>
 </resources>
