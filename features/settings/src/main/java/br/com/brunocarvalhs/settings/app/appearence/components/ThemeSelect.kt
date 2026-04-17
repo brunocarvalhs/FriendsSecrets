@@ -86,9 +86,9 @@ private fun ThemeItem(
 
     val descriptionRes = remember(theme) {
         when (theme) {
-            ThemeService.Theme.LIGHT -> R.string.tema_claro
-            ThemeService.Theme.DARK -> R.string.tema_escuro
-            ThemeService.Theme.SYSTEM -> R.string.tema_do_sistema
+            ThemeService.Theme.LIGHT -> R.string.light_theme
+            ThemeService.Theme.DARK -> R.string.dark_theme
+            ThemeService.Theme.SYSTEM -> R.string.system_theme
         }
     }
 

@@ -14,17 +14,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.report.components.WebViewContainer
 
 @Composable
 internal fun ReportIssueScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: ReportIssueViewModel = hiltViewModel()
 ) {
+    val url by viewModel.url.collectAsState()
+
     ReportIssueContent(
+        url = url,
         onBack = onBack
     )
 }
@@ -33,6 +40,7 @@ internal fun ReportIssueScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReportIssueContent(
+    url: String,
     onBack: () -> Unit = {}
 ) {
     Scaffold(
@@ -49,7 +57,7 @@ private fun ReportIssueContent(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },
@@ -58,7 +66,7 @@ private fun ReportIssueContent(
     ) {
         Column(modifier = Modifier.padding(it)) {
             WebViewContainer(
-                url = "https://github.com/brunocarvalhs/FriendsSecrets/issues/new",
+                url = url,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -69,6 +77,7 @@ private fun ReportIssueContent(
 @Preview
 private fun ReportIssuePreview() {
     ReportIssueContent(
+        url = "https://github.com/brunocarvalhs/FriendsSecrets/issues/new",
         onBack = {}
     )
 }
