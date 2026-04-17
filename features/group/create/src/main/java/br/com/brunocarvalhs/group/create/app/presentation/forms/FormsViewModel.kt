@@ -8,7 +8,9 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
+import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +25,8 @@ import javax.inject.Inject
 internal class FormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupCreateUseCase: GroupCreateUseCase,
-    private val imageService: GroupImageService
+    private val imageService: GroupImageService,
+    private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<FormsRouter>(FormsRouter.typeMap)
@@ -36,6 +39,7 @@ internal class FormsViewModel @Inject constructor(
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
 
     init {
+        analytics.trackFormsScreenView()
         viewModelScope.launch {
             imageService.availablePhotos.collectLatest { photos ->
                 _uiState.update { 
@@ -48,6 +52,7 @@ internal class FormsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "FormsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: FormsIntent) = when (intent) {
         is FormsIntent.CreateGroup -> createGroup(intent.onFinish)
         is FormsIntent.UpdateName -> updateState { copy(name = intent.name) }
@@ -79,6 +84,7 @@ internal class FormsViewModel @Inject constructor(
         )
     }
 
+    @AddTrace(name = "FormsViewModel.createGroup", enabled = true)
     private fun createGroup(onFinish: (String) -> Unit) {
         viewModelScope.launch {
             val currentState = _uiState.value
@@ -97,9 +103,11 @@ internal class FormsViewModel @Inject constructor(
             )
             
             groupCreateUseCase(group).onSuccess {
+                analytics.trackCreateGroup(true)
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 onFinish(group.token)
             }.onFailure {
+                analytics.trackCreateGroup(false)
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = it.message

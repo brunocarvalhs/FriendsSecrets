@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
+import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 internal class EditFormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupEditUseCase: GroupEditUseCase,
-    private val imageService: GroupImageService
+    private val imageService: GroupImageService,
+    private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<EditFormsRouter>(EditFormsRouter.typeMap)
@@ -40,6 +43,7 @@ internal class EditFormsViewModel @Inject constructor(
     val uiState: StateFlow<EditFormsUiState> = _uiState.asStateFlow()
 
     init {
+        analytics.trackEditFormScreenView()
         viewModelScope.launch {
             imageService.availablePhotos.collectLatest { photos ->
                 _uiState.update {
@@ -52,6 +56,7 @@ internal class EditFormsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "EditFormsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: EditFormsIntent) = when (intent) {
         is EditFormsIntent.SaveGroup -> saveGroup(intent.onFinish)
         is EditFormsIntent.UpdateName -> updateState { copy(name = intent.name) }
@@ -83,6 +88,7 @@ internal class EditFormsViewModel @Inject constructor(
         )
     }
 
+    @AddTrace(name = "EditFormsViewModel.saveGroup", enabled = true)
     private fun saveGroup(onFinish: () -> Unit) {
         viewModelScope.launch {
             val currentState = _uiState.value

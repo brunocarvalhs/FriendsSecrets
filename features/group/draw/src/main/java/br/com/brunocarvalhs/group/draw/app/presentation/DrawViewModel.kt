@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.DrawUseCase
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.ShareSecretFriendsUseCase
+import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalytics
 import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,8 @@ import javax.inject.Inject
 internal class DrawViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val shareSecretFriendsUseCase: ShareSecretFriendsUseCase,
-    private val drawUseCase: DrawUseCase
+    private val drawUseCase: DrawUseCase,
+    private val analytics: DrawAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<DrawGraphRouter>(DrawGraphRouter.typeMap)
@@ -35,13 +37,19 @@ internal class DrawViewModel @Inject constructor(
     )
     val uiState: StateFlow<DrawUiState> = _uiState.asStateFlow()
 
-    @AddTrace(name = "DrawViewModel.eventIntent", enabled = true)
+    init {
+        analytics.trackScreenView()
+    }
+
+    @AddTrace(name = "DrawViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: DrawIntent) = when (intent) {
         is DrawIntent.Share -> share(intent.secret)
         DrawIntent.Draw -> draw()
     }
 
+    @AddTrace(name = "DrawViewModel.share", enabled = true)
     private fun share(secret: String) {
+        analytics.trackShareAction()
         shareSecretFriendsUseCase(group = args.group, secret = secret).onSuccess {
 
         }.onFailure {
@@ -49,7 +57,9 @@ internal class DrawViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "DrawViewModel.draw", enabled = true)
     private fun draw() {
+        analytics.trackDrawAction()
         viewModelScope.launch {
             drawUseCase(group = args.group).onSuccess { results ->
                 _uiState.value = _uiState.value.copy(

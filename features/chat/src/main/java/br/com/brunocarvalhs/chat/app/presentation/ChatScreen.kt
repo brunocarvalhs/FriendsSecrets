@@ -62,7 +62,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(
+internal fun ChatScreen(
     viewModel: ChatViewModel,
     onBack: () -> Unit
 ) {

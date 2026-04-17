@@ -111,4 +111,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.perf)
+    implementation(libs.firebase.analytics)
 }

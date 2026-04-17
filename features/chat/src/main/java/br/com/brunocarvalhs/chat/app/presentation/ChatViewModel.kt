@@ -10,10 +10,12 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.ClearMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
+import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
 import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,13 +33,14 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class ChatViewModel @Inject constructor(
+internal class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMessagesUseCase: GetMessagesUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
     private val clearMessagesUseCase: ClearMessagesUseCase,
     private val identifyUserUseCase: IdentifyUserUseCase,
-    private val deviceService: DeviceService
+    private val deviceService: DeviceService,
+    private val analytics: ChatAnalytics
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<ChatGraphRouter>(ChatGraphRouter.typeMap)
     private val _uiState = MutableStateFlow(ChatUiState(
@@ -48,6 +51,7 @@ class ChatViewModel @Inject constructor(
     private var deviceId: String = ""
 
     init {
+        analytics.trackScreenView()
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
             
@@ -67,6 +71,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.checkAndClearExpiredChat", enabled = true)
     private suspend fun checkAndClearExpiredChat() {
         val groupDateString = _uiState.value.groupModel.date ?: return
         try {
@@ -77,6 +82,7 @@ class ChatViewModel @Inject constructor(
             if (currentDate.after(groupDate)) {
                 Timber.d("Chat expirado para o grupo ${_uiState.value.groupModel.id}. Limpando...")
                 clearMessagesUseCase(_uiState.value.groupModel.id)
+                analytics.trackClearMessages()
             }
         } catch (e: kotlinx.coroutines.CancellationException) {
             Timber.e(e)
@@ -85,6 +91,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: ChatIntent) {
         when (intent) {
             is ChatIntent.UpdateInput -> updateInput(intent.text)
@@ -100,6 +107,7 @@ class ChatViewModel @Inject constructor(
         _uiState.update { it.copy(inputText = text) }
     }
 
+    @AddTrace(name = "ChatViewModel.identifyUser", enabled = true)
     private fun identifyUser(name: String) {
         if (name.isBlank()) return
         viewModelScope.launch {
@@ -119,6 +127,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.sendMessage", enabled = true)
     private fun sendMessage() {
         val messageText = _uiState.value.inputText
         if (messageText.isBlank()) return
@@ -147,6 +156,7 @@ class ChatViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            analytics.trackSendMessage()
             val result = sendMessageUseCase(_uiState.value.groupModel.id, newMessage)
             
             if (result.isFailure) {
@@ -161,6 +171,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.observeMessages", enabled = true)
     private fun observeMessages() {
         viewModelScope.launch {
             getMessagesUseCase(_uiState.value.groupModel.id)

@@ -6,6 +6,8 @@ import br.com.brunocarvalhs.group.create.app.data.services.ContactServiceImpl
 import br.com.brunocarvalhs.group.create.app.domain.repositories.ContactsRepository
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import br.com.brunocarvalhs.group.create.app.domain.services.ContactService
+import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
+import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalyticsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -31,4 +33,10 @@ internal abstract class GroupCreateModule {
     abstract fun bindGroupCreateRepository(
         impl: GroupCreateRepositoryImpl
     ): GroupCreateRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindGroupCreateAnalytics(
+        impl: GroupCreateAnalyticsImpl
+    ): GroupCreateAnalytics
 }

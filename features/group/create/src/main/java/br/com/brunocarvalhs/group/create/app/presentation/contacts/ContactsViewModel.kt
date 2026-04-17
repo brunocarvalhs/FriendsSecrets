@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
+import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,16 +19,19 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class ContactsViewModel @Inject constructor(
-    private val getContactsUseCase: GetContactsUseCase
+    private val getContactsUseCase: GetContactsUseCase,
+    private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ContactsUiState())
     val uiState: StateFlow<ContactsUiState> = _uiState.asStateFlow()
 
     init {
+        analytics.trackContactsScreenView()
         handleIntent(ContactsIntent.LoadContacts)
     }
 
+    @AddTrace(name = "ContactsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: ContactsIntent) {
         when (intent) {
             is ContactsIntent.LoadContacts -> loadContacts()
@@ -37,6 +42,7 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.loadContacts", enabled = true)
     private fun loadContacts() {
         _uiState.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
@@ -64,6 +70,7 @@ internal class ContactsViewModel @Inject constructor(
     }
 
     private fun toggleMember(contact: UserModel) {
+        analytics.trackSelectContact()
         _uiState.update { currentState ->
             val isAlreadySelected = currentState.members.any {
                 (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) ||
@@ -93,6 +100,7 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.filterContacts", enabled = true)
     private fun filterContacts(contacts: List<UserModel>, query: String): List<UserModel> {
         if (query.isBlank()) return contacts
         return contacts.filter {
@@ -101,6 +109,7 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.next", enabled = true)
     private fun next(callback: (FormsRouter) -> Unit) {
         val members = _uiState.value.members
         

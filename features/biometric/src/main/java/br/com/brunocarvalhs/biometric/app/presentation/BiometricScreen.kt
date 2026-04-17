@@ -30,7 +30,7 @@ import androidx.fragment.app.FragmentActivity
 import br.com.brunocarvalhs.biometric.R
 
 @Composable
-fun BiometricScreen(
+internal fun BiometricScreen(
     viewModel: BiometricViewModel,
     onSuccess: () -> Unit
 ) {

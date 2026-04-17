@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.biometric.app.presentation
 
-data class BiometricUiState(
+internal data class BiometricUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val failedAttemptMessage: String? = null,

@@ -20,17 +20,23 @@ import javax.inject.Inject
 internal class GroupListViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
+    private val analytics: GroupListAnalytics,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GroupListUiState())
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
 
-    @AddTrace(name = "HomeViewModel.event", enabled = true)
+    init {
+        analytics.trackScreenView()
+    }
+
+    @AddTrace(name = "GroupListViewModel.handleEvent", enabled = true)
     fun handleEvent(intent: GroupListIntent) {
         when (intent) {
             GroupListIntent.FetchGroups -> fetchGroups()
             is GroupListIntent.GroupToEnter -> groupToEnter(intent.token)
             is GroupListIntent.OnSearchQueryChange -> {
+                analytics.trackSearch(intent.query)
                 _uiState.update { it.copy(searchQuery = intent.query) }
             }
             is GroupListIntent.OnTagSelected -> {
@@ -39,8 +45,9 @@ internal class GroupListViewModel @Inject constructor(
         }
     }
 
-    @AddTrace(name = "HomeViewModel.groupToEnter", enabled = true)
+    @AddTrace(name = "GroupListViewModel.groupToEnter", enabled = true)
     private fun groupToEnter(token: String) {
+        analytics.trackGroupToEnter(token)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupByTokenUseCase.invoke(token)
@@ -57,8 +64,9 @@ internal class GroupListViewModel @Inject constructor(
         }
     }
 
-    @AddTrace(name = "HomeViewModel.fetchGroups", enabled = true)
+    @AddTrace(name = "GroupListViewModel.fetchGroups", enabled = true)
     private fun fetchGroups() {
+        analytics.trackFetchGroups()
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupListUseCase.invoke().onSuccess { result ->

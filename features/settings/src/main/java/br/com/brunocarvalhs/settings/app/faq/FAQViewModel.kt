@@ -2,6 +2,8 @@ package br.com.brunocarvalhs.settings.app.faq
 
 import androidx.lifecycle.ViewModel
 import br.com.brunocarvalhs.friendssecrets.domain.services.ConfigurationService
+import br.com.brunocarvalhs.settings.app.list.SettingsAnalytics
+import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class FAQViewModel @Inject constructor(
-    private val configurationService: ConfigurationService
+    private val configurationService: ConfigurationService,
+    private val analytics: SettingsAnalytics
 ) : ViewModel() {
 
     private val _url = MutableStateFlow(
@@ -20,6 +23,19 @@ internal class FAQViewModel @Inject constructor(
         )
     )
     val url: StateFlow<String> = _url.asStateFlow()
+
+    init {
+        analytics.trackFAQView()
+        loadUrl()
+    }
+
+    @AddTrace(name = "FAQViewModel.loadUrl", enabled = true)
+    private fun loadUrl() {
+        _url.value = configurationService.getString(
+            key = URL_FAQ,
+            defaultValue = DEFAULT_URL
+        )
+    }
 
     companion object {
         private const val URL_FAQ = "url_faq"
