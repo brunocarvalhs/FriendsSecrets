@@ -30,10 +30,6 @@
                 android:value="androidx.startup" />
 
             <meta-data
-                android:name="br.com.brunocarvalhs.friendssecrets.commons.sdks.FeatureFlagsInitializer"
-                android:value="androidx.startup" />
-
-            <meta-data
                 android:name="br.com.brunocarvalhs.friendssecrets.commons.sdks.PerformanceInitializer"
                 android:value="androidx.startup" />
 
