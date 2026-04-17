@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.commons.di
 
 import android.content.Context
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseCompatibilityConverter
+import br.com.brunocarvalhs.friendssecrets.commons.flags.FeatureFlagsManager
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseFirestoreManager
 import br.com.brunocarvalhs.friendssecrets.commons.network.FirebaseRealtimeManager
 import br.com.brunocarvalhs.friendssecrets.commons.network.NetworkManager
@@ -19,6 +20,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.services.ConfigurationService
 import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
+import br.com.brunocarvalhs.friendssecrets.domain.services.FeatureFlagService
 import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
@@ -170,4 +172,10 @@ object AppModule {
     fun provideConfigurationService(
         remoteConfig: FirebaseRemoteConfig
     ): ConfigurationService = RemoteConfigService(remoteConfig)
+
+    @Provides
+    @Singleton
+    fun provideFeatureFlagService(
+        remoteConfig: FirebaseRemoteConfig
+    ): FeatureFlagService = FeatureFlagsManager(remoteConfig)
 }

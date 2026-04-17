@@ -1,16 +1,19 @@
 package br.com.brunocarvalhs.friendssecrets.commons.flags
 
+import br.com.brunocarvalhs.friendssecrets.domain.services.FeatureFlagService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FeatureFlagsManager(
-    private val remoteProvider: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-) {
-    private val TAG = "FeatureFlags"
+@Singleton
+internal class FeatureFlagsManager @Inject constructor(
+    private val remoteConfig: FirebaseRemoteConfig
+) : FeatureFlagService {
 
     init {
         Timber.tag(TAG).d("--> FETCH REMOTE CONFIG")
-        remoteProvider.fetch().addOnCompleteListener { task ->
+        remoteConfig.fetch().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Timber.tag(TAG).d("<-- SUCCESS FETCH REMOTE CONFIG")
             } else {
@@ -19,27 +22,26 @@ class FeatureFlagsManager(
         }
     }
 
-    fun isFeatureEnabled(key: String, defaultValue: Boolean = false): Boolean {
+    override fun validate(key: String): Boolean {
         Timber.tag(TAG).v("--> CHECK FEATURE: %s", key)
-        return runCatching { 
-            remoteProvider.getBoolean(key).also {
-                Timber.tag(TAG).v("<-- RESULT FEATURE [%s]: %s", key, it)
-            }
-        }.getOrElse {
-            Timber.tag(TAG).v("<-- DEFAULT FEATURE [%s]: %s", key, defaultValue)
+        return remoteConfig.getBoolean(key).also {
+            Timber.tag(TAG).d("<-- SUCCESS CHECK FEATURE: %s", key)
+        }
+    }
+
+    override fun validate(key: String, defaultValue: Boolean): Boolean {
+        Timber.tag(TAG).v("--> CHECK FEATURE: %s", key)
+        val value = remoteConfig.getBoolean(key)
+        return if (remoteConfig.all.containsKey(key)) {
+            Timber.tag(TAG).d("<-- SUCCESS CHECK FEATURE: %s", key)
+            value
+        } else {
+            Timber.tag(TAG).d("<-- FAILURE CHECK FEATURE: %s", key)
             defaultValue
         }
     }
 
     companion object {
-        @Volatile
-        private var instance: FeatureFlagsManager? = null
-
-        @JvmStatic
-        fun getInstance(): FeatureFlagsManager {
-            return instance ?: synchronized(this) {
-                instance ?: FeatureFlagsManager().also { instance = it }
-            }
-        }
+        private const val TAG = "FeatureFlags"
     }
 }
