@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.network
 
 import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
-import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

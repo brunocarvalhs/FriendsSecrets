@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.core.network.data
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
-import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer

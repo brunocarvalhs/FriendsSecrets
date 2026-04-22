@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.network
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference

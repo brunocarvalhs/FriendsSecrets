@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme.remote.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
+import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

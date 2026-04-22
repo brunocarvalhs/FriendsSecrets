@@ -96,7 +96,7 @@ dependencies {
     implementation(project(":features:chat"))
     implementation(project(":features:biometric"))
     implementation(project(":core:network"))
-    implementation(project(":core:infrastructure"))
+    implementation(project(":core:theme"))
     implementation(project(":core:security"))
     implementation(project(":core:navigation"))
 

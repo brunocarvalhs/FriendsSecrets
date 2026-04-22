@@ -17,7 +17,7 @@ import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvi
 import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
-import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
+import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
