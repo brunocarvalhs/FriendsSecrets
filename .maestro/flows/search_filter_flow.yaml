@@ -3,8 +3,9 @@ name: Search and Filter Flow
 ---
 - launchApp
 - runFlow: home_flow.yaml
-- tapOn: "Pesquisar grupos..."
+- tapOn: "Search groups..."
 - inputText: "Grupo"
-- tapOn: "Arquivados"
-- tapOn: "Sorteados"
-- tapOn: "Ativos"
+- tapOn: "Archived"
+- tapOn: "Drawn"
+- tapOn: "Not drawn"
+- tapOn: "Active"
