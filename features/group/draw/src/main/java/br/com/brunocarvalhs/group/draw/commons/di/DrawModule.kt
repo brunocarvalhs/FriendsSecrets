@@ -1,32 +1,18 @@
 package br.com.brunocarvalhs.group.draw.commons.di
 
-import br.com.brunocarvalhs.group.draw.app.domain.services.DrawService
-import br.com.brunocarvalhs.group.draw.app.data.repository.DrawRepositoryImpl
-import br.com.brunocarvalhs.group.draw.app.data.services.DrawManager
-import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository
-import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalytics
-import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalyticsImpl
+import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.group.draw.DrawInitializerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class DrawModule {
+abstract class DrawModule {
 
     @Binds
-    abstract fun bindDrawRepository(
-        impl: DrawRepositoryImpl
-    ): DrawRepository
-
-    @Binds
-    abstract fun bindDrawService(
-        impl: DrawManager
-    ): DrawService
-
-    @Binds
-    abstract fun bindDrawAnalytics(
-        impl: DrawAnalyticsImpl
-    ): DrawAnalytics
+    @IntoSet
+    abstract fun bindDrawInitializer(impl: DrawInitializerImpl): FeatureInitializer
 }

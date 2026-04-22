@@ -55,6 +55,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toCurrencyMask
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toFormattedDate
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
@@ -67,9 +68,9 @@ import coil.compose.AsyncImage
 internal fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
-    onChat: () -> Unit = {},
-    onDraw: () -> Unit = {},
-    onEdit: () -> Unit = {},
+    onChat: (GroupModel) -> Unit = {},
+    onDraw: (GroupModel) -> Unit = {},
+    onEdit: (GroupModel) -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
@@ -104,12 +105,12 @@ internal fun GroupDetailsScreen(
         members = group.members,
         draws = group.draws,
         onBack = onBack,
-        onDraw = onDraw,
-        onChat = onChat,
+        onDraw = { onDraw.invoke(group) },
+        onChat = { onChat.invoke(group) },
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
-        onEdit = onEdit
+        onEdit = { onEdit.invoke(group) }
     )
 }
 

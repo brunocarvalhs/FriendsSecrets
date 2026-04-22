@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.infrastructure"
+    namespace = "br.com.brunocarvalhs.friendssecrets.core.navigation"
     compileSdk = 35
 
     defaultConfig {
@@ -20,18 +22,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
-    implementation(project(":core:domain"))
-    
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.lifecycle.process)
-    implementation(libs.androidx.compose.runtime.annotation)
-    ksp(libs.hilt.compiler)
-    
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.biometric)
-    implementation(libs.timber)
+    api(project(":core:domain"))
+    api(libs.androidx.navigation.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.runtime)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

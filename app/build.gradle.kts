@@ -98,6 +98,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:infrastructure"))
     implementation(project(":core:security"))
+    implementation(project(":core:navigation"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
 

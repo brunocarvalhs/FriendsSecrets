@@ -4,6 +4,7 @@
     <string name="app_name">Secret Santa</string>
     <string name="ops">Oops!</string>
     <string name="cancel">Cancel</string>
+    <string name="title_settings">Settings</string>
 
     <!-- Home/Group List -->
     <string name="home_title">Hey</string>

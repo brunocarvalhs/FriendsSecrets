@@ -1,6 +1,10 @@
 package br.com.brunocarvalhs.friendssecrets.core.network.di
 
+import br.com.brunocarvalhs.friendssecrets.core.network.config.FeatureFlagsManager
+import br.com.brunocarvalhs.friendssecrets.core.network.config.RemoteConfigService
 import br.com.brunocarvalhs.friendssecrets.core.network.data.NetworkManager
+import br.com.brunocarvalhs.friendssecrets.domain.services.ConfigurationService
+import br.com.brunocarvalhs.friendssecrets.domain.services.FeatureFlagService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -21,6 +25,14 @@ abstract class NetworkModule {
     @Binds
     @Singleton
     abstract fun bindNetworkService(impl: NetworkManager): NetworkService
+
+    @Binds
+    @Singleton
+    abstract fun bindConfigurationService(impl: RemoteConfigService): ConfigurationService
+
+    @Binds
+    @Singleton
+    abstract fun bindFeatureFlagService(impl: FeatureFlagsManager): FeatureFlagService
 
     companion object {
         @Provides

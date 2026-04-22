@@ -52,6 +52,7 @@ lifecycleProcess = "2.10.0"
 coreKtxVersion = "1.10.3"
 room = "2.6.1"
 firebaseDatabaseKtx = "22.0.1"
+runtimeAnnotation = "1.10.6"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -115,6 +116,8 @@ androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-p
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-runtime-annotation = { group = "androidx.compose.runtime", name = "runtime-annotation", version.ref = "runtimeAnnotation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

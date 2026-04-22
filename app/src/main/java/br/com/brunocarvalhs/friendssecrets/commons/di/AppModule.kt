@@ -1,10 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.di
 
-import br.com.brunocarvalhs.friendssecrets.commons.flags.FeatureFlagsManager
-import br.com.brunocarvalhs.friendssecrets.commons.network.RemoteConfigService
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.domain.services.ConfigurationService
-import br.com.brunocarvalhs.friendssecrets.domain.services.FeatureFlagService
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -48,16 +44,4 @@ object AppModule {
     ): ThemeRemoteProvider = ThemeRemoteProvider(
         remoteProvider = firebaseRemoteConfig
     )
-
-    @Provides
-    @Singleton
-    fun provideConfigurationService(
-        remoteConfig: FirebaseRemoteConfig
-    ): ConfigurationService = RemoteConfigService(remoteConfig)
-
-    @Provides
-    @Singleton
-    fun provideFeatureFlagService(
-        remoteConfig: FirebaseRemoteConfig
-    ): FeatureFlagService = FeatureFlagsManager(remoteConfig)
 }

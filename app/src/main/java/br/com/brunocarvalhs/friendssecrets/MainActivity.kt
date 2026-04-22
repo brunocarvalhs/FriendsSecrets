@@ -19,6 +19,8 @@ import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
@@ -28,6 +30,8 @@ class MainActivity : FragmentActivity() {
     lateinit var themeRemoteProvider: ThemeRemoteProvider
     @Inject
     lateinit var biometricManager: BiometricManager
+    @Inject
+    lateinit var featureInitializers: Set<@JvmSuppressWildcards FeatureInitializer>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,10 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
-                    navController.MainApp(isBiometric = biometricManager.isBiometricPromptEnabled.value)
+                    navController.MainApp(
+                        isBiometric = biometricManager.isBiometricPromptEnabled.value,
+                        initializers = featureInitializers
+                    )
                 }
             }
         }

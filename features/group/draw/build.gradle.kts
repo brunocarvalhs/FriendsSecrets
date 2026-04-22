@@ -47,6 +47,7 @@ detekt {
 }
 
 dependencies {
+    implementation(project(":core:navigation"))
     api(project(":core:domain"))
     implementation(project(":core:security"))
 

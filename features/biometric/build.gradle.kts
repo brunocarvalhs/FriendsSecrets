@@ -47,6 +47,7 @@ detekt {
 }
 
 dependencies {
+    implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
 
     // Compose Core
