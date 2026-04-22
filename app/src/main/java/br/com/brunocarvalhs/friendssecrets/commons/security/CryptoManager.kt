@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.friendssecrets.commons.security
 
 import android.util.Base64
-import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
+import br.com.brunocarvalhs.group.draw.app.domain.services.CryptoService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement

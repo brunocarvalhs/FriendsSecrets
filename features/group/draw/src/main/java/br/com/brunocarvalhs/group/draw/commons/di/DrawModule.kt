@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.commons.di
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.DrawService
+import br.com.brunocarvalhs.group.draw.app.domain.services.DrawService
 import br.com.brunocarvalhs.group.draw.app.data.repository.DrawRepositoryImpl
 import br.com.brunocarvalhs.group.draw.app.data.services.DrawManager
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository

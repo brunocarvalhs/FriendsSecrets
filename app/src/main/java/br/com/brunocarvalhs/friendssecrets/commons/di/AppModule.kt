@@ -15,13 +15,13 @@ import br.com.brunocarvalhs.friendssecrets.commons.storage.StorageManager
 import br.com.brunocarvalhs.friendssecrets.commons.storage.dataStore
 import br.com.brunocarvalhs.friendssecrets.commons.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.chat.app.domain.services.ChatService
+import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
+import br.com.brunocarvalhs.group.draw.app.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
-import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.services.ConfigurationService
-import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.services.FeatureFlagService
-import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService

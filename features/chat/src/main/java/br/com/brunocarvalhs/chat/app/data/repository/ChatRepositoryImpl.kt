@@ -4,7 +4,7 @@ import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
-import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
+import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow

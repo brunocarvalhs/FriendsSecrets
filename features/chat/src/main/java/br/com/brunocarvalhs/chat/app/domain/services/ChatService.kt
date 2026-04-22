@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.domain.services
+package br.com.brunocarvalhs.chat.app.domain.services
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import kotlinx.coroutines.flow.Flow

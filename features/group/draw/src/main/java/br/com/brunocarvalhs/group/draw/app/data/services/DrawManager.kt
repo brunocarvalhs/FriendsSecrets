@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.draw.app.data.services
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.CryptoService
-import br.com.brunocarvalhs.friendssecrets.domain.services.DrawService
+import br.com.brunocarvalhs.group.draw.app.domain.services.CryptoService
+import br.com.brunocarvalhs.group.draw.app.domain.services.DrawService
 import javax.inject.Inject
 
 internal class DrawManager @Inject constructor(

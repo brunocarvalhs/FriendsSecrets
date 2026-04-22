@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
+import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter

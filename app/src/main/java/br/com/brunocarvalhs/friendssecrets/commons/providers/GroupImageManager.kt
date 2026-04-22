@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.commons.providers
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.GroupImageService
+import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.flow.MutableStateFlow

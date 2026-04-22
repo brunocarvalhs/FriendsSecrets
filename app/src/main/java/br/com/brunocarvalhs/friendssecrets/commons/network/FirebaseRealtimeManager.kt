@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.commons.network
 
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
-import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
+import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

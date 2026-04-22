@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.domain.services
+package br.com.brunocarvalhs.group.create.app.domain.services
 
 import kotlinx.coroutines.flow.StateFlow
 
