@@ -25,7 +25,7 @@ internal class EditFormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupEditUseCase: GroupEditUseCase,
     private val imageService: GroupImageService,
-    private val analytics: GroupCreateAnalytics
+    analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<EditFormsRouter>(EditFormsRouter.typeMap)

@@ -13,7 +13,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class LoggerModule {
 
-    @Provides
-    @Singleton
-    fun provideFirebaseCrashlytics(): FirebaseCrashlytics = Firebase.crashlytics
+    companion object {
+        @Provides
+        @Singleton
+        fun provideFirebaseCrashlytics(): FirebaseCrashlytics = Firebase.crashlytics
+    }
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class BiometricManager @Inject constructor(
+internal class BiometricManager @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val storage: StorageService,
 ) : BiometricService {

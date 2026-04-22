@@ -14,10 +14,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DeviceManager @Inject constructor(
+internal class DeviceManager @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : DeviceService {
 
