@@ -1,7 +1,9 @@
 package br.com.brunocarvalhs.group.list.app.presentation
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.group.list.R
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -9,11 +11,11 @@ import java.util.Locale
 private const val DATE_FORMAT = "dd/MM/yyyy"
 private const val EMPTY_STRING = ""
 
-internal enum class GroupFilterTag(val description: String) {
-    ACTIVE("Ativos"),
-    ARCHIVED("Arquivados"),
-    DRAWN("Sorteados"),
-    NOT_DRAWN("Não sorteados")
+internal enum class GroupFilterTag(@field:StringRes val description: Int) {
+    ACTIVE(R.string.group_list_filter_active),
+    ARCHIVED(R.string.group_list_filter_archived),
+    DRAWN(R.string.group_list_filter_drawn),
+    NOT_DRAWN(R.string.group_list_filter_not_drawn)
 }
 
 @Stable

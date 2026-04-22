@@ -239,7 +239,7 @@ private fun GroupListTopBar(
                     FilterChip(
                         selected = selectedTag == tag,
                         onClick = { onTagSelected(tag) },
-                        label = { Text(tag.description) }
+                        label = { Text(stringResource(tag.description)) }
                     )
                 }
             }

@@ -38,4 +38,8 @@
 
     <!-- Accessibility/Descriptions -->
     <string name="contact_photo_description">Contact photo of %1$s</string>
+    <string name="group_list_filter_active">Active</string>
+    <string name="group_list_filter_archived">Archived</string>
+    <string name="group_list_filter_drawn">Drawn</string>
+    <string name="group_list_filter_not_drawn">Not drawn</string>
 </resources>
