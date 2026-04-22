@@ -26,7 +26,7 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
-    implementation(project(":core:theme"))
+    implementation(project(":core:remote"))
 
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.material3)

@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
-import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
-import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.biometric.BiometricService
+import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
+import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.friendssecrets.core.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var themeService: ThemeService
     @Inject
-    lateinit var themeRemoteProvider: ThemeRemoteProvider
+    lateinit var themeRemoteProvider: ThemeRemote
     @Inject
     lateinit var biometricService: BiometricService
     @Inject

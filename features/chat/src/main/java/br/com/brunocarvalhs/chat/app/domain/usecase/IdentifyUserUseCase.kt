@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.chat.app.domain.usecase
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
+import br.com.brunocarvalhs.storage.domain.StorageService
 import javax.inject.Inject
 
 class IdentifyUserUseCase @Inject constructor(

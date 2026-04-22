@@ -49,6 +49,8 @@ detekt {
 dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
+    implementation(project(":core:biometric"))
+    implementation(project(":core:remote"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))

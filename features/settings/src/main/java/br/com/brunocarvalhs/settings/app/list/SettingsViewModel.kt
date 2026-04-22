@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.settings.app.list
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.biometric.BiometricService
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

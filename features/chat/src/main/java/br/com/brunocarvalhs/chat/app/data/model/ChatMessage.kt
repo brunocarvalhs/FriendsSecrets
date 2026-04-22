@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.chat.app.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 
 @Entity(tableName = "chat_messages")
 data class ChatMessage(
@@ -14,5 +14,5 @@ data class ChatMessage(
     val timestamp: Long = System.currentTimeMillis(),
     val senderName: String = "",
     val senderId: String = "",
-    val status: MessageStatus = MessageStatus.SENT
+    val status: MessageModel.MessageStatus = MessageModel.MessageStatus.SENT
 )

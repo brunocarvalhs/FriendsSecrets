@@ -1,12 +1,12 @@
 package br.com.brunocarvalhs.group.list.app.domain.useCases
 
+import br.com.brunocarvalhs.deviceid.DeviceService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
-import br.com.brunocarvalhs.friendssecrets.domain.services.DeviceService
-import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
+import br.com.brunocarvalhs.storage.domain.StorageService
 import javax.inject.Inject
 
 internal class GroupByTokenUseCase @Inject constructor(

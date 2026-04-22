@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme.remote.ThemeRemoteProvider
+import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 
 private val lightScheme = lightColorScheme(
@@ -96,7 +96,7 @@ private val darkScheme = darkColorScheme(
 fun FriendsSecretsTheme(
     isThemeRemote: Boolean = false,
     themeService: ThemeService? = null,
-    themeRemoteProvider: ThemeRemoteProvider? = null,
+    themeRemoteProvider: ThemeRemote? = null,
     content: @Composable () -> Unit,
 ) {
     val isInPreview = LocalInspectionMode.current

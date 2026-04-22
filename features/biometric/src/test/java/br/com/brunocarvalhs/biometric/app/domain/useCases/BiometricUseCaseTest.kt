@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.biometric.app.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.biometric.BiometricService
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertFalse
@@ -9,7 +9,7 @@ import org.junit.Test
 
 class BiometricUseCaseTest {
 
-    private val biometricService: BiometricService = mockk()
+    private val biometricService:BiometricService = mockk()
     private val useCase = BiometricUseCase(biometricService)
 
     @Test

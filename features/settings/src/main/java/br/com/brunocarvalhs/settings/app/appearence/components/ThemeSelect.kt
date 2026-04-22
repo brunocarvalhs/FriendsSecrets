@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
+import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 import br.com.brunocarvalhs.settings.R
 
 @Composable

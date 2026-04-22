@@ -50,6 +50,9 @@ dependencies {
     implementation(project(":core:navigation"))
     api(project(":core:domain"))
     implementation(project(":core:network"))
+    implementation(project(":core:storage"))
+    implementation(project(":core:deviceid"))
+    implementation(project(":core:remote"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))

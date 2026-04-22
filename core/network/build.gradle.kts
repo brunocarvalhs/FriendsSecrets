@@ -32,7 +32,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
-    implementation(libs.firebase.config)
     implementation(libs.firebase.perf)
     
     implementation(libs.kotlinx.serialization.json)

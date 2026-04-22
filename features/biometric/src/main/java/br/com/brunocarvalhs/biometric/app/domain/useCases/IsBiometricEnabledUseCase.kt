@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.biometric.app.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
+import br.com.brunocarvalhs.biometric.BiometricService
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 

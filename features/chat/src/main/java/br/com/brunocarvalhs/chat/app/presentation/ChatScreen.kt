@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.chat.R
 import br.com.brunocarvalhs.chat.app.data.extensions.toLocalDateTime
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel.MessageStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

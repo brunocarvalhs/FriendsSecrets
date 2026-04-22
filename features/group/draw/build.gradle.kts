@@ -51,6 +51,7 @@ dependencies {
     api(project(":core:domain"))
     implementation(project(":core:security"))
     implementation(project(":core:network"))
+    implementation(project(":core:remote"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))

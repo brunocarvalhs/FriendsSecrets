@@ -88,6 +88,13 @@ detekt {
 }
 
 dependencies {
+    implementation(project(":core:ui"))
+    implementation(project(":core:network"))
+    implementation(project(":core:remote"))
+    implementation(project(":core:security"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:biometric"))
+
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))
     implementation(project(":features:group:create"))
@@ -95,10 +102,6 @@ dependencies {
     implementation(project(":features:settings"))
     implementation(project(":features:chat"))
     implementation(project(":features:biometric"))
-    implementation(project(":core:network"))
-    implementation(project(":core:theme"))
-    implementation(project(":core:security"))
-    implementation(project(":core:navigation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -3,8 +3,8 @@ package br.com.brunocarvalhs.biometric.app.domain.useCases
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import br.com.brunocarvalhs.biometric.BiometricService
 import br.com.brunocarvalhs.biometric.R
-import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

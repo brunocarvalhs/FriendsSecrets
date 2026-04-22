@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.chat.app.data.services
 
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -70,7 +69,7 @@ class FirebaseRealtimeManager @Inject constructor(
                 "senderId" to message.senderId,
                 "senderName" to message.senderName,
                 "timestamp" to message.timestamp,
-                "status" to MessageStatus.SENT.name
+                "status" to MessageModel.MessageStatus.SENT.name
             )
 
             reference.setValue(messageMap).await()
@@ -88,7 +87,9 @@ class FirebaseRealtimeManager @Inject constructor(
             senderId = this["senderId"] as? String ?: "",
             senderName = this["senderName"] as? String ?: "",
             timestamp = (this["timestamp"] as? Long) ?: System.currentTimeMillis(),
-            status = MessageStatus.valueOf(this["status"] as? String ?: MessageStatus.SENT.name)
+            status = MessageModel.MessageStatus.valueOf(
+                this["status"] as? String ?: MessageModel.MessageStatus.SENT.name
+            )
         )
     }
 }

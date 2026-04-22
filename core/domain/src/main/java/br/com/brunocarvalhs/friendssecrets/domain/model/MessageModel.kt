@@ -1,9 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.domain.model
 
-enum class MessageStatus {
-    SENDING, SENT, ERROR
-}
-
 data class MessageModel(
     val id: String = "",
     val groupId: String = "",
@@ -12,4 +8,8 @@ data class MessageModel(
     val senderName: String = "",
     val timestamp: Long = System.currentTimeMillis(),
     val status: MessageStatus = MessageStatus.SENT
-)
+) {
+    enum class MessageStatus {
+        SENDING, SENT, ERROR
+    }
+}

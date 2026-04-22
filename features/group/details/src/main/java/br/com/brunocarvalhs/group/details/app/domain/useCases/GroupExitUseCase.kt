@@ -3,8 +3,8 @@ package br.com.brunocarvalhs.group.details.app.domain.useCases
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME_ADMIN
-import br.com.brunocarvalhs.friendssecrets.domain.services.StorageService
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
+import br.com.brunocarvalhs.storage.domain.StorageService
 import javax.inject.Inject
 
 internal class GroupExitUseCase @Inject constructor(

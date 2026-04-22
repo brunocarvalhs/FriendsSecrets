@@ -50,6 +50,8 @@ detekt {
 dependencies {
     api(project(":core:domain"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:biometric"))
+    implementation(project(":core:remote"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

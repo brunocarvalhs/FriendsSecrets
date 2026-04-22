@@ -49,6 +49,10 @@ detekt {
 dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
+    implementation(project(":core:network"))
+    implementation(project(":core:deviceid"))
+    implementation(project(":core:storage"))
+    implementation(project(":core:remote"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
