@@ -16,7 +16,7 @@
     <string name="appearance_screen_title">Selecting a specific option will change the appearance (color) of the app according to your preferences.</string>
     <string name="appearance_screen_title_description">Enabling the Dynamic Theme will allow the app to automatically adjust its colors based on your device\'s wallpaper.</string>
     <string name="appearance_screen_dynamic_title">Dynamic Theme</string>
-    <string name="light_theme">Light</string>
+    <string name="light_theme">Light theme</string>
     <string name="dark_theme">Dark theme</string>
     <string name="system_theme">System theme</string>
 

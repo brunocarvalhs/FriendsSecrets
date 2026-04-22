@@ -12,9 +12,9 @@ name: Settings Flow
 - assertVisible: "Review App"
 - tapOn: "Appearance"
 - assertVisible: "Appearance"
-- assertVisible: "Light"
-- assertVisible: "Dark"
-- assertVisible: "System"
+- assertVisible: "Light theme"
+- assertVisible: "Dark theme"
+- assertVisible: "System theme"
 - assertVisible: "Dynamic Theme"
 - back
 - tapOn: "Report an issue"
