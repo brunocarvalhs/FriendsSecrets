@@ -112,4 +112,5 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.perf)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.config)
 }

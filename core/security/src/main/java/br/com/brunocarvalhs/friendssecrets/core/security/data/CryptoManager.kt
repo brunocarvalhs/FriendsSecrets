@@ -1,7 +1,7 @@
-package br.com.brunocarvalhs.friendssecrets.commons.security
+package br.com.brunocarvalhs.friendssecrets.core.security.data
 
 import android.util.Base64
-import br.com.brunocarvalhs.group.draw.app.domain.services.CryptoService
+import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -13,15 +13,16 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 import timber.log.Timber
+import javax.inject.Inject
 
-class CryptoManager(
-    private val base64Encoder: Base64Encoder = DefaultBase64Encoder,
+class CryptoManager @Inject constructor() : CryptoService {
+
     private val json: Json = Json {
         ignoreUnknownKeys = true
         isLenient = true
         encodeDefaults = true
     }
-): CryptoService {
+
     override fun encryptMap(
         inputMap: Map<String, Any?>,
         excludedKeys: Set<String>
@@ -40,7 +41,7 @@ class CryptoManager(
             null -> null
             is Map<*, *> -> (value as Map<String, Any?>).mapValues { encryptValue(it.value) }
             is Iterable<*> -> value.map { encryptValue(it) }
-            else -> encrypt(json.encodeToString(value.toJsonElement()))
+            else -> encrypt(json.encodeToString(JsonPrimitive.serializer(), value.toJsonElement() as JsonPrimitive))
         }
     }
 
@@ -79,7 +80,7 @@ class CryptoManager(
 
     override fun encrypt(input: String): String {
         Timber.tag(TAG).v("--> ENCRYPT | Input: %s", input)
-        return base64Encoder.encodeToString(
+        return Base64.encodeToString(
             input.toByteArray(),
             BASE64_FLAGS
         ).also {
@@ -90,7 +91,7 @@ class CryptoManager(
     override fun decrypt(encoded: String): String {
         Timber.tag(TAG).v("--> DECRYPT | Input: %s", encoded)
         return runCatching {
-            val decodedBytes = base64Encoder.decode(encoded, BASE64_FLAGS)
+            val decodedBytes = Base64.decode(encoded, BASE64_FLAGS)
             String(decodedBytes).also {
                 Timber.tag(TAG).v("<-- RESULT DECRYPT: %s", it)
             }
@@ -122,21 +123,8 @@ class CryptoManager(
         is JsonObject -> mapValues { it.value.toAny() }
     }
 
-    interface Base64Encoder {
-        fun encodeToString(input: ByteArray, flags: Int): String
-        fun decode(input: String, flags: Int): ByteArray
-    }
-
     private companion object {
         private const val TAG = "CryptoManager"
         private const val BASE64_FLAGS = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
-
-        private object DefaultBase64Encoder : Base64Encoder {
-            override fun encodeToString(input: ByteArray, flags: Int): String =
-                Base64.encodeToString(input, flags)
-
-            override fun decode(input: String, flags: Int): ByteArray =
-                Base64.decode(input, flags)
-        }
     }
 }

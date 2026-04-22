@@ -48,6 +48,7 @@ detekt {
 
 dependencies {
     api(project(":core:domain"))
+    implementation(project(":core:security"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))

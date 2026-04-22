@@ -3,9 +3,11 @@ package br.com.brunocarvalhs.group.create.commons.di
 import br.com.brunocarvalhs.group.create.app.data.repository.ContactsRepositoryImpl
 import br.com.brunocarvalhs.group.create.app.data.repository.GroupCreateRepositoryImpl
 import br.com.brunocarvalhs.group.create.app.data.services.ContactServiceImpl
+import br.com.brunocarvalhs.group.create.app.data.services.GroupImageManager
 import br.com.brunocarvalhs.group.create.app.domain.repositories.ContactsRepository
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import br.com.brunocarvalhs.group.create.app.domain.services.ContactService
+import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalyticsImpl
 import dagger.Binds
@@ -39,4 +41,10 @@ internal abstract class GroupCreateModule {
     abstract fun bindGroupCreateAnalytics(
         impl: GroupCreateAnalyticsImpl
     ): GroupCreateAnalytics
+
+    @Binds
+    @Singleton
+    abstract fun bindGroupImageService(
+        impl: GroupImageManager
+    ): GroupImageService
 }

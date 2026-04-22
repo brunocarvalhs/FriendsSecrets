@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.storage
+package br.com.brunocarvalhs.friendssecrets.core.infrastructure.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -15,13 +15,14 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 class StorageManager @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    private val dataStore: DataStore<Preferences>
+) : StorageService {
+
     private val json: Json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
         encodeDefaults = true
     }
-) : StorageService {
 
     private val TAG = "StorageManager"
 

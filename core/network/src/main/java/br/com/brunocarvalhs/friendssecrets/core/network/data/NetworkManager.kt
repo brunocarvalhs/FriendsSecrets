@@ -1,6 +1,6 @@
-package br.com.brunocarvalhs.friendssecrets.commons.network
+package br.com.brunocarvalhs.friendssecrets.core.network.data
 
-import br.com.brunocarvalhs.friendssecrets.commons.security.CryptoManager
+import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 
 class NetworkManager @Inject constructor(
     private val firebaseFirestoreManager: FirebaseFirestoreManager,
-    private val cryptoManager: CryptoManager,
+    private val cryptoManager: CryptoService,
     private val compatibilityConverter: FirebaseCompatibilityConverter
 ) : NetworkService {
 
@@ -83,7 +83,6 @@ class NetworkManager @Inject constructor(
         } catch (e: Exception) {
             Timber.tag(TAG).e(e, "Compatibility Error on %s", clazz.simpleName)
             
-            // Fallback para ClassCastException (ex: Array vs List) usando a nova classe
             if (response is List<*> && clazz.java.isArray) {
                 return compatibilityConverter.listToTypedArray(response, clazz.java) as? T
             }

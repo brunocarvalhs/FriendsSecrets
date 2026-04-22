@@ -8,6 +8,7 @@ import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalyticsImpl
+import br.com.brunocarvalhs.chat.app.data.services.FirebaseRealtimeManager
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import dagger.Binds

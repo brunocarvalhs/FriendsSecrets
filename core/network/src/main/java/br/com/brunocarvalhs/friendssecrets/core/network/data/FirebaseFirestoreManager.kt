@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.network
+package br.com.brunocarvalhs.friendssecrets.core.network.data
 
 import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import com.google.firebase.firestore.FirebaseFirestore

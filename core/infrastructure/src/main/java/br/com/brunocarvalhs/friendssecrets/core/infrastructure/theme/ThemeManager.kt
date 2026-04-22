@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.theme
+package br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme
 
 import android.content.Context
 import android.content.res.Configuration
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Stable
 @Singleton
 class ThemeManager @Inject constructor(
-    @param:ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context,
     private val storage: StorageService
 ) : ThemeService {
 

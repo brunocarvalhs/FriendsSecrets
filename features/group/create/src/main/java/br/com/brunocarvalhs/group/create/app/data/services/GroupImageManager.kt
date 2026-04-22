@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.providers
+package br.com.brunocarvalhs.group.create.app.data.services
 
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig

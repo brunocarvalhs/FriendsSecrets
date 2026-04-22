@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.security
+package br.com.brunocarvalhs.friendssecrets.core.infrastructure.device
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DeviceManager @Inject constructor(
-    @param:ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context
 ) : DeviceService {
 
     @SuppressLint("HardwareIds")

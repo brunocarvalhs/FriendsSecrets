@@ -1,7 +1,6 @@
-package br.com.brunocarvalhs.group.draw.app.domain.services
+package br.com.brunocarvalhs.friendssecrets.core.security.domain
 
 interface CryptoService {
-
     fun encryptMap(
         inputMap: Map<String, Any?>,
         excludedKeys: Set<String>

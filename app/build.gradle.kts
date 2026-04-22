@@ -95,6 +95,9 @@ dependencies {
     implementation(project(":features:settings"))
     implementation(project(":features:chat"))
     implementation(project(":features:biometric"))
+    implementation(project(":core:network"))
+    implementation(project(":core:infrastructure"))
+    implementation(project(":core:security"))
 
     implementation("androidx.startup:startup-runtime:1.2.0")
 

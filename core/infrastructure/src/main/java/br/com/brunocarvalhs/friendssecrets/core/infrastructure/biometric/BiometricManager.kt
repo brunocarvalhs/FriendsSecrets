@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.commons.security
+package br.com.brunocarvalhs.friendssecrets.core.infrastructure.biometric
 
 import android.content.Context
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BiometricManager @Inject constructor(
-    @param:ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context,
     private val storage: StorageService,
 ) : BiometricService {
 
