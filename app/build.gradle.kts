@@ -89,6 +89,7 @@ detekt {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:logger"))
     implementation(project(":core:network"))
     implementation(project(":core:remote"))
     implementation(project(":core:security"))

@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.logger.di
 
+import br.com.brunocarvalhs.logger.CrashlyticsLogger
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -11,11 +12,18 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class LoggerModule {
+object LoggerModule {
 
-    companion object {
-        @Provides
-        @Singleton
-        fun provideFirebaseCrashlytics(): FirebaseCrashlytics = Firebase.crashlytics
+    @Provides
+    @Singleton
+    fun provideFirebaseCrashlytics(): FirebaseCrashlytics =
+        Firebase.crashlytics
+
+    @Provides
+    @Singleton
+    fun provideCrashlyticsLogger(
+        crashlytics: FirebaseCrashlytics
+    ): CrashlyticsLogger {
+        return CrashlyticsLogger(crashlytics)
     }
 }
