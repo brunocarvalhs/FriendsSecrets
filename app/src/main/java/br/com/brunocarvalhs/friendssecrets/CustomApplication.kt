@@ -2,11 +2,10 @@ package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
 import android.os.StrictMode
-import br.com.brunocarvalhs.friendssecrets.commons.logger.CrashLoggerProvider
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import br.com.brunocarvalhs.friendssecrets.domain.services.logger.LoggerService
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Application class with Hilt dependency injection setup.
@@ -21,11 +20,14 @@ import timber.log.Timber
 @HiltAndroidApp
 class CustomApplication : Application() {
 
+    @Inject
+    lateinit var logger: LoggerService
+
     override fun onCreate() {
         super.onCreate()
 
         if (BuildConfig.DEBUG) Timber.plant(tree = Timber.DebugTree())
-        else Timber.plant(tree = CrashLoggerProvider(Firebase.crashlytics))
+        else Timber.plant(tree = logger as Timber.Tree)
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(

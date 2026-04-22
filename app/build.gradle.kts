@@ -100,8 +100,6 @@ dependencies {
     implementation(project(":core:security"))
     implementation(project(":core:navigation"))
 
-    implementation("androidx.startup:startup-runtime:1.2.0")
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

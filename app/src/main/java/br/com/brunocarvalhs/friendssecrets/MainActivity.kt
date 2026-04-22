@@ -8,18 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.commons.security.BiometricManager
 import br.com.brunocarvalhs.friendssecrets.commons.theme.remote.ThemeRemoteProvider
 import br.com.brunocarvalhs.friendssecrets.commons.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.friendssecrets.domain.services.BiometricService
 import br.com.brunocarvalhs.friendssecrets.domain.services.ThemeService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -29,7 +29,7 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var themeRemoteProvider: ThemeRemoteProvider
     @Inject
-    lateinit var biometricManager: BiometricManager
+    lateinit var biometricService: BiometricService
     @Inject
     lateinit var featureInitializers: Set<@JvmSuppressWildcards FeatureInitializer>
 
@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity() {
                 ) {
                     val navController = rememberNavController()
                     navController.MainApp(
-                        isBiometric = biometricManager.isBiometricPromptEnabled.value,
+                        isBiometric = biometricService.isBiometricPromptEnabled.collectAsState().value,
                         initializers = featureInitializers
                     )
                 }
