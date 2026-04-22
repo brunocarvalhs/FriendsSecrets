@@ -5,10 +5,11 @@ name: Home Flow
 - assertVisible: "Friends Secrets"
 
 # Verifica se os elementos da tela inicial estão presentes
-- assertVisible: "Pesquisar grupos..."
-- assertVisible: "Ativos"
-- assertVisible: "Arquivados"
-- assertVisible: "Sorteados"
+- assertVisible: "Search groups..."
+- assertVisible: "Active"
+- assertVisible: "Archived"
+- assertVisible: "Drawn"
+- assertVisible: "Not drawn"
 - assertVisible: "Uh-oh!"
 - assertVisible: "No group found"
 - assertVisible: "Enter a group"
@@ -26,16 +27,16 @@ name: Home Flow
 - assertVisible: "Friends Secrets"
 
 # Testa a navegação pelas abas (chips)
-- tapOn: "Arquivados"
-- tapOn: "Sorteados"
-- tapOn: "Ativos"
+- tapOn: "Active"
+- tapOn: "Drawn"
+- tapOn: "Active"
 
 # Testa o Floating Action Button (Novo Grupo)
-- tapOn: "Novo Grupo" # contentDescription stringResource(R.string.new_group)
+- tapOn: "New group"
 - back
 - assertVisible: "Friends Secrets"
 
 # Testa o More Options (Configuração)
-- tapOn: "Mais opções" # contentDescription stringResource(R.string.new_group)
+- tapOn: "More options"
 - back
 - assertVisible: "Friends Secrets"
