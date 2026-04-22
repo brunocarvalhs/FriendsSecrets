@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.storage.di
 
-import br.com.brunocarvalhs.storage.data.DataStoreService
+import br.com.brunocarvalhs.storage.data.StorageManager
 import br.com.brunocarvalhs.storage.domain.StorageService
 import dagger.Binds
 import dagger.Module
@@ -14,5 +14,5 @@ abstract class StorageModule {
 
     @Binds
     @Singleton
-    internal abstract fun bindStorageService(impl: DataStoreService): StorageService
+    internal abstract fun bindStorageService(impl: StorageManager): StorageService
 }
