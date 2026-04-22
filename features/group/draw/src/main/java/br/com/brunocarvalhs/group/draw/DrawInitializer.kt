@@ -5,9 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import br.com.brunocarvalhs.friendssecrets.core.navigation.DrawGraph
 import br.com.brunocarvalhs.group.draw.app.presentation.DrawScreen
 import br.com.brunocarvalhs.group.draw.app.presentation.DrawViewModel
-import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import br.com.brunocarvalhs.group.draw.commons.navigation.DrawRouter
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
@@ -16,9 +16,9 @@ class DrawInitializer(private val builder: Builder) {
 
     @AddTrace(name = "DrawInitializer.build", enabled = true)
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<DrawGraphRouter>(
+        return navGraphBuilder.navigation<DrawGraph>(
             startDestination = DrawRouter,
-            typeMap = DrawGraphRouter.typeMap
+            typeMap = DrawGraph.typeMap
         ) {
             composable<DrawRouter> {
                 val viewModel = hiltViewModel<DrawViewModel>()

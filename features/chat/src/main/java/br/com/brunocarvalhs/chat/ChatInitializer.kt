@@ -7,18 +7,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import br.com.brunocarvalhs.chat.app.presentation.ChatScreen
 import br.com.brunocarvalhs.chat.app.presentation.ChatViewModel
-import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.chat.commons.navigation.ChatRouter
-import br.com.brunocarvalhs.chat.commons.navigation.GenerativeRouter
+import br.com.brunocarvalhs.friendssecrets.core.navigation.ChatGraph
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 
 class ChatInitializer(private val builder: Builder) {
 
     fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<ChatGraphRouter>(
+        return navGraphBuilder.navigation<ChatGraph>(
             startDestination = ChatRouter,
-            typeMap = ChatGraphRouter.typeMap,
+            typeMap = ChatGraph.typeMap,
         ) {
             composable<ChatRouter> {
                 val viewModel = hiltViewModel<ChatViewModel>()
@@ -26,9 +25,6 @@ class ChatInitializer(private val builder: Builder) {
                     viewModel = viewModel,
                     onBack = builder.onBack
                 )
-            }
-            composable<GenerativeRouter> {
-
             }
         }
     }

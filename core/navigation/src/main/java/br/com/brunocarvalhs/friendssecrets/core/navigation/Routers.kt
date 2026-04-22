@@ -8,16 +8,39 @@ import kotlin.reflect.typeOf
 data object GroupListGraph
 
 @Serializable
-data object GroupListRoute
-
-@Serializable
 data object GroupCreateGraph
 
 @Serializable
-data object GroupCreateRoute
+data class GroupDetailsGraph(val group: GroupModel) {
+    companion object {
+        val typeMap = mapOf(
+            typeOf<GroupModel>() to navTypeSerializer<GroupModel>()
+        )
+    }
+}
 
 @Serializable
-data class GroupDetailsRoute(val group: GroupModel) {
+data class EditFormsGraph(val group: GroupModel) {
+    companion object {
+        val typeMap = mapOf(
+            typeOf<GroupModel>() to navTypeSerializer<GroupModel>()
+        )
+    }
+}
+
+@Serializable
+data class ChatGraph(
+    val group: GroupModel,
+) {
+    companion object {
+        val typeMap = mapOf(
+            typeOf<GroupModel>() to navTypeSerializer<GroupModel>()
+        )
+    }
+}
+
+@Serializable
+data class DrawGraph(val group: GroupModel) {
     companion object {
         val typeMap = mapOf(
             typeOf<GroupModel>() to navTypeSerializer<GroupModel>()
@@ -27,3 +50,6 @@ data class GroupDetailsRoute(val group: GroupModel) {
 
 @Serializable
 data object SettingsGraph
+
+@Serializable
+data object BiometricGraph

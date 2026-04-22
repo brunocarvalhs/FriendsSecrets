@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.brunocarvalhs.biometric.commons.navigation.BiometricGraphRouter
+import br.com.brunocarvalhs.friendssecrets.core.navigation.BiometricGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
-import br.com.brunocarvalhs.group.list.commons.navigation.GroupListRouter
+import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupListGraph
 
 @Composable
 fun NavHostController.MainApp(
@@ -15,9 +15,9 @@ fun NavHostController.MainApp(
 ) {
     val startRoute: Any = remember(isBiometric) {
         if (isBiometric) {
-            BiometricGraphRouter
+            BiometricGraph
         } else {
-            GroupListRouter
+            GroupListGraph
         }
     }
 

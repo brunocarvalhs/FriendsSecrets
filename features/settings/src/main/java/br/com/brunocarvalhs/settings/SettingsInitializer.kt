@@ -4,8 +4,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
+import br.com.brunocarvalhs.friendssecrets.core.navigation.SettingsGraph
 import br.com.brunocarvalhs.settings.app.appearence.AppearanceScreen
 import br.com.brunocarvalhs.settings.app.appearence.AppearanceViewModel
 import br.com.brunocarvalhs.settings.app.faq.FAQScreen
@@ -14,14 +14,13 @@ import br.com.brunocarvalhs.settings.app.report.ReportIssueScreen
 import br.com.brunocarvalhs.settings.commons.navigation.AppearanceScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.FAQScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.ReportIssueScreenRoute
-import br.com.brunocarvalhs.settings.commons.navigation.SettingsGraphRoute
 import br.com.brunocarvalhs.settings.commons.navigation.SettingsScreenRoute
 import kotlin.properties.Delegates
 
 class SettingsInitializer(private val builder: Builder) {
 
     private fun build(navGraphBuilder: NavGraphBuilder) {
-        return navGraphBuilder.navigation<SettingsGraphRoute>(startDestination = SettingsScreenRoute) {
+        return navGraphBuilder.navigation<SettingsGraph>(startDestination = SettingsScreenRoute) {
             composable<SettingsScreenRoute> {
                 SettingsScreen(
                     viewModel = hiltViewModel(),

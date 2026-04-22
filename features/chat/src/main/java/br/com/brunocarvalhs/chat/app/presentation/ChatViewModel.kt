@@ -11,8 +11,8 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
-import br.com.brunocarvalhs.chat.commons.navigation.ChatGraphRouter
 import br.com.brunocarvalhs.deviceid.DeviceService
+import br.com.brunocarvalhs.friendssecrets.core.navigation.ChatGraph
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel.MessageStatus
 import com.google.firebase.perf.metrics.AddTrace
@@ -42,7 +42,7 @@ internal class ChatViewModel @Inject constructor(
     private val deviceService: DeviceService,
     private val analytics: ChatAnalytics
 ) : ViewModel() {
-    private val args = savedStateHandle.toRoute<ChatGraphRouter>(ChatGraphRouter.typeMap)
+    private val args = savedStateHandle.toRoute<ChatGraph>(ChatGraph.typeMap)
     private val _uiState = MutableStateFlow(ChatUiState(
         groupModel = args.group
     ))

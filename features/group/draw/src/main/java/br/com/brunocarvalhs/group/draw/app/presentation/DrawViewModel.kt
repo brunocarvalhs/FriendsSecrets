@@ -5,10 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.friendssecrets.core.navigation.DrawGraph
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.DrawUseCase
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.ShareSecretFriendsUseCase
 import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalytics
-import br.com.brunocarvalhs.group.draw.commons.navigation.DrawGraphRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ internal class DrawViewModel @Inject constructor(
     private val analytics: DrawAnalytics
 ) : ViewModel() {
 
-    private val args = savedStateHandle.toRoute<DrawGraphRouter>(DrawGraphRouter.typeMap)
+    private val args = savedStateHandle.toRoute<DrawGraph>(DrawGraph.typeMap)
 
     private val _uiState: MutableStateFlow<DrawUiState> = MutableStateFlow(
         DrawUiState(
