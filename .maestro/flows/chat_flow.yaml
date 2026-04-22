@@ -2,20 +2,20 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Chat Flow
 ---
 - launchApp
-- runFlow: group_details_flow.yaml
-- tapOn: "Arquivados"
+- runFlow: create_group_flow.yaml
+- tapOn: "Archived"
 - tapOn: "Grupo de Natal 2024"
 - tapOn: "Chat"
 
 - runFlow:
     when:
-      visible: "Identifique-se"
+      visible: "Identify yourself"
     commands:
-      - tapOn: "Seu Nome ou Apelido"
+      - tapOn: "Your Name or Nickname"
       - inputText: "Bruno"
-      - tapOn: "Salvar"
-- assertVisible: "Digite uma mensagem..."
-- tapOn: "Digite uma mensagem..."
+      - tapOn: "Save"
+- assertVisible: "Type a message..."
+- tapOn: "Type a message..."
 - back
 - back
 - back
