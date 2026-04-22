@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.draw.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import br.com.brunocarvalhs.group.draw.app.data.model.GroupDrawDTO
 import br.com.brunocarvalhs.group.draw.app.data.services.DrawManager
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository

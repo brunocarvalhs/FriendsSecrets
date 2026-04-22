@@ -49,6 +49,7 @@ detekt {
 dependencies {
     implementation(project(":core:navigation"))
     api(project(":core:domain"))
+    implementation(project(":core:network"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
