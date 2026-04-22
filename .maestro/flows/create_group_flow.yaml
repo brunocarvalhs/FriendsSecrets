@@ -2,68 +2,69 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Create Group Flow
 ---
 - launchApp
-- tapOn: "Novo Grupo"
-- assertVisible: "Adicionar membros"
+- tapOn: "Create a group"
+- assertVisible: "Add members"
 
-# Tela de Adicionar Membros
-- assertVisible: "Adicionar membros"
-- assertVisible: "0 selecionados"
-- tapOn: "Adicionar manualmente"
+# Tela de Add members
+- assertVisible: "Add members"
+- assertVisible: "0 selected"
+- tapOn: "Add manually"
 
 # Membro 1
-- tapOn: "Nome do participante"
+- tapOn: "Participant's Name"
 - inputText: "Bruno"
-- tapOn: "Telefone (Opcional)"
+- tapOn: "Phone (Optional)"
 - inputText: "11999999991"
 - back
-- tapOn: "Adicionar ao Grupo"
+- tapOn: "Add to Group"
 
 # Membro 2
-- tapOn: "Nome do participante"
+- tapOn: "Participant's Name"
 - inputText: "Carla"
 - back
-- tapOn: "Telefone (Opcional)"
+- tapOn: "Phone (Optional)"
 - inputText: "11999999992"
 - back
-- tapOn: "Adicionar ao Grupo"
+- tapOn: "Add to Group"
 
 # Membro 3
-- tapOn: "Nome do participante"
+- tapOn: "Participant's Name"
 - inputText: "Daniel"
 - back
-- tapOn: "Telefone (Opcional)"
+- tapOn: "Phone (Optional)"
 - inputText: "11999999993"
 - back
-- tapOn: "Adicionar ao Grupo"
+- tapOn: "Add to Group"
 
 # Membro 4
-- tapOn: "Nome do participante"
+- tapOn: "Participant's Name"
 - inputText: "Erica"
 - back
-- tapOn: "Telefone (Opcional)"
+- tapOn: "Phone (Optional)"
 - inputText: "11999999994"
 - back
-- tapOn: "Adicionar ao Grupo"
+- tapOn: "Add to Group"
 
 # Verifica se o contador atualizou para 4
-- assertVisible: "4 selecionados"
-- tapOn: "Avançar"
+- assertVisible: "4 selected"
+- tapOn: "Next"
 
 # Preenche dados básicos do grupo
-- tapOn: "Nome do grupo"
+- assertVisible: "New Group"
+- tapOn: "Group name"
 - inputText: "Grupo de Natal 2024"
 - back
-- tapOn: "Descrição"
+- tapOn: "Description"
 - inputText: "Amigo secreto da firma"
 - back
-- tapOn: "Data do evento"
-- tapOn: "Próximo"
+- tapOn: "Event date"
+- tapOn: "Next"
 - tapOn: "OK"
-- tapOn: "Preço Mín."
+- tapOn: "Min. Price"
 - inputText: "1000"
 - back
-- tapOn: "Preço Máx."
+- tapOn: "Max. Price"
 - inputText: "2000"
 - back
-- assertVisible: "Membros"
-- tapOn: "Criar"
+- assertVisible: "Members"
+- tapOn: "Create"
