@@ -3,7 +3,7 @@ name: Settings Flow
 ---
 - launchApp
 - runFlow: home_flow.yaml
-- tapOn: "Mais opções"
+- tapOn: "More options"
 - tapOn: "Settings"
 - assertVisible: "General"
 - assertVisible: "Appearance"
