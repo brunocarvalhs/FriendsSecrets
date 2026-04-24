@@ -1,8 +1,8 @@
 plugins {
-    id("java-library")
+    alias(libs.plugins.gradle.javaLibrary)
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.detekt)
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_11

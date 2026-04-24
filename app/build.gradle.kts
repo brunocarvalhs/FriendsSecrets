@@ -1,16 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.androidx.baselineprofile)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.google.firebase.firebase.perf)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
-    id("org.jetbrains.dokka") version "1.9.20"
-    kotlin("plugin.serialization") version "2.1.10"
-    id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.jetbrains.dokka)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.dagger.hilt.android)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -55,12 +55,18 @@ android {
             )
         }
     }
+
+    baselineProfile {
+        mergeIntoMain = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -88,6 +94,7 @@ detekt {
 }
 
 dependencies {
+    baselineProfile(project(":baselineprofile"))
     implementation(project(":core:ui"))
     implementation(project(":core:logger"))
     implementation(project(":core:network"))

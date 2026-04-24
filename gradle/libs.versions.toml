@@ -1,51 +1,53 @@
 [versions]
+baselineprofile = "1.5.0-alpha05"
 accompanistSystemuicontroller = "0.36.0"
-agp = "8.7.3"
+agp = "9.1.1"
 biometric = "1.1.0"
-coilCompose = "2.7.0"
+coilCompose = "3.4.0"
 detekt = "1.23.8"
-datastorePreferences = "1.1.7"
-gson = "2.12.1"
-hiltAndroid = "2.56.2"
-hiltNavigationCompose = "1.2.0"
-kotlin = "2.1.10"
-ksp = "2.1.10-1.0.31"
-coreKtx = "1.16.0"
+dokka = "2.2.0"
+datastorePreferences = "1.2.1"
+gson = "2.13.2"
+hiltAndroid = "2.59.2"
+hiltNavigationCompose = "1.3.0"
+kotlin = "2.2.10"
+ksp = "2.2.10-2.0.2"
+coreKtx = "1.18.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
 kotlinxCoroutinesPlayServices = "1.10.2"
-kotlinxSerializationJson = "1.8.1"
-lifecycleRuntimeKtx = "2.9.1"
-lifecycleViewmodelCompose = "2.9.1"
-activityCompose = "1.10.1"
-composeBom = "2025.06.01"
+kotlinxSerializationJson = "1.11.0"
+lifecycleRuntimeKtx = "2.10.0"
+lifecycleViewmodelCompose = "2.10.0"
+activityCompose = "1.13.0"
+composeBom = "2026.04.01"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
-lottieCompose = "4.0.0"
-material3 = "1.3.2"
+lottieCompose = "6.7.1"
+material3 = "1.4.0"
 materialIconsExtended = "1.7.8"
-mockitoInline = "4.8.0"
-mockk = "1.13.13"
-navigationCompose = "2.9.0"
-googleFirebaseFirebasePerf = "1.4.2"
-googleGmsGoogleServices = "4.4.3"
-googleFirebaseCrashlytics = "3.0.4"
+mockitoInline = "5.2.0"
+mockk = "1.14.9"
+navigationCompose = "2.9.8"
+googleFirebaseFirebasePerf = "2.0.2"
+googleGmsGoogleServices = "4.4.4"
+googleFirebaseCrashlytics = "3.0.7"
 review = "2.0.2"
-robolectric = "4.14"
+robolectric = "4.16.1"
 startupRuntime = "1.2.0"
 timber = "5.0.1"
-tracingPerfetto = "1.0.0"
-tracingPerfettoBinary = "1.0.0"
-uiTextGoogleFonts = "1.8.3"
-firebaseBom = "33.16.0"
-accompanist = "0.36.0"
-jetbrainsKotlinJvm = "2.1.10"
-coreSplashscreen = "1.0.1"
+tracingPerfetto = "1.0.1"
+tracingPerfettoBinary = "1.0.1"
+uiTextGoogleFonts = "1.11.0"
+firebaseBom = "34.12.0"
+accompanist = "0.37.3"
+jetbrainsKotlinJvm = "2.2.10"
+coreSplashscreen = "1.2.0"
 datastoreCore = "1.2.1"
 lifecycleProcess = "2.10.0"
-room = "2.6.1"
-appcompat = "1.6.1"
-material = "1.10.0"
+room = "2.8.4"
+appcompat = "1.7.1"
+material = "1.13.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -58,7 +60,7 @@ androidx-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing"
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startupRuntime" }
 androidx-tracing-perfetto = { module = "androidx.tracing:tracing-perfetto", version.ref = "tracingPerfetto" }
 androidx-tracing-perfetto-binary = { module = "androidx.tracing:tracing-perfetto-binary", version.ref = "tracingPerfettoBinary" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroid" }
@@ -93,6 +95,8 @@ review = { module = "com.google.android.play:review", version.ref = "review" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version = "2.3.0" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version = "1.4.1" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
@@ -116,6 +120,10 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+android-test = { id = "com.android.test", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gradle-javaLibrary = { id = "java-library" }
+androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
