@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "br.com.brunocarvalhs.performance"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

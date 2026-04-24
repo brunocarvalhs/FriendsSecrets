@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "br.com.brunocarvalhs.chat"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

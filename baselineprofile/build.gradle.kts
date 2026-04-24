@@ -6,7 +6,7 @@ plugins {
 android {
     targetProjectPath = ":app"
     namespace = "br.com.brunocarvalhs.friendssecrets.baselineprofile"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

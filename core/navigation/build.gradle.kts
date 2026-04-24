@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "br.com.brunocarvalhs.friendssecrets.core.navigation"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
