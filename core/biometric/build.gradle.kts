@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.biometric"
+    namespace = "br.com.brunocarvalhs.core.biometric"
     compileSdk = 35
 
     defaultConfig {
