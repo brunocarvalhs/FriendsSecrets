@@ -4,11 +4,13 @@ agp = "8.7.3"
 biometric = "1.1.0"
 coilCompose = "2.7.0"
 countryPicker = "2.1.1"
+detekt = "1.23.8"
 datastorePreferences = "1.1.7"
 gson = "2.12.1"
 hiltAndroid = "2.56.2"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.10"
+ksp = "2.1.10-1.0.31"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -137,3 +139,6 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.8" apply false
-    id("com.google.dagger.hilt.android") version "2.56.2" apply false
-    id("com.google.devtools.ksp") version "2.1.10-1.0.31" apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.google.dagger.hilt.android) apply false
+    alias(libs.plugins.google.devtools.ksp) apply false
 }
