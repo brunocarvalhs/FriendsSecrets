@@ -4,7 +4,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import javax.inject.Inject
 
-internal class BiometricAnalyticsImpl @Inject constructor(
+class BiometricAnalyticsImpl @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) : BiometricAnalytics {
     override fun trackScreenView() {

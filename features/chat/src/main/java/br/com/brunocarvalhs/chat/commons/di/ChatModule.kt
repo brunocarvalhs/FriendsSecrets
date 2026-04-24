@@ -60,7 +60,7 @@ abstract class ChatModule {
         }
 
         @Provides
-        internal fun provideChatAnalytics(
+        fun provideChatAnalytics(
             firebaseAnalytics: FirebaseAnalytics
         ): ChatAnalytics {
             return ChatAnalyticsImpl(firebaseAnalytics)

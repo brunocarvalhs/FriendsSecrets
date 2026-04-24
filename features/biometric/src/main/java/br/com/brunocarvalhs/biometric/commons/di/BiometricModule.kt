@@ -22,7 +22,7 @@ abstract class BiometricModule {
 
     companion object {
         @Provides
-        internal fun provideBiometricAnalytics(
+        fun provideBiometricAnalytics(
             firebaseAnalytics: FirebaseAnalytics
         ): BiometricAnalytics {
             return BiometricAnalyticsImpl(firebaseAnalytics)

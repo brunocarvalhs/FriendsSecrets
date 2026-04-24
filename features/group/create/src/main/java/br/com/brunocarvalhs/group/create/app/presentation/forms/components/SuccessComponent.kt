@@ -54,7 +54,7 @@ internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> U
         LottieAnimation(
             modifier = Modifier.size(200.dp),
             composition = composition,
-            progress = progress
+            progress = { progress }
         )
         if (isAnimationFinished) {
             Text(

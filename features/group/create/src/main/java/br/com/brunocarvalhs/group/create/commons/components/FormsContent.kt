@@ -68,7 +68,7 @@ import br.com.brunocarvalhs.group.create.R
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

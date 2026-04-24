@@ -8,9 +8,9 @@ import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemot
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme.ThemeManager
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme.remote.ThemeRemoteProvider
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

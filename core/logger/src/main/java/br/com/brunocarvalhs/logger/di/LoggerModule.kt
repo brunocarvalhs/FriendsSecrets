@@ -1,9 +1,9 @@
 package br.com.brunocarvalhs.logger.di
 
 import br.com.brunocarvalhs.logger.CrashlyticsLogger
+import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

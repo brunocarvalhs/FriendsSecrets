@@ -64,7 +64,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore)
     debugImplementation(libs.androidx.runtime.tracing)
     debugImplementation(libs.androidx.tracing.perfetto)
     debugImplementation(libs.androidx.tracing.perfetto.binary)
@@ -115,7 +115,6 @@ dependencies {
 
     // firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
     implementation(libs.firebase.perf)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.config)

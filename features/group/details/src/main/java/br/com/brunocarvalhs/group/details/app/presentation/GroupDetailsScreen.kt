@@ -62,7 +62,7 @@ import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIcon
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 internal fun GroupDetailsScreen(

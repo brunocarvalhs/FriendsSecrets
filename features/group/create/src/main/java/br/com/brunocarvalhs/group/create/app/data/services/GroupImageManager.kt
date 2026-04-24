@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.create.app.data.services
 
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -37,7 +37,7 @@ fun LoadingProgress(
         LottieAnimation(
             modifier = Modifier.size(140.dp),
             composition = composition,
-            progress = progress
+            progress = { progress }
         )
     }
 }

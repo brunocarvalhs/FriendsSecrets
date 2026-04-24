@@ -50,7 +50,7 @@ internal fun EmptyGroupComponent(
         LottieAnimation(
             modifier = Modifier.size(200.dp),
             composition = composition,
-            progress = progress
+            progress = { progress }
         )
         Row(
             horizontalArrangement = Arrangement.Center,

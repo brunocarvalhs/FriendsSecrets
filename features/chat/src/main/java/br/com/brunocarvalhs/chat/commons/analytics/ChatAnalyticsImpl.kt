@@ -4,7 +4,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import javax.inject.Inject
 
-internal class ChatAnalyticsImpl @Inject constructor(
+class ChatAnalyticsImpl @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) : ChatAnalytics {
     override fun trackScreenView() {
