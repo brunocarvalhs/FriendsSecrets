@@ -31,3 +31,15 @@ exceptions:
 
 naming:
   active: true
+
+Compose:
+  active: true
+  ComposeNaming:
+    active: true
+  ComposeComposableModifier:
+    active: true
+  ComposeModifierOrder:
+    active: true
+  ComposeLambdaOffset:
+    active: true
+

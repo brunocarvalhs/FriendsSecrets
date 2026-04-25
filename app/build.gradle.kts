@@ -91,10 +91,6 @@ android {
     }
 }
 
-detekt {
-    config.from(files("$rootDir/detekt.yml"))
-}
-
 dependencies {
     baselineProfile(project(":baselineprofile"))
     implementation(project(":core:ui"))
