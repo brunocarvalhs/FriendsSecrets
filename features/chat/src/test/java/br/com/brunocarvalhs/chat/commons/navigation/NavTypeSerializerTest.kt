@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.chat.commons.navigation
 
 import android.os.Bundle
+import br.com.brunocarvalhs.friendssecrets.core.navigation.navtype.navTypeSerializer
 import kotlinx.serialization.Serializable
 import org.junit.Assert.assertEquals
 import org.junit.Test
