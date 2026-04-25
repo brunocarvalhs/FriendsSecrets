@@ -7,7 +7,6 @@ import androidx.core.content.edit
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -78,9 +77,6 @@ class DeviceManager @Inject constructor(
                     val deviceId = DeviceManager(context).getDeviceIdentifier()
                     Timber.d("Device ID: $deviceId")
                     callback(deviceId)
-                } catch (e: CancellationException) {
-                    Timber.e(e, "Error getting device identifier")
-                    throw e
                 } catch (e: IllegalStateException) {
                     Timber.e(e, "Error getting device identifier")
                     throw e

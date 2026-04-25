@@ -1,10 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme
 
-import android.content.Context
 import androidx.compose.runtime.Stable
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 import br.com.brunocarvalhs.storage.domain.StorageService
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -13,7 +11,6 @@ import javax.inject.Singleton
 @Stable
 @Singleton
 class ThemeManager @Inject constructor(
-    @param:ApplicationContext private val context: Context,
     private val storage: StorageService
 ) : ThemeService {
 

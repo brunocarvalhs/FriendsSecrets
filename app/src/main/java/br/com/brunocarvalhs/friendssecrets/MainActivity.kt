@@ -60,7 +60,7 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     val navController = rememberNavController()
-                    navController.MainApp(
+                    navController.mainApp(
                         isBiometric = biometricService.isBiometricPromptEnabled.collectAsState().value,
                         initializers = featureInitializers
                     )

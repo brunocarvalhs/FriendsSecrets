@@ -3,7 +3,8 @@ package br.com.brunocarvalhs.friendssecrets.core.infrastructure.theme.remote
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Assert.*
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 

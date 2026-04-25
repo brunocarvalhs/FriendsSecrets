@@ -11,12 +11,19 @@ class RealtimeInitializer: Initializer<FirebaseDatabase> {
     override fun create(context: Context): FirebaseDatabase {
         return FirebaseDatabase.getInstance().apply {
             setPersistenceEnabled(!BuildConfig.DEBUG)
-            setPersistenceCacheSizeBytes(50 * 1024 * 1024)
+            setPersistenceCacheSizeBytes(CACHE_SIZE_BYTES)
             setLogLevel(Logger.Level.DEBUG)
         }
     }
 
     override fun dependencies(): List<Class<out Initializer<*>?>?> {
         return mutableListOf(FirebaseInitializer::class.java)
+    }
+
+    companion object {
+        private const val CACHE_SIZE_MB = 50L
+        private const val BYTES_PER_KB = 1024L
+        private const val KB_PER_MB = 1024L
+        private const val CACHE_SIZE_BYTES = CACHE_SIZE_MB * BYTES_PER_KB * KB_PER_MB
     }
 }

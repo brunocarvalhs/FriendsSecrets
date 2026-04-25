@@ -15,6 +15,6 @@ fun Double?.toCurrencyMask(
         val formatter = NumberFormat.getCurrencyInstance(locale)
         formatter.format(valueToFormat)
     } catch (e: Exception) {
-        this.toString()
+        throw e
     }
 }
