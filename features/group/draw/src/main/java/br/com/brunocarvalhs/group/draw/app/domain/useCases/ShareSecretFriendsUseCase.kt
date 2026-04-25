@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 internal class ShareSecretFriendsUseCase @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val cryptoManager: CryptoService
 ) {
     operator fun invoke(
         group: GroupModel,
@@ -33,7 +32,7 @@ internal class ShareSecretFriendsUseCase @Inject constructor(
 
     private fun getUrl(secret: String) = URL.replace(
         oldValue = "{secret}",
-        newValue = cryptoManager.encrypt(secret)
+        newValue = secret
     )
 
     companion object {

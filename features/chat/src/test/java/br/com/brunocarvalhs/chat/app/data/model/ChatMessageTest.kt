@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.chat.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -15,7 +15,7 @@ class ChatMessageTest {
         val senderId = "user_1"
         val senderName = "Bruno"
         val timestamp = 1000L
-        val status = MessageStatus.SENT
+        val status = MessageModel.MessageStatus.SENT
         val isFromMe = true
 
         // When

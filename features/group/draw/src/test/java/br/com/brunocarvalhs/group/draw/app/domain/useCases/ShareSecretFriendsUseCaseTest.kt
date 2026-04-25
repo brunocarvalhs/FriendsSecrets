@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.domain.useCases
 
 import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import io.mockk.mockk
 import io.mockk.verify
@@ -14,12 +13,11 @@ import org.robolectric.RobolectricTestRunner
 class ShareSecretFriendsUseCaseTest {
 
     private val context: Context = mockk(relaxed = true)
-    private val cryptoManager: CryptoService = mockk(relaxed = true)
     private lateinit var useCase: ShareSecretFriendsUseCase
 
     @Before
     fun setup() {
-        useCase = ShareSecretFriendsUseCase(context, cryptoManager)
+        useCase = ShareSecretFriendsUseCase(context)
     }
 
     @Test

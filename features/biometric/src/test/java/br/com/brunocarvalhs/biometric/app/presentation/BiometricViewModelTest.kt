@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.biometric.app.presentation
 import androidx.fragment.app.FragmentActivity
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricResult
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricUseCase
+import br.com.brunocarvalhs.biometric.commons.analytics.BiometricAnalytics
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ import org.junit.Test
 class BiometricViewModelTest {
 
     private val biometricUseCase: BiometricUseCase = mockk()
+    private val biometricAnalytics: BiometricAnalytics = mockk()
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: BiometricViewModel
 
@@ -29,7 +31,8 @@ class BiometricViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { biometricUseCase.canAuthenticate() } returns true
-        viewModel = BiometricViewModel(biometricUseCase)
+        viewModel = BiometricViewModel(biometricUseCase, biometricAnalytics)
+        every { biometricAnalytics.trackScreenView() } returns Unit
     }
 
     @After

@@ -46,4 +46,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.process)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.biometric)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 }

@@ -1,9 +1,8 @@
 package br.com.brunocarvalhs.chat.app.data.repository
 
-import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
+import br.com.brunocarvalhs.chat.app.domain.services.ChatService
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
-import br.com.brunocarvalhs.friendssecrets.domain.services.ChatService
-import br.com.brunocarvalhs.friendssecrets.domain.services.NetworkService
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -16,12 +15,11 @@ class ChatRepositoryImplTest {
 
     private val chatService: ChatService = mockk()
     private val networkService: NetworkService = mockk()
-    private val chatMessageDao: ChatMessageDao = mockk()
     private lateinit var repository: ChatRepositoryImpl
 
     @Before
     fun setup() {
-        repository = ChatRepositoryImpl(chatService, networkService, chatMessageDao)
+        repository = ChatRepositoryImpl(chatService)
     }
 
     @Test

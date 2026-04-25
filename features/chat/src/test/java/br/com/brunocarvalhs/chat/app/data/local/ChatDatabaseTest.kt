@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageStatus
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -46,7 +46,7 @@ class ChatDatabaseTest {
             groupId = groupId,
             text = "Hello World",
             senderName = "Bruno",
-            status = MessageStatus.SENT
+            status = MessageModel.MessageStatus.SENT
         )
 
         // When
