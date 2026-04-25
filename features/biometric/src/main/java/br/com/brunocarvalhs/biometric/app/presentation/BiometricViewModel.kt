@@ -20,8 +20,7 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class BiometricViewModel @Inject constructor(
-    private val biometricUseCase: BiometricUseCase,
-    private val analytics: BiometricAnalytics
+    private val biometricUseCase: BiometricUseCase, private val analytics: BiometricAnalytics
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BiometricUiState())
@@ -54,27 +53,43 @@ internal class BiometricViewModel @Inject constructor(
 
         _state.update { it.copy(isLoading = true, error = null, failedAttemptMessage = null) }
         viewModelScope.launch {
-            try {
+            runCatching {
                 biometricUseCase.authenticate(activity).collect { result ->
                     when (result) {
                         is BiometricResult.Success -> {
                             analytics.trackAuthenticationResult(true)
-                            _state.update { it.copy(isAuthenticated = true, isLoading = false, failedAttemptMessage = null) }
+                            _state.update {
+                                it.copy(
+                                    isAuthenticated = true,
+                                    isLoading = false,
+                                    failedAttemptMessage = null
+                                )
+                            }
                         }
+
                         is BiometricResult.FailedAttempt -> {
                             analytics.trackAuthenticationResult(false, "failed_attempt")
-                            _state.update { it.copy(failedAttemptMessage = activity.getString(R.string.biometric_not_found)) }
+                            _state.update {
+                                it.copy(
+                                    failedAttemptMessage = activity.getString(R.string.biometric_not_found)
+                                )
+                            }
                         }
+
                         is BiometricResult.Error -> {
                             analytics.trackAuthenticationResult(false, result.message)
-                            _state.update { it.copy(error = result.message, isLoading = false, failedAttemptMessage = null) }
+                            _state.update {
+                                it.copy(
+                                    error = result.message,
+                                    isLoading = false,
+                                    failedAttemptMessage = null
+                                )
+                            }
                         }
                     }
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) {
-                _state.update { it.copy(error = e.message, isLoading = false) }
-            } catch (e: Exception) {
-                _state.update { it.copy(error = e.message, isLoading = false) }
+            }.onFailure {
+                _state.update { it.copy(error = it.error, isLoading = false) }
             }
         }
     }

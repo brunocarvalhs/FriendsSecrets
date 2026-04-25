@@ -18,8 +18,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,13 +31,13 @@ import br.com.brunocarvalhs.biometric.R
 
 @Composable
 internal fun BiometricScreen(
-    viewModel: BiometricViewModel,
+    state: BiometricUiState,
+    handleIntent: (BiometricIntent) -> Unit,
     onSuccess: () -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    BiometricEffects(viewModel, state.isAuthenticated, onSuccess)
+    BiometricEffects(handleIntent, state.isAuthenticated, onSuccess)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +48,7 @@ internal fun BiometricScreen(
             onAuthenticate = {
                 val activity = context as? FragmentActivity
                 activity?.let {
-                    viewModel.handleIntent(BiometricIntent.Authenticate(it))
+                    handleIntent(BiometricIntent.Authenticate(it))
                 }
             }
         )
@@ -57,21 +57,24 @@ internal fun BiometricScreen(
 
 @Composable
 private fun BiometricEffects(
-    viewModel: BiometricViewModel,
+    handleIntent: (BiometricIntent) -> Unit,
     isAuthenticated: Boolean,
     onSuccess: () -> Unit
 ) {
     val context = LocalContext.current
+    val currentHandleIntent by rememberUpdatedState(handleIntent)
+    val currentOnSuccess by rememberUpdatedState(onSuccess)
+
     LaunchedEffect(Unit) {
         val activity = context as? FragmentActivity
         activity?.let {
-            viewModel.handleIntent(BiometricIntent.Authenticate(it))
+            currentHandleIntent(BiometricIntent.Authenticate(it))
         }
     }
 
     LaunchedEffect(isAuthenticated) {
         if (isAuthenticated) {
-            onSuccess()
+            currentOnSuccess()
         }
     }
 }
@@ -124,21 +127,23 @@ private fun BiometricHeader() {
 
 @Composable
 private fun BiometricDescription() {
-    Text(
-        text = stringResource(R.string.biometric_required),
-        style = MaterialTheme.typography.headlineMedium,
-        color = MaterialTheme.colorScheme.onBackground,
-        textAlign = TextAlign.Center
-    )
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = stringResource(R.string.biometric_required),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Text(
-        text = stringResource(R.string.biometric_message),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        textAlign = TextAlign.Center
-    )
+        Text(
+            text = stringResource(R.string.biometric_message),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
 }
 
 @Composable

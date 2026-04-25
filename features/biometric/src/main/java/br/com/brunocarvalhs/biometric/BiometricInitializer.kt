@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.biometric
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -17,8 +19,11 @@ class BiometricInitializer(private val builder: Builder) {
         navGraphBuilder.navigation<BiometricGraph>(startDestination = BiometricRouter) {
             composable<BiometricRouter> {
                 val viewModel = hiltViewModel<BiometricViewModel>()
+                val state by viewModel.state.collectAsState()
+
                 BiometricScreen(
-                    viewModel = viewModel,
+                    state = state,
+                    handleIntent = viewModel::handleIntent,
                     onSuccess = builder.onSuccess
                 )
             }
