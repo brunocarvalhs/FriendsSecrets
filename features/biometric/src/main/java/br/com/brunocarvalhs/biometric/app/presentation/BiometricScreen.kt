@@ -37,6 +37,31 @@ internal fun BiometricScreen(
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
 
+    BiometricEffects(viewModel, state.isAuthenticated, onSuccess)
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        BiometricContent(
+            state = state,
+            onAuthenticate = {
+                val activity = context as? FragmentActivity
+                activity?.let {
+                    viewModel.handleIntent(BiometricIntent.Authenticate(it))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun BiometricEffects(
+    viewModel: BiometricViewModel,
+    isAuthenticated: Boolean,
+    onSuccess: () -> Unit
+) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         val activity = context as? FragmentActivity
         activity?.let {
@@ -44,80 +69,97 @@ internal fun BiometricScreen(
         }
     }
 
-    LaunchedEffect(state.isAuthenticated) {
-        if (state.isAuthenticated) {
+    LaunchedEffect(isAuthenticated) {
+        if (isAuthenticated) {
             onSuccess()
         }
     }
+}
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+@Composable
+private fun BiometricContent(
+    state: BiometricUiState,
+    onAuthenticate: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Fingerprint,
-                contentDescription = null,
-                modifier = Modifier.size(120.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
+        BiometricHeader()
 
-            Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = stringResource(R.string.biometric_required),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
-            )
+        BiometricDescription()
 
+        state.error?.let {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
-                text = stringResource(R.string.biometric_message),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
             )
+        }
 
-            state.error?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+        Spacer(modifier = Modifier.height(48.dp))
 
-            Spacer(modifier = Modifier.height(48.dp))
+        BiometricButton(
+            isLoading = state.isLoading,
+            onClick = onAuthenticate
+        )
+    }
+}
 
-            Button(
-                onClick = {
-                    val activity = context as? FragmentActivity
-                    activity?.let {
-                        viewModel.handleIntent(BiometricIntent.Authenticate(it))
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                enabled = !state.isLoading
-            ) {
-                if (state.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Text(stringResource(R.string.biometric_button_authentic))
-                }
-            }
+@Composable
+private fun BiometricHeader() {
+    Icon(
+        imageVector = Icons.Default.Fingerprint,
+        contentDescription = null,
+        modifier = Modifier.size(120.dp),
+        tint = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+private fun BiometricDescription() {
+    Text(
+        text = stringResource(R.string.biometric_required),
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onBackground,
+        textAlign = TextAlign.Center
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Text(
+        text = stringResource(R.string.biometric_message),
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun BiometricButton(
+    isLoading: Boolean,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        enabled = !isLoading
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colorScheme.onPrimary,
+                strokeWidth = 2.dp
+            )
+        } else {
+            Text(stringResource(R.string.biometric_button_authentic))
         }
     }
 }
