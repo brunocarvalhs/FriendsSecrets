@@ -4,6 +4,8 @@
     <string name="app_name">비밀 산타</string>
     <string name="ops">어머나!</string>
     <string name="cancel">취소</string>
+    <string name="title_settings">설정</string>
+
 
     <!-- Home/Group List -->
     <string name="home_title">안녕하세요</string>
@@ -37,4 +39,12 @@
 
     <!-- Accessibility/Descriptions -->
     <string name="contact_photo_description">%1$s의 연락처 사진</string>
+    <string name="group_list_filter_active">활성</string>
+    <string name="group_list_filter_archived">보관됨</string>
+    <string name="group_list_filter_drawn">추첨됨</string>
+    <string name="group_list_filter_not_drawn">추첨되지 않음</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">기능을 사용할 수 없음</string>
+    <string name="maintenance_message">죄송합니다. 성능 개선을 위해 이 기능을 점검 중입니다. 나중에 다시 시도해 주세요.</string>
 </resources>

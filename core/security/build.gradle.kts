@@ -34,6 +34,10 @@ android {
     }
 }
 
+detekt {
+    config.from(files("$rootDir/detekt.yml"))
+}
+
 dependencies {
     implementation(project(":core:domain"))
     implementation(libs.hilt.android)

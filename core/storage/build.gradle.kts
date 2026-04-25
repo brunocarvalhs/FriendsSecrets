@@ -37,6 +37,10 @@ android {
     }
 }
 
+detekt {
+    config.from(files("$rootDir/detekt.yml"))
+}
+
 dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

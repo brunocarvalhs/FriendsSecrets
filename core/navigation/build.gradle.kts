@@ -39,6 +39,10 @@ android {
     }
 }
 
+detekt {
+    config.from(files("$rootDir/detekt.yml"))
+}
+
 dependencies {
     api(project(":core:domain"))
     api(libs.androidx.navigation.compose)

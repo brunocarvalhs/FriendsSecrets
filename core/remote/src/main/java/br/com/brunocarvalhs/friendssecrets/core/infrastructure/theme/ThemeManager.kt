@@ -58,12 +58,14 @@ internal class ThemeManager @Inject constructor(
     }
 
     private fun getSystemTheme(): ThemeService.Theme {
-        return if ((context.applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+        val uiMode = context.applicationContext.resources.configuration.uiMode
+        return if ((uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             ThemeService.Theme.DARK
         } else {
             ThemeService.Theme.LIGHT
         }
     }
+
 
     fun isDarkTheme(): Boolean {
         val isDark = if (_theme.value == ThemeService.Theme.SYSTEM) {

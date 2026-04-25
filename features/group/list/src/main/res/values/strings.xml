@@ -42,4 +42,8 @@
     <string name="group_list_filter_archived">Archived</string>
     <string name="group_list_filter_drawn">Drawn</string>
     <string name="group_list_filter_not_drawn">Not drawn</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">Feature Unavailable</string>
+    <string name="maintenance_message">Sorry, this feature is under maintenance for improvements. Please try again later.</string>
 </resources>

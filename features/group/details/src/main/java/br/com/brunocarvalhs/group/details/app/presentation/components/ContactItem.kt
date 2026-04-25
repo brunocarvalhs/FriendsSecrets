@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -53,10 +52,13 @@ internal fun ContactItem(
     paddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
     action: @Composable ((HashMap<String?, String?>, Boolean) -> Unit)? = null,
 ) {
-    val context = LocalContext.current
     val filteredLikes = remember(likes) {
         likes.filter { it.isNotBlank() }
     }
+
+    val expandedState = stringResource(R.string.likes_expanded_state)
+    val collapsedState = stringResource(R.string.likes_collapsed_state)
+
 
     val backgroundColor = if (isSelected) {
         MaterialTheme.colorScheme.primaryContainer
@@ -79,11 +81,10 @@ internal fun ContactItem(
                 }
             )
             .semantics(mergeDescendants = true) {
-                stateDescription = if (isLiked)
-                    context.getString(R.string.likes_expanded_state)
-                else
-                    context.getString(R.string.likes_collapsed_state)
+                stateDescription = if (isLiked) expandedState
+                else collapsedState
             },
+
         tonalElevation = if (isSelected) 4.dp else 2.dp,
         color = backgroundColor,
         shape = MaterialTheme.shapes.medium

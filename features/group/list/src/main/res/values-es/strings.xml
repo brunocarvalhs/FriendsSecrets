@@ -4,6 +4,8 @@
     <string name="app_name">Amigo Invisible</string>
     <string name="ops">¡Ups!</string>
     <string name="cancel">Cancelar</string>
+    <string name="title_settings">Ajustes</string>
+
 
     <!-- Home/Group List -->
     <string name="home_title">Hola</string>
@@ -37,4 +39,12 @@
 
     <!-- Accessibility/Descriptions -->
     <string name="contact_photo_description">Foto de contacto de %1$s</string>
+    <string name="group_list_filter_active">Activo</string>
+    <string name="group_list_filter_archived">Archivado</string>
+    <string name="group_list_filter_drawn">Sorteado</string>
+    <string name="group_list_filter_not_drawn">No sorteado</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">Funcionalidad no disponible</string>
+    <string name="maintenance_message">Lo sentimos, esta funcionalidad está en mantenimiento para mejoras. Por favor, inténtelo de nuevo más tarde.</string>
 </resources>

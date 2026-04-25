@@ -6,6 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,13 +22,14 @@ internal class ThemeRemoteProvider @Inject constructor(
     }
 
     override fun getDarkColorScheme(): ColorScheme? {
-        try {
-            val data = remoteProvider.getString(THEME_DARK)
-            if (data.isBlank()) return null
+        val data = remoteProvider.getString(THEME_DARK)
+        if (data.isBlank()) return null
 
+        var result: ColorScheme? = null
+        try {
             val theme = json.decodeFromString<Theme>(data)
 
-            return darkColorScheme(
+            result = darkColorScheme(
                 primary = hexToComposeColor(theme.primary),
                 onPrimary = hexToComposeColor(theme.onPrimary),
                 primaryContainer = hexToComposeColor(theme.primaryContainer),
@@ -64,20 +66,24 @@ internal class ThemeRemoteProvider @Inject constructor(
                 surfaceContainerHigh = hexToComposeColor(theme.surfaceContainerHigh),
                 surfaceContainerHighest = hexToComposeColor(theme.surfaceContainerHighest)
             )
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
             Timber.e(e)
-            return null
+        } catch (e: IllegalArgumentException) {
+            Timber.e(e)
         }
+
+        return result
     }
 
     override fun getLightColorScheme(): ColorScheme? {
-        try {
-            val data = remoteProvider.getString(THEME_LIGHT)
-            if (data.isBlank()) return null
+        val data = remoteProvider.getString(THEME_LIGHT)
+        if (data.isBlank()) return null
 
+        var result: ColorScheme? = null
+        try {
             val theme = json.decodeFromString<Theme>(data)
 
-            return lightColorScheme(
+            result = lightColorScheme(
                 primary = hexToComposeColor(theme.primary),
                 onPrimary = hexToComposeColor(theme.onPrimary),
                 primaryContainer = hexToComposeColor(theme.primaryContainer),
@@ -114,28 +120,31 @@ internal class ThemeRemoteProvider @Inject constructor(
                 surfaceContainerHigh = hexToComposeColor(theme.surfaceContainerHigh),
                 surfaceContainerHighest = hexToComposeColor(theme.surfaceContainerHighest)
             )
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
             Timber.e(e)
-            return null
+        } catch (e: IllegalArgumentException) {
+            Timber.e(e)
         }
+
+        return result
     }
 
     private fun hexToComposeColor(hex: String): Color {
         val cleanedHex = hex.removePrefix("#")
 
         return when (cleanedHex.length) {
-            6 -> {
-                val r = Integer.parseInt(cleanedHex.substring(0, 2), 16)
-                val g = Integer.parseInt(cleanedHex.substring(2, 4), 16)
-                val b = Integer.parseInt(cleanedHex.substring(4, 6), 16)
+            HEX_LENGTH_RGB -> {
+                val r = Integer.parseInt(cleanedHex.substring(OFFSET_0, OFFSET_2), RADIX_HEX)
+                val g = Integer.parseInt(cleanedHex.substring(OFFSET_2, OFFSET_4), RADIX_HEX)
+                val b = Integer.parseInt(cleanedHex.substring(OFFSET_4, OFFSET_6), RADIX_HEX)
                 Color(red = r, green = g, blue = b)
             }
 
-            8 -> {
-                val a = Integer.parseInt(cleanedHex.substring(0, 2), 16)
-                val r = Integer.parseInt(cleanedHex.substring(2, 4), 16)
-                val g = Integer.parseInt(cleanedHex.substring(4, 6), 16)
-                val b = Integer.parseInt(cleanedHex.substring(6, 8), 16)
+            HEX_LENGTH_ARGB -> {
+                val a = Integer.parseInt(cleanedHex.substring(OFFSET_0, OFFSET_2), RADIX_HEX)
+                val r = Integer.parseInt(cleanedHex.substring(OFFSET_2, OFFSET_4), RADIX_HEX)
+                val g = Integer.parseInt(cleanedHex.substring(OFFSET_4, OFFSET_6), RADIX_HEX)
+                val b = Integer.parseInt(cleanedHex.substring(OFFSET_6, OFFSET_8), RADIX_HEX)
                 Color(red = r, green = g, blue = b, alpha = a)
             }
 
@@ -148,5 +157,13 @@ internal class ThemeRemoteProvider @Inject constructor(
     companion object {
         const val THEME_DARK = "theme_dark"
         const val THEME_LIGHT = "theme_light"
+        private const val HEX_LENGTH_RGB = 6
+        private const val HEX_LENGTH_ARGB = 8
+        private const val RADIX_HEX = 16
+        private const val OFFSET_0 = 0
+        private const val OFFSET_2 = 2
+        private const val OFFSET_4 = 4
+        private const val OFFSET_6 = 6
+        private const val OFFSET_8 = 8
     }
 }
