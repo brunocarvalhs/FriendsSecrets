@@ -55,6 +55,7 @@ lifecycleProcess = "2.10.0"
 room = "2.8.4"
 appcompat = "1.7.1"
 material = "1.13.0"
+core = "1.18.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -115,6 +116,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

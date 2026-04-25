@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.core.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,11 +9,13 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.core.view.WindowCompat
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
 
@@ -127,6 +130,15 @@ fun FriendsSecretsTheme(
 
         darkTheme -> if (isThemeRemote) themeRemoteProvider?.getDarkColorScheme() ?: darkScheme else darkScheme
         else -> if (isThemeRemote) themeRemoteProvider?.getLightColorScheme() ?: lightScheme else lightScheme
+    }
+
+    val view = LocalContext.current as Activity
+
+    SideEffect {
+        val window = view.window ?: return@SideEffect
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+
+        controller.isAppearanceLightStatusBars = !darkTheme
     }
 
     MaterialTheme(
