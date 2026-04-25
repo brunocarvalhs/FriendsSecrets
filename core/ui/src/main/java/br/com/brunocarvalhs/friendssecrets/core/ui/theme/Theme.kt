@@ -104,46 +104,87 @@ fun FriendsSecretsTheme(
 ) {
     val isInPreview = LocalInspectionMode.current
 
-    val theme by if (!isInPreview && themeService != null) {
-        themeService.theme.collectAsState()
-    } else {
-        remember { androidx.compose.runtime.mutableStateOf(ThemeService.Theme.SYSTEM) }
-    }
+    val theme by rememberThemeState(themeService, isInPreview)
+    val dynamicColorEnabled by rememberDynamicColorState(themeService, isInPreview)
 
-    val dynamicColorEnabled by if (!isInPreview && themeService != null) {
-        themeService.isDynamicThemeEnabled.collectAsState()
-    } else {
-        remember { androidx.compose.runtime.mutableStateOf(false) }
-    }
+    val darkTheme = calculateDarkTheme(theme)
+    val colorScheme = pickColorScheme(
+        darkTheme = darkTheme,
+        dynamicColorEnabled = dynamicColorEnabled,
+        isThemeRemote = isThemeRemote,
+        themeRemoteProvider = themeRemoteProvider
+    )
 
-    val darkTheme = when (theme) {
-        ThemeService.Theme.DARK -> true
-        ThemeService.Theme.LIGHT -> false
-        ThemeService.Theme.SYSTEM -> isSystemInDarkTheme()
-    }
-
-    val colorScheme = when {
-        dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> if (isThemeRemote) themeRemoteProvider?.getDarkColorScheme() ?: darkScheme else darkScheme
-        else -> if (isThemeRemote) themeRemoteProvider?.getLightColorScheme() ?: lightScheme else lightScheme
-    }
-
-    val view = LocalContext.current as Activity
-
-    SideEffect {
-        val window = view.window ?: return@SideEffect
-        val controller = WindowCompat.getInsetsController(window, window.decorView)
-
-        controller.isAppearanceLightStatusBars = !darkTheme
-    }
+    SideEffectWindow(darkTheme)
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
         content = content
     )
+}
+
+@Composable
+private fun rememberThemeState(
+    themeService: ThemeService?,
+    isInPreview: Boolean
+) = if (!isInPreview && themeService != null) {
+    themeService.theme.collectAsState()
+} else {
+    remember { androidx.compose.runtime.mutableStateOf(ThemeService.Theme.SYSTEM) }
+}
+
+@Composable
+private fun rememberDynamicColorState(
+    themeService: ThemeService?,
+    isInPreview: Boolean
+) = if (!isInPreview && themeService != null) {
+    themeService.isDynamicThemeEnabled.collectAsState()
+} else {
+    remember { androidx.compose.runtime.mutableStateOf(false) }
+}
+
+@Composable
+private fun calculateDarkTheme(theme: ThemeService.Theme) = when (theme) {
+    ThemeService.Theme.DARK -> true
+    ThemeService.Theme.LIGHT -> false
+    ThemeService.Theme.SYSTEM -> isSystemInDarkTheme()
+}
+
+@Composable
+private fun pickColorScheme(
+    darkTheme: Boolean,
+    dynamicColorEnabled: Boolean,
+    isThemeRemote: Boolean,
+    themeRemoteProvider: ThemeRemote?
+): androidx.compose.material3.ColorScheme {
+    val context = LocalContext.current
+    return when {
+        dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
+        darkTheme -> if (isThemeRemote) {
+            themeRemoteProvider?.getDarkColorScheme() ?: darkScheme
+        } else {
+            darkScheme
+        }
+
+        else -> if (isThemeRemote) {
+            themeRemoteProvider?.getLightColorScheme() ?: lightScheme
+        } else {
+            lightScheme
+        }
+    }
+}
+
+@Composable
+private fun SideEffectWindow(darkTheme: Boolean) {
+    val view = LocalContext.current as Activity
+    SideEffect {
+        val window = view.window ?: return@SideEffect
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+
+        controller.isAppearanceLightStatusBars = !darkTheme
+    }
 }

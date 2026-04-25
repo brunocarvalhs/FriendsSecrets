@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
@@ -27,17 +28,20 @@ class DrawRepositoryImplTest {
     @Test
     fun `drawMembers should shuffle members and call network PUT`() = runTest {
         // Given
-        val members = listOf(UserModel(name = "Bruno"), UserModel(name = "Alice"), UserModel(name = "Bob"))
+        val members =
+            listOf(UserModel(name = "Bruno"), UserModel(name = "Alice"), UserModel(name = "Bob"))
         val group = GroupModel(id = "1", members = members)
         val expectedDraw = mapOf("Bruno" to "Alice", "Alice" to "Bob", "Bob" to "Bruno")
-        
+
         every { drawManager.draw(any()) } returns expectedDraw
-        coEvery { 
+        coEvery {
             network.make(
-                endpoint = "groups/1",
-                payload = any(),
-                method = NetworkService.Method.PUT,
-                clazz = GroupDrawDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups/1",
+                    payload = any(),
+                    method = NetworkService.Method.PUT
+                ),
+                response = GroupDrawDTO::class
             )
         } returns mockk()
 

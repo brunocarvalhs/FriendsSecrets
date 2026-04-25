@@ -24,21 +24,21 @@ class NetworkManager @Inject constructor(
         encodeDefaults = true
     }
 
-    override suspend fun <T : Any> make(request: NetworkRequest, clazz: KClass<T>): T? {
+    override suspend fun <T : Any> make(request: NetworkRequest, response: KClass<T>): T? {
         val finalEndpoint = getEndpoint(request.endpoint)
         val finalPayload = getPayload(request.payload)
 
         Timber.tag(TAG).d("--> %s [%s]", request.method, finalEndpoint)
 
         return runCatching {
-            val response = firebaseFirestoreManager.execute(
+            val result = firebaseFirestoreManager.execute(
                 endpoint = finalEndpoint,
                 method = request.method,
                 data = finalPayload,
                 query = request.query,
             )
 
-            getResponse(response, clazz)
+            getResponse(result, response)
         }.onSuccess {
             Timber.tag(TAG).d("<-- SUCCESS %s [%s]", request.method, finalEndpoint)
         }.onFailure {
@@ -57,11 +57,11 @@ class NetworkManager @Inject constructor(
 
     @OptIn(InternalSerializationApi::class)
     @Suppress("UNCHECKED_CAST")
-    private fun <T : Any> getResponse(response: Any?, clazz: KClass<T>): T? {
-        val data = response ?: return null
+    private fun <T : Any> getResponse(result: Any?, response: KClass<T>): T? {
+        val data = result ?: return null
 
         return try {
-            val serializer = json.serializersModule.serializer(clazz.java)
+            val serializer = json.serializersModule.serializer(response.java)
 
             val decryptedData = when (data) {
                 is Map<*, *> -> cryptoManager.decryptMap(data as Map<String, Any>, EXCLUDED_KEYS)
@@ -78,22 +78,22 @@ class NetworkManager @Inject constructor(
 
             val jsonElement = compatibilityConverter.toJsonElement(decryptedData)
 
-            Timber.tag(TAG).v("Processing JSON for %s: %s", clazz.simpleName, jsonElement)
+            Timber.tag(TAG).v("Processing JSON for %s: %s", response.simpleName, jsonElement)
 
             json.decodeFromJsonElement(serializer, jsonElement) as? T
         } catch (e: SerializationException) {
-            Timber.tag(TAG).e(e, "Serialization Error on %s", clazz.simpleName)
+            Timber.tag(TAG).e(e, "Serialization Error on %s", response.simpleName)
 
-            if (data is List<*> && clazz.java.isArray) {
-                compatibilityConverter.listToTypedArray(data, clazz.java) as? T
+            if (data is List<*> && response.java.isArray) {
+                compatibilityConverter.listToTypedArray(data, response.java) as? T
             } else {
                 null
             }
         } catch (e: IllegalArgumentException) {
-            Timber.tag(TAG).e(e, "Argument Error on %s", clazz.simpleName)
+            Timber.tag(TAG).e(e, "Argument Error on %s", response.simpleName)
 
-            if (data is List<*> && clazz.java.isArray) {
-                compatibilityConverter.listToTypedArray(data, clazz.java) as? T
+            if (data is List<*> && response.java.isArray) {
+                compatibilityConverter.listToTypedArray(data, response.java) as? T
             } else {
                 null
             }

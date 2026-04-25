@@ -6,7 +6,7 @@ interface NetworkService {
 
     suspend fun <T : Any> make(
         request: NetworkRequest,
-        clazz: KClass<T>
+        response: KClass<T>
     ): T?
 
     enum class Method {

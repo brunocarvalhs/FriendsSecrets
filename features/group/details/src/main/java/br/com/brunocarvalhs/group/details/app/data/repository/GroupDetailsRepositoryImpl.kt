@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.data.exceptions.GroupDeleteException
@@ -16,18 +17,22 @@ internal class GroupDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun read(groupId: String): GroupModel = withContext(Dispatchers.IO) {
         val response = network.make(
-            endpoint = "${GroupModel.COLLECTION_NAME}/$groupId",
-            method = NetworkService.Method.GET,
-            clazz = GroupDetailsDTO::class
+            request = NetworkRequest(
+                endpoint = "${GroupModel.COLLECTION_NAME}/$groupId",
+                method = NetworkService.Method.GET
+            ),
+            response = GroupDetailsDTO::class
         )
         return@withContext response?.toDomain() ?: throw GroupNotFoundException()
     }
 
     override suspend fun delete(group: GroupModel): Unit = withContext(Dispatchers.IO) {
         val response = network.make(
-            endpoint = "${GroupModel.COLLECTION_NAME}/${group.id}",
-            method = NetworkService.Method.DELETE,
-            clazz = Boolean::class
+            request = NetworkRequest(
+                endpoint = "${GroupModel.COLLECTION_NAME}/${group.id}",
+                method = NetworkService.Method.DELETE
+            ),
+            response = Boolean::class
         ) ?: throw GroupNotFoundException()
         if (!response) throw GroupDeleteException()
         return@withContext

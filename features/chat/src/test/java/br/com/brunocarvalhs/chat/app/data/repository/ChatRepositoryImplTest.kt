@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.chat.app.data.repository
 
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
 import io.mockk.coEvery
@@ -29,10 +30,12 @@ class ChatRepositoryImplTest {
         val message = MessageModel(id = "msg1", text = "Hello", groupId = groupId)
         coEvery {
             networkService.make(
-                endpoint = "messages",
-                payload = any(),
-                method = NetworkService.Method.POST,
-                clazz = String::class
+                request = NetworkRequest(
+                    endpoint = "messages",
+                    payload = any(),
+                    method = NetworkService.Method.POST
+                ),
+                response = String::class
             )
         } returns "OK"
         coEvery { chatService.sendMessage(groupId, message) } returns Result.success(Unit)
@@ -43,14 +46,18 @@ class ChatRepositoryImplTest {
         // Then
         assertTrue(result.isSuccess)
         coVerify { chatService.sendMessage(groupId, message) }
-        coVerify { networkService.make<String>(
-            endpoint = any(),
-            payload = any(),
-            headers = any(),
-            query = any(),
-            method = any(),
-            clazz = any()
-        ) }
+        coVerify {
+            networkService.make<String>(
+                request = NetworkRequest(
+                    endpoint = any(),
+                    payload = any(),
+                    headers = any(),
+                    query = any(),
+                    method = any()
+                ),
+                response = any()
+            )
+        }
     }
 
     @Test
@@ -59,9 +66,11 @@ class ChatRepositoryImplTest {
         val groupId = "group1"
         coEvery {
             networkService.make(
-                endpoint = "messages/$groupId",
-                method = NetworkService.Method.DELETE,
-                clazz = Boolean::class
+                request = NetworkRequest(
+                    endpoint = "messages/$groupId",
+                    method = NetworkService.Method.DELETE
+                ),
+                response = Boolean::class
             )
         } returns true
         coEvery { chatService.clearMessages(groupId) } returns Result.success(Unit)

@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.data.exceptions.GroupNotFoundException
@@ -28,9 +29,11 @@ class GroupDetailsRepositoryImplTest {
         val dto = GroupDetailsDTO(id = groupId, name = "Test")
         coEvery {
             network.make(
-                endpoint = "groups/$groupId",
-                method = NetworkService.Method.GET,
-                clazz = GroupDetailsDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups/$groupId",
+                    method = NetworkService.Method.GET
+                ),
+                response = GroupDetailsDTO::class
             )
         } returns dto
 
@@ -48,9 +51,11 @@ class GroupDetailsRepositoryImplTest {
         val groupId = "1"
         coEvery {
             network.make(
-                endpoint = "groups/$groupId",
-                method = NetworkService.Method.GET,
-                clazz = GroupDetailsDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups/$groupId",
+                    method = NetworkService.Method.GET
+                ),
+                response = GroupDetailsDTO::class
             )
         } returns null
 
@@ -64,15 +69,17 @@ class GroupDetailsRepositoryImplTest {
         val group = GroupModel(id = "1")
         coEvery {
             network.make(
-                endpoint = "groups/1",
-                method = NetworkService.Method.DELETE,
-                clazz = Boolean::class
+                request = NetworkRequest(
+                    endpoint = "groups/1",
+                    method = NetworkService.Method.DELETE
+                ),
+                response = Boolean::class
             )
         } returns true
 
         // When
         repository.delete(group)
-        
+
         // Then - Should not throw exception
     }
 }

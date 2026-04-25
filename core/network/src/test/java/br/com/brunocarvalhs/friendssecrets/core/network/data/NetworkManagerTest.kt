@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.core.network.data
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
@@ -58,12 +59,14 @@ class NetworkManagerTest {
         } returns jsonElement
 
         val result = networkManager.make(
-            endpoint = "groups/123",
-            payload = null,
-            headers = null,
-            query = null,
-            method = NetworkService.Method.GET,
-            clazz = GroupModel::class
+            request = NetworkRequest(
+                endpoint = "groups/123",
+                payload = null,
+                headers = null,
+                query = null,
+                method = NetworkService.Method.GET,
+            ),
+            response = GroupModel::class
         )
 
         assertNull(result)
@@ -80,12 +83,14 @@ class NetworkManagerTest {
         } throws RuntimeException("boom")
 
         val result = networkManager.make(
-            endpoint = "groups/123",
-            payload = null,
-            headers = null,
-            query = null,
-            method = NetworkService.Method.GET,
-            clazz = GroupModel::class
+            request = NetworkRequest(
+                endpoint = "groups/123",
+                payload = null,
+                headers = null,
+                query = null,
+                method = NetworkService.Method.GET,
+            ),
+            response = GroupModel::class
         )
 
         assertNull(result)
@@ -107,12 +112,14 @@ class NetworkManagerTest {
         } returns "generated_id"
 
         val result = networkManager.make(
-            endpoint = "groups",
-            payload = mapOf("name" to "Bruno"),
-            headers = null,
-            query = null,
-            method = NetworkService.Method.POST,
-            clazz = String::class
+            request = NetworkRequest(
+                endpoint = "groups",
+                payload = mapOf("name" to "Bruno"),
+                headers = null,
+                query = null,
+                method = NetworkService.Method.POST,
+            ),
+            response = String::class
         )
 
         assertEquals(null, result)
@@ -141,12 +148,14 @@ class NetworkManagerTest {
         } returns null
 
         networkManager.make(
-            endpoint = "groups",
-            payload = mapOf("name" to "Bruno"),
-            headers = null,
-            query = null,
-            method = NetworkService.Method.POST,
-            clazz = String::class
+            request = NetworkRequest(
+                endpoint = "groups",
+                payload = mapOf("name" to "Bruno"),
+                headers = null,
+                query = null,
+                method = NetworkService.Method.POST,
+            ),
+            response = String::class
         )
 
         verify(exactly = 1) {
@@ -165,12 +174,14 @@ class NetworkManagerTest {
         } returns emptyMap()
 
         networkManager.make(
-            endpoint = "groups/123",
-            payload = null,
-            headers = null,
-            query = null,
-            method = NetworkService.Method.GET,
-            clazz = String::class
+            request = NetworkRequest(
+                endpoint = "groups/123",
+                payload = null,
+                headers = null,
+                query = null,
+                method = NetworkService.Method.GET
+            ),
+            response = String::class
         )
 
         coVerify {

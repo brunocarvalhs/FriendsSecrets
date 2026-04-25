@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.list.app.data.repository
 
 import br.com.brunocarvalhs.deviceid.DeviceService
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
@@ -20,21 +21,25 @@ internal class GroupListRepositoryImpl @Inject constructor(
         val device = device.getDeviceId()
         return withContext(Dispatchers.IO) {
             val admin = network.make(
-                endpoint = COLLECTION_NAME,
-                query = mapOf(
-                    GroupModel.OWNER_ID to device
+                request = NetworkRequest(
+                    endpoint = COLLECTION_NAME,
+                    query = mapOf(
+                        GroupModel.OWNER_ID to device
+                    ),
+                    method = NetworkService.Method.GET
                 ),
-                method = NetworkService.Method.GET,
-                clazz = Array<GroupListDTO>::class
+                response = Array<GroupListDTO>::class
             )?.toMutableList().orEmpty()
 
             val list = network.make(
-                endpoint = COLLECTION_NAME,
-                query = mapOf(
-                    GroupModel.TOKEN to groupTokens,
+                request = NetworkRequest(
+                    endpoint = COLLECTION_NAME,
+                    query = mapOf(
+                        GroupModel.TOKEN to groupTokens,
+                    ),
+                    method = NetworkService.Method.GET
                 ),
-                method = NetworkService.Method.GET,
-                clazz = Array<GroupListDTO>::class
+                response = Array<GroupListDTO>::class
             )?.toMutableList().orEmpty()
 
             return@withContext (admin + list).distinctBy { it.id }
@@ -44,10 +49,12 @@ internal class GroupListRepositoryImpl @Inject constructor(
     override suspend fun searchByToken(token: String): GroupListDTO? {
         return withContext(Dispatchers.IO) {
             val response = network.make(
-                endpoint = COLLECTION_NAME,
-                query = mapOf(GroupModel.TOKEN to token),
-                method = NetworkService.Method.GET,
-                clazz = Array<GroupListDTO>::class
+                request = NetworkRequest(
+                    endpoint = COLLECTION_NAME,
+                    query = mapOf(GroupModel.TOKEN to token),
+                    method = NetworkService.Method.GET
+                ),
+                response = Array<GroupListDTO>::class
             )
 
             return@withContext response?.firstOrNull()

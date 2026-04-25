@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.data.repository
 
+import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.data.model.GroupCreateDTO
@@ -26,10 +27,12 @@ class GroupCreateRepositoryImplTest {
         val group = GroupModel(id = "1", name = "Test")
         coEvery {
             network.make(
-                endpoint = "groups",
-                payload = any(),
-                method = NetworkService.Method.POST,
-                clazz = GroupCreateDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups",
+                    payload = any(),
+                    method = NetworkService.Method.POST
+                ),
+                response = GroupCreateDTO::class
             )
         } returns mockk<GroupCreateDTO>()
 
@@ -46,10 +49,12 @@ class GroupCreateRepositoryImplTest {
         val group = GroupModel(id = "1", name = "Test")
         coEvery {
             network.make(
-                endpoint = "groups",
-                payload = any(),
-                method = NetworkService.Method.POST,
-                clazz = GroupCreateDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups",
+                    payload = any(),
+                    method = NetworkService.Method.POST
+                ),
+                response = GroupCreateDTO::class
             )
         } returns null
 
@@ -66,10 +71,12 @@ class GroupCreateRepositoryImplTest {
         val group = GroupModel(id = "1", name = "Test")
         coEvery {
             network.make(
-                endpoint = "groups/1",
-                payload = any(),
-                method = NetworkService.Method.PUT,
-                clazz = GroupCreateDTO::class
+                request = NetworkRequest(
+                    endpoint = "groups/1",
+                    payload = any(),
+                    method = NetworkService.Method.PUT
+                ),
+                response = GroupCreateDTO::class
             )
         } returns mockk<GroupCreateDTO>()
 
