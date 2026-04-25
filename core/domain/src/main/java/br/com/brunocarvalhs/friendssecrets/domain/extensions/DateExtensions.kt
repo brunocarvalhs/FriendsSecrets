@@ -10,6 +10,7 @@ fun Long.toFormattedDate(pattern: String = "dd/MM/yyyy"): String {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.format(Date(this))
     } catch (e: IllegalArgumentException) {
+        e.printStackTrace()
         ""
     }
 }

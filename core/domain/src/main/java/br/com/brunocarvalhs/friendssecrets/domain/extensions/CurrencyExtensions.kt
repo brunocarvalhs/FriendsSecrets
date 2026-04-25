@@ -12,6 +12,7 @@ fun Double?.toCurrencyMask(): String {
         val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
         format.format(valueToFormat)
     } catch (e: IllegalArgumentException) {
+        e.printStackTrace()
         this.toString()
     }
 }
