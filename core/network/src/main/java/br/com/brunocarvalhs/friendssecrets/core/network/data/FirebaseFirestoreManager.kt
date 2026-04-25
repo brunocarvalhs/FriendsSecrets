@@ -50,7 +50,7 @@ class FirebaseFirestoreManager @Inject constructor(
         if (listEntry != null) {
             val key = listEntry.key
             val values = listEntry.value as List<*>
-            val chunks = values.chunked(10)
+            val chunks = values.chunked(FIRESTORE_WHERE_IN_BATCH_SIZE)
 
             for (chunk in chunks) {
                 var ref: Query = firebaseFirestore.collection(collection).whereIn(key, chunk)
@@ -98,5 +98,9 @@ class FirebaseFirestoreManager @Inject constructor(
         val (collection, id) = endpoint.split("/")
         firebaseFirestore.collection(collection).document(id).delete().await()
         return true
+    }
+
+    companion object {
+        private const val FIRESTORE_WHERE_IN_BATCH_SIZE = 10
     }
 }

@@ -5,11 +5,7 @@ import kotlin.reflect.KClass
 interface NetworkService {
 
     suspend fun <T : Any> make(
-        endpoint: String,
-        payload: Map<String, Any?>? = null,
-        headers: Map<String, String>? = null,
-        query: Map<String, Any>? = null,
-        method: Method,
+        request: NetworkRequest,
         clazz: KClass<T>
     ): T?
 

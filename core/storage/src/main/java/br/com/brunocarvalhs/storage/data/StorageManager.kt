@@ -27,7 +27,6 @@ internal class StorageManager @Inject constructor(
         encodeDefaults = true
     }
 
-    private val TAG = "StorageManager"
 
     override suspend fun <T : Any> save(key: String, value: T) {
         Timber.tag(TAG).d("--> SAVE [%s]", key)
@@ -72,12 +71,14 @@ internal class StorageManager @Inject constructor(
     override suspend fun <T : Any> load(key: String, value: KClass<T>): T? {
         Timber.tag(TAG).d("--> LOAD [%s] | Type: %s", key, value.simpleName)
 
-        val preferences = context.dataStore.data.firstOrNull() ?: run {
+        val preferences = context.dataStore.data.firstOrNull()
+
+        if (preferences == null) {
             Timber.tag(TAG).w("<-- LOAD [%s] | DataStore is empty", key)
             return null
         }
 
-        return runCatching {
+        val result: T? = runCatching {
             when {
                 value == Set::class || value.java.isAssignableFrom(Set::class.java) -> {
                     preferences[stringSetPreferencesKey(key)] as? T
@@ -98,9 +99,12 @@ internal class StorageManager @Inject constructor(
                 else -> {
                     val jsonValue = preferences[stringPreferencesKey(key)] ?: run {
                         Timber.tag(TAG).d("<-- LOAD [%s] | Not found", key)
-                        return null
+                        return@runCatching null
                     }
-                    val serializer = json.serializersModule.serializer(value.java) as KSerializer<T>
+
+                    val serializer =
+                        json.serializersModule.serializer(value.java) as KSerializer<T>
+
                     json.decodeFromString(serializer, jsonValue)
                 }
             }
@@ -114,6 +118,8 @@ internal class StorageManager @Inject constructor(
         }.onFailure {
             Timber.tag(TAG).e(it, "<-- FAILURE LOAD [%s] | Error: %s", key, it.message)
         }.getOrNull()
+
+        return result
     }
 
     override suspend fun remove(key: String) {
@@ -128,5 +134,9 @@ internal class StorageManager @Inject constructor(
         }.onFailure {
             Timber.tag(TAG).e(it, "<-- FAILURE REMOVE [%s] | Error: %s", key, it.message)
         }
+    }
+
+    companion object {
+        private const val TAG = "StorageManager"
     }
 }
