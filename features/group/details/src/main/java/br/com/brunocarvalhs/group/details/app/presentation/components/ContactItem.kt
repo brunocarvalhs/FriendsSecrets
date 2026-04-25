@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.R
-import coil3.compose.AsyncImage
+import coil.compose.AsyncImage
 
 @Composable
 internal fun ContactItem(
