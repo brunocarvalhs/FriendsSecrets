@@ -1,15 +1,15 @@
 package br.com.brunocarvalhs.friendssecrets.core.navigation.navigation
 
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.core.navigation.ChatGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ChatGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
-import br.com.brunocarvalhs.friendssecrets.core.navigation.ContactsRouter
-import br.com.brunocarvalhs.friendssecrets.core.navigation.DrawGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupCreateGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupDetailsGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupListGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.SettingsGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ContactsRouter
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.DrawGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.EditFormsGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupCreateGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupDetailsGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupListGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.SettingsGraph
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import javax.inject.Inject
 import javax.inject.Singleton

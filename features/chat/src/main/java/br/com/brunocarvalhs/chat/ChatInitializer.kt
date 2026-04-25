@@ -8,7 +8,7 @@ import androidx.navigation.navigation
 import br.com.brunocarvalhs.chat.app.presentation.ChatScreen
 import br.com.brunocarvalhs.chat.app.presentation.ChatViewModel
 import br.com.brunocarvalhs.chat.commons.navigation.ChatRouter
-import br.com.brunocarvalhs.friendssecrets.core.navigation.ChatGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ChatGraph
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
 

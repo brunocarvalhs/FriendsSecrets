@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.biometric
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.core.navigation.BiometricGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.BiometricGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
 import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
 import javax.inject.Inject

@@ -1,5 +1,7 @@
-package br.com.brunocarvalhs.friendssecrets.core.navigation
+package br.com.brunocarvalhs.friendssecrets.core.navigation.routers
 
+import br.com.brunocarvalhs.friendssecrets.core.navigation.navtype.navTypeSerializer
+import br.com.brunocarvalhs.friendssecrets.core.navigation.navtype.navTypeSerializerNullable
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf

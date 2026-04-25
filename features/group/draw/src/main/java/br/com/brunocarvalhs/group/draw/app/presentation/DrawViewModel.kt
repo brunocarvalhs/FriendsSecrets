@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.friendssecrets.core.navigation.DrawGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.DrawGraph
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.DrawUseCase
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.ShareSecretFriendsUseCase
 import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalytics

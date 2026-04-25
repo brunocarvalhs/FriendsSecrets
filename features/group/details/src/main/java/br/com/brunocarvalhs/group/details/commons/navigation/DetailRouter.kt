@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.details.commons.navigation
 
-import br.com.brunocarvalhs.friendssecrets.core.navigation.navTypeSerializer
+import br.com.brunocarvalhs.friendssecrets.core.navigation.navtype.navTypeSerializer
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf

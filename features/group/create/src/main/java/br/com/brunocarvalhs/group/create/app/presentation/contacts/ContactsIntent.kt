@@ -1,8 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
-import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
-import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 
 
 internal sealed class ContactsIntent {

@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupListGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupListGraph
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.presentation.GroupListScreen
 import br.com.brunocarvalhs.group.list.app.presentation.GroupListViewModel

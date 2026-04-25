@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
 import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
-import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupCreateGraph
+import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupCreateGraph
 import javax.inject.Inject
 
 class GroupCreateInitializerImpl @Inject constructor(

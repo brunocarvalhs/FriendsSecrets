@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.friendssecrets.core.navigation
+package br.com.brunocarvalhs.friendssecrets.core.navigation.navtype
 
 import android.os.Bundle
 import androidx.navigation.NavType
@@ -12,7 +12,7 @@ val navJson = Json {
     encodeDefaults = true
 }
 
-inline fun <reified T : Any> navTypeSerializer() = object : NavType<T>(isNullableAllowed = false) {
+inline fun <reified T : Any> navTypeSerializer(): NavType<T> = object : NavType<T>(isNullableAllowed = false) {
     override fun get(bundle: Bundle, key: String): T? {
         return bundle.getString(key)?.let { navJson.decodeFromString(it) }
     }
@@ -30,7 +30,7 @@ inline fun <reified T : Any> navTypeSerializer() = object : NavType<T>(isNullabl
     }
 }
 
-internal inline fun <reified T : Any> navTypeListSerializer() =
+internal inline fun <reified T : Any> navTypeListSerializer(): NavType<List<T>> =
     object : NavType<List<T>>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): List<T>? {
             return bundle.getString(key)?.let { navJson.decodeFromString(it) }
@@ -41,7 +41,7 @@ internal inline fun <reified T : Any> navTypeListSerializer() =
         }
 
         override fun put(bundle: Bundle, key: String, value: List<T>) {
-            bundle.putString(key, Json.encodeToString(value))
+            bundle.putString(key, navJson.encodeToString(value))
         }
 
         override fun serializeAsValue(value: List<T>): String {
@@ -49,7 +49,7 @@ internal inline fun <reified T : Any> navTypeListSerializer() =
         }
     }
 
-inline fun <reified T : Any> navTypeSerializerNullable() =
+inline fun <reified T : Any> navTypeSerializerNullable(): NavType<T?> =
     object : NavType<T?>(isNullableAllowed = true) {
 
         override fun get(bundle: Bundle, key: String): T? {
