@@ -5,10 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
-import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +28,7 @@ internal class EditFormsViewModel @Inject constructor(
     analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
-    private val args = savedStateHandle.toRoute<EditFormsRouter>(EditFormsRouter.typeMap)
+    private val args = savedStateHandle.toRoute<EditFormsGraph>(EditFormsGraph.typeMap)
     private val _uiState = MutableStateFlow(
         EditFormsUiState(
             name = args.group.name,

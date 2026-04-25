@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupCreateGraph
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsViewModel
@@ -13,7 +14,6 @@ import br.com.brunocarvalhs.group.create.app.presentation.editForm.EditFormsView
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.forms.FormsViewModel
 import br.com.brunocarvalhs.group.create.commons.navigation.ContactsRouter
-import br.com.brunocarvalhs.group.create.commons.navigation.EditFormsRouter
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import kotlin.properties.Delegates
@@ -32,7 +32,7 @@ class GroupCreateInitializer(private val builder: Builder) {
                 )
             }
 
-            composable<EditFormsRouter>(typeMap = EditFormsRouter.typeMap) {
+            composable<EditFormsGraph>(typeMap = EditFormsGraph.typeMap) {
                 val viewModel = hiltViewModel<EditFormsViewModel>()
                 EditFormsScreen(
                     viewModel = viewModel,
