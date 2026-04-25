@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.friendssecrets.core.navigation.navigation
 import androidx.navigation.NavHostController
 import br.com.brunocarvalhs.friendssecrets.core.navigation.ChatGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
+import br.com.brunocarvalhs.friendssecrets.core.navigation.ContactsRouter
 import br.com.brunocarvalhs.friendssecrets.core.navigation.DrawGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
 import br.com.brunocarvalhs.friendssecrets.core.navigation.GroupCreateGraph
@@ -56,6 +57,12 @@ class AppNavigator @Inject constructor() : CommonNavigator {
 
     override fun navigateToEditGroup(navController: NavHostController, group: GroupModel) {
         navController.navigate(EditFormsGraph(group)) {
+            launchSingleTop = true
+        }
+    }
+
+    override fun navigateToContacts(navController: NavHostController, group: GroupModel) {
+        navController.navigate(ContactsRouter(group)) {
             launchSingleTop = true
         }
     }

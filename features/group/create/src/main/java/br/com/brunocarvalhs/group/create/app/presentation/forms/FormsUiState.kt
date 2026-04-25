@@ -10,7 +10,6 @@ internal data class FormsUiState(
     val minPrice: String = EMPTY_STRING,
     val maxPrice: String = EMPTY_STRING,
     val members: List<UserModel> = emptyList(),
-    val contacts: Int = 0,
     val isLoading: Boolean = false,
     val error: String? = null,
     val isPriceError: Boolean = false,

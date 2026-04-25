@@ -7,7 +7,6 @@ import kotlin.reflect.typeOf
 @Serializable
 internal data class FormsRouter(
     val members: List<UserModel>,
-    val contacts: Int
 ) {
     companion object {
         val typeMap = mapOf(

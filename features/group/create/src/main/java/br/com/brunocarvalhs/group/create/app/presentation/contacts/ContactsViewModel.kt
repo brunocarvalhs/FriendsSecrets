@@ -1,8 +1,12 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import br.com.brunocarvalhs.friendssecrets.core.navigation.ContactsRouter
+import br.com.brunocarvalhs.friendssecrets.core.navigation.EditFormsGraph
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
@@ -19,11 +23,18 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class ContactsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getContactsUseCase: GetContactsUseCase,
     private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ContactsUiState())
+    private val args = savedStateHandle.toRoute<ContactsRouter>(ContactsRouter.typeMap)
+    private val _uiState = MutableStateFlow(
+        value = ContactsUiState(
+            isEditing = args.group?.members?.isNotEmpty() ?: false,
+            members = args.group?.members.orEmpty(),
+        )
+    )
     val uiState: StateFlow<ContactsUiState> = _uiState.asStateFlow()
 
     init {
@@ -78,7 +89,6 @@ internal class ContactsViewModel @Inject constructor(
             }
 
             if (isAlreadySelected) {
-                // Se já estiver selecionado, removemos
                 currentState.copy(
                     members = currentState.members.filterNot { 
                         (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) || 
@@ -86,7 +96,6 @@ internal class ContactsViewModel @Inject constructor(
                     }
                 )
             } else {
-                // Se não estiver, adicionamos
                 currentState.copy(members = currentState.members + contact)
             }
         }
@@ -110,7 +119,7 @@ internal class ContactsViewModel @Inject constructor(
     }
 
     @AddTrace(name = "ContactsViewModel.next", enabled = true)
-    private fun next(callback: (FormsRouter) -> Unit) {
+    private fun next(callback: (Any) -> Unit) {
         val members = _uiState.value.members
         
         if (members.isEmpty()) {
@@ -123,11 +132,18 @@ internal class ContactsViewModel @Inject constructor(
             return
         }
 
-        callback(
-            FormsRouter(
-                members = members,
-                contacts = _uiState.value.contacts.size
+        args.group?.let {
+            callback(
+                EditFormsGraph(
+                    group = it.copy(members = members)
+                )
             )
-        )
+        } ?: run {
+            callback(
+                FormsRouter(
+                    members = members,
+                )
+            )
+        }
     }
 }

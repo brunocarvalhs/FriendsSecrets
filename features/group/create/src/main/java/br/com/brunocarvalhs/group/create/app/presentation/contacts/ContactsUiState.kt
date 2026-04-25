@@ -5,6 +5,7 @@ import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 
 @Stable
 internal data class ContactsUiState(
+    val isEditing: Boolean = false,
     val contacts: List<UserModel> = emptyList(),
     val filteredContacts: List<UserModel> = emptyList(),
     val searchQuery: String = "",

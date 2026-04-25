@@ -23,6 +23,9 @@ class GroupDetailsInitializerImpl @Inject constructor(
             .onEdit { group ->
                 navigator.navigateToEditGroup(navController, group)
             }
+            .onAddMembers { group ->
+                navigator.navigateToContacts(navController, group)
+            }
             .build(navGraphBuilder)
     }
 }

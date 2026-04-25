@@ -12,4 +12,5 @@ interface CommonNavigator {
     fun navigateToDraw(navController: NavHostController, group: GroupModel)
     fun navigateToChat(navController: NavHostController, group: GroupModel)
     fun navigateToEditGroup(navController: NavHostController, group: GroupModel)
+    fun navigateToContacts(navController: NavHostController, group: GroupModel)
 }

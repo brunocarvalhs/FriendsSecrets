@@ -38,6 +38,7 @@ internal class EditFormsViewModel @Inject constructor(
             maxPrice = args.group.maxPrice.toString(),
             members = args.group.members,
             selectedPhoto = args.group.photo,
+            isValid = args.group.members.isNotEmpty()
         )
     )
     val uiState: StateFlow<EditFormsUiState> = _uiState.asStateFlow()

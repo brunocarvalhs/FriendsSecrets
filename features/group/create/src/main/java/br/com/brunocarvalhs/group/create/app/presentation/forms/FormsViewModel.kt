@@ -33,7 +33,6 @@ internal class FormsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         FormsUiState(
             members = args.members,
-            contacts = args.contacts
         )
     )
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()

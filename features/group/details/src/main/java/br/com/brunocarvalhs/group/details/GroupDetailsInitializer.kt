@@ -30,7 +30,8 @@ class GroupDetailsInitializer(private val builder: Builder) {
                     onBack = builder.onBack,
                     onDraw = { builder.onDraw(viewModel.uiState.value.group) },
                     onChat = { builder.onChat(viewModel.uiState.value.group) },
-                    onEdit = { builder.onEdit(viewModel.uiState.value.group) }
+                    onEdit = { builder.onEdit(viewModel.uiState.value.group) },
+                    onAddMembers = { builder.onAddMembers(viewModel.uiState.value.group) }
                 )
             }
         }
@@ -42,6 +43,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
         internal var onDraw: (GroupModel) -> Unit = {}
         internal var onChat: (GroupModel) -> Unit = {}
         internal var onEdit: (GroupModel) -> Unit = {}
+        internal var onAddMembers: (GroupModel) -> Unit = {}
 
         @AddTrace(name = "GroupListInitializer.Builder.navController", enabled = true)
         fun navController(navController: NavHostController) = apply {
@@ -66,6 +68,11 @@ class GroupDetailsInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupListInitializer.Builder.onEdit", enabled = true)
         fun onEdit(onEdit: (GroupModel) -> Unit) = apply {
             this.onEdit = onEdit
+        }
+
+        @AddTrace(name = "GroupListInitializer.Builder.onAddMembers", enabled = true)
+        fun onAddMembers(onAddMembers: (GroupModel) -> Unit) = apply {
+            this.onAddMembers = onAddMembers
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.build", enabled = true)

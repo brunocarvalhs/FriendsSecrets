@@ -29,6 +29,17 @@ data class EditFormsGraph(val group: GroupModel) {
 }
 
 @Serializable
+data class ContactsRouter(
+    val group: GroupModel? = null
+) {
+    companion object {
+        val typeMap = mapOf(
+            typeOf<GroupModel?>() to navTypeSerializerNullable<GroupModel>()
+        )
+    }
+}
+
+@Serializable
 data class ChatGraph(
     val group: GroupModel,
 ) {

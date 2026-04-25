@@ -71,6 +71,7 @@ internal fun GroupDetailsScreen(
     onChat: (GroupModel) -> Unit = {},
     onDraw: (GroupModel) -> Unit = {},
     onEdit: (GroupModel) -> Unit = {},
+    onAddMembers: (GroupModel) -> Unit = {},
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
@@ -110,7 +111,8 @@ internal fun GroupDetailsScreen(
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
-        onEdit = { onEdit.invoke(group) }
+        onEdit = { onEdit.invoke(group) },
+        onAddMembers = { onAddMembers.invoke(group) }
     )
 }
 
@@ -137,6 +139,7 @@ private fun GroupDetailsContent(
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
+    onAddMembers: () -> Unit ,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -164,7 +167,6 @@ private fun GroupDetailsContent(
                 .padding(paddingValue),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 AsyncImage(
@@ -303,7 +305,8 @@ private fun GroupDetailsContent(
                         Icons.Default.PersonAdd,
                         stringResource(R.string.add_participants),
                         iconColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.primary,
+                        onClick = onAddMembers
                     )
                 }
             }
@@ -362,6 +365,7 @@ private fun GroupDetailsPreview() {
         onDelete = {},
         onExit = {},
         onShareGroup = {},
-        onEdit = {}
+        onEdit = {},
+        onAddMembers = {}
     )
 }

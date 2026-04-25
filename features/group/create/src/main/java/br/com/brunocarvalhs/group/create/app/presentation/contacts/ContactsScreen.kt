@@ -50,7 +50,6 @@ import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.Co
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SearchField
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SelectedMembersRow
 import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
-import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -64,7 +63,7 @@ private const val PACKAGE = "package"
 internal fun ContactsScreen(
     viewModel: ContactsViewModel,
     onBack: () -> Unit,
-    onNext: (FormsRouter) -> Unit,
+    onNext: (Any) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -106,7 +105,7 @@ internal fun ContactsScreen(
                     callback = { router -> onNext(router) }
                 )
             )
-        }
+        },
     )
 }
 
@@ -125,7 +124,7 @@ private fun ContactsContent(
     onToggleMember: (UserModel) -> Unit,
     onRemoveMember: (UserModel) -> Unit,
     onBack: () -> Unit,
-    onNext: (List<UserModel>) -> Unit
+    onNext: (List<UserModel>) -> Unit,
 ) {
     var showManualForm by remember(isPermissionGranted) { mutableStateOf(!isPermissionGranted) }
 
