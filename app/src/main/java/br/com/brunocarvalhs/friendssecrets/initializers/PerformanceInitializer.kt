@@ -5,7 +5,8 @@ import androidx.startup.Initializer
 import br.com.brunocarvalhs.friendssecrets.BuildConfig
 import com.google.firebase.perf.FirebasePerformance
 
-class PerformanceInitializer: Initializer<FirebasePerformance> {
+class PerformanceInitializer : Initializer<FirebasePerformance> {
+
     override fun create(p0: Context): FirebasePerformance {
         return FirebasePerformance.getInstance().apply {
             isPerformanceCollectionEnabled = !BuildConfig.DEBUG
@@ -13,6 +14,6 @@ class PerformanceInitializer: Initializer<FirebasePerformance> {
     }
 
     override fun dependencies(): List<Class<out Initializer<*>?>?> {
-        TODO("Not yet implemented")
+        return mutableListOf(FirebaseInitializer::class.java)
     }
 }

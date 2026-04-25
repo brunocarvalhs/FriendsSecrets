@@ -16,6 +16,6 @@ class CrashlyticsInitializer: Initializer<FirebaseCrashlytics> {
     }
 
     override fun dependencies(): List<Class<out Initializer<*>?>?> {
-        return mutableListOf()
+        return mutableListOf(FirebaseInitializer::class.java)
     }
 }
