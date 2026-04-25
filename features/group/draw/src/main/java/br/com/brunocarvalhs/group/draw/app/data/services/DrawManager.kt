@@ -6,10 +6,11 @@ import javax.inject.Inject
 
 internal class DrawManager @Inject constructor(
     private val crypto: CryptoService
-): DrawService {
+) : DrawService {
+
     override fun draw(participants: MutableList<String>): Map<String, String> {
-        require(participants.size >= 3) {
-            "Minimum number of participants is 3"
+        require(participants.size >= MIN_PARTICIPANTS) {
+            "Minimum number of participants is $MIN_PARTICIPANTS"
         }
 
         var shuffled: List<String>
@@ -25,5 +26,9 @@ internal class DrawManager @Inject constructor(
         }
 
         return secretSantaMap
+    }
+
+    companion object {
+        private const val MIN_PARTICIPANTS = 3
     }
 }

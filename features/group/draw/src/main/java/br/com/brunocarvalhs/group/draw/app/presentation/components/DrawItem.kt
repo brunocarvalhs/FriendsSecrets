@@ -63,7 +63,7 @@ internal fun DrawItem(
 
 @Preview(showBackground = true)
 @Composable
-fun DrawItemPreview() {
+internal fun DrawItemPreview() {
     MaterialTheme {
         DrawItem(
             members = listOf(UserModel(name = "Bruno")),
