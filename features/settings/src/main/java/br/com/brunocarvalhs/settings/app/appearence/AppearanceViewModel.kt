@@ -30,7 +30,7 @@ internal class AppearanceViewModel @Inject constructor(
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch { themeService.initializer() }
+        viewModelScope.launch { themeService.initialize() }
         analytics.trackAppearanceScreenView()
     }
 

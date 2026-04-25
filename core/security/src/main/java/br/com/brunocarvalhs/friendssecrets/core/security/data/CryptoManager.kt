@@ -15,13 +15,13 @@ import timber.log.Timber
 import java.util.Base64
 import javax.inject.Inject
 
-class CryptoManager @Inject constructor(
+class CryptoManager @Inject constructor() : CryptoService {
+
     private val json: Json = Json {
         ignoreUnknownKeys = true
         isLenient = true
         encodeDefaults = true
     }
-) : CryptoService {
 
     override fun encryptMap(
         inputMap: Map<String, Any?>,
