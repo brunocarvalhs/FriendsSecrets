@@ -1,0 +1,12 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Group Details Flow
+---
+- launchApp
+- runFlow: create_group_flow.yaml
+- tapOn: "Archived"
+- tapOn: "Grupo de Natal 2024"
+
+- assertVisible: "Grupo de Natal 2024"
+- scroll
+- assertVisible: "Edit group information"
+- tapOn: "Edit group information"
