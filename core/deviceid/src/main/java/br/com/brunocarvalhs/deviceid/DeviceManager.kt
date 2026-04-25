@@ -78,9 +78,12 @@ internal class DeviceManager @Inject constructor(
                 } catch (e: CancellationException) {
                     Timber.e(e, "Error getting device identifier")
                     throw e
-                } catch (e: Exception) {
+                } catch (e: IllegalStateException) {
                     Timber.e(e, "Error getting device identifier")
-                    callback("unknown_error")
+                    throw e
+                } catch (e: IllegalArgumentException) {
+                    Timber.e(e, "Error getting device identifier")
+                    throw e
                 }
             }
         }
