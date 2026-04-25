@@ -10,7 +10,7 @@ class CrashlyticsInitializer: Initializer<FirebaseCrashlytics> {
 
     override fun create(context: Context): FirebaseCrashlytics {
         return FirebaseCrashlytics.getInstance().apply {
-            isCrashlyticsCollectionEnabled = BuildConfig.DEBUG
+            isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
             DeviceManager.setCallbackDeviceId(context) { setUserId(it) }
         }
     }

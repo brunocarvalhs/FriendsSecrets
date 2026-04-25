@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.core.network.data
 
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
+import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
@@ -92,6 +93,6 @@ class NetworkManager @Inject constructor(
 
     companion object {
         private const val TAG = "NetworkManager"
-        private val EXCLUDED_KEYS = setOf("id", "token", "createdAt", "updatedAt", "timestamp")
+        private val EXCLUDED_KEYS = setOf(GroupModel.ID, GroupModel.TOKEN, GroupModel.CREATED_AT)
     }
 }
