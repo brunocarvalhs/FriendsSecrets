@@ -100,7 +100,8 @@ internal fun FormsContent(
     onBack: () -> Unit,
     isLoading: Boolean = false,
     isValid: Boolean = false,
-    isPriceError: Boolean = false
+    isPriceError: Boolean = false,
+    onRemoveMember: ((UserModel) -> Unit)? = null
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -541,7 +542,7 @@ internal fun FormsContent(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             items(members) { member ->
-                                MemberAvatarItem(name = member.name)
+                                MemberAvatarItem(name = member.name, photoUrl = member.photoUrl)
                             }
                         }
                     }
