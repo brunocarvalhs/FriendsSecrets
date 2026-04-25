@@ -94,7 +94,9 @@ android {
 dependencies {
     baselineProfile(project(":baselineprofile"))
     implementation(project(":core:ui"))
+    implementation(project(":core:analytics"))
     implementation(project(":core:logger"))
+    implementation(project(":core:deviceid"))
     implementation(project(":core:network"))
     implementation(project(":core:remote"))
     implementation(project(":core:security"))

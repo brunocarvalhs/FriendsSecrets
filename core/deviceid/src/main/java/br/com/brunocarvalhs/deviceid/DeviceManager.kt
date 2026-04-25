@@ -15,7 +15,7 @@ import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
-internal class DeviceManager @Inject constructor(
+class DeviceManager @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : DeviceService {
 
@@ -62,6 +62,9 @@ internal class DeviceManager @Inject constructor(
     companion object {
         @Volatile
         private var cachedDeviceId: String? = null
+
+        const val DEVICE_ID = "device_id"
+
         private const val PREFS_NAME = "device_prefs"
         private const val KEY_FALLBACK_ID = "fallback_device_id"
 

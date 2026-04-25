@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.friendssecrets.core.analytics.di
 
 import br.com.brunocarvalhs.friendssecrets.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.friendssecrets.core.analytics.FirebaseAnalyticsManager
+import br.com.brunocarvalhs.friendssecrets.core.analytics.aspect.AnalyticsAspect
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -26,5 +27,13 @@ abstract class AnalyticsModule {
         @Provides
         @Singleton
         fun provideFirebaseAnalytics(): FirebaseAnalytics = Firebase.analytics
+
+        @Provides
+        @Singleton
+        fun provideAnalyticsAspect(analyticsService: AnalyticsService): AnalyticsAspect {
+            val aspect = AnalyticsAspect()
+            AnalyticsAspect.setAnalyticsService(analyticsService)
+            return aspect
+        }
     }
 }

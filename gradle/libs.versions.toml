@@ -49,6 +49,7 @@ lifecycleProcess = "2.10.0"
 room = "2.8.4"
 appcompat = "1.7.1"
 material = "1.13.0"
+aspectj-plugin = "4.3.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -102,7 +103,6 @@ androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchm
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
-firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
