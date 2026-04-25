@@ -10,11 +10,7 @@ fun Double?.toCurrencyMask(
     divisor: Int = CURRENCY_DIVISOR
 ): String {
     if (this == null) return ""
-    return try {
-        val valueToFormat = this / divisor
-        val formatter = NumberFormat.getCurrencyInstance(locale)
-        formatter.format(valueToFormat)
-    } catch (e: Exception) {
-        throw e
-    }
+    val valueToFormat = this / divisor
+    val formatter = NumberFormat.getCurrencyInstance(locale)
+    return formatter.format(valueToFormat)
 }
