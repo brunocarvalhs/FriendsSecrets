@@ -7,6 +7,7 @@ interface ThemeService {
     val theme: StateFlow<Theme>
     val isDynamicThemeEnabled: StateFlow<Boolean>
 
+    suspend fun initialize()
     suspend fun setDynamicThemeEnabled(enabled: Boolean)
     suspend fun setTheme(theme: Theme)
 

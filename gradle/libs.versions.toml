@@ -1,5 +1,6 @@
 [versions]
-minSdk = "24"
+kotlinxCoroutinesTest = "1.10.2"
+minSdk = "26"
 compileSdk = "37"
 targetSdk = "35"
 versionCode = "14"
@@ -56,6 +57,7 @@ room = "2.8.4"
 appcompat = "1.7.1"
 material = "1.13.0"
 core = "1.18.0"
+coreKtxVersion = "1.7.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -95,6 +97,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
@@ -117,6 +120,7 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,6 +1,5 @@
 package br.com.brunocarvalhs.friendssecrets.core.security.data
 
-import android.util.Base64
 import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -13,15 +12,16 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 import timber.log.Timber
+import java.util.Base64
 import javax.inject.Inject
 
-class CryptoManager @Inject constructor() : CryptoService {
-
+class CryptoManager @Inject constructor(
     private val json: Json = Json {
         ignoreUnknownKeys = true
         isLenient = true
         encodeDefaults = true
     }
+) : CryptoService {
 
     override fun encryptMap(
         inputMap: Map<String, Any?>,
@@ -46,13 +46,13 @@ class CryptoManager @Inject constructor() : CryptoService {
     }
 
     override fun decryptMap(
-        encodedMap: Map<String, Any>,
+        encodedMap: Map<String, Any?>,
         excludedKeys: Set<String>
-    ): Map<String, Any> {
+    ): Map<String, Any?> {
         Timber.tag(TAG).d("--> DECRYPT MAP | Excluded: %s", excludedKeys)
         return encodedMap.mapValues { (key, value) ->
-            if (key in excludedKeys) return@mapValues value
-            decryptValue(value)
+            if (key in excludedKeys) value
+            else decryptValue(value)
         }.also {
             Timber.tag(TAG).d("<-- SUCCESS DECRYPT MAP")
         }
@@ -80,23 +80,28 @@ class CryptoManager @Inject constructor() : CryptoService {
 
     override fun encrypt(input: String): String {
         Timber.tag(TAG).v("--> ENCRYPT | Input: %s", input)
-        return Base64.encodeToString(
-            input.toByteArray(),
-            BASE64_FLAGS
-        ).also {
-            Timber.tag(TAG).v("<-- RESULT ENCRYPT: %s", it)
-        }
+
+        return Base64.getUrlEncoder()
+            .withoutPadding()
+            .encodeToString(input.toByteArray(Charsets.UTF_8))
+            .also {
+                Timber.tag(TAG).v("<-- RESULT ENCRYPT: %s", it)
+            }
     }
 
     override fun decrypt(encoded: String): String {
         Timber.tag(TAG).v("--> DECRYPT | Input: %s", encoded)
+
         return runCatching {
-            val decodedBytes = Base64.decode(encoded, BASE64_FLAGS)
-            String(decodedBytes).also {
-                Timber.tag(TAG).v("<-- RESULT DECRYPT: %s", it)
-            }
+            val decodedBytes = Base64.getUrlDecoder().decode(encoded)
+            val decoded = String(decodedBytes, Charsets.UTF_8)
+
+            val reEncoded = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(decoded.toByteArray(Charsets.UTF_8))
+
+            if (reEncoded == encoded) decoded else encoded
         }.getOrElse {
-            Timber.tag(TAG).e(it, "<-- FAILURE DECRYPT | Error: %s", it.message)
             encoded
         }
     }
@@ -124,7 +129,6 @@ class CryptoManager @Inject constructor() : CryptoService {
     }
 
     private companion object {
-        private const val TAG = "CryptoManager"
-        private const val BASE64_FLAGS = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+        const val TAG = "CryptoManager"
     }
 }

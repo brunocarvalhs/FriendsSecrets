@@ -7,9 +7,9 @@ interface CryptoService {
     ): Map<String, Any?>
 
     fun decryptMap(
-        encodedMap: Map<String, Any>,
+        encodedMap: Map<String, Any?>,
         excludedKeys: Set<String>
-    ): Map<String, Any>
+    ): Map<String, Any?>
 
     fun encrypt(input: String): String
 

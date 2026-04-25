@@ -44,4 +44,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.timber)
     implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
 }

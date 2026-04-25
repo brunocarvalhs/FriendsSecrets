@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.biometric.BiometricService
 import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
@@ -19,6 +20,7 @@ import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeServi
 import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.friendssecrets.core.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,6 +43,10 @@ class MainActivity : FragmentActivity() {
         }
 
         enableEdgeToEdge()
+
+        lifecycleScope.launch {
+            themeService.initialize()
+        }
 
         setContent {
             FriendsSecretsTheme(

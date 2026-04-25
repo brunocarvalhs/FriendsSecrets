@@ -47,4 +47,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.timber)
     implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.datastore.preferences)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.core.ktx)
+    testImplementation(libs.robolectric)
 }

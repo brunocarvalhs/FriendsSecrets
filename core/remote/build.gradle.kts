@@ -56,7 +56,14 @@ dependencies {
 
     implementation(libs.timber)
 
-    // Firebase for Remote Theme, Logger and Initializers
+    // Testes
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockito.inline)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.robolectric)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config)
     implementation(libs.firebase.crashlytics)

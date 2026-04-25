@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
     implementation(libs.firebase.perf)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
     
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
