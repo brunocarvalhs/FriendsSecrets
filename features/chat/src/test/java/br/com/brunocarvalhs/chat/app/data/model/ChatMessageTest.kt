@@ -49,7 +49,7 @@ class ChatMessageTest {
         // Then
         assertEquals("", message.groupId)
         assertEquals("", message.text)
-        assertEquals(MessageStatus.SENT, message.status)
+        assertEquals(MessageModel.MessageStatus.SENT, message.status)
         assertEquals(false, message.isFromMe)
     }
 }
