@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.friendssecrets.domain.model
 
+import br.com.brunocarvalhs.friendssecrets.domain.factory.TokenGenerator
 import kotlinx.serialization.Serializable
 import java.util.UUID
-import kotlin.random.Random
 
 @Serializable
 data class GroupModel(
@@ -41,10 +41,12 @@ data class GroupModel(
         const val CREATED_AT = "created_at"
 
         fun generateToken(size: Int = 8): String {
-            val charPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-            return (1..size)
-                .map { charPool[Random.nextInt(charPool.size)] }
-                .joinToString("")
+            return TokenGenerator.generate(
+                size = size,
+                uppercase = true,
+                lowercase = false,
+                numbers = true
+            )
         }
     }
 }

@@ -28,4 +28,6 @@
     <string name="edit_group_information">Edit group information</string>
     <string name="delete_group">Delete group</string>
     <string name="leave_group">Leave group</string>
+    <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
+    <string name="share_group_title">Share Code</string>
 </resources>

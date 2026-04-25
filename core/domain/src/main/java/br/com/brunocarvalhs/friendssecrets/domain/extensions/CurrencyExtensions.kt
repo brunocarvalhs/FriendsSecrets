@@ -5,14 +5,16 @@ import java.util.Locale
 
 private const val CURRENCY_DIVISOR = 10
 
-fun Double?.toCurrencyMask(): String {
+fun Double?.toCurrencyMask(
+    locale: Locale = Locale.getDefault(),
+    divisor: Int = CURRENCY_DIVISOR
+): String {
     if (this == null) return ""
     return try {
-        val valueToFormat = this / CURRENCY_DIVISOR
-        val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
-        format.format(valueToFormat)
-    } catch (e: IllegalArgumentException) {
-        e.printStackTrace()
+        val valueToFormat = this / divisor
+        val formatter = NumberFormat.getCurrencyInstance(locale)
+        formatter.format(valueToFormat)
+    } catch (e: Exception) {
         this.toString()
     }
 }
