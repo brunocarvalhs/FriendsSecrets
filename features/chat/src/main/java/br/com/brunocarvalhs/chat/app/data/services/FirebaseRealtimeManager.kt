@@ -2,6 +2,7 @@ package br.com.brunocarvalhs.chat.app.data.services
 
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel.MessageStatus
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,21 +18,29 @@ class FirebaseRealtimeManager @Inject constructor(
     private val database: FirebaseDatabase
 ) : ChatService {
 
+    private companion object {
+        const val KEY_TEXT = "t"
+        const val KEY_SENDER_ID = "si"
+        const val KEY_SENDER_NAME = "sn"
+        const val KEY_TIMESTAMP = "ts"
+        const val KEY_STATUS = "s"
+    }
+
     override fun getMessages(groupId: String): Flow<List<MessageModel>> = callbackFlow {
-        val query = database.getReference("chats").child(groupId).limitToLast(50)
+        val query = database.getReference("chats").child(groupId).limitToLast(20)
         val messages = mutableMapOf<String, MessageModel>()
 
         val listener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val map = snapshot.value as? Map<String, Any> ?: return
-                val message = map.toMessageModel(snapshot.key ?: "")
+                val message = map.toMessageModel(snapshot.key ?: "", groupId)
                 messages[snapshot.key ?: ""] = message
                 trySend(messages.values.toList().sortedBy { it.timestamp })
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val map = snapshot.value as? Map<String, Any> ?: return
-                val message = map.toMessageModel(snapshot.key ?: "")
+                val message = map.toMessageModel(snapshot.key ?: "", groupId)
                 messages[snapshot.key ?: ""] = message
                 trySend(messages.values.toList().sortedBy { it.timestamp })
             }
@@ -44,7 +53,7 @@ class FirebaseRealtimeManager @Inject constructor(
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
             override fun onCancelled(error: DatabaseError) {
-                Timber.e(error.toException(), "FirebaseRealtimeManager: Error observing messages")
+                Timber.e(error.toException())
                 close(error.toException())
             }
         }
@@ -63,13 +72,11 @@ class FirebaseRealtimeManager @Inject constructor(
             val reference = database.getReference("chats").child(groupId).child(id)
 
             val messageMap = mapOf(
-                "id" to id,
-                "groupId" to groupId,
-                "text" to message.text,
-                "senderId" to message.senderId,
-                "senderName" to message.senderName,
-                "timestamp" to message.timestamp,
-                "status" to MessageModel.MessageStatus.SENT.name
+                KEY_TEXT to message.text,
+                KEY_SENDER_ID to message.senderId,
+                KEY_SENDER_NAME to message.senderName, // Salva o nome para quem não tem o membro no cache
+                KEY_TIMESTAMP to message.timestamp,
+                KEY_STATUS to MessageStatus.SENT.ordinal
             )
 
             reference.setValue(messageMap).await()
@@ -79,17 +86,18 @@ class FirebaseRealtimeManager @Inject constructor(
         database.getReference("chats").child(groupId).removeValue().await()
     }
 
-    private fun Map<String, Any>.toMessageModel(key: String): MessageModel {
+    private fun Map<String, Any>.toMessageModel(key: String, groupId: String): MessageModel {
+        val statusOrdinal = (this[KEY_STATUS] as? Long)?.toInt() ?: MessageStatus.SENT.ordinal
+        val status = MessageStatus.entries.getOrElse(statusOrdinal) { MessageStatus.SENT }
+        
         return MessageModel(
             id = key,
-            groupId = this["groupId"] as? String ?: "",
-            text = this["text"] as? String ?: "",
-            senderId = this["senderId"] as? String ?: "",
-            senderName = this["senderName"] as? String ?: "",
-            timestamp = (this["timestamp"] as? Long) ?: System.currentTimeMillis(),
-            status = MessageModel.MessageStatus.valueOf(
-                this["status"] as? String ?: MessageModel.MessageStatus.SENT.name
-            )
+            groupId = groupId,
+            text = this[KEY_TEXT] as? String ?: "",
+            senderId = this[KEY_SENDER_ID] as? String ?: "",
+            senderName = this[KEY_SENDER_NAME] as? String ?: "",
+            timestamp = (this[KEY_TIMESTAMP] as? Long) ?: System.currentTimeMillis(),
+            status = status
         )
     }
 }

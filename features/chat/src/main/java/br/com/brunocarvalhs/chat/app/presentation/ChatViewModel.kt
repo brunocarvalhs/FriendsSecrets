@@ -174,6 +174,8 @@ internal class ChatViewModel @Inject constructor(
     @AddTrace(name = "ChatViewModel.observeMessages", enabled = true)
     private fun observeMessages() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
             getMessagesUseCase(_uiState.value.groupModel.id)
                 .onEach { messages ->
                     _uiState.update { state ->
@@ -192,8 +194,14 @@ internal class ChatViewModel @Inject constructor(
 
     private fun MessageModel.toChatMessage(currentDeviceId: String): ChatMessage {
         val groupMembers = _uiState.value.groupModel.members
-        val member = groupMembers.find { it.phoneNumber == senderId || it.id == senderId }
-        val displayName = member?.name ?: senderName.ifBlank { senderId }
+        val member = groupMembers.find { it.id == senderId || it.phoneNumber == senderId }
+        
+        val displayName = when {
+            senderId == currentDeviceId -> "Você"
+            senderId == "system" -> "Sistema"
+            member != null -> member.name
+            else -> senderName.ifBlank { "Membro" }
+        }
 
         return ChatMessage(
             id = id,
