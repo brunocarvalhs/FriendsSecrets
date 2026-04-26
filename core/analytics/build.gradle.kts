@@ -35,6 +35,15 @@ android {
     }
 }
 
+afterEvaluate {
+    val androidComponents =
+        extensions.getByType<com.android.build.api.variant.LibraryAndroidComponentsExtension>()
+    val bootClasspathProvider = androidComponents.sdkComponents.bootClasspath
+    tasks.withType<io.freefair.gradle.plugins.aspectj.AspectjCompile>().configureEach {
+        ajcOptions.bootclasspath.from(bootClasspathProvider)
+    }
+}
+
 detekt {
     config.from(files("$rootDir/detekt.yml"))
 }
