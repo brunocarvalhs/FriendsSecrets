@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.core.remote.domain.ThemeService
-import br.com.brunocarvalhs.settings.app.list.SettingsAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AppearanceViewModel @Inject constructor(
     private val themeService: ThemeService,
-    private val analytics: SettingsAnalytics,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -30,8 +28,7 @@ internal class AppearanceViewModel @Inject constructor(
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch { themeService.initialize() }
-        analytics.trackAppearanceScreenView()
+        initializer()
     }
 
     @AddTrace(name = "AppearanceViewModel.handleIntent", enabled = true)
@@ -42,9 +39,12 @@ internal class AppearanceViewModel @Inject constructor(
         }
     }
 
+    private fun initializer() {
+        viewModelScope.launch { themeService.initialize() }
+    }
+
     @AddTrace(name = "AppearanceViewModel.setTheme", enabled = true)
     private fun setTheme(theme: String) {
-        analytics.trackChangeTheme(theme)
         viewModelScope.launch {
             themeService.setTheme(ThemeService.Theme.valueOf(theme.uppercase()))
             _state.update { it.copy(themeSelected = theme) }
@@ -53,7 +53,6 @@ internal class AppearanceViewModel @Inject constructor(
 
     @AddTrace(name = "AppearanceViewModel.setDynamicThemeEnabled", enabled = true)
     private fun setDynamicThemeEnabled(enabled: Boolean) {
-        analytics.trackToggleDynamicTheme(enabled)
         viewModelScope.launch {
             themeService.setDynamicThemeEnabled(enabled)
             _state.update { it.copy(isDynamicThemeEnabled = enabled) }

@@ -8,7 +8,6 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
-import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +25,6 @@ internal class FormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupCreateUseCase: GroupCreateUseCase,
     private val imageService: GroupImageService,
-    private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<FormsRouter>(FormsRouter.typeMap)
@@ -38,17 +36,7 @@ internal class FormsViewModel @Inject constructor(
     val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
 
     init {
-        analytics.trackFormsScreenView()
-        viewModelScope.launch {
-            imageService.availablePhotos.collectLatest { photos ->
-                _uiState.update { 
-                    it.copy(
-                        availablePhotos = photos,
-                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
-                    )
-                }
-            }
-        }
+        initializer()
     }
 
     @AddTrace(name = "FormsViewModel.handleIntent", enabled = true)
@@ -60,6 +48,19 @@ internal class FormsViewModel @Inject constructor(
         is FormsIntent.UpdateMinPrice -> updateState { copy(minPrice = intent.minPrice) }
         is FormsIntent.UpdateMaxPrice -> updateState { copy(maxPrice = intent.maxPrice) }
         is FormsIntent.UpdatePhoto -> updateState { copy(selectedPhoto = intent.photoUrl) }
+    }
+
+    private fun initializer() {
+        viewModelScope.launch {
+            imageService.availablePhotos.collectLatest { photos ->
+                _uiState.update {
+                    it.copy(
+                        availablePhotos = photos,
+                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
+                    )
+                }
+            }
+        }
     }
 
     private fun updateState(update: FormsUiState.() -> FormsUiState) {
@@ -102,16 +103,23 @@ internal class FormsViewModel @Inject constructor(
             )
             
             groupCreateUseCase(group).onSuccess {
-                analytics.trackCreateGroup(true)
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                success()
                 onFinish(group.token)
-            }.onFailure {
-                analytics.trackCreateGroup(false)
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = it.message
-                )
-            }
+            }.onFailure { error(it.message) }
         }
+    }
+
+    private fun success() {
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            error = null
+        )
+    }
+
+    private fun error(message: String?) {
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            error = message
+        )
     }
 }

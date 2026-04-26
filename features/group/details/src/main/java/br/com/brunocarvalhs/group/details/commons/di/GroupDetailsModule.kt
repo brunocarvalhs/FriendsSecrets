@@ -4,8 +4,6 @@ import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.details.GroupDetailsInitializerImpl
 import br.com.brunocarvalhs.group.details.app.data.repository.GroupDetailsRepositoryImpl
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
-import br.com.brunocarvalhs.group.details.commons.analytics.GroupDetailsAnalytics
-import br.com.brunocarvalhs.group.details.commons.analytics.GroupDetailsAnalyticsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -24,9 +22,4 @@ abstract class GroupDetailsModule {
     internal abstract fun bindGroupDetailsRepository(
         impl: GroupDetailsRepositoryImpl
     ): GroupDetailsRepository
-
-    @Binds
-    internal abstract fun bindGroupDetailsAnalytics(
-        impl: GroupDetailsAnalyticsImpl
-    ): GroupDetailsAnalytics
 }

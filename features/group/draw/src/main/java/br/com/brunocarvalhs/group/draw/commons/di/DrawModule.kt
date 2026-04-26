@@ -4,12 +4,8 @@ import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.draw.DrawInitializerImpl
 import br.com.brunocarvalhs.group.draw.app.data.repository.DrawRepositoryImpl
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository
-import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalytics
-import br.com.brunocarvalhs.group.draw.commons.analytics.DrawAnalyticsImpl
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
@@ -28,14 +24,4 @@ internal abstract class DrawModule {
     abstract fun bindDrawRepository(
         impl: DrawRepositoryImpl
     ): DrawRepository
-
-    companion object {
-
-        @Provides
-        fun provideDrawAnalytics(
-            firebaseAnalytics: FirebaseAnalytics
-        ): DrawAnalytics {
-            return DrawAnalyticsImpl(firebaseAnalytics)
-        }
-    }
 }

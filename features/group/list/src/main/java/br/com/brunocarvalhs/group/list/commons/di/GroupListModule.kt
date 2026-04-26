@@ -4,8 +4,6 @@ import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.list.GroupListInitializerImpl
 import br.com.brunocarvalhs.group.list.app.data.repository.GroupListRepositoryImpl
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
-import br.com.brunocarvalhs.group.list.commons.analytics.GroupListAnalytics
-import br.com.brunocarvalhs.group.list.commons.analytics.GroupListAnalyticsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,9 +24,4 @@ internal abstract class GroupListModule {
     internal abstract fun bindGroupListRepository(
         impl: GroupListRepositoryImpl
     ): GroupListRepository
-
-    @Binds
-    internal abstract fun bindGroupListAnalytics(
-        impl: GroupListAnalyticsImpl
-    ): GroupListAnalytics
 }

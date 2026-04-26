@@ -8,7 +8,6 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
-import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +24,6 @@ internal class EditFormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupEditUseCase: GroupEditUseCase,
     private val imageService: GroupImageService,
-    analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<EditFormsGraph>(EditFormsGraph.typeMap)
@@ -44,17 +42,7 @@ internal class EditFormsViewModel @Inject constructor(
     val uiState: StateFlow<EditFormsUiState> = _uiState.asStateFlow()
 
     init {
-        analytics.trackEditFormScreenView()
-        viewModelScope.launch {
-            imageService.availablePhotos.collectLatest { photos ->
-                _uiState.update {
-                    it.copy(
-                        availablePhotos = photos,
-                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
-                    )
-                }
-            }
-        }
+        initializer()
     }
 
     @AddTrace(name = "EditFormsViewModel.handleIntent", enabled = true)
@@ -66,6 +54,19 @@ internal class EditFormsViewModel @Inject constructor(
         is EditFormsIntent.UpdateMinPrice -> updateState { copy(minPrice = intent.minPrice) }
         is EditFormsIntent.UpdateMaxPrice -> updateState { copy(maxPrice = intent.maxPrice) }
         is EditFormsIntent.UpdatePhoto -> updateState { copy(selectedPhoto = intent.photoUrl) }
+    }
+
+    private fun initializer() {
+        viewModelScope.launch {
+            imageService.availablePhotos.collectLatest { photos ->
+                _uiState.update {
+                    it.copy(
+                        availablePhotos = photos,
+                        selectedPhoto = it.selectedPhoto ?: photos.firstOrNull()
+                    )
+                }
+            }
+        }
     }
 
     private fun updateState(update: EditFormsUiState.() -> EditFormsUiState) {

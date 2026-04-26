@@ -10,7 +10,6 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.ClearMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
-import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
 import br.com.brunocarvalhs.deviceid.DeviceService
 import br.com.brunocarvalhs.core.navigation.routers.ChatGraph
 import br.com.brunocarvalhs.core.domain.model.MessageModel
@@ -41,7 +40,6 @@ internal class ChatViewModel @Inject constructor(
     private val clearMessagesUseCase: ClearMessagesUseCase,
     private val identifyUserUseCase: IdentifyUserUseCase,
     private val deviceService: DeviceService,
-    private val analytics: ChatAnalytics
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<ChatGraph>(ChatGraph.typeMap)
     private val _uiState = MutableStateFlow(
@@ -54,7 +52,10 @@ internal class ChatViewModel @Inject constructor(
     private var deviceId: String = ""
 
     init {
-        analytics.trackScreenView()
+        initializer()
+    }
+
+    private fun initializer() {
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
 
@@ -86,7 +87,6 @@ internal class ChatViewModel @Inject constructor(
             if (currentDate.after(groupDate)) {
                 Timber.d("Chat expirado para o grupo ${_uiState.value.groupModel.id}. Limpando...")
                 clearMessagesUseCase(_uiState.value.groupModel.id)
-                analytics.trackClearMessages()
             }
         }.onFailure { Timber.e(it) }
     }
@@ -156,7 +156,6 @@ internal class ChatViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            analytics.trackSendMessage()
             val result = sendMessageUseCase(_uiState.value.groupModel.id, newMessage)
 
             if (result.isFailure) {

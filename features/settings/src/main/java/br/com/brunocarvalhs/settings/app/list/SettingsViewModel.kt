@@ -16,14 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
     private val biometricService: BiometricService,
-    private val analytics: SettingsAnalytics,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
 
     init {
-        analytics.trackScreenView()
         checkBiometricSupport()
         observeBiometricStatus()
     }
@@ -52,7 +50,6 @@ internal class SettingsViewModel @Inject constructor(
 
     @AddTrace(name = "SettingsViewModel.setBiometricPromptEnabled", enabled = true)
     private fun setBiometricPromptEnabled(enabled: Boolean) {
-        analytics.trackToggleBiometric(enabled)
         viewModelScope.launch {
             biometricService.setBiometricPromptEnabled(enabled)
         }

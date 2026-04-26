@@ -9,7 +9,6 @@ import br.com.brunocarvalhs.core.navigation.routers.ContactsRouter
 import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
-import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +24,6 @@ import javax.inject.Inject
 internal class ContactsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getContactsUseCase: GetContactsUseCase,
-    private val analytics: GroupCreateAnalytics
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<ContactsRouter>(ContactsRouter.typeMap)
@@ -38,7 +36,6 @@ internal class ContactsViewModel @Inject constructor(
     val uiState: StateFlow<ContactsUiState> = _uiState.asStateFlow()
 
     init {
-        analytics.trackContactsScreenView()
         handleIntent(ContactsIntent.LoadContacts)
     }
 
@@ -81,7 +78,6 @@ internal class ContactsViewModel @Inject constructor(
     }
 
     private fun toggleMember(contact: UserModel) {
-        analytics.trackSelectContact()
         _uiState.update { currentState ->
             val isAlreadySelected = currentState.members.any {
                 (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) ||

@@ -5,10 +5,7 @@ import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
 import br.com.brunocarvalhs.chat.app.data.services.FirebaseRealtimeManager
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
-import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
-import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalyticsImpl
 import br.com.brunocarvalhs.core.navigation.FeatureInitializer
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Binds
 import dagger.Module
@@ -39,14 +36,6 @@ abstract class ChatModule {
     ): ChatRepository
 
     companion object {
-
-        @Provides
-        fun provideChatAnalytics(
-            firebaseAnalytics: FirebaseAnalytics
-        ): ChatAnalytics {
-            return ChatAnalyticsImpl(firebaseAnalytics)
-        }
-
         @Provides
         @Singleton
         fun provideFirebaseDatabase(): FirebaseDatabase {

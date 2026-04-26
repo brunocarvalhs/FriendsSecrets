@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.settings.app.faq
 
 import androidx.lifecycle.ViewModel
 import br.com.brunocarvalhs.core.remote.domain.ConfigurationService
-import br.com.brunocarvalhs.settings.app.list.SettingsAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 internal class FAQViewModel @Inject constructor(
     private val configurationService: ConfigurationService,
-    private val analytics: SettingsAnalytics
 ) : ViewModel() {
 
     private val _url = MutableStateFlow(
@@ -25,7 +23,6 @@ internal class FAQViewModel @Inject constructor(
     val url: StateFlow<String> = _url.asStateFlow()
 
     init {
-        analytics.trackFAQView()
         loadUrl()
     }
 

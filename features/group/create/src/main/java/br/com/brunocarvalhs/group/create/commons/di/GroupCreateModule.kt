@@ -10,12 +10,8 @@ import br.com.brunocarvalhs.group.create.app.domain.repositories.ContactsReposit
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository
 import br.com.brunocarvalhs.group.create.app.domain.services.ContactService
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
-import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
-import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalyticsImpl
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
@@ -49,14 +45,4 @@ internal abstract class GroupCreateModule {
     abstract fun bindGroupImageService(
         impl: GroupImageManager
     ): GroupImageService
-
-    companion object {
-
-        @Provides
-        fun provideGroupCreateAnalytics(
-            firebaseAnalytics: FirebaseAnalytics
-        ): GroupCreateAnalytics {
-            return GroupCreateAnalyticsImpl(firebaseAnalytics)
-        }
-    }
 }
