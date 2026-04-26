@@ -58,6 +58,7 @@ appcompat = "1.7.1"
 material = "1.13.0"
 core = "1.18.0"
 coreKtxVersion = "1.7.0"
+aspectj-plugin = "8.6.1"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -140,3 +141,4 @@ google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.re
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 gradle-javaLibrary = { id = "java-library" }
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+aspectj-android = { id = "io.freefair.android.aspectj.post-compile-weaving", version.ref = "aspectj-plugin" }
