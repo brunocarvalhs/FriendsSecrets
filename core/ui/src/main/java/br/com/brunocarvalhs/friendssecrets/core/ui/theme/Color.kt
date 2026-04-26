@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package br.com.brunocarvalhs.friendssecrets.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
