@@ -7,7 +7,7 @@ import com.google.firebase.perf.FirebasePerformance
 
 class PerformanceInitializer : Initializer<FirebasePerformance> {
 
-    override fun create(p0: Context): FirebasePerformance {
+    override fun create(context: Context): FirebasePerformance {
         return FirebasePerformance.getInstance().apply {
             isPerformanceCollectionEnabled = !BuildConfig.DEBUG
         }
