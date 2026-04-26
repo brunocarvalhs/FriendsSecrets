@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_manually">Add manually</string>
+    <string name="add_member_manual_button">Add to Group</string>
+    <string name="add_member_manual_description">It looks like we don\'t have access to your contacts or the list is empty. You can add people by entering their names below.</string>
+    <string name="add_member_manual_input_name">Participant\'s Name</string>
+    <string name="add_member_manual_input_name_place">E.g., John Smith</string>
+    <string name="add_member_manual_input_phone">Phone (Optional)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_title">Add Manually</string>
+    <string name="allow_contacts_in_settings">Allow contacts in Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="contacts_adicional_members">Add members</string>
+    <string name="contacts_adicional_members_subtitle_select">%1$d selected</string>
+    <string name="content_description_back">Back</string>
+    <string name="content_description_next">Next</string>
+    <string name="content_description_remove">Remove</string>
+    <string name="create">Create</string>
+    <string name="description">Description</string>
+    <string name="edit_group">Edit group</string>
+    <string name="enable_contact_access">Enable contact access</string>
+    <string name="error_component_button_to_home">Go to home</string>
+    <string name="error_component_button_try_again">Try again</string>
+    <string name="event_date">Event date</string>
+    <string name="group_name">Group name</string>
+    <string name="maximum_price">Max. Price</string>
+    <string name="members">Members</string>
+    <string name="minimum_price">Min. Price</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">Minimum price cannot be greater than maximum</string>
+    <string name="new_group">New group</string>
+    <string name="next">Next</string>
+    <string name="ok">OK</string>
+    <string name="ops">Oops!</string>
+    <string name="save">Save</string>
+    <string name="search_field_place">Search name or number</string>
+    <string name="select_the_best_time">Select the time</string>
+    <string name="success">Success!</string>
+    <string name="view_contact_list">View contact list</string>
+</resources>

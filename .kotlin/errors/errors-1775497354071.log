@@ -1,0 +1,316 @@
+kotlin version: 2.1.10
+error message: org.jetbrains.kotlin.backend.common.CompilationException: Back-end: Please report this problem https://kotl.in/issue
+/Users/bruno/Developers/FriendsSecrets/features/group/list/src/main/java/br/com/brunocarvalhs/group/list/app/domain/model/GroupModel.kt:9:1
+Problem with `@Stable
+@Serializable
+data class GroupModel : GroupEntities {
+  constructor(name: String = "", description: String = "", members: List<UserModel> = emptyList<UserModel>(), draws: Map<String, String> = emptyMap<String, String>(), isOwner: Boolean = false, type: String? = null, minPrice: Double? = null, maxPrice: Double? = null) /* primary */ {
+    super/*GroupEntities*/()
+    /* <init>() */
+
+  }
+
+  override val name: String
+    field = name
+    override get
+
+  override val description: String
+    field = description
+    override get
+
+  override val members: List<UserModel>
+    field = members
+    override get
+
+  override val draws: Map<String, String>
+    field = draws
+    override get
+
+  override val isOwner: Boolean
+    field = isOwner
+    override get
+
+  override val type: String?
+    field = type
+    override get
+
+  override val minPrice: Double?
+    field = minPrice
+    override get
+
+  override val maxPrice: Double?
+    field = maxPrice
+    override get
+
+  override val photo: String?
+    override get(): String? {
+      return try { // BLOCK
+        when {
+          when {
+            <this>.<get-photo>().isNullOrBlank().not() -> greater(arg0 = CHECK_NOT_NULL<Int>(arg0 = { // BLOCK
+              val tmp0_safe_receiver: String? = <this>.<get-photo>()
+              when {
+                EQEQ(arg0 = tmp0_safe_receiver, arg1 = null) -> null
+                else -> tmp0_safe_receiver.<get-length>()
+              }
+            }), arg1 = 100)
+            else -> false
+          } -> { // BLOCK
+            decode(p0 = <this>.<get-photo>(), p1 = 2) /*!! ByteArray */.toString(charset = Charsets.<get-UTF_8>())
+          }
+          else -> null
+        }
+      }
+      catch (e: Exception){ // BLOCK
+        null
+      }
+
+    }
+
+  override fun toCopy(token: String, name: String, description: String?, date: String?, minPrice: Double?, maxPrice: Double?, type: String?, members: List<UserEntities>, draws: Map<String, String>, isOwner: Boolean, photo: String?): GroupEntities {
+    return <this>.copy(, isOwner = isOwner)
+  }
+
+  companion object Companion {
+    val $childSerializers: Array<KSerializer<Any>>
+      field = arrayOf<KSerializer<Any>>(elements = [null, null, ArrayListSerializer</* null */>(element = $serializer), LinkedHashMapSerializer</* null */, /* null */>(kSerializer = StringSerializer, vSerializer = StringSerializer), null, null, null, null])
+      private get(): Array<KSerializer<Any>> {
+        return <this>.#$childSerializers
+      }
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    fun serializer(): KSerializer<GroupModel>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @StabilityInferred(parameters = 0)
+  object $serializer : GeneratedSerializer<GroupModel> {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun serialize(encoder: Encoder, value: GroupModel)
+
+    override fun deserialize(decoder: Decoder): GroupModel
+
+    override val descriptor: SerialDescriptor
+      override get
+
+    override fun childSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override fun typeParametersSerializers(): Array<KSerializer<*>>
+
+    /* fake */ override operator fun equals(other: Any?): Boolean
+
+    /* fake */ override fun hashCode(): Int
+
+    /* fake */ override fun toString(): String
+
+    /* static final field */ val $stable: Int = 8
+  }
+
+  operator fun component1(): String {
+    return <this>.#name
+  }
+
+  operator fun component2(): String {
+    return <this>.#description
+  }
+
+  operator fun component3(): List<UserModel> {
+    return <this>.#members
+  }
+
+  operator fun component4(): Map<String, String> {
+    return <this>.#draws
+  }
+
+  operator fun component5(): Boolean {
+    return <this>.#isOwner
+  }
+
+  operator fun component6(): String? {
+    return <this>.#type
+  }
+
+  operator fun component7(): Double? {
+    return <this>.#minPrice
+  }
+
+  operator fun component8(): Double? {
+    return <this>.#maxPrice
+  }
+
+  fun copy(name: String = <this>.#name, description: String = <this>.#description, members: List<UserModel> = <this>.#members, draws: Map<String, String> = <this>.#draws, isOwner: Boolean = <this>.#isOwner, type: String? = <this>.#type, minPrice: Double? = <this>.#minPrice, maxPrice: Double? = <this>.#maxPrice): GroupModel {
+    return GroupModel(name = name, description = description, members = members, draws = draws, isOwner = isOwner, type = type, minPrice = minPrice, maxPrice = maxPrice)
+  }
+
+  override fun toString(): String {
+    return "GroupModel(" + "name=" + <this>.#name + ", " + "description=" + <this>.#description + ", " + "members=" + <this>.#members + ", " + "draws=" + <this>.#draws + ", " + "isOwner=" + <this>.#isOwner + ", " + "type=" + <this>.#type + ", " + "minPrice=" + <this>.#minPrice + ", " + "maxPrice=" + <this>.#maxPrice + ")"
+  }
+
+  override fun hashCode(): Int {
+    var result: Int = <this>.#name.hashCode()
+    result = result.times(other = 31).plus(other = <this>.#description.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#members.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#draws.hashCode())
+    result = result.times(other = 31).plus(other = <this>.#isOwner.hashCode())
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#type, arg1 = null) -> 0
+      else -> <this>.#type.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#minPrice, arg1 = null) -> 0
+      else -> <this>.#minPrice.hashCode()
+    })
+    result = result.times(other = 31).plus(other = when {
+      EQEQ(arg0 = <this>.#maxPrice, arg1 = null) -> 0
+      else -> <this>.#maxPrice.hashCode()
+    })
+    return result
+  }
+
+  override operator fun equals(other: Any?): Boolean {
+    when {
+      EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+    }
+    when {
+      other !is GroupModel -> return false
+    }
+    val tmp0_other_with_cast: GroupModel = other as GroupModel
+    when {
+      EQEQ(arg0 = <this>.#name, arg1 = tmp0_other_with_cast.#name).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#description, arg1 = tmp0_other_with_cast.#description).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#members, arg1 = tmp0_other_with_cast.#members).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#draws, arg1 = tmp0_other_with_cast.#draws).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#isOwner, arg1 = tmp0_other_with_cast.#isOwner).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#type, arg1 = tmp0_other_with_cast.#type).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#minPrice, arg1 = tmp0_other_with_cast.#minPrice).not() -> return false
+    }
+    when {
+      EQEQ(arg0 = <this>.#maxPrice, arg1 = tmp0_other_with_cast.#maxPrice).not() -> return false
+    }
+    return true
+  }
+
+  /* fake */ override fun toMap(): Map<String, Any?>
+
+  /* fake */ override fun token(size: Int): String
+
+  /* fake */ override val token: String
+    /* fake */ override get(): String
+
+  /* fake */ override val id: String
+    /* fake */ override get(): String
+
+  /* fake */ override val date: String?
+    /* fake */ override get(): String?
+
+  /* static final field */ val $stable: Int = 0
+  @JvmStatic
+  internal /* static */ fun write$Self(self: GroupModel, output: CompositeEncoder, serialDesc: SerialDescriptor)
+
+  internal constructor(seen0: Int, name: String?, description: String?, members: List<UserModel>?, draws: Map<String, String>?, isOwner: Boolean, type: String?, minPrice: Double?, maxPrice: Double?, serializationConstructorMarker: SerializationConstructorMarker?)
+
+}
+
+`
+Details: kotlinx.serialization compiler plugin internal error: unable to transform declaration, see cause
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:230)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:46)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitClass(IrElementVisitorVoid.kt:48)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitClass(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrClass.accept(IrClass.kt:72)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.acceptChildren(IrFile.kt:34)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptChildrenVoid(IrVisitors.kt:15)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitElement(SerializationLoweringExtension.kt:42)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitPackageFragment(IrElementVisitorVoid.kt:172)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitPackageFragment(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:188)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid$DefaultImpls.visitFile(IrElementVisitorVoid.kt:184)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt$runOnFileInOrder$1.visitFile(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlin.ir.declarations.IrFile.accept(IrFile.kt:28)
+	at org.jetbrains.kotlin.ir.visitors.IrVisitorsKt.acceptVoid(IrVisitors.kt:11)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtensionKt.runOnFileInOrder(SerializationLoweringExtension.kt:40)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationLoweringExtension.generate(SerializationLoweringExtension.kt:194)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.applyIrGenerationExtensions(convertToIr.kt:472)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.runActualizationPipeline(convertToIr.kt:241)
+	at org.jetbrains.kotlin.fir.pipeline.Fir2IrPipeline.convertToIrAndActualize(convertToIr.kt:130)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize(convertToIr.kt:100)
+	at org.jetbrains.kotlin.fir.pipeline.ConvertToIrKt.convertToIrAndActualize$default(convertToIr.kt:75)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertToIrAndActualizeForJvm(jvmCompilerPipeline.kt:134)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.convertAnalyzedFirToIr(jvmCompilerPipeline.kt:107)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.runBackend(jvmCompilerPipeline.kt:73)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineLightTreeKt.compileModule(jvmCompilerPipelineLightTree.kt:264)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineLightTreeKt.compileSingleModuleUsingFrontendIrAndLightTree(jvmCompilerPipelineLightTree.kt:231)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineLightTreeKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipelineLightTree.kt:86)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:146)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:102)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.exec(CLICompiler.kt:316)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:683)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:91)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1811)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.IllegalStateException: Class serializable internally should have special constructor with marker
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.generateSuperSerializableCall(SerializableIrGenerator.kt:281)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.generateInternalConstructor$lambda$13(SerializableIrGenerator.kt:135)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.IrBuilderWithPluginContext.addFunctionBody(IrBuilderWithPluginContext.kt:48)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.generateInternalConstructor(SerializableIrGenerator.kt:67)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.generateSyntheticInternalConstructor(SerializableIrGenerator.kt:379)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator.generate(SerializableIrGenerator.kt:371)
+	at org.jetbrains.kotlinx.serialization.compiler.backend.ir.SerializableIrGenerator$Companion.generate(SerializableIrGenerator.kt:399)
+	at org.jetbrains.kotlinx.serialization.compiler.extensions.SerializerClassLowering.lower(SerializationLoweringExtension.kt:146)
+	... 59 more
+
+

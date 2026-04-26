@@ -1,0 +1,9 @@
+br.com.brunocarvalhs.chat
+string back
+string chat_button_send
+string chat_input
+string identify
+string identify_cancela
+string identify_message
+string identify_name
+string identify_save

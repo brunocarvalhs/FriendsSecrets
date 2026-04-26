@@ -1,0 +1,8 @@
+br.com.brunocarvalhs.group.details-pngs-0 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/generated/res/pngs/debug
+br.com.brunocarvalhs.group.details-updated_navigation_xml-1 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/generated/updated_navigation_xml/debug
+br.com.brunocarvalhs.group.details-mergeDebugResources-2 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+br.com.brunocarvalhs.group.details-mergeDebugResources-3 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+br.com.brunocarvalhs.group.details-debug-4 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/intermediates/merged_res/debug/mergeDebugResources
+br.com.brunocarvalhs.group.details-debug-5 /Users/bruno/Developers/FriendsSecrets/features/group/details/build/intermediates/packaged_res/debug/packageDebugResources
+br.com.brunocarvalhs.group.details-debug-6 /Users/bruno/Developers/FriendsSecrets/features/group/details/src/debug/res
+br.com.brunocarvalhs.group.details-main-7 /Users/bruno/Developers/FriendsSecrets/features/group/details/src/main/res

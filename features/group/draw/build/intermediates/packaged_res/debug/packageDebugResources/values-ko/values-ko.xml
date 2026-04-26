@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">뒤로</string>
+    <string name="draw_complete_message">추첨이 완료되었습니다! 결과를 친구들과 공유하세요.</string>
+    <string name="draw_results">추첨 결과</string>
+    <string name="draw_results_title">추첨 결과</string>
+    <string name="drawing">추첨 중...</string>
+    <string name="drawing_button">추첨 중...</string>
+    <string name="just_drawn">방금 추첨됨</string>
+    <string name="ready_to_discover_title">당신의 마니또를 확인할 준비가 되셨나요?</string>
+    <string name="ready_to_draw">추첨할 준비가 되셨나요?</string>
+    <string name="scale">배율</string>
+    <string name="secret_santa_draw">마니또 추첨</string>
+    <string name="secret_santa_draw_title">마니또 추첨</string>
+    <string name="share">공유</string>
+    <string name="start_draw_button">추첨 시작</string>
+    <string name="start_magic_subtitle">아래 버튼을 눌러 마법을 시작하세요!</string>
+    <string name="tap_the_button_below_to_start_the_draw">아래 버튼을 눌러 추첨을 시작하세요!</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">추첨이 완료되었습니다! 결과를 그룹 멤버들과 공유하세요.</string>
+</resources>

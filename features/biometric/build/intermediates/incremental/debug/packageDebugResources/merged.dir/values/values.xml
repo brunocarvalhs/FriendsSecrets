@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_button_authentic">Authenticate</string>
+    <string name="biometric_message">Use your biometrics to access FriendsSecrets securely.</string>
+    <string name="biometric_not_found">Fingerprint not recognized. Try again.</string>
+    <string name="biometric_required">Authentication Required</string>
+    <string name="subtitle_biometric">Access using biometrics or device password</string>
+    <string name="title_biometric">Secure Authentication</string>
+</resources>

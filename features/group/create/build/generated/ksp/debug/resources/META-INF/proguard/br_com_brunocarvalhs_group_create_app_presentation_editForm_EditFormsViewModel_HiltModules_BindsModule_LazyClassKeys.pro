@@ -1,0 +1,1 @@
+-keep,allowobfuscation,allowshrinking class br.com.brunocarvalhs.group.create.app.presentation.editForm.EditFormsViewModel

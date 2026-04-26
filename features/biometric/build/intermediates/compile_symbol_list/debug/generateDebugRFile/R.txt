@@ -1,0 +1,6 @@
+int string biometric_button_authentic 0x0
+int string biometric_message 0x0
+int string biometric_not_found 0x0
+int string biometric_required 0x0
+int string subtitle_biometric 0x0
+int string title_biometric 0x0

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_group_description">Add group description</string>
+    <string name="add_participants">Add participants</string>
+    <string name="back">Back</string>
+    <string name="chat">Chat</string>
+    <string name="collapse_likes_action">Collapse likes</string>
+    <string name="contact_photo_description">Contact photo of %1$s</string>
+    <string name="created_at">Created on %1$s</string>
+    <string name="delete_group">Delete group</string>
+    <string name="draw">Draw</string>
+    <string name="draw_date">Draw date</string>
+    <string name="draw_details">Draw details</string>
+    <string name="edit_group_information">Edit group information</string>
+    <string name="edit_participant_action">Edit participant %1$s</string>
+    <string name="expand_likes_action">Expand likes</string>
+    <string name="gift_type">Gift type</string>
+    <string name="group_participants">Group · %1$d participants</string>
+    <string name="invite">Invite</string>
+    <string name="leave_group">Leave group</string>
+    <string name="likes_collapsed_state">Collapsed</string>
+    <string name="likes_expanded_state">Expanded</string>
+    <string name="participants">%1$d participants</string>
+    <string name="price_between_min_and_max">Between %1$s and %2$s</string>
+    <string name="price_from_min">From %1$s</string>
+    <string name="price_range">Price range</string>
+    <string name="price_up_to">Up to %1$s</string>
+    <string name="remove_participant_action">Remove participant %1$s</string>
+    <string name="reveal">Reveal</string>
+    <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
+    <string name="share_group_title">Share Code</string>
+    <string name="unnamed_group">Unnamed group</string>
+</resources>

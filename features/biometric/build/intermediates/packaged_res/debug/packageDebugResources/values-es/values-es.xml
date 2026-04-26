@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_button_authentic">Autenticar</string>
+    <string name="biometric_message">Usa tu biometría para acceder a FriendsSecrets de forma segura.</string>
+    <string name="biometric_not_found">Huella digital no reconocida. Inténtalo de nuevo.</string>
+    <string name="biometric_required">Autenticación requerida</string>
+    <string name="subtitle_biometric">Accede usando biometría o la contraseña del dispositivo</string>
+    <string name="title_biometric">Autenticación segura</string>
+</resources>

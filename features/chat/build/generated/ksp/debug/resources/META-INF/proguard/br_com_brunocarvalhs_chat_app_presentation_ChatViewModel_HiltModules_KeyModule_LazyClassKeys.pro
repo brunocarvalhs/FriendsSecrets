@@ -1,0 +1,1 @@
+-keep,allowobfuscation,allowshrinking class br.com.brunocarvalhs.chat.app.presentation.ChatViewModel
