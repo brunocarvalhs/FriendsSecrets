@@ -42,7 +42,7 @@
     <string name="group_list_filter_archived">Archived</string>
     <string name="group_list_filter_drawn">Drawn</string>
     <string name="group_list_filter_not_drawn">Not drawn</string>
-    <string name="group_card_members_count">%1$d pessoas</string>
+    <string name="group_card_members_count">%1$d people</string>
 
     <!-- Maintenance -->
     <string name="maintenance_title">Feature Unavailable</string>
