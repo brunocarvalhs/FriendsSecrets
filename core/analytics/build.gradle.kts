@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.aspectj.android)
 }
 
 android {
@@ -25,22 +24,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
-    }
-}
-
-afterEvaluate {
-    val androidComponents =
-        extensions.getByType<com.android.build.api.variant.LibraryAndroidComponentsExtension>()
-    val bootClasspathProvider = androidComponents.sdkComponents.bootClasspath
-    tasks.withType<io.freefair.gradle.plugins.aspectj.AspectjCompile>().configureEach {
-        ajcOptions.bootclasspath.from(bootClasspathProvider)
     }
 }
 
@@ -51,8 +41,12 @@ detekt {
 dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+
     implementation(libs.aspectjrt)
+    implementation(libs.aspectjweaver)
+
     implementation(libs.timber)
 }

@@ -1,5 +1,4 @@
 [versions]
-aspectjrt = "1.9.25.1"
 kotlinxCoroutinesTest = "1.10.2"
 minSdk = "26"
 compileSdk = "37"
@@ -60,6 +59,8 @@ material = "1.13.0"
 core = "1.18.0"
 coreKtxVersion = "1.7.0"
 aspectj-plugin = "8.13.0"
+aspectjrt = "1.9.26"
+aspectjweaver = "1.9.26"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -73,6 +74,7 @@ androidx-startup-runtime = { module = "androidx.startup:startup-runtime", versio
 androidx-tracing-perfetto = { module = "androidx.tracing:tracing-perfetto", version.ref = "tracingPerfetto" }
 androidx-tracing-perfetto-binary = { module = "androidx.tracing:tracing-perfetto-binary", version.ref = "tracingPerfettoBinary" }
 aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
+aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjweaver" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
