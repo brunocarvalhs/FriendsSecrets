@@ -34,14 +34,11 @@ internal fun rememberReviewRequester(): () -> Unit {
     }
 
     suspend fun requestInAppReview(activity: Activity) {
-        try {
+        runCatching {
             val reviewManager = ReviewManagerFactory.create(activity)
             val request = reviewManager.requestReviewFlow().await()
             reviewManager.launchReviewFlow(activity, request).await()
-        } catch (t: kotlinx.coroutines.CancellationException) {
-            Timber.e(t)
-            openPlayStore(activity)
-        } catch (t: Exception) {
+        }.onFailure { t ->
             Timber.e(t)
             openPlayStore(activity)
         }

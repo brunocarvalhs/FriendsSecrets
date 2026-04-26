@@ -71,9 +71,9 @@ internal fun ThemeSelect(
 
 @Composable
 private fun ThemeItem(
-    modifier: Modifier = Modifier,
     selected: String,
     theme: ThemeService.Theme,
+    modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
 ) {
     val imageRes = remember(theme) {

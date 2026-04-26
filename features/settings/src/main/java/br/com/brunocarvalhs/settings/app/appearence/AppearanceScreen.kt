@@ -120,7 +120,7 @@ private fun AppearanceContent(
 
 @Composable
 @Preview
-private fun AppearanceContentPreview() {
+internal fun AppearanceContentPreview() {
     AppearanceContent(
         themeSelected = "Light",
         isDynamicThemeEnabled = true,
@@ -129,3 +129,4 @@ private fun AppearanceContentPreview() {
         onTheme = {}
     )
 }
+

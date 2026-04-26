@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.sharp.Fingerprint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +31,6 @@ import br.com.brunocarvalhs.settings.R
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemNavigation
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 import br.com.brunocarvalhs.settings.commons.remembers.rememberReviewRequester
-import androidx.compose.material.icons.sharp.Fingerprint
 
 @Composable
 internal fun SettingsScreen(
@@ -67,25 +67,24 @@ private fun SettingsContent(
     onFAQ: () -> Unit = {},
 ) {
     val requestReview = rememberReviewRequester()
-
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(topBar = {
         LargeTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
-            ), title = {
-                Text(text = stringResource(R.string.title_settings))
-            }, navigationIcon = {
+            ),
+            title = { Text(text = stringResource(R.string.title_settings)) },
+            navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)
                     )
                 }
-            }, scrollBehavior = scrollBehavior
+            },
+            scrollBehavior = scrollBehavior
         )
     }) {
         Column(
@@ -93,60 +92,83 @@ private fun SettingsContent(
                 .padding(it)
                 .padding(16.dp)
         ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.settings_screen_general),
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                if (isBiometricSupported) {
-                    SettingsListItemOptions(
-                        selected = isBiometricPromptEnabled,
-                        title = stringResource(R.string.settings_screen_security),
-                        icon = Icons.Sharp.Fingerprint,
-                        onClick = onBiometricPrompt
-                    )
-                }
-                SettingsListItemNavigation(
-                    title = R.string.title_appearance,
-                    icon = Icons.Outlined.Palette,
-                    onClick = onAppearance
-                )
-            }
+            GeneralSection(
+                isBiometricSupported = isBiometricSupported,
+                isBiometricPromptEnabled = isBiometricPromptEnabled,
+                onBiometricPrompt = onBiometricPrompt,
+                onAppearance = onAppearance
+            )
 
-            Column {
-                Text(
-                    text = stringResource(R.string.settings_screen_support),
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                SettingsListItemNavigation(
-                    title = R.string.title_report_an_issue,
-                    icon = Icons.Outlined.Report,
-                    onClick = onReportIssue
-                )
-                SettingsListItemNavigation(
-                    title = R.string.title_faq,
-                    icon = Icons.Outlined.Info,
-                    onClick = onFAQ
-                )
-                SettingsListItemNavigation(
-                    title = R.string.title_review,
-                    icon = Icons.Outlined.Star,
-                    onClick = { requestReview() }
-                )
-            }
+            SupportSection(
+                onReportIssue = onReportIssue,
+                onFAQ = onFAQ,
+                onReview = { requestReview() }
+            )
         }
     }
 }
 
-
-@Preview(
-    name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO
-)
 @Composable
-private fun SettingsContentPreview() {
+private fun GeneralSection(
+    isBiometricSupported: Boolean,
+    isBiometricPromptEnabled: Boolean,
+    onBiometricPrompt: (Boolean) -> Unit,
+    onAppearance: () -> Unit
+) {
+    Column {
+        Text(
+            text = stringResource(R.string.settings_screen_general),
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        if (isBiometricSupported) {
+            SettingsListItemOptions(
+                title = stringResource(R.string.settings_screen_security),
+                icon = Icons.Sharp.Fingerprint,
+                selected = isBiometricPromptEnabled,
+                onClick = onBiometricPrompt
+            )
+        }
+        SettingsListItemNavigation(
+            title = R.string.title_appearance,
+            icon = Icons.Outlined.Palette,
+            onClick = onAppearance
+        )
+    }
+}
+
+@Composable
+private fun SupportSection(
+    onReportIssue: () -> Unit,
+    onFAQ: () -> Unit,
+    onReview: () -> Unit
+) {
+    Column {
+        Text(
+            text = stringResource(R.string.settings_screen_support),
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        SettingsListItemNavigation(
+            title = R.string.title_report_an_issue,
+            icon = Icons.Outlined.Report,
+            onClick = onReportIssue
+        )
+        SettingsListItemNavigation(
+            title = R.string.title_faq,
+            icon = Icons.Outlined.Info,
+            onClick = onFAQ
+        )
+        SettingsListItemNavigation(
+            title = R.string.title_review,
+            icon = Icons.Outlined.Star,
+            onClick = onReview
+        )
+    }
+}
+
+@Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Composable
+internal fun SettingsContentPreview() {
     SettingsContent(
         isBiometricPromptEnabled = true,
         isBiometricSupported = true,
@@ -158,14 +180,10 @@ private fun SettingsContentPreview() {
     )
 }
 
-@Preview(
-    name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO
-)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "Light Mode", showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
-private fun SettingsContentIsBiometricPromptDisabledPreview() {
+internal fun SettingsContentIsBiometricPromptDisabledPreview() {
     SettingsContent(
         isBiometricPromptEnabled = false,
         isBiometricSupported = false,

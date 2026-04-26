@@ -1,5 +1,3 @@
-autoCorrect: true
-
 style:
   MaxLineLength:
     maxLineLength: 120

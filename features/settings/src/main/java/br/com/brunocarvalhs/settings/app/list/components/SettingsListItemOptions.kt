@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun SettingsListItemOptions(
-    selected: Boolean = false,
     title: String,
     icon: ImageVector,
+    selected: Boolean = false,
     onClick: (Boolean) -> Unit,
 ) {
     var checked by rememberSaveable { mutableStateOf(value = selected) }
@@ -55,9 +55,8 @@ internal fun SettingsListItemOptions(
 
 @Composable
 @Preview
-private fun SettingsListItemOptionsPreview() {
+internal fun SettingsListItemOptionsPreview() {
     SettingsListItemOptions(
-        selected = false,
         icon = Icons.AutoMirrored.Filled.ForwardToInbox,
         title = "Notifications",
         onClick = {}

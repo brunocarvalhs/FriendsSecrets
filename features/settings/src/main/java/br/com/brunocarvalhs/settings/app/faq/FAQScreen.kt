@@ -74,9 +74,10 @@ private fun FAQContent(
 
 @Composable
 @Preview
-private fun FAQContentPreview() {
+internal fun FAQContentPreview() {
     FAQContent(
         url = "https://github.com/brunocarvalhs/FriendsSecrets/wiki/FAQ",
         onBack = {}
     )
 }
+
