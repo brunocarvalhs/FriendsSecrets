@@ -15,13 +15,11 @@ import br.com.brunocarvalhs.group.details.R
 @Composable
 internal fun MemberItem(
     participant: String = "",
-    draws: Map<String, String>? = null,
     likes: List<String> = emptyList(),
     isAdministrator: Boolean = false,
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
 ) {
-    val canShare = isAdministrator && draws?.isNotEmpty() == true
     val hasLikes = likes.any { it.isNotBlank() }
 
     ContactItem(
@@ -72,10 +70,6 @@ private fun MemberItemPreview() {
     MemberItem(
         participant = "Produto de Teste",
         likes = listOf("Like 1", "Like 2", "Like 3"),
-        draws = mapOf(
-            "Participant 1" to "Secret Friend 1",
-            "Participant 2" to "Secret Friend 2"
-        ),
         isAdministrator = false,
         onEdit = {},
         onRemove = {}
@@ -88,10 +82,6 @@ private fun MemberItemEmptyPreview() {
     MemberItem(
         participant = "Produto de Teste",
         likes = listOf("Like 1", "Like 2", "Like 3"),
-        draws = mapOf(
-            "Participant 1" to "Secret Friend 1",
-            "Participant 2" to "Secret Friend 2"
-        ),
         isAdministrator = false,
         onEdit = {},
         onRemove = {}
@@ -104,10 +94,6 @@ private fun MemberItemBlankPreview() {
     MemberItem(
         participant = "Produto de Teste",
         likes = listOf("Like 1", "Like 2", "Like 3"),
-        draws = mapOf(
-            "Participant 1" to "Secret Friend 1",
-            "Participant 2" to "Secret Friend 2"
-        ),
         isAdministrator = false,
         onEdit = {},
         onRemove = {}
@@ -120,10 +106,6 @@ private fun MemberItemAdminPreview() {
     MemberItem(
         participant = "Produto de Teste",
         likes = listOf("Like 1", "Like 2", "Like 3"),
-        draws = mapOf(
-            "Participant 1" to "Secret Friend 1",
-            "Participant 2" to "Secret Friend 2"
-        ),
         isAdministrator = true,
         onEdit = {},
         onRemove = {}

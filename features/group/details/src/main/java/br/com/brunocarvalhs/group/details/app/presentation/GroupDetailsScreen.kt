@@ -38,9 +38,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -104,7 +101,6 @@ internal fun GroupDetailsScreen(
         maxPrice = group.maxPrice,
         giftType = group.type,
         members = group.members,
-        draws = group.draws,
         onBack = onBack,
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
@@ -131,7 +127,6 @@ private fun GroupDetailsContent(
     maxPrice: Double?,
     giftType: String?,
     members: List<UserModel>,
-    draws: Map<String, String>,
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onChat: () -> Unit,
@@ -139,26 +134,11 @@ private fun GroupDetailsContent(
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
-    onAddMembers: () -> Unit ,
+    onAddMembers: () -> Unit,
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(
-                                R.string.back
-                            )
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
+            GroupDetailsTopBar(onBack = onBack)
         }
     ) { paddingValue ->
         LazyColumn(
@@ -168,132 +148,37 @@ private fun GroupDetailsContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                AsyncImage(
-                    model = photoUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentScale = ContentScale.Crop
+                GroupDetailsHeader(
+                    name = name,
+                    photoUrl = photoUrl,
+                    memberCount = memberCount
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = name.ifBlank { stringResource(R.string.unnamed_group) },
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(R.string.group_participants, memberCount),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(24.dp))
             }
 
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ActionIconCard(
-                        Icons.Default.Share,
-                        stringResource(R.string.invite), onShareGroup
-                    )
-                    ActionIconCard(
-                        Icons.AutoMirrored.Filled.Chat,
-                        stringResource(R.string.chat), onChat
-                    )
-                    ActionIconCard(
-                        icon = Icons.Default.Casino,
-                        label = if (isDrawn) {
-                            stringResource(R.string.reveal)
-                        } else {
-                            stringResource(R.string.draw)
-                        },
-                        onClick = onDraw
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
+                GroupDetailsActions(
+                    isDrawn = isDrawn,
+                    onShareGroup = onShareGroup,
+                    onChat = onChat,
+                    onDraw = onDraw
+                )
             }
 
-            val showDescription = description.isNotBlank() || isOwner
-            if (showDescription) {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        if (description.isNotBlank() || isOwner) {
-                            Text(
-                                text = description.ifBlank { stringResource(R.string.add_group_description) },
-                                color = if (description.isBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-
-                        if (createdAtTimestamp > 0) {
-                            Text(
-                                text = stringResource(
-                                    R.string.created_at,
-                                    createdAtTimestamp.toFormattedDate()
-                                ),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
-                        }
-                    }
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        thickness = 0.5.dp
-                    )
-                }
+            item {
+                GroupDetailsDescription(
+                    description = description,
+                    isOwner = isOwner,
+                    createdAtTimestamp = createdAtTimestamp
+                )
             }
 
-            val hasDrawDetails =
-                drawDate != null || minPrice != null || maxPrice != null || giftType != null
-            if (hasDrawDetails) {
-                item {
-                    SectionHeader(title = stringResource(R.string.draw_details))
-                    drawDate?.let {
-                        SettingItem(
-                            Icons.Default.CalendarToday,
-                            stringResource(R.string.draw_date),
-                            it
-                        )
-                    }
-                    if (minPrice != null || maxPrice != null) {
-                        val priceRange = if (minPrice != null && maxPrice != null) {
-                            stringResource(
-                                R.string.price_between_min_and_max,
-                                minPrice.toCurrencyMask(),
-                                maxPrice.toCurrencyMask()
-                            )
-                        } else if (minPrice != null) {
-                            stringResource(R.string.price_from_min, minPrice.toCurrencyMask())
-                        } else {
-                            stringResource(R.string.price_up_to, maxPrice.toCurrencyMask())
-                        }
-                        SettingItem(Icons.Default.AttachMoney,
-                            stringResource(R.string.price_range), priceRange)
-                    }
-                    giftType?.let {
-                        SettingItem(
-                            Icons.Default.CardGiftcard,
-                            stringResource(R.string.gift_type),
-                            it
-                        )
-                    }
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        thickness = 0.5.dp
-                    )
-                }
+            item {
+                GroupDrawDetails(
+                    drawDate = drawDate,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice,
+                    giftType = giftType
+                )
             }
 
             item {
@@ -314,31 +199,227 @@ private fun GroupDetailsContent(
             items(members) { member ->
                 MemberItem(
                     participant = member.name,
-                    draws = draws,
                     isAdministrator = isOwner,
                 )
             }
 
             item {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
-                if (isOwner) {
-                    SettingItem(Icons.Default.Edit,
-                        stringResource(R.string.edit_group_information), onClick = onEdit)
-                }
-                SettingItem(
-                    icon = if (isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
-                    title = if (isOwner) {
-                        stringResource(R.string.delete_group)
-                    } else {
-                        stringResource(R.string.leave_group)
-                    },
-                    textColor = MaterialTheme.colorScheme.error,
-                    iconColor = MaterialTheme.colorScheme.error,
-                    onClick = if (isOwner) onDelete else onExit
+                GroupDetailsFooter(
+                    isOwner = isOwner,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    onExit = onExit
                 )
-                Spacer(modifier = Modifier.height(32.dp))
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GroupDetailsTopBar(onBack: () -> Unit) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+    )
+}
+
+@Composable
+private fun GroupDetailsHeader(
+    name: String,
+    photoUrl: String?,
+    memberCount: Int
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(16.dp))
+        AsyncImage(
+            model = photoUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = name.ifBlank { stringResource(R.string.unnamed_group) },
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = stringResource(R.string.group_participants, memberCount),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun GroupDetailsActions(
+    isDrawn: Boolean,
+    onShareGroup: () -> Unit,
+    onChat: () -> Unit,
+    onDraw: () -> Unit
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            ActionIconCard(
+                Icons.Default.Share,
+                stringResource(R.string.invite), onShareGroup
+            )
+            ActionIconCard(
+                Icons.AutoMirrored.Filled.Chat,
+                stringResource(R.string.chat), onChat
+            )
+            ActionIconCard(
+                icon = Icons.Default.Casino,
+                label = if (isDrawn) {
+                    stringResource(R.string.reveal)
+                } else {
+                    stringResource(R.string.draw)
+                },
+                onClick = onDraw
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun GroupDetailsDescription(
+    description: String,
+    isOwner: Boolean,
+    createdAtTimestamp: Long
+) {
+    if (description.isNotBlank() || isOwner) {
+        Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = description.ifBlank { stringResource(R.string.add_group_description) },
+                    color = if (description.isBlank()) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                if (createdAtTimestamp > 0) {
+                    Text(
+                        text = stringResource(
+                            R.string.created_at,
+                            createdAtTimestamp.toFormattedDate()
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                thickness = 0.5.dp
+            )
+        }
+    }
+}
+
+@Composable
+private fun GroupDrawDetails(
+    drawDate: String?,
+    minPrice: Double?,
+    maxPrice: Double?,
+    giftType: String?
+) {
+    val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
+    if (hasDrawDetails) {
+        Column {
+            SectionHeader(title = stringResource(R.string.draw_details))
+            drawDate?.let {
+                SettingItem(
+                    Icons.Default.CalendarToday,
+                    stringResource(R.string.draw_date),
+                    it
+                )
+            }
+            if (minPrice != null || maxPrice != null) {
+                val priceRange = if (minPrice != null && maxPrice != null) {
+                    stringResource(
+                        R.string.price_between_min_and_max,
+                        minPrice.toCurrencyMask(),
+                        maxPrice.toCurrencyMask()
+                    )
+                } else if (minPrice != null) {
+                    stringResource(R.string.price_from_min, minPrice.toCurrencyMask())
+                } else {
+                    stringResource(R.string.price_up_to, maxPrice.toCurrencyMask())
+                }
+                SettingItem(
+                    Icons.Default.AttachMoney,
+                    stringResource(R.string.price_range), priceRange
+                )
+            }
+            giftType?.let {
+                SettingItem(
+                    Icons.Default.CardGiftcard,
+                    stringResource(R.string.gift_type),
+                    it
+                )
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                thickness = 0.5.dp
+            )
+        }
+    }
+}
+
+@Composable
+private fun GroupDetailsFooter(
+    isOwner: Boolean,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onExit: () -> Unit
+) {
+    Column {
+        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+        if (isOwner) {
+            SettingItem(
+                Icons.Default.Edit,
+                stringResource(R.string.edit_group_information), onClick = onEdit
+            )
+        }
+        SettingItem(
+            icon = if (isOwner) Icons.Default.Delete else Icons.AutoMirrored.Filled.ExitToApp,
+            title = if (isOwner) {
+                stringResource(R.string.delete_group)
+            } else {
+                stringResource(R.string.leave_group)
+            },
+            textColor = MaterialTheme.colorScheme.error,
+            iconColor = MaterialTheme.colorScheme.error,
+            onClick = if (isOwner) onDelete else onExit
+        )
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -358,7 +439,6 @@ private fun GroupDetailsPreview() {
         maxPrice = 200.0,
         giftType = "Qualquer coisa",
         members = emptyList(),
-        draws = emptyMap(),
         onBack = {},
         onDraw = {},
         onChat = {},

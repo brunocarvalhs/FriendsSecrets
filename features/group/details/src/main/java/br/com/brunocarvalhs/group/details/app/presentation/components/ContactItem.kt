@@ -74,7 +74,9 @@ internal fun ContactItem(
             .padding(paddingValues)
             .clickable(
                 enabled = filteredLikes.isNotEmpty(),
-                onClickLabel = stringResource(if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action),
+                onClickLabel = stringResource(
+                    if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action
+                ),
                 role = Role.Button,
                 onClick = {
                     isLiked = !isLiked
