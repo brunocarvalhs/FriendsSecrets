@@ -3,8 +3,6 @@ kotlinxCoroutinesTest = "1.10.2"
 minSdk = "26"
 compileSdk = "37"
 targetSdk = "35"
-versionCode = "14"
-versionName = "3.0.0"
 
 baselineprofile = "1.5.0-alpha05"
 accompanistSystemuicontroller = "0.36.0"
