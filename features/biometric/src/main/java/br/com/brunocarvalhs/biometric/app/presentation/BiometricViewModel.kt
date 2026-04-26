@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.biometric.R
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricResult
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricUseCase
-import br.com.brunocarvalhs.biometric.commons.analytics.BiometricAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,16 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 internal class BiometricViewModel @Inject constructor(
     private val biometricUseCase: BiometricUseCase,
-    private val analytics: BiometricAnalytics
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BiometricUiState())
     val state: StateFlow<BiometricUiState> = _state.asStateFlow()
 
-    init {
-        analytics.trackScreenView()
-        checkCanAuthenticate()
-    }
+    init { checkCanAuthenticate() }
 
     @AddTrace(name = "BiometricViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: BiometricIntent) {
@@ -57,41 +52,42 @@ internal class BiometricViewModel @Inject constructor(
             runCatching {
                 biometricUseCase.authenticate(activity).collect { result ->
                     when (result) {
-                        is BiometricResult.Success -> {
-                            analytics.trackAuthenticationResult(true)
-                            _state.update {
-                                it.copy(
-                                    isAuthenticated = true,
-                                    isLoading = false,
-                                    failedAttemptMessage = null
-                                )
-                            }
-                        }
-
-                        is BiometricResult.FailedAttempt -> {
-                            analytics.trackAuthenticationResult(false, "failed_attempt")
-                            _state.update {
-                                it.copy(
-                                    failedAttemptMessage = activity.getString(R.string.biometric_not_found)
-                                )
-                            }
-                        }
-
-                        is BiometricResult.Error -> {
-                            analytics.trackAuthenticationResult(false, result.message)
-                            _state.update {
-                                it.copy(
-                                    error = result.message,
-                                    isLoading = false,
-                                    failedAttemptMessage = null
-                                )
-                            }
-                        }
+                        is BiometricResult.Success -> success()
+                        is BiometricResult.FailedAttempt -> failedAttempt(activity)
+                        is BiometricResult.Error -> error(result.message)
                     }
                 }
             }.onFailure {
                 _state.update { it.copy(error = it.error, isLoading = false) }
             }
+        }
+    }
+
+    private fun success() {
+        _state.update {
+            it.copy(
+                isAuthenticated = true,
+                isLoading = false,
+                failedAttemptMessage = null
+            )
+        }
+    }
+
+    private fun error(message: String) {
+        _state.update {
+            it.copy(
+                error = message,
+                isLoading = false,
+                failedAttemptMessage = null
+            )
+        }
+    }
+
+    private fun failedAttempt(activity: FragmentActivity) {
+        _state.update {
+            it.copy(
+                failedAttemptMessage = activity.getString(R.string.biometric_not_found)
+            )
         }
     }
 }
