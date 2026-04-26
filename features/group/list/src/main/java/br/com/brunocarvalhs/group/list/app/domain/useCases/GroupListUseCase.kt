@@ -21,7 +21,7 @@ internal class GroupListUseCase @Inject constructor(
 
         val ownerId = deviceService.getDeviceId()
         repository.list(groupTokens).map { group ->
-            group.toDomain().copy(isOwner = group.owner_id == ownerId)
+            group.toDomain().copy(isOwner = group.ownerId == ownerId)
         }
     }
 

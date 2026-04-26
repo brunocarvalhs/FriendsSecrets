@@ -34,7 +34,7 @@ internal class GroupByTokenUseCase @Inject constructor(
     private suspend fun fetchGroupByToken(token: String): GroupModel {
         val ownerId = device.getDeviceId()
         val data = repository.searchByToken(token) ?: throw GroupNotFoundException()
-        return data.toDomain().copy(isOwner = ownerId == data.owner_id)
+        return data.toDomain().copy(isOwner = ownerId == data.ownerId)
     }
 
     private suspend fun storeToken(group: GroupModel) {
