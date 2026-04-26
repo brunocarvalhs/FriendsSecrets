@@ -16,7 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.draw.app.presentation.components.AnimatedDraw
 import br.com.brunocarvalhs.group.draw.app.presentation.components.DrawResultsList
 import br.com.brunocarvalhs.group.draw.app.presentation.components.DrawTopBar

@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.SettingsGraph
+import br.com.brunocarvalhs.core.navigation.routers.SettingsGraph
 import br.com.brunocarvalhs.settings.app.appearence.AppearanceScreen
 import br.com.brunocarvalhs.settings.app.appearence.AppearanceViewModel
 import br.com.brunocarvalhs.settings.app.faq.FAQScreen

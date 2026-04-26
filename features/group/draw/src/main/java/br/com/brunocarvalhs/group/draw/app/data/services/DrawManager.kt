@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.data.services
 
-import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
+import br.com.brunocarvalhs.core.security.domain.CryptoService
 import br.com.brunocarvalhs.group.draw.app.domain.services.DrawService
 import javax.inject.Inject
 

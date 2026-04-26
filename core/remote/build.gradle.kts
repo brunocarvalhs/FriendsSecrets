@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.infrastructure"
+    namespace = "br.com.brunocarvalhs.core.remote"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

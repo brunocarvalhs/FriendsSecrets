@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.list.app.presentation.components.ErrorComponent
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListAppBar

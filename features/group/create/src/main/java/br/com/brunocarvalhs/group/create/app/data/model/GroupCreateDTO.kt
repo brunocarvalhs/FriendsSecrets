@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.create.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.extensions.toVanillaMap
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.extensions.toVanillaMap
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

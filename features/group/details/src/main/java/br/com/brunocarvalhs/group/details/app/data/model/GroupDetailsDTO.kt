@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.data.constants.EMPTY_STRING
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

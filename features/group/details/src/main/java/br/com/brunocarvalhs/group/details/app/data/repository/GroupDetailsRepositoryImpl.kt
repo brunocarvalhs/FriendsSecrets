@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.group.details.app.data.repository
 
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.network.domain.NetworkRequest
+import br.com.brunocarvalhs.core.network.domain.NetworkService
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.data.exceptions.GroupDeleteException
 import br.com.brunocarvalhs.group.details.app.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.group.details.app.data.model.GroupDetailsDTO

@@ -7,7 +7,7 @@ import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalyticsImpl
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Binds

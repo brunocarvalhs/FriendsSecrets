@@ -5,9 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ContactsRouter
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.EditFormsGraph
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.navigation.routers.ContactsRouter
+import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.analytics.GroupCreateAnalytics
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter

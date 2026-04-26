@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.settings.app.appearence
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
+import br.com.brunocarvalhs.core.remote.domain.ThemeService
 import br.com.brunocarvalhs.settings.app.list.SettingsAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.group.create.app.data.repository
 
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.network.domain.NetworkRequest
+import br.com.brunocarvalhs.core.network.domain.NetworkService
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.data.exceptions.FailedCreateGroupException
 import br.com.brunocarvalhs.group.create.app.data.model.GroupCreateDTO
 import br.com.brunocarvalhs.group.create.app.domain.repositories.GroupCreateRepository

@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.details.app.domain.useCases
 
 import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
 import io.mockk.coEvery
 import io.mockk.mockk

@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.draw
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import javax.inject.Inject
 
 class DrawInitializerImpl @Inject constructor() : FeatureInitializer {

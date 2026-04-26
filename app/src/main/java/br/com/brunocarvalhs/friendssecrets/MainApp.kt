@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.BiometricGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupListGraph
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.routers.BiometricGraph
+import br.com.brunocarvalhs.core.navigation.routers.GroupListGraph
 
 @Composable
 fun NavHostController.mainApp(

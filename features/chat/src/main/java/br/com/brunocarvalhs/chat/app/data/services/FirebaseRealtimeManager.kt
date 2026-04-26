@@ -1,8 +1,8 @@
 package br.com.brunocarvalhs.chat.app.data.services
 
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel.MessageStatus
+import br.com.brunocarvalhs.core.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel.MessageStatus
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

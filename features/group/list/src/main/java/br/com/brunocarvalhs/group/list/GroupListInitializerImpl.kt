@@ -5,8 +5,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.CommonNavigator
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
 import javax.inject.Inject
 

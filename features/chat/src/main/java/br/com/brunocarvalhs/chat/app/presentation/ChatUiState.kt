@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.chat.app.presentation
 
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 
 internal data class ChatUiState(
     val groupModel: GroupModel,

@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.details.app.presentation
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 
 internal data class GroupDetailsUiState(
     val group: GroupModel,

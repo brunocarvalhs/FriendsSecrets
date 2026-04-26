@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.list.commons.di
 
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.list.GroupListInitializerImpl
 import br.com.brunocarvalhs.group.list.app.data.repository.GroupListRepositoryImpl
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository

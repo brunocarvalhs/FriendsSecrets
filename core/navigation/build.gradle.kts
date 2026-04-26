@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.navigation"
+    namespace = "br.com.brunocarvalhs.core.navigation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

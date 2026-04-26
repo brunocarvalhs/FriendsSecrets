@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.chat.app.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel
 
 @Entity(tableName = "chat_messages")
 data class ChatMessage(

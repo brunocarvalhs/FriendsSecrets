@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.commons.flags
 
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.FeatureFlagService
+import br.com.brunocarvalhs.core.remote.domain.FeatureFlagService
 import javax.inject.Inject
 import javax.inject.Singleton
 

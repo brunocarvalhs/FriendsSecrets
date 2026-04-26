@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.chat.app.data.repository
 
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

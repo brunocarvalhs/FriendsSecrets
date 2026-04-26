@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.details.app.domain.useCases
 
 import android.content.Context
 import android.content.Intent
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

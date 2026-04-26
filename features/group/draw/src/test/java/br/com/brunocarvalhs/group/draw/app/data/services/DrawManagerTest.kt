@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.data.services
 
-import br.com.brunocarvalhs.friendssecrets.core.security.domain.CryptoService
+import br.com.brunocarvalhs.core.security.domain.CryptoService
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals

@@ -15,10 +15,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.biometric.BiometricService
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeRemote
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ThemeService
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
-import br.com.brunocarvalhs.friendssecrets.core.ui.theme.FriendsSecretsTheme
+import br.com.brunocarvalhs.core.remote.domain.ThemeRemote
+import br.com.brunocarvalhs.core.remote.domain.ThemeService
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.ui.theme.FriendsSecretsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

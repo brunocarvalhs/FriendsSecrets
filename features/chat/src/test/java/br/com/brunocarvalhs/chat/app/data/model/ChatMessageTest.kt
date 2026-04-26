@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.chat.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

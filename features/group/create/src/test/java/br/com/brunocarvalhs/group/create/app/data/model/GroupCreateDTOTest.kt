@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.create.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

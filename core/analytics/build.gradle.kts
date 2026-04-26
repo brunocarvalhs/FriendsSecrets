@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.analytics"
+    namespace = "br.com.brunocarvalhs.core.analytics"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

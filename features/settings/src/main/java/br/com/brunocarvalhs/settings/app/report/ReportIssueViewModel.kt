@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.settings.app.report
 
 import androidx.lifecycle.ViewModel
-import br.com.brunocarvalhs.friendssecrets.core.infrastructure.domain.ConfigurationService
+import br.com.brunocarvalhs.core.remote.domain.ConfigurationService
 import br.com.brunocarvalhs.settings.app.list.SettingsAnalytics
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel

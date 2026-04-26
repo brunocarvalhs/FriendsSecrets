@@ -1,10 +1,10 @@
 package br.com.brunocarvalhs.group.list.app.data.repository
 
 import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel.Companion.COLLECTION_NAME
+import br.com.brunocarvalhs.core.network.domain.NetworkRequest
+import br.com.brunocarvalhs.core.network.domain.NetworkService
+import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel.Companion.COLLECTION_NAME
 import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import kotlinx.coroutines.Dispatchers

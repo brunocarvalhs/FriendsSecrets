@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.chat.app.domain.repository
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {

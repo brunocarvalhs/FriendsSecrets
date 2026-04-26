@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.commons.di
 
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.draw.DrawInitializerImpl
 import br.com.brunocarvalhs.group.draw.app.data.repository.DrawRepositoryImpl
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository

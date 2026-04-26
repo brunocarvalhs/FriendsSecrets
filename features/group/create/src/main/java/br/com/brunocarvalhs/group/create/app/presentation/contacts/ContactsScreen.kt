@@ -44,7 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.R
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.AddManualMemberForm
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactList

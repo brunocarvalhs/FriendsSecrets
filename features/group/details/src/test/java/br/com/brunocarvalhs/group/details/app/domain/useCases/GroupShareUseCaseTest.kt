@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.details.app.domain.useCases
 
 import android.content.Context
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before

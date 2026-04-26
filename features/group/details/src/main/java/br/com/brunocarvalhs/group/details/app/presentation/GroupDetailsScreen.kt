@@ -50,10 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import br.com.brunocarvalhs.friendssecrets.domain.extensions.toCurrencyMask
-import br.com.brunocarvalhs.friendssecrets.domain.extensions.toFormattedDate
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.extensions.toCurrencyMask
+import br.com.brunocarvalhs.core.domain.extensions.toFormattedDate
+import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem

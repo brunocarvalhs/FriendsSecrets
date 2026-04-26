@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 
 
 internal sealed class ContactsIntent {

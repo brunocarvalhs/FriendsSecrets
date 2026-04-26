@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.presentation
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 
 internal data class DrawUiState(
     val isLoading: Boolean = false,

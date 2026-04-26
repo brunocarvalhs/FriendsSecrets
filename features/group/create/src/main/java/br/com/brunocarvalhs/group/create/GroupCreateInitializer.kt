@@ -5,9 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ContactsRouter
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.EditFormsGraph
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.GroupCreateGraph
+import br.com.brunocarvalhs.core.navigation.routers.ContactsRouter
+import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
+import br.com.brunocarvalhs.core.navigation.routers.GroupCreateGraph
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsScreen
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.ContactsViewModel
 import br.com.brunocarvalhs.group.create.app.presentation.editForm.EditFormsScreen

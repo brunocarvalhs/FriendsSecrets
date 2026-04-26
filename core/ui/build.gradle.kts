@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.ui"
+    namespace = "br.com.brunocarvalhs.core.ui"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

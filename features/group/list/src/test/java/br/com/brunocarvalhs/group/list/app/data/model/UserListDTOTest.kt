@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.list.app.data.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.chat.app.data.repository
 
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

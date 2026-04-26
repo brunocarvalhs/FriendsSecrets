@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.biometric.commons.di
 import br.com.brunocarvalhs.biometric.BiometricInitializerImpl
 import br.com.brunocarvalhs.biometric.commons.analytics.BiometricAnalytics
 import br.com.brunocarvalhs.biometric.commons.analytics.BiometricAnalyticsImpl
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Binds
 import dagger.Module

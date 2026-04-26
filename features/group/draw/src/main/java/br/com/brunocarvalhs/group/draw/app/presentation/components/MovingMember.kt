@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.group.draw.app.presentation.components
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.setValue
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 
 private const val BOUNDARY_DIVIDER = 2.2f
 private const val GRAVITY_FORCE = 5f

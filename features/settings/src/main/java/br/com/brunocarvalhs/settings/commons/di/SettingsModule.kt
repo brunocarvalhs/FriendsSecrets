@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.settings.commons.di
 
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.settings.SettingsInitializerImpl
 import dagger.Binds
 import dagger.Module

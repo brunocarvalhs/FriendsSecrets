@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.list.app.domain.useCases
 
 import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
 import br.com.brunocarvalhs.storage.domain.StorageService

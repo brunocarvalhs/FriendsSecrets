@@ -2,8 +2,8 @@ package br.com.brunocarvalhs.group.details
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import br.com.brunocarvalhs.friendssecrets.core.navigation.CommonNavigator
-import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.CommonNavigator
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import javax.inject.Inject
 
 class GroupDetailsInitializerImpl @Inject constructor(

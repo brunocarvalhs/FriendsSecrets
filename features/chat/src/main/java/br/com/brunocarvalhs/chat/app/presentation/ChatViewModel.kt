@@ -12,9 +12,9 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
 import br.com.brunocarvalhs.chat.commons.analytics.ChatAnalytics
 import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.friendssecrets.core.navigation.routers.ChatGraph
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.MessageModel.MessageStatus
+import br.com.brunocarvalhs.core.navigation.routers.ChatGraph
+import br.com.brunocarvalhs.core.domain.model.MessageModel
+import br.com.brunocarvalhs.core.domain.model.MessageModel.MessageStatus
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

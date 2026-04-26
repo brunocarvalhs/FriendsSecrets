@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.group.create.app.domain.model
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.constants.EMPTY_STRING
 
 internal data class ContactModel(

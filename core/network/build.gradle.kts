@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.brunocarvalhs.friendssecrets.core.network"
+    namespace = "br.com.brunocarvalhs.core.network"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

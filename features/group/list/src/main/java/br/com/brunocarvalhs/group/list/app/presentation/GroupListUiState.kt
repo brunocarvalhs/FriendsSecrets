@@ -2,7 +2,7 @@ package br.com.brunocarvalhs.group.list.app.presentation
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.R
 import timber.log.Timber
 import java.text.SimpleDateFormat

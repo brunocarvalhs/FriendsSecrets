@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.draw.app.domain.useCases
 
-import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
+import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.draw.app.domain.repository.DrawRepository
 import javax.inject.Inject
 
