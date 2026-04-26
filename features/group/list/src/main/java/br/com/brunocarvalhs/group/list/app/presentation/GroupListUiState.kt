@@ -38,7 +38,7 @@ internal data class GroupListUiState(
                 
                 val groupDateLong = try {
                     group.date?.let { dateFormat.parse(it)?.time } ?: Long.MAX_VALUE
-                } catch (e: Exception) {
+                } catch (e: java.text.ParseException) {
                     Timber.e(e, "Error parsing date: %s", group.date)
                     0L
                 }

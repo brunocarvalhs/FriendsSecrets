@@ -40,6 +40,11 @@ import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.group.list.R
 import kotlinx.coroutines.launch
 
+private const val TOKEN_MAX_LENGTH = 8
+private const val SHEET_HEIGHT_FRACTION = 0.85f
+private const val LETTER_SPACING = 8
+private const val FONT_SIZE = 24
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupToEnterBottomSheet(
@@ -75,62 +80,77 @@ fun GroupToEnterBottomSheet(
             )
         },
     ) {
-        Column(
+        GroupToEnterContent(
+            token = token,
+            onTokenChange = { newValue ->
+                if (newValue.length <= TOKEN_MAX_LENGTH && newValue.all { it.isLetterOrDigit() }) {
+                    token = newValue
+                    if (token.length == TOKEN_MAX_LENGTH) {
+                        focusManager.clearFocus()
+                    }
+                }
+            },
+            focusRequester = focusRequester,
+            onActionClick = {
+                scope.launch {
+                    sheetState.hide()
+                    onToEnter(token)
+                    token = ""
+                }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        onDismiss()
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun GroupToEnterContent(
+    token: String,
+    onTokenChange: (String) -> Unit,
+    focusRequester: FocusRequester,
+    onActionClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(SHEET_HEIGHT_FRACTION)
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+            .imePadding(),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.group_to_enter_title),
+            style = MaterialTheme.typography.headlineSmall,
+        )
+
+        OutlinedTextField(
+            value = token,
+            onValueChange = onTokenChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.85f)
-                .padding(horizontal = 32.dp, vertical = 24.dp)
-                .imePadding(),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .focusRequester(focusRequester),
+            textStyle = LocalTextStyle.current.copy(
+                textAlign = TextAlign.Center,
+                fontSize = FONT_SIZE.sp,
+                letterSpacing = LETTER_SPACING.sp
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.None
+            ),
+            visualTransformation = TokenVisualTransformation()
+        )
+
+        Button(
+            onClick = onActionClick,
+            modifier = Modifier
+                .fillMaxWidth(),
+            enabled = token.length == TOKEN_MAX_LENGTH
         ) {
-            Text(
-                text = stringResource(R.string.group_to_enter_title),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-
-            OutlinedTextField(
-                value = token,
-                onValueChange = { newValue ->
-                    if (newValue.length <= 8 && newValue.all { it.isLetterOrDigit() }) {
-                        token = newValue
-                        if (token.length == 8) {
-                            focusManager.clearFocus()
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                textStyle = LocalTextStyle.current.copy(
-                    textAlign = TextAlign.Center,
-                    fontSize = 24.sp,
-                    letterSpacing = 8.sp
-                ),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None
-                ),
-                visualTransformation = TokenVisualTransformation()
-            )
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        sheetState.hide()
-                        onToEnter(token)
-                        token = ""
-                    }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onDismiss()
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                enabled = token.length == 8
-            ) {
-                Text(stringResource(R.string.group_to_enter_button_text))
-            }
+            Text(stringResource(R.string.group_to_enter_button_text))
         }
     }
 }

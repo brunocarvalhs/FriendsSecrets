@@ -12,7 +12,6 @@ class GroupListInitializerTest {
     fun `builder should create instance and call build`() {
         // Given
         val navController = mockk<NavHostController>(relaxed = true)
-        val navGraphBuilder = mockk<NavGraphBuilder>(relaxed = true)
 
         // When
         val initializer = GroupListInitializer.Builder()

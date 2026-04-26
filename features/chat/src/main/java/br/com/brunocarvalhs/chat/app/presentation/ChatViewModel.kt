@@ -33,6 +33,7 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
+@Suppress("LongParameterList")
 internal class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMessagesUseCase: GetMessagesUseCase,
@@ -43,9 +44,11 @@ internal class ChatViewModel @Inject constructor(
     private val analytics: ChatAnalytics
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<ChatGraph>(ChatGraph.typeMap)
-    private val _uiState = MutableStateFlow(ChatUiState(
-        groupModel = args.group
-    ))
+    private val _uiState = MutableStateFlow(
+        ChatUiState(
+            groupModel = args.group
+        )
+    )
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
 
     private var deviceId: String = ""
@@ -54,19 +57,20 @@ internal class ChatViewModel @Inject constructor(
         analytics.trackScreenView()
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
-            
+
             checkAndClearExpiredChat()
 
             val cachedName = identifyUserUseCase.getNickname()
-            val member = _uiState.value.groupModel.members.find { it.phoneNumber == deviceId || it.id == deviceId }
+            val member =
+                _uiState.value.groupModel.members.find { it.phoneNumber == deviceId || it.id == deviceId }
             val finalName = cachedName ?: member?.name ?: ""
-            
+
             _uiState.update { it.copy(currentUserNickname = finalName) }
 
             if (finalName.isBlank()) {
                 _uiState.update { it.copy(showIdentificationModal = true) }
             }
-            
+
             observeMessages()
         }
     }
@@ -74,7 +78,7 @@ internal class ChatViewModel @Inject constructor(
     @AddTrace(name = "ChatViewModel.checkAndClearExpiredChat", enabled = true)
     private suspend fun checkAndClearExpiredChat() {
         val groupDateString = _uiState.value.groupModel.date ?: return
-        try {
+        runCatching {
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val groupDate = sdf.parse(groupDateString) ?: return
             val currentDate = Date()
@@ -84,11 +88,7 @@ internal class ChatViewModel @Inject constructor(
                 clearMessagesUseCase(_uiState.value.groupModel.id)
                 analytics.trackClearMessages()
             }
-        } catch (e: kotlinx.coroutines.CancellationException) {
-            Timber.e(e)
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
+        }.onFailure { Timber.e(it) }
     }
 
     @AddTrace(name = "ChatViewModel.handleIntent", enabled = true)
@@ -113,7 +113,7 @@ internal class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             identifyUserUseCase.saveNickname(name)
             _uiState.update { it.copy(currentUserNickname = name, showIdentificationModal = false) }
-            
+
             val joinMessage = MessageModel(
                 id = UUID.randomUUID().toString(),
                 groupId = _uiState.value.groupModel.id,
@@ -158,12 +158,12 @@ internal class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             analytics.trackSendMessage()
             val result = sendMessageUseCase(_uiState.value.groupModel.id, newMessage)
-            
+
             if (result.isFailure) {
                 _uiState.update { state ->
                     state.copy(
-                        messages = state.messages.map { 
-                            if (it.id == tempId) it.copy(status = MessageStatus.ERROR) else it 
+                        messages = state.messages.map {
+                            if (it.id == tempId) it.copy(status = MessageStatus.ERROR) else it
                         }
                     )
                 }
@@ -180,10 +180,14 @@ internal class ChatViewModel @Inject constructor(
                 .onEach { messages ->
                     _uiState.update { state ->
                         val remoteIds = messages.map { it.id }.toSet()
-                        val pendingMessages = state.messages.filter { it.status == MessageStatus.SENDING && it.id !in remoteIds }
+                        val pendingMessages = state.messages.filter {
+                            it.status == MessageStatus.SENDING && it.id !in remoteIds
+                        }
 
                         state.copy(
-                            messages = (messages.map { it.toChatMessage(deviceId) } + pendingMessages)
+                            messages = (messages.map {
+                                it.toChatMessage(deviceId)
+                            } + pendingMessages)
                                 .sortedBy { it.timestamp },
                             isLoading = false
                         )
@@ -195,7 +199,7 @@ internal class ChatViewModel @Inject constructor(
     private fun MessageModel.toChatMessage(currentDeviceId: String): ChatMessage {
         val groupMembers = _uiState.value.groupModel.members
         val member = groupMembers.find { it.id == senderId || it.phoneNumber == senderId }
-        
+
         val displayName = when {
             senderId == currentDeviceId -> "Você"
             senderId == "system" -> "Sistema"

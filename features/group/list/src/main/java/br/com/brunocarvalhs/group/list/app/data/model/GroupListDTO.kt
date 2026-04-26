@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.list.app.data.model
 
 import br.com.brunocarvalhs.friendssecrets.domain.extensions.toVanillaMap
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
-import br.com.brunocarvalhs.group.list.app.data.model.UserListDTO
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -19,12 +18,12 @@ internal data class GroupListDTO(
     @SerialName(GroupModel.MIN_PRICE) val minPrice: Double? = null,
     @SerialName(GroupModel.MAX_PRICE) val maxPrice: Double? = null,
     @SerialName(GroupModel.TYPE) val type: String? = null,
-    @SerialName(GroupModel.PHOTO) val photo_base64: String? = null,
+    @SerialName(GroupModel.PHOTO) val photoBase64: String? = null,
     @SerialName(GroupModel.MEMBERS) val members: List<UserListDTO> = emptyList(),
     @SerialName(GroupModel.DRAWS) val draws: Map<String, String> = emptyMap(),
-    @SerialName(GroupModel.OWNER_ID) val owner_id: String? = null,
-    @SerialName(GroupModel.IS_OWNER) val is_owner: Boolean = false,
-    @SerialName(GroupModel.CREATED_AT) val created_at: Long = 0L
+    @SerialName(GroupModel.OWNER_ID) val ownerId: String? = null,
+    @SerialName(GroupModel.IS_OWNER) val isOwner: Boolean = false,
+    @SerialName(GroupModel.CREATED_AT) val createdAt: Long = 0L
 ) {
     fun toDomain() = GroupModel(
         id = id,
@@ -32,12 +31,12 @@ internal data class GroupListDTO(
         description = description,
         token = token,
         date = date,
-        photo = photo_base64,
+        photo = photoBase64,
         members = members.map { it.toDomain() },
-        ownerId = owner_id,
+        ownerId = ownerId,
         draws = draws,
-        isOwner = is_owner,
-        createdAt = created_at
+        isOwner = isOwner,
+        createdAt = createdAt
     )
 
     fun toMap(): Map<String, Any?> {
@@ -52,15 +51,15 @@ internal data class GroupListDTO(
             description = model.description,
             token = model.token,
             date = model.date,
-            photo_base64 = model.photo,
+            photoBase64 = model.photo,
             minPrice = model.minPrice,
             maxPrice = model.maxPrice,
             type = model.type,
             members = model.members.map { UserListDTO.fromDomain(it) },
-            owner_id = model.ownerId,
+            ownerId = model.ownerId,
             draws = model.draws,
-            is_owner = model.isOwner,
-            created_at = model.createdAt
+            isOwner = model.isOwner,
+            createdAt = model.createdAt
         )
     }
 }

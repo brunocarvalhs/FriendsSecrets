@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation.list.components
+package br.com.brunocarvalhs.group.list.app.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
@@ -10,9 +10,44 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import br.com.brunocarvalhs.group.list.R
+
+@Composable
+fun MenuHome(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onClick: (MenuItem) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = modifier
+    ) {
+        MenuItem.values.forEach {
+            if (!it.isEnabled) return@forEach
+
+            DropdownMenuItem(
+                text = { Text(it.title()) },
+                onClick = {
+                    onDismissRequest.invoke()
+                    onClick(it)
+                },
+                leadingIcon = {
+                    it.icon?.let { icon ->
+                        Icon(
+                            icon,
+                            contentDescription = it.title()
+                        )
+                    }
+                }
+            )
+        }
+    }
+}
 
 sealed class MenuItem(
     val title: @Composable () -> String,
@@ -51,34 +86,5 @@ sealed class MenuItem(
             Settings,
             Logout
         )
-    }
-}
-
-@Composable
-fun MenuHome(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    onClick: (MenuItem) -> Unit,
-) {
-    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
-        MenuItem.values.forEach {
-            if (!it.isEnabled) return@forEach
-
-            DropdownMenuItem(
-                text = { Text(it.title()) },
-                onClick = {
-                    onDismissRequest.invoke()
-                    onClick(it)
-                },
-                leadingIcon = {
-                    it.icon?.let { icon ->
-                        Icon(
-                            icon,
-                            contentDescription = it.title()
-                        )
-                    }
-                }
-            )
-        }
     }
 }

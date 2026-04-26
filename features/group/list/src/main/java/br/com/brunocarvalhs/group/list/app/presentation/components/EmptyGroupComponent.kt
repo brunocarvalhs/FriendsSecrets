@@ -28,10 +28,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 internal fun EmptyGroupComponent(
+    onGroupToEnter: () -> Unit,
+    onCreateGroup: () -> Unit,
     modifier: Modifier = Modifier,
     message: String = stringResource(R.string.empty_group_message),
-    onGroupToEnter: () -> Unit = {},
-    onCreateGroup: () -> Unit = {},
     isJoinGroupEnabled: Boolean = true,
     isCreateGroupEnabled: Boolean = true,
 ) {
@@ -107,6 +107,9 @@ internal fun EmptyGroupComponent(
     uiMode = UI_MODE_NIGHT_NO
 )
 @Composable
-fun EmptyGroupComponentPreview() {
-    EmptyGroupComponent()
+private fun EmptyGroupComponentPreview() {
+    EmptyGroupComponent(
+        onGroupToEnter = {},
+        onCreateGroup = {}
+    )
 }

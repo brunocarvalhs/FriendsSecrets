@@ -25,6 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 private const val MAX_VISIBLE_MEMBERS = 3
+private const val OVERLAP_OFFSET = -10
+private const val MEMBER_ICON_SIZE = 40
+private const val BORDER_WIDTH = 1
+private const val ROW_FILL_FRACTION = 0.8f
 
 @Composable
 internal fun MembersRow(
@@ -32,10 +36,10 @@ internal fun MembersRow(
     shape: RoundedCornerShape = CircleShape,
 ) {
     Column(
-        modifier = Modifier.fillMaxHeight(0.8f),
+        modifier = Modifier.fillMaxHeight(ROW_FILL_FRACTION),
         verticalArrangement = Arrangement.Bottom
     ) {
-        val overlapOffset = (-10).dp
+        val overlapOffset = OVERLAP_OFFSET.dp
         Row(
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -45,15 +49,15 @@ internal fun MembersRow(
             if (members.size > MAX_VISIBLE_MEMBERS) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(MEMBER_ICON_SIZE.dp)
                         .clip(shape)
                         .background(MaterialTheme.colorScheme.primary)
-                        .border(1.dp, Color.White, shape)
+                        .border(BORDER_WIDTH.dp, Color.White, shape)
                         .zIndex(members.size.toFloat()),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "+${members.size - 3}",
+                        text = "+${members.size - MAX_VISIBLE_MEMBERS}",
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -63,10 +67,10 @@ internal fun MembersRow(
             members.take(MAX_VISIBLE_MEMBERS).forEachIndexed { index, member ->
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(MEMBER_ICON_SIZE.dp)
                         .clip(shape)
                         .background(MaterialTheme.colorScheme.primary)
-                        .border(1.dp, Color.White, shape)
+                        .border(BORDER_WIDTH.dp, Color.White, shape)
                         .zIndex((members.size - index - 1).toFloat()),
                     contentAlignment = Alignment.Center
                 ) {
@@ -83,6 +87,6 @@ internal fun MembersRow(
 
 @Composable
 @Preview
-private fun MembersRowPreview() {
+fun MembersRowPreview() {
     MembersRow(members = listOf("A", "B", "C", "D", "E"))
 }

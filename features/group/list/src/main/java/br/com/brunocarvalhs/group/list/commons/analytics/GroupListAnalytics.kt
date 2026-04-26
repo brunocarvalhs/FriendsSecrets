@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.list.app.presentation
+package br.com.brunocarvalhs.group.list.commons.analytics
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent

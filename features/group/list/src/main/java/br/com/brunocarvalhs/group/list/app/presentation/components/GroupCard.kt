@@ -27,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,15 +46,19 @@ private val imagesBottom = listOf(
     R.raw.card_top_one,
 )
 
+private const val ANIMATION_SIZE = 180
+private const val ANIMATION_OFFSET = 30
+private const val ANIMATION_ALPHA = 0.15f
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GroupCard(
-    modifier: Modifier = Modifier,
     name: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     description: String? = null,
     date: String? = null,
     membersCount: Int? = null,
-    onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
 ) {
     val image = rememberSaveable { imagesBottom.random() }
@@ -73,57 +78,72 @@ internal fun GroupCard(
         shape = MaterialTheme.shapes.extraLarge
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-
             LottieAnimation(
                 composition = composition,
                 progress = { progress },
                 modifier = Modifier
-                    .size(180.dp)
-                    .alpha(0.15f)
+                    .size(ANIMATION_SIZE.dp)
+                    .alpha(ANIMATION_ALPHA)
                     .align(Alignment.BottomEnd)
-                    .offset(x = 30.dp, y = 30.dp)
+                    .offset(x = ANIMATION_OFFSET.dp, y = ANIMATION_OFFSET.dp)
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = name,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+            GroupCardContent(
+                name = name,
+                description = description,
+                date = date,
+                membersCount = membersCount
+            )
+        }
+    }
+}
 
-                    if (!description.isNullOrBlank()) {
-                        Text(
-                            text = description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
+@Composable
+private fun GroupCardContent(
+    name: String,
+    description: String?,
+    date: String?,
+    membersCount: Int?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (date != null) {
-                        InfoBadge(icon = Icons.Default.CalendarMonth, text = date)
-                    }
-                    if (membersCount != null) {
-                        InfoBadge(icon = Icons.Default.People, text = "$membersCount pessoas")
-                    }
-                }
+            if (!description.isNullOrBlank()) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (date != null) {
+                InfoBadge(icon = Icons.Default.CalendarMonth, text = date)
+            }
+            if (membersCount != null) {
+                val text = stringResource(R.string.group_card_members_count, membersCount)
+                InfoBadge(icon = Icons.Default.People, text = text)
             }
         }
     }

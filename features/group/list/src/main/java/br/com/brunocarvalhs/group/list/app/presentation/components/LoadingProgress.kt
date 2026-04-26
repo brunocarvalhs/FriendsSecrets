@@ -44,6 +44,6 @@ fun LoadingProgress(
 
 @Composable
 @Preview
-private fun LoadingProgressPreview() {
+fun LoadingProgressPreview() {
     LoadingProgress()
 }

@@ -171,7 +171,10 @@ fun IdentificationDialog(
 }
 
 @Composable
-fun ChatMessageItem(message: ChatMessage) {
+fun ChatMessageItem(
+    message: ChatMessage,
+    modifier: Modifier = Modifier
+) {
     val alignment = if (message.isFromMe) Alignment.CenterEnd else Alignment.CenterStart
     val containerColor =
         if (message.isFromMe) MaterialTheme.colorScheme.primaryContainer 
@@ -184,7 +187,7 @@ fun ChatMessageItem(message: ChatMessage) {
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         contentAlignment = alignment
@@ -233,7 +236,10 @@ fun ChatMessageItem(message: ChatMessage) {
 }
 
 @Composable
-fun StatusIcon(status: MessageStatus) {
+fun StatusIcon(
+    status: MessageStatus,
+    modifier: Modifier = Modifier
+) {
     val icon = when (status) {
         MessageStatus.SENDING -> Icons.Default.AccessTime
         MessageStatus.SENT -> Icons.Default.Check
@@ -248,7 +254,7 @@ fun StatusIcon(status: MessageStatus) {
     Icon(
         imageVector = icon,
         contentDescription = status.name,
-        modifier = Modifier.size(12.dp),
+        modifier = modifier.size(12.dp),
         tint = color
     )
 }
@@ -257,9 +263,13 @@ fun StatusIcon(status: MessageStatus) {
 fun ChatInputBar(
     text: String,
     onTextChange: (String) -> Unit,
-    onSend: () -> Unit
+    onSend: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Surface(tonalElevation = 2.dp) {
+    Surface(
+        modifier = modifier,
+        tonalElevation = 2.dp
+    ) {
         Row(
             modifier = Modifier
                 .padding(8.dp)

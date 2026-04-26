@@ -4,8 +4,8 @@ import br.com.brunocarvalhs.friendssecrets.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.list.GroupListInitializerImpl
 import br.com.brunocarvalhs.group.list.app.data.repository.GroupListRepositoryImpl
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
-import br.com.brunocarvalhs.group.list.app.presentation.GroupListAnalytics
-import br.com.brunocarvalhs.group.list.app.presentation.GroupListAnalyticsImpl
+import br.com.brunocarvalhs.group.list.commons.analytics.GroupListAnalytics
+import br.com.brunocarvalhs.group.list.commons.analytics.GroupListAnalyticsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

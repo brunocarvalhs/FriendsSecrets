@@ -24,8 +24,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 internal fun ErrorComponent(
-    modifier: Modifier = Modifier,
     message: String,
+    modifier: Modifier = Modifier,
     onRefresh: (() -> Unit)? = null,
     onBack: (() -> Unit)? = null,
 ) {
@@ -40,52 +40,65 @@ internal fun ErrorComponent(
             modifier = Modifier.size(200.dp),
             composition = composition,
         )
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.ops),
-                style = MaterialTheme.typography.headlineLarge,
-            )
-        }
+        ErrorText(message = message)
         Spacer(modifier = Modifier.size(16.dp))
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Spacer(Modifier.size(32.dp))
-            onRefresh?.let { refresh ->
-                Button(
-                    onClick = { refresh.invoke() }
-                ) {
-                    Text(text = stringResource(R.string.error_component_button_try_again))
-                }
+        ErrorActions(onRefresh = onRefresh, onBack = onBack)
+    }
+}
+
+@Composable
+private fun ErrorText(message: String) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.ops),
+            style = MaterialTheme.typography.headlineLarge,
+        )
+    }
+    Spacer(modifier = Modifier.size(16.dp))
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }
+}
+
+@Composable
+private fun ErrorActions(
+    onRefresh: (() -> Unit)?,
+    onBack: (() -> Unit)?
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Spacer(Modifier.size(32.dp))
+        onRefresh?.let { refresh ->
+            Button(
+                onClick = { refresh.invoke() }
+            ) {
+                Text(text = stringResource(R.string.error_component_button_try_again))
             }
-            onBack?.let { back ->
-                Spacer(Modifier.size(8.dp))
-                if (onRefresh == null) {
-                    Button(
-                        onClick = { back.invoke() }
-                    ) {
-                        Text(text = stringResource(R.string.error_component_button_to_home))
-                    }
-                } else {
-                    TextButton(
-                        onClick = { back.invoke() }
-                    ) {
-                        Text(text = stringResource(R.string.error_component_button_to_home))
-                    }
+        }
+        onBack?.let { back ->
+            Spacer(Modifier.size(8.dp))
+            if (onRefresh == null) {
+                Button(
+                    onClick = { back.invoke() }
+                ) {
+                    Text(text = stringResource(R.string.error_component_button_to_home))
+                }
+            } else {
+                TextButton(
+                    onClick = { back.invoke() }
+                ) {
+                    Text(text = stringResource(R.string.error_component_button_to_home))
                 }
             }
         }
