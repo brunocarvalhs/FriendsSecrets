@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="biometric_button_authentic">Autenticar</string>
-    <string name="biometric_message">Use sua biometria para acessar o FriendsSecrets de forma segura.</string>
-    <string name="biometric_not_found">Digital não reconhecida. Tente novamente.</string>
-    <string name="biometric_required">Autenticação Necessária</string>
-    <string name="subtitle_biometric">Acesse usando biometria ou a senha do dispositivo</string>
-    <string name="title_biometric">Autenticação Segura</string>
-</resources>

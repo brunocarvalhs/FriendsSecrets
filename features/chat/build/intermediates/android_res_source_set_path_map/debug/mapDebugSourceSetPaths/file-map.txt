@@ -1,8 +1,0 @@
-br.com.brunocarvalhs.chat-pngs-0 /Users/bruno/Developers/FriendsSecrets/features/chat/build/generated/res/pngs/debug
-br.com.brunocarvalhs.chat-updated_navigation_xml-1 /Users/bruno/Developers/FriendsSecrets/features/chat/build/generated/updated_navigation_xml/debug
-br.com.brunocarvalhs.chat-mergeDebugResources-2 /Users/bruno/Developers/FriendsSecrets/features/chat/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
-br.com.brunocarvalhs.chat-mergeDebugResources-3 /Users/bruno/Developers/FriendsSecrets/features/chat/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
-br.com.brunocarvalhs.chat-debug-4 /Users/bruno/Developers/FriendsSecrets/features/chat/build/intermediates/merged_res/debug/mergeDebugResources
-br.com.brunocarvalhs.chat-debug-5 /Users/bruno/Developers/FriendsSecrets/features/chat/build/intermediates/packaged_res/debug/packageDebugResources
-br.com.brunocarvalhs.chat-debug-6 /Users/bruno/Developers/FriendsSecrets/features/chat/src/debug/res
-br.com.brunocarvalhs.chat-main-7 /Users/bruno/Developers/FriendsSecrets/features/chat/src/main/res

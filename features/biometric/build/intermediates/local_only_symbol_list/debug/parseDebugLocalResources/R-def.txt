@@ -1,8 +1,0 @@
-R_DEF: Internal format may change without notice
-local
-string biometric_button_authentic
-string biometric_message
-string biometric_not_found
-string biometric_required
-string subtitle_biometric
-string title_biometric

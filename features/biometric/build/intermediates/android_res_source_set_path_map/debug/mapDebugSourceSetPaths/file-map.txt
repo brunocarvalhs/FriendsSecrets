@@ -1,8 +1,0 @@
-br.com.brunocarvalhs.biometric-pngs-0 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/generated/res/pngs/debug
-br.com.brunocarvalhs.biometric-updated_navigation_xml-1 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/generated/updated_navigation_xml/debug
-br.com.brunocarvalhs.biometric-mergeDebugResources-2 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
-br.com.brunocarvalhs.biometric-mergeDebugResources-3 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
-br.com.brunocarvalhs.biometric-debug-4 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/intermediates/merged_res/debug/mergeDebugResources
-br.com.brunocarvalhs.biometric-debug-5 /Users/bruno/Developers/FriendsSecrets/features/biometric/build/intermediates/packaged_res/debug/packageDebugResources
-br.com.brunocarvalhs.biometric-debug-6 /Users/bruno/Developers/FriendsSecrets/features/biometric/src/debug/res
-br.com.brunocarvalhs.biometric-main-7 /Users/bruno/Developers/FriendsSecrets/features/biometric/src/main/res

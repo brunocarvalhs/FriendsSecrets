@@ -1,1 +1,0 @@
--keep,allowobfuscation,allowshrinking class br.com.brunocarvalhs.group.list.app.presentation.GroupListViewModel

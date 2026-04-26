@@ -1,1 +1,0 @@
--keep,allowobfuscation,allowshrinking class br.com.brunocarvalhs.group.draw.app.presentation.DrawViewModel

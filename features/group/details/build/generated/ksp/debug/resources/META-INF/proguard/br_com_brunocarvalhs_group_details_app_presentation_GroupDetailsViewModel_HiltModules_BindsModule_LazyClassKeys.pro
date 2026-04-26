@@ -1,1 +1,0 @@
--keep,allowobfuscation,allowshrinking class br.com.brunocarvalhs.group.details.app.presentation.GroupDetailsViewModel
