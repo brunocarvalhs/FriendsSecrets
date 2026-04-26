@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.aspectj.android)
 }
 
 android {
@@ -94,6 +95,9 @@ dependencies {
     kspAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
+
+    // AspectJ
+    implementation(libs.aspectjrt)
 
     // firebase
     implementation(platform(libs.firebase.bom))

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.aspectj.android)
 }
 
 android {
@@ -118,6 +119,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    // AspectJ
+    implementation(libs.aspectjrt)
 
     // Firebase Realtime Database
     implementation(libs.firebase.database)
