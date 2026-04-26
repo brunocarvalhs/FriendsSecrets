@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets.core.analytics
 
-import android.os.Bundle
+import br.com.brunocarvalhs.friendssecrets.core.analytics.extensions.ConvertParameters
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,17 +11,7 @@ class FirebaseAnalyticsManager @Inject constructor(
 ) : AnalyticsService {
 
     override fun logEvent(name: String, params: Map<String, Any?>) {
-        val bundle = Bundle()
-        params.forEach { (key, value) ->
-            when (value) {
-                is String -> bundle.putString(key, value)
-                is Int -> bundle.putInt(key, value)
-                is Long -> bundle.putLong(key, value)
-                is Double -> bundle.putDouble(key, value)
-                is Boolean -> bundle.putBoolean(key, value)
-                else -> bundle.putString(key, value.toString())
-            }
-        }
+        val bundle = ConvertParameters.toBundle(params)
         firebaseAnalytics.logEvent(name, bundle)
     }
 
