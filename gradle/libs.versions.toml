@@ -59,8 +59,8 @@ material = "1.13.0"
 core = "1.18.0"
 coreKtxVersion = "1.7.0"
 aspectj-plugin = "8.13.0"
-aspectjrt = "1.9.26"
-aspectjweaver = "1.9.26"
+aspectjrt = "1.9.25.1"
+aspectjweaver = "1.9.25.1"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
