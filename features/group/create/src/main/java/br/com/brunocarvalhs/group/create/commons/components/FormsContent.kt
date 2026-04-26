@@ -100,8 +100,7 @@ internal fun FormsContent(
     onBack: () -> Unit,
     isLoading: Boolean = false,
     isValid: Boolean = false,
-    isPriceError: Boolean = false,
-    onRemoveMember: ((UserModel) -> Unit)? = null
+    isPriceError: Boolean = false
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -237,7 +236,11 @@ internal fun FormsContent(
                                 stringResource(R.string.create)
                             },
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = if (isValid) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if (isValid) {
+                                MaterialTheme.colorScheme.secondary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
                         )
                     }
                 },
@@ -424,7 +427,11 @@ internal fun FormsContent(
 
                         Text(
                             text = date.ifEmpty { stringResource(R.string.event_date) },
-                            color = if (date.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                            color = if (date.isEmpty()) {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            } else {
+                                MaterialTheme.colorScheme.onSurface
+                            },
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
@@ -442,7 +449,11 @@ internal fun FormsContent(
                         Icon(
                             imageVector = Icons.Default.PriceChange,
                             contentDescription = null,
-                            tint = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = if (isPriceError) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -456,7 +467,11 @@ internal fun FormsContent(
                             placeholder = {
                                 Text(
                                     stringResource(R.string.minimum_price),
-                                    color = if (isPriceError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    color = if (isPriceError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             },

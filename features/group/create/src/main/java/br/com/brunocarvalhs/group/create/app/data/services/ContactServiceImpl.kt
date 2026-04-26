@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.create.app.data.services
 
 import android.Manifest
+import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
@@ -28,9 +29,100 @@ internal class ContactServiceImpl @Inject constructor(
         if (!hasPermission(context)) return emptyList()
 
         val contactMap = mutableMapOf<String, ContactDTO>()
-        val contentResolver = context.contentResolver
+        val contentResolver: ContentResolver? = context.contentResolver
 
-        val phoneCursor = contentResolver.query(
+        contentResolver.getPhoneCursor(contactMap)
+        contentResolver.getEmailsCursor(contactMap)
+        contentResolver.getCursor(contactMap)
+        contentResolver.getAddressCursor(contactMap)
+
+        return contactMap.values
+            .map { it.toDomain() }
+            .distinctBy { it.phoneNumber }
+            .sortedBy { it.name }
+    }
+
+    private fun ContentResolver?.getCursor(contactMap: MutableMap<String, ContactDTO>) {
+        val orgCursor = this?.query(
+            ContactsContract.Data.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.Organization.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Organization.COMPANY,
+                ContactsContract.CommonDataKinds.Organization.TITLE
+            ),
+            ContactsContract.Data.MIMETYPE + CURSOR_SELECTION,
+            arrayOf(ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE),
+            null
+        )
+        orgCursor?.use { cursor ->
+            val idIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.CONTACT_ID)
+            val companyIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY)
+            val titleIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.TITLE)
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(idIndex)
+                contactMap[id]?.let {
+                    contactMap[id] = it.copy(
+                        company = cursor.getString(companyIndex),
+                        jobTitle = cursor.getString(titleIndex)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun ContentResolver?.getEmailsCursor(contactMap: MutableMap<String, ContactDTO>) {
+        val emailCursor = this?.query(
+            ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Email.ADDRESS
+            ),
+            null,
+            null,
+            null
+        )
+        emailCursor?.use { cursor ->
+            val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)
+            val emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(idIndex)
+                contactMap[id]?.let {
+                    contactMap[id] = it.copy(email = cursor.getString(emailIndex))
+                }
+            }
+        }
+    }
+
+    private fun ContentResolver?.getAddressCursor(contactMap: MutableMap<String, ContactDTO>) {
+        val addressCursor = this?.query(
+            ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
+            arrayOf(
+                ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID,
+                ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+            ),
+            null,
+            null,
+            null
+        )
+        addressCursor?.use { cursor ->
+            val idIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID)
+            val addrIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS)
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(idIndex)
+                contactMap[id]?.let {
+                    contactMap[id] = it.copy(address = cursor.getString(addrIndex))
+                }
+            }
+        }
+    }
+
+    private fun ContentResolver?.getPhoneCursor(contactMap: MutableMap<String, ContactDTO>) {
+        val phoneCursor = this?.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             arrayOf(
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
@@ -45,7 +137,8 @@ internal class ContactServiceImpl @Inject constructor(
 
         phoneCursor?.use { cursor ->
             val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
-            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val nameIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
             val photoIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI)
 
@@ -65,65 +158,6 @@ internal class ContactServiceImpl @Inject constructor(
                 }
             }
         }
-
-        val emailCursor = contentResolver.query(
-            ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-            arrayOf(ContactsContract.CommonDataKinds.Email.CONTACT_ID, ContactsContract.CommonDataKinds.Email.ADDRESS),
-            null,
-            null,
-            null
-        )
-        emailCursor?.use { cursor ->
-            val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)
-            val emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(idIndex)
-                contactMap[id]?.let { contactMap[id] = it.copy(email = cursor.getString(emailIndex)) }
-            }
-        }
-
-        val orgCursor = contentResolver.query(
-            ContactsContract.Data.CONTENT_URI,
-            arrayOf(ContactsContract.CommonDataKinds.Organization.CONTACT_ID, ContactsContract.CommonDataKinds.Organization.COMPANY, ContactsContract.CommonDataKinds.Organization.TITLE),
-            ContactsContract.Data.MIMETYPE + CURSOR_SELECTION,
-            arrayOf(ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE),
-            null
-        )
-        orgCursor?.use { cursor ->
-            val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.CONTACT_ID)
-            val companyIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY)
-            val titleIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.TITLE)
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(idIndex)
-                contactMap[id]?.let {
-                    contactMap[id] = it.copy(
-                        company = cursor.getString(companyIndex),
-                        jobTitle = cursor.getString(titleIndex)
-                    )
-                }
-            }
-        }
-
-        val addressCursor = contentResolver.query(
-            ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
-            arrayOf(ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID, ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS),
-            null,
-            null,
-            null
-        )
-        addressCursor?.use { cursor ->
-            val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID)
-            val addrIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS)
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(idIndex)
-                contactMap[id]?.let { contactMap[id] = it.copy(address = cursor.getString(addrIndex)) }
-            }
-        }
-
-        return contactMap.values
-            .map { it.toDomain() }
-            .distinctBy { it.phoneNumber }
-            .sortedBy { it.name }
     }
 
     companion object {

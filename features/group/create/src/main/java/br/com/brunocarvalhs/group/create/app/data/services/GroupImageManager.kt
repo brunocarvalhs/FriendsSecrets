@@ -36,9 +36,11 @@ class GroupImageManager @Inject constructor(
         setupRemoteConfig()
     }
 
-    private fun setupRemoteConfig() {
+    private fun setupRemoteConfig(
+        minimumFetchIntervalInSeconds: Long = MINIMUM_FETCH_INTERVAL_IN_SECONDS
+    ) {
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
+            this.minimumFetchIntervalInSeconds = minimumFetchIntervalInSeconds
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         
@@ -52,13 +54,13 @@ class GroupImageManager @Inject constructor(
         remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val jsonPhotos = remoteConfig.getString(PHOTOS_KEY)
-                try {
+                runCatching {
                     val decoded = Json.decodeFromString<List<String>>(jsonPhotos)
                     if (decoded.isNotEmpty()) {
                         _availablePhotos.value = decoded
                     }
-                } catch (e: Exception) {
-                    Timber.e(e, "Error decoding Remote Config photos")
+                }.onFailure {
+                    Timber.e(it, "Error decoding Remote Config photos")
                 }
             }
         }
@@ -68,5 +70,6 @@ class GroupImageManager @Inject constructor(
 
     companion object {
         private const val PHOTOS_KEY = "group_available_photos"
+        private const val MINIMUM_FETCH_INTERVAL_IN_SECONDS: Long = 3600
     }
 }

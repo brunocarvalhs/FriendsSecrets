@@ -127,7 +127,7 @@ internal class ContactsViewModel @Inject constructor(
             return
         }
         
-        if (members.size < 3) {
+        if (members.size < MIN_GROUP_MEMBERS) {
             _uiState.update { it.copy(error = "O grupo precisa de no mínimo 3 membros") }
             return
         }
@@ -145,5 +145,9 @@ internal class ContactsViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private companion object {
+        const val MIN_GROUP_MEMBERS = 3
     }
 }

@@ -23,6 +23,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.delay
 
+private val GREEN = Color(0xFF00CA8D)
 @Composable
 internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> Unit = {}) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
@@ -34,7 +35,7 @@ internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> U
 
     val isAnimationFinished = progress == 1f
 
-    val backgroundColor = if (isAnimationFinished) Color(0xFF00CA8D)
+    val backgroundColor = if (isAnimationFinished) GREEN
     else MaterialTheme.colorScheme.background
 
     LaunchedEffect(isAnimationFinished) {
