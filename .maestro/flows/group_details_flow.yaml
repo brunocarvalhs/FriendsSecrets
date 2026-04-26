@@ -2,7 +2,6 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Group Details Flow
 ---
 - launchApp
-- runFlow: create_group_flow.yaml
 - tapOn: "Archived"
 - tapOn: "Grupo de Natal 2024"
 
@@ -44,4 +43,3 @@ name: Group Details Flow
 - scroll
 - assertVisible: "Edit group information"
 - assertVisible: "Delete group"
-- tapOn: "Delete group"

@@ -68,3 +68,7 @@ name: Create Group Flow
 - back
 - assertVisible: "Members"
 - tapOn: "Create"
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Archived"
+- assertVisible: "Grupo de Natal 2024"

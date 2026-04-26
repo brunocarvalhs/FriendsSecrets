@@ -2,7 +2,6 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Chat Flow
 ---
 - launchApp
-- runFlow: create_group_flow.yaml
 - tapOn: "Archived"
 - tapOn: "Grupo de Natal 2024"
 - tapOn: "Chat"

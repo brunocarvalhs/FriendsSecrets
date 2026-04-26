@@ -2,7 +2,6 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Settings Flow
 ---
 - launchApp
-- runFlow: home_flow.yaml
 - tapOn: "More options"
 - tapOn: "Settings"
 - assertVisible: "General"
