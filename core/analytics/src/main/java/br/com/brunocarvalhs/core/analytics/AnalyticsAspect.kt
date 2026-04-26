@@ -15,9 +15,9 @@ class AnalyticsAspect {
     @Before("@annotation(analyticsAnnotation)")
     fun interceptAnalytics(joinPoint: JoinPoint, analyticsAnnotation: Analytics) {
         try {
-            val eventName: String = analyticsAnnotation.event
+            val eventName: String = analyticsAnnotation.event.name
             val params = ConvertParameters.toBundle(
-                params = analyticsAnnotation.params.associate { it.key to it.value }
+                params = analyticsAnnotation.params.associate { it.key.name to it.value }
             )
             Timber.d("Log Analytics: Evento $eventName com params $params")
             Firebase.analytics.logEvent(
