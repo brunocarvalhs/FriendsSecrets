@@ -44,6 +44,8 @@ private const val TOKEN_MAX_LENGTH = 8
 private const val SHEET_HEIGHT_FRACTION = 0.85f
 private const val LETTER_SPACING = 8
 private const val FONT_SIZE = 24
+private const val TOKEN_DIVIDER_INDEX = 3
+private const val TOKEN_DIVIDER_OFFSET = 4
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -160,16 +162,16 @@ private class TokenVisualTransformation : VisualTransformation {
         val out = StringBuilder()
         for (i in text.indices) {
             out.append(text[i])
-            if (i == 3) out.append(" ")
+            if (i == TOKEN_DIVIDER_INDEX) out.append(" ")
         }
 
         val offsetMapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int): Int {
-                return if (offset <= 3) offset else offset + 1
+                return if (offset <= TOKEN_DIVIDER_INDEX) offset else offset + 1
             }
 
             override fun transformedToOriginal(offset: Int): Int {
-                return if (offset <= 4) offset else offset - 1
+                return if (offset <= TOKEN_DIVIDER_OFFSET) offset else offset - 1
             }
         }
 

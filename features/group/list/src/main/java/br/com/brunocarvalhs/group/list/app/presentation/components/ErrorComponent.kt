@@ -51,25 +51,29 @@ private fun ErrorText(
     message: String,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(R.string.ops),
-            style = MaterialTheme.typography.headlineLarge,
-        )
-    }
-    Spacer(modifier = Modifier.size(16.dp))
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-        )
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.ops),
+                style = MaterialTheme.typography.headlineLarge,
+            )
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }
 

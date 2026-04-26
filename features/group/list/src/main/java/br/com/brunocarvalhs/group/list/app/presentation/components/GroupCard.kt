@@ -98,6 +98,7 @@ internal fun GroupCard(
     }
 }
 
+
 @Composable
 private fun GroupCardContent(
     name: String,
@@ -149,6 +150,7 @@ private fun GroupCardContent(
     }
 }
 
+
 @Composable
 private fun InfoBadge(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -171,6 +173,7 @@ private fun InfoBadge(
         )
     }
 }
+
 
 @Composable
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
