@@ -20,6 +20,9 @@ style:
 complexity:
   CyclomaticComplexMethod:
     threshold: 15
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
   LargeClass:
     threshold: 600
   LongParameterList:

@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun ContactListItem(
     name: String,
-    photoUrl: String? = null,
     isSelected: Boolean,
+    photoUrl: String? = null,
     onToggle: () -> Unit
 ) {
     Row(

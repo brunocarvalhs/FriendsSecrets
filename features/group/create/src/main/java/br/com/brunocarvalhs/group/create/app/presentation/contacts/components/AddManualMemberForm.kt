@@ -35,8 +35,8 @@ import br.com.brunocarvalhs.group.create.app.domain.constants.EMPTY_STRING
 
 @Composable
 internal fun AddManualMemberForm(
+    onAddMember: (UserModel) -> Unit,
     modifier: Modifier = Modifier,
-    onAddMember: (UserModel) -> Unit
 ) {
     var name by remember { mutableStateOf(value = EMPTY_STRING) }
     var phone by remember { mutableStateOf(value = EMPTY_STRING) }

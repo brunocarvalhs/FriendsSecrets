@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +25,13 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.delay
 
 private val GREEN = Color(0xFF00CA8D)
+private const val DELAY: Long = 500
+
 @Composable
-internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> Unit = {}) {
+internal fun SuccessComponent(
+    modifier: Modifier = Modifier,
+    redirectTo: () -> Unit
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
 
     val progress by animateLottieCompositionAsState(
@@ -38,10 +44,12 @@ internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> U
     val backgroundColor = if (isAnimationFinished) GREEN
     else MaterialTheme.colorScheme.background
 
+    val redirectToState = rememberUpdatedState(redirectTo)
+
     LaunchedEffect(isAnimationFinished) {
-        delay(timeMillis = 500)
         if (isAnimationFinished) {
-            redirectTo()
+            delay(DELAY)
+            redirectToState.value()
         }
     }
 
@@ -70,5 +78,7 @@ internal fun SuccessComponent(modifier: Modifier = Modifier, redirectTo: () -> U
 @Composable
 @Preview(showBackground = true)
 private fun SuccessComponentPreview() {
-    SuccessComponent()
+    SuccessComponent {
+
+    }
 }

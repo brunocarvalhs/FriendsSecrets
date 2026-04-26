@@ -81,26 +81,26 @@ private const val DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FormsContent(
-    isEditing: Boolean = false,
     name: String,
     description: String,
     date: String,
     minPrice: String,
     maxPrice: String,
     selectedPhoto: String?,
-    availablePhotos: List<String> = emptyList(),
+    members: List<UserModel>,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateChange: (String) -> Unit,
     onMinPriceChange: (String) -> Unit,
     onMaxPriceChange: (String) -> Unit,
     onPhotoChange: (String) -> Unit,
-    members: List<UserModel>,
     onCreate: () -> Unit,
-    onBack: () -> Unit,
     isLoading: Boolean = false,
     isValid: Boolean = false,
-    isPriceError: Boolean = false
+    isPriceError: Boolean = false,
+    isEditing: Boolean = false,
+    availablePhotos: List<String> = emptyList(),
+    onBack: () -> Unit,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }

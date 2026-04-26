@@ -24,8 +24,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 internal fun ErrorComponent(
-    modifier: Modifier = Modifier,
     message: String,
+    modifier: Modifier = Modifier,
     onRefresh: (() -> Unit)? = null,
     onBack: (() -> Unit)? = null,
 ) {
