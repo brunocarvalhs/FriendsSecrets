@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import AnalyticsParam
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,7 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -40,19 +39,25 @@ class MainActivity : FragmentActivity() {
     lateinit var analyticsService: AnalyticsService
     @Inject
     lateinit var featureInitializers: Set<@JvmSuppressWildcards FeatureInitializer>
+    @Volatile
+    private var isThemeReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
+        val splashScreen = installSplashScreen()
+
+        splashScreen.setKeepOnScreenCondition {
+            !isThemeReady
         }
 
-        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
             themeService.initialize()
+            isThemeReady = true
         }
+
+        enableEdgeToEdge()
 
         setContent {
             FriendsSecretsTheme(
@@ -69,11 +74,10 @@ class MainActivity : FragmentActivity() {
 
                     LaunchedEffect(navController) {
                         navController.currentBackStackEntryFlow.collect { backStackEntry ->
-                            val route = backStackEntry.destination.route
                             analyticsService.logEvent(
                                 name = AnalyticsEvent.VIEW,
                                 params = mapOf(
-                                    AnalyticsParam.SCREEN to route
+                                    AnalyticsParam.SCREEN to backStackEntry.destination.route
                                 )
                             )
                         }
