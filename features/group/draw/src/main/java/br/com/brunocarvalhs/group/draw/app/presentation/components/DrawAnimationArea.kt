@@ -21,7 +21,7 @@ internal fun DrawAnimationArea(
     movingMembers: List<MovingMember>,
     isFalling: Boolean,
     selectedMember: UserModel?,
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
         modifier = modifier
@@ -49,7 +49,7 @@ internal fun DrawAnimationArea(
             ContactAvatar(
                 name = member.user.name,
                 photoUrl = member.user.photoUrl,
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .size(80.dp)
                     .graphicsLayer {
                         translationX = member.x
@@ -57,7 +57,7 @@ internal fun DrawAnimationArea(
                         scaleX = scale
                         scaleY = scale
                     }
-                    .align(Alignment.Companion.Center)
+                    .align(Alignment.Center)
             )
         }
     }

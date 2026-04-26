@@ -26,11 +26,13 @@ internal fun DrawActionButton(
         enabled = !isFalling
     ) {
         Text(
-            text = if (isFalling) {
-                stringResource(R.string.drawing)
-            } else {
-                stringResource(R.string.just_drawn)
-            },
+            text = stringResource(
+                if (isFalling) {
+                    R.string.drawing
+                } else {
+                    R.string.just_drawn
+                }
+            ),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Companion.Bold)
         )
     }

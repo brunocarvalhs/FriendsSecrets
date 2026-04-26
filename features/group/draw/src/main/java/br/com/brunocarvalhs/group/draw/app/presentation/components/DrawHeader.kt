@@ -15,26 +15,26 @@ import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.draw.R
 
 @Composable
-internal fun DrawHeader(modifier: Modifier = Modifier.Companion) {
+internal fun DrawHeader(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.Companion.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.ready_to_draw),
             style = MaterialTheme.typography.headlineSmall.copy(
-                fontWeight = FontWeight.Companion.Bold,
-                textAlign = TextAlign.Companion.Center
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             ),
             color = MaterialTheme.colorScheme.primary
         )
 
-        Spacer(modifier = Modifier.Companion.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = stringResource(R.string.tap_the_button_below_to_start_the_draw),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Companion.Center,
+            textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }

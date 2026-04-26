@@ -28,7 +28,9 @@ internal fun DrawItem(
     member: String,
     onShare: () -> Unit
 ) {
-    val drawMember = remember(member, members) { members.find { it.name == member } }
+    val drawMember = remember(member, members) {
+        members.find { it.name == member }
+    }
 
     Row(
         modifier = Modifier
