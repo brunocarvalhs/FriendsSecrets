@@ -1,0 +1,20 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Chat Flow
+---
+- launchApp
+- tapOn: "Archived"
+- tapOn: "Grupo de Natal 2024"
+- tapOn: "Chat"
+
+- runFlow:
+    when:
+      visible: "Identify yourself"
+    commands:
+      - tapOn: "Your Name or Nickname"
+      - inputText: "Bruno"
+      - tapOn: "Save"
+- assertVisible: "Type a message..."
+- tapOn: "Type a message..."
+- back
+- back
+- back

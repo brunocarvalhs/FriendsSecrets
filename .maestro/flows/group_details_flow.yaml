@@ -1,0 +1,45 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Group Details Flow
+---
+- launchApp
+- tapOn: "Archived"
+- tapOn: "Grupo de Natal 2024"
+
+# Validação do Cabeçalho e Ações
+- assertVisible: "Grupo de Natal 2024"
+- assertVisible: "Group · 4 participants"
+- assertVisible: "Invite"
+- assertVisible: "Chat"
+- assertVisible: "Draw"
+
+# Validação da Descrição e Data de Criação
+- assertVisible: "Amigo secreto da firma"
+- assertVisible: "Created on .*"
+
+# Validação dos Detalhes do Sorteio
+- assertVisible: "Draw details"
+- assertVisible: "Draw date"
+- assertVisible: "Price range"
+- assertVisible: "Between .* and .*"
+
+# Validação da Lista de Participants
+- assertVisible: "4 participants"
+- assertVisible: "Add participants"
+- assertVisible: "Bruno"
+
+# Teste de navegação (Clicar e voltar)
+- tapOn: "Invite"
+- back
+- assertVisible: "Grupo de Natal 2024"
+
+# Teste de navegação (Clicar e voltar)
+- tapOn: "Chat"
+- back
+- assertVisible: "Grupo de Natal 2024"
+
+- tapOn: "Draw"
+- back
+- assertVisible: "Grupo de Natal 2024"
+- scroll
+- assertVisible: "Edit group information"
+- assertVisible: "Delete group"

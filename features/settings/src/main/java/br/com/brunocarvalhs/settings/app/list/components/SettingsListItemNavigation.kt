@@ -12,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 import br.com.brunocarvalhs.settings.R
 
 @Composable
-fun SettingsListItemNavigation(
+internal fun SettingsListItemNavigation(
     title: Int,
     icon: ImageVector,
     onClick: () -> Unit = {},
@@ -27,7 +26,7 @@ fun SettingsListItemNavigation(
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "Localized description",
+                contentDescription = stringResource(R.string.localized_description),
             )
         },
         leadingContent = {
@@ -40,14 +39,13 @@ fun SettingsListItemNavigation(
     HorizontalDivider()
 }
 
+
 @Composable
 @Preview
 private fun SettingsListItemNavigationPreview() {
-    FriendsSecretsTheme {
-        SettingsListItemNavigation(
-            title = R.string.settings_screen_security,
-            icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            onClick = { }
-        )
-    }
+    SettingsListItemNavigation(
+        title = R.string.settings_screen_security,
+        icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+        onClick = { }
+    )
 }

@@ -2,16 +2,41 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Home Flow
 ---
 - launchApp
-- runFlow: anonymous_login_flow.yaml
-- assertVisible: "Bem-vindo"
-- tapOn:
-    id: ".*MoreVert.*"
-- assertVisible: "Entrar em um grupo"
-- assertVisible: "Configurações"
-- assertVisible: "Sair"
-- tapOn: "Entrar em um grupo"
-- assertVisible: "Código do grupo"
-- tapOn: "Código do grupo"
-- inputText: "123456"
-- tapOn: "Entrar"
+- assertVisible: "Friends Secrets"
+
+# Verifica se os elementos da tela inicial estão presentes
+- assertVisible: "Search groups..."
+- assertVisible: "Active"
+- assertVisible: "Archived"
+- assertVisible: "Drawn"
+- assertVisible: "Not drawn"
+- assertVisible: "Uh-oh!"
+- assertVisible: "No group found"
+- assertVisible: "Enter a group"
+- assertVisible: "Create a group"
+
+# Testa o fluxo de "Enter a group" (Botão no meio da tela)
+- tapOn: "Enter a group"
 - back
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa o fluxo de "Create a group" (Botão no meio da tela)
+- tapOn: "Create a group"
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa a navegação pelas abas (chips)
+- tapOn: "Active"
+- tapOn: "Drawn"
+- tapOn: "Active"
+
+# Testa o Floating Action Button (Novo Grupo)
+- tapOn: "New group"
+- back
+- assertVisible: "Friends Secrets"
+
+# Testa o More Options (Configuração)
+- tapOn: "More options"
+- back
+- assertVisible: "Friends Secrets"

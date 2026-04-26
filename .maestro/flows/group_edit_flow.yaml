@@ -1,0 +1,44 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Group Details Flow
+---
+- launchApp
+- tapOn: "Archived"
+- tapOn: "Grupo de Natal 2024"
+
+- assertVisible: "Grupo de Natal 2024"
+- scrollUntilVisible:
+    element: "Edit group information"
+- assertVisible: "Edit group information"
+- tapOn: "Edit group information"
+
+# Preenche dados básicos do grupo
+- longPressOn: "Grupo de Natal 2024"
+- eraseText: 1
+- inputText: "2024"
+
+- longPressOn: "Amigo secreto da firma"
+- eraseText: 1
+- eraseText
+- inputText: "Amigo secreto da firma 2024"
+- back
+
+- longPressOn: "R$ 100,00"
+- tapOn: "Select All"
+- eraseText: 1
+- inputText: "3000"
+- back
+
+- longPressOn: "R$ 200,00"
+- tapOn: "Select All"
+- eraseText: 1
+- inputText: "6000"
+- back
+
+- assertVisible: "Members"
+- tapOn: "Save"
+- waitForAnimationToEnd:
+    timeout: 5000
+- scrollUntilVisible:
+    element: "Amigo secreto da firma 2024"
+    direction: UP
+- assertVisible: "Grupo de Natal 2024"

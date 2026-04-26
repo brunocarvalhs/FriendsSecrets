@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="app_name">비밀 산타</string>
+    <string name="ops">어머나!</string>
+    <string name="cancel">취소</string>
+    <string name="title_settings">설정</string>
+
+
+    <!-- Home/Group List -->
+    <string name="home_title">안녕하세요</string>
+    <string name="home_action_create_group">새 그룹 만들기</string>
+    <string name="search_groups">그룹 검색...</string>
+    <string name="new_group">새 그룹</string>
+    <string name="join_group">그룹 참여하기</string>
+    <string name="more_options">더 보기</string>
+
+    <!-- Home Menu Items -->
+    <string name="home_drop_menu_item_text_profile">프로필</string>
+    <string name="home_drop_menu_item_text_join_a_group">그룹 참여하기</string>
+    <string name="home_drop_menu_item_text_settings">설정</string>
+    <string name="home_drop_menu_item_text_logout">로그아웃</string>
+
+    <!-- Empty State -->
+    <string name="empty_group_title">어머나!</string>
+    <string name="empty_group_message">그룹을 찾을 수 없습니다</string>
+    <string name="empty_group_component_button_create_grup">그룹 만들기</string>
+    <string name="empty_group_component_button_enter_grup">그룹 참여하기</string>
+
+    <!-- Group Join/Enter -->
+    <string name="group_to_enter_title">그룹 코드를 입력하세요</string>
+    <string name="group_to_enter_button_text">확인</string>
+    <string name="group_to_enter_button_enter_to_group">그룹 입장</string>
+    <string name="group_to_enter_textfield_token_to_grup">그룹 토큰</string>
+
+    <!-- Error State -->
+    <string name="error_component_button_try_again">다시 시도</string>
+    <string name="error_component_button_to_home">홈으로 이동</string>
+
+    <!-- Accessibility/Descriptions -->
+    <string name="contact_photo_description">%1$s의 연락처 사진</string>
+    <string name="group_list_filter_active">활성</string>
+    <string name="group_list_filter_archived">보관됨</string>
+    <string name="group_list_filter_drawn">추첨됨</string>
+    <string name="group_list_filter_not_drawn">추첨되지 않음</string>
+
+    <!-- Maintenance -->
+    <string name="group_card_members_count">%1$d명</string>
+    <string name="maintenance_title">기능을 사용할 수 없음</string>
+    <string name="maintenance_message">죄송합니다. 성능 개선을 위해 이 기능을 점검 중입니다. 나중에 다시 시도해 주세요.</string>
+</resources>

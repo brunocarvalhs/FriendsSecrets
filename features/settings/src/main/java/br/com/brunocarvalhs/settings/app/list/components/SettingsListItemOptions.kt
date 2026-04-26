@@ -17,13 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
 
 @Composable
-fun SettingsListItemOptions(
-    selected: Boolean = false,
+internal fun SettingsListItemOptions(
     title: String,
     icon: ImageVector,
+    selected: Boolean = false,
     onClick: (Boolean) -> Unit,
 ) {
     var checked by rememberSaveable { mutableStateOf(value = selected) }
@@ -56,13 +55,10 @@ fun SettingsListItemOptions(
 
 @Composable
 @Preview
-private fun SettingsListItemOptionsPreview() {
-    FriendsSecretsTheme {
-        SettingsListItemOptions(
-            selected = false,
-            icon = Icons.AutoMirrored.Filled.ForwardToInbox,
-            title = "Notifications",
-            onClick = {}
-        )
-    }
+internal fun SettingsListItemOptionsPreview() {
+    SettingsListItemOptions(
+        icon = Icons.AutoMirrored.Filled.ForwardToInbox,
+        title = "Notifications",
+        onClick = {}
+    )
 }

@@ -3,27 +3,36 @@ package br.com.brunocarvalhs.settings.app.report
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.ui.components.WebViewContainer
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import br.com.brunocarvalhs.settings.R
+import br.com.brunocarvalhs.settings.app.report.components.WebViewContainer
 
 @Composable
-fun ReportIssueScreen(navController: NavHostController) {
+internal fun ReportIssueScreen(
+    onBack: () -> Unit,
+    viewModel: ReportIssueViewModel = hiltViewModel()
+) {
+    val url by viewModel.url.collectAsState()
+
     ReportIssueContent(
-        navController = navController
+        url = url,
+        onBack = onBack
     )
 }
 
@@ -31,7 +40,8 @@ fun ReportIssueScreen(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReportIssueContent(
-    navController: NavHostController,
+    url: String,
+    onBack: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -44,14 +54,19 @@ private fun ReportIssueContent(
                     Text(text = stringResource(R.string.title_report_an_issue))
                 },
                 navigationIcon = {
-                    NavigationBackIconButton(navController = navController)
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
                 },
             )
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
             WebViewContainer(
-                url = "https://github.com/brunocarvalhs/FriendsSecrets/issues/new",
+                url = url,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -61,9 +76,8 @@ private fun ReportIssueContent(
 @Composable
 @Preview
 private fun ReportIssuePreview() {
-    FriendsSecretsTheme {
-        ReportIssueContent(
-            navController = rememberNavController()
-        )
-    }
+    ReportIssueContent(
+        url = "https://github.com/brunocarvalhs/FriendsSecrets/issues/new",
+        onBack = {}
+    )
 }

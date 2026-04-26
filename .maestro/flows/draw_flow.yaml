@@ -1,0 +1,28 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Chat Flow
+---
+- launchApp
+- tapOn: "Archived"
+- tapOn: "Grupo de Natal 2024"
+- tapOn: "Draw"
+- assertVisible: "Secret Santa Draw"
+- assertVisible: "Ready to draw?"
+- assertVisible: "Just Drawn"
+- tapOn: "Just Drawn"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Draw Results"
+- back
+- assertVisible: "Reveal"
+- tapOn: "Reveal"
+- assertVisible: "Draw Results"
+- back
+- assertNotVisible: "Add participants"
+- scrollUntilVisible:
+    element: "Delete group"
+- assertVisible: "Edit group information"
+- assertVisible: "Delete group"
+- tapOn: "Delete group"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible: "teste 2"

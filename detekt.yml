@@ -2,15 +2,44 @@ style:
   MaxLineLength:
     maxLineLength: 120
     excludeCommentStatements: true
+  MagicNumber:
+    active: true
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+      - '0xFF'
+    ignorePropertyDeclaration: true
+    ignoreAnnotation: true
+    ignoreEnums: true
+  UnusedPrivateMember:
+    active: true
+    allowedNames: '.*Preview'
 
 complexity:
   CyclomaticComplexMethod:
     threshold: 15
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
   LargeClass:
     threshold: 600
   LongParameterList:
     functionThreshold: 6
     constructorThreshold: 6
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
+      - 'Inject'
+      - 'javax.inject.Inject'
+      - 'HiltViewModel'
+  LongMethod:
+    active: true
+    threshold: 60
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
   TooManyFunctions:
     thresholdInClasses: 12
 
@@ -25,9 +54,29 @@ coroutines:
 
 empty-blocks:
   active: true
+  EmptyFunctionBlock:
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
 
 exceptions:
   active: true
 
 naming:
   active: true
+  FunctionNaming:
+    active: true
+    ignoreAnnotated:
+      - 'Composable'
+      - 'androidx.compose.runtime.Composable'
+
+Compose:
+  active: true
+  ComposeNaming:
+    active: true
+  ComposeComposableModifier:
+    active: true
+  ComposeModifierOrder:
+    active: true
+  ComposeLambdaOffset:
+    active: true

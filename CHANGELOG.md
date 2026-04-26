@@ -5,6 +5,27 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [3.0.0] - 2025-05-22
+
+### Adicionado
+- Nova arquitetura modular
+- Suporte a Temas Dinâmicos (Material You)
+- Gerenciamento de preferências centralizado
+
+### Melhorado
+- Migração completa para Version Catalog (libs.versions.toml)
+- Atualização para Android 15 (SDK 35/37)
+- Otimização de performance no carregamento inicial
+
+## [2.2.1] - 2025-05-22
+
+### Adicionado
+- Centralização de configurações de SDK e versionamento no Version Catalog
+
+### Melhorado
+- Atualização do Version Name para 2.2.1
+- Sincronização de versões entre módulos
+
 ## [1.2.4] - 2025-04-26
 - Atualizando variável da CI/CD do google-services
 

@@ -1,73 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">비밀 산타</string>
-    <string name="biometric_screen_title_authentication">친구 비밀을 사용하려면 잠금 해제하세요</string>
-    <string name="biometric_screen_log_in_using_your_biometric_credential">생체 인식 인증으로 로그인</string>
-    <string name="biometric_screen_use_account_password">계정 비밀번호 사용</string>
-    <string name="biometric_screen_biometric_authentication">친구 비밀이 잠겨 있습니다</string>
-    <string name="biometric_screen_unlock">잠금 해제</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group">그룹 나가기</string>
-    <string name="group_details_drop_menu_item_text_exit_to_group_admin">그룹 삭제</string>
+    <string name="back">뒤로</string>
+
+    <!-- Settings -->
     <string name="title_settings">설정</string>
-    <string name="title_appearance">외관</string>
-    <string name="title_faq">자주 묻는 질문</string>
-    <string name="title_review">앱 평가</string>
-    <string name="title_report_an_issue">문제 신고</string>
-    <string name="appearance_screen_dynamic_title">동적 테마</string>
-    <string name="appearance_screen_title_description">동적 테마를 활성화하면 기기 배경화면에 따라 앱 색상이 자동으로 조정됩니다.</string>
-    <string name="appearance_screen_title">특정 옵션을 선택하면 사용자의 선호에 따라 앱의 외관(색상)이 변경됩니다.</string>
     <string name="settings_screen_general">일반</string>
     <string name="settings_screen_security">지문</string>
     <string name="settings_screen_support">지원</string>
-    <string name="group_details_description">설명</string>
-    <string name="group_details_members">멤버</string>
-    <string name="draw_screen_title">당신의 비밀 친구는...</string>
-    <string name="draw_screen_action_title">내 비밀 친구 공개하기</string>
-    <string name="draw_screen_action_generative">선물 제안</string>
-    <string name="draw_screen_code_secret">비밀 코드</string>
-    <string name="draw_screen_title_like">좋아요</string>
-    <string name="onboarding_screen_close">닫기</string>
-    <string name="onboarding_next">다음</string>
-    <string name="onboarding_finish">시작</string>
-    <string name="group_to_enter_button_text">확인</string>
-    <string name="group_to_enter_button_enter_to_group">그룹에 들어가기</string>
-    <string name="group_to_enter_textfield_token_to_grup">그룹 토큰</string>
-    <string name="error_component_button_try_again">다시 시도</string>
-    <string name="error_component_button_to_home">홈으로 가기</string>
-    <string name="empty_group_component_button_create_grup">그룹 만들기</string>
-    <string name="chat_generative_title_chat">채팅</string>
-    <string name="empty_group_component_button_enter_grup">그룹에 참여하기</string>
-    <string name="chat_generative_textfield_message">메시지 입력...</string>
-    <string name="chat_generative_button_send">보내기</string>
-    <string name="empty_group_title">앗!</string>
-    <string name="empty_group_message">그룹을 찾을 수 없습니다</string>
-    <string name="home_title">안녕하세요</string>
-    <string name="home_drop_menu_item_text_logout">로그아웃</string>
-    <string name="group_create_phone_contacts">전화 연락처</string>
-    <string name="group_create_app_users">앱 사용자</string>
-    <string name="login_screen_welcome">%1$s에 오신 것을 환영합니다</string>
-    <string name="login_screen_description">개인정보처리방침을 읽어보세요. '수락하고 등록'을 눌러 계정을 만들거나 '수락하고 계속'을 눌러 등록 없이 진행할 수 있습니다. 두 옵션 모두 서비스 약관에 동의하는 것으로 간주됩니다.</string>
-    <string name="login_screen_privacy">개인정보처리방침</string>
-    <string name="login_screen_terms">서비스 약관</string>
-    <string name="login_screen_and">" 그리고 "</string>
-    <string name="login_screen_button_register">수락하고 등록</string>
-    <string name="login_screen_button_anonymation">수락하고 계속</string>
-    <string name="phone_send_title">전화번호를 입력하세요</string>
-    <string name="phone_send_description">%1$s가 전화번호를 확인해야 합니다.</string>
-    <string name="phone_send_textfield_label">전화번호</string>
-    <string name="phone_send_textfield_description">통신사 요금이 부과될 수 있습니다.</string>
-    <string name="phone_send_button">다음</string>
-    <string name="add_like_description" translatable="false">좋아요 추가</string>
-    <string name="remove_like_description" translatable="false">좋아요 취소: %1$s</string>
-    <string name="contact_photo_description">%1$s의 연락처 사진</string>
-    <string name="collapse_likes_action">좋아요 접기</string>
-    <string name="expand_likes_action">좋아요 펼치기</string>
-    <string name="likes_expanded_state">펼쳐짐</string>
-    <string name="likes_collapsed_state">접힘</string>
-    <string name="share_secret_friend_action">%1$s의 비밀 친구 공유</string>
-    <string name="edit_participant_action">%1$s 참가자 편집</string>
-    <string name="remove_participant_action">%1$s 참가자 제거</string>
-    <string name="tema_claro">라이트 테마</string>
-    <string name="tema_escuro">다크 테마</string>
-    <string name="tema_do_sistema">시스템 테마</string>
+    <string name="title_report_an_issue">문제 신고</string>
+    <string name="title_review">앱 평가</string>
+    <string name="localized_description">현지화된 설명</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">테마</string>
+    <string name="appearance_screen_title">특정 옵션을 선택하면 기본 설정에 따라 앱의 모양(색상)이 변경됩니다.</string>
+    <string name="appearance_screen_title_description">동적 테마를 활성화하면 앱이 기기의 배경화면에 따라 색상을 자동으로 조정합니다.</string>
+    <string name="appearance_screen_dynamic_title">동적 테마</string>
+    <string name="light_theme">라이트</string>
+    <string name="dark_theme">다크 테마</string>
+    <string name="system_theme">시스템 테마</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">자주 묻는 질문</string>
 </resources>

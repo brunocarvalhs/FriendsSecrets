@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Voltar</string>
+    <string name="draw_results_title">Resultados do Sorteio</string>
+    <string name="secret_santa_draw_title">Sorteio de Amigo Secreto</string>
+    <string name="draw_complete_message">O sorteio foi concluído! Compartilhe os resultados com seus amigos.</string>
+    <string name="ready_to_discover_title">Pronto para descobrir seu Amigo Secreto?</string>
+    <string name="start_magic_subtitle">Toque no botão abaixo para começar a mágica!</string>
+    <string name="drawing_button">Sorteando...</string>
+    <string name="start_draw_button">Começar Sorteio</string>
+    <string name="draw_results">Resultados do Sorteio</string>
+    <string name="secret_santa_draw">Sorteio de Amigo Secreto</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">O sorteio foi concluído! Compartilhe os resultados com os membros do grupo.</string>
+    <string name="ready_to_draw">Pronto para sortear?</string>
+    <string name="tap_the_button_below_to_start_the_draw">Toque no botão abaixo para começar o sorteio!</string>
+    <string name="scale">Escala</string>
+    <string name="drawing">Sorteando...</string>
+    <string name="just_drawn">Sorteado Agora</string>
+    <string name="share">Compartilhar</string>
+</resources>

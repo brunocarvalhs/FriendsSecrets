@@ -1,41 +1,50 @@
 package br.com.brunocarvalhs.settings.app.faq
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import br.com.brunocarvalhs.friendssecrets.ui.components.NavigationBackIconButton
-import br.com.brunocarvalhs.friendssecrets.ui.theme.FriendsSecretsTheme
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import br.com.brunocarvalhs.settings.R
+import br.com.brunocarvalhs.settings.app.report.components.WebViewContainer
 
 @Composable
-fun FAQScreen(navController: NavHostController) {
-    FAQContent(navController = navController)
+internal fun FAQScreen(
+    onBack: () -> Unit,
+    viewModel: FAQViewModel = hiltViewModel()
+) {
+    val url by viewModel.url.collectAsState()
+
+    FAQContent(
+        url = url,
+        onBack = onBack
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FAQContent(
-    navController: NavHostController
+    url: String,
+    onBack: () -> Unit
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-
     Scaffold(
         topBar = {
-            LargeTopAppBar(
+            TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
@@ -44,26 +53,31 @@ private fun FAQContent(
                     Text(text = stringResource(R.string.title_faq))
                 },
                 navigationIcon = {
-                    NavigationBackIconButton(navController = navController)
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
                 },
-                scrollBehavior = scrollBehavior
             )
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .padding(16.dp)) {
-
+        Column(modifier = Modifier.padding(it)) {
+            WebViewContainer(
+                url = url,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
 
 @Composable
 @Preview
-private fun FAQContentPreview() {
-    FriendsSecretsTheme {
-        FAQContent(
-            navController = rememberNavController()
-        )
-    }
+internal fun FAQContentPreview() {
+    FAQContent(
+        url = "https://github.com/brunocarvalhs/FriendsSecrets/wiki/FAQ",
+        onBack = {}
+    )
 }
+
