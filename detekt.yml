@@ -31,6 +31,9 @@ complexity:
     ignoreAnnotated:
       - 'Composable'
       - 'androidx.compose.runtime.Composable'
+      - 'Inject'
+      - 'javax.inject.Inject'
+      - 'HiltViewModel'
   LongMethod:
     active: true
     threshold: 60

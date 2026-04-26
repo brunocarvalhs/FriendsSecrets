@@ -25,14 +25,18 @@ import javax.inject.Inject
 @HiltViewModel
 internal class GroupDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val services: GroupDetailsServices,
+    private val readUseCase: GroupReadUseCase,
+    private val deleteUseCase: GroupDeleteUseCase,
+    private val exitUseCase: GroupExitUseCase,
+    private val shareUseCase: GroupShareUseCase,
+    private val analytics: GroupDetailsAnalytics
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
     private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
 
     init {
-        services.analytics.trackScreenView()
+        analytics.trackScreenView()
     }
 
     @AddTrace(name = "GroupDetailsViewModel.handleIntent", enabled = true)
@@ -45,10 +49,10 @@ internal class GroupDetailsViewModel @Inject constructor(
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
     private fun deleteGroup(callback: () -> Unit) {
-        services.analytics.trackDeleteGroup()
+        analytics.trackDeleteGroup()
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            services.deleteUseCase.invoke(_uiState.value.group)
+            deleteUseCase.invoke(_uiState.value.group)
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false) }
                     callback()
@@ -62,10 +66,10 @@ internal class GroupDetailsViewModel @Inject constructor(
 
     @AddTrace(name = "GroupDetailsViewModel.exitGroup", enabled = true)
     private fun exitGroup(callback: () -> Unit) {
-        services.analytics.trackExitGroup()
+        analytics.trackExitGroup()
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            services.exitUseCase.invoke(_uiState.value.group)
+            exitUseCase.invoke(_uiState.value.group)
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false) }
                     callback()
@@ -79,17 +83,17 @@ internal class GroupDetailsViewModel @Inject constructor(
 
     @AddTrace(name = "GroupDetailsViewModel.shareGroup", enabled = true)
     private fun shareGroup() {
-        services.analytics.trackShareGroup()
+        analytics.trackShareGroup()
         viewModelScope.launch {
-            services.shareUseCase(group = _uiState.value.group)
+            shareUseCase(group = _uiState.value.group)
         }
     }
 
     @AddTrace(name = "GroupDetailsViewModel.readGroup", enabled = true)
     private fun readGroup() {
-        services.analytics.trackRefreshGroup()
+        analytics.trackRefreshGroup()
         viewModelScope.launch {
-            services.readUseCase(_uiState.value.group.id)
+            readUseCase(_uiState.value.group.id)
                 .onSuccess { group ->
                     if (group != _uiState.value.group) {
                         _uiState.update { it.copy(group = group) }
