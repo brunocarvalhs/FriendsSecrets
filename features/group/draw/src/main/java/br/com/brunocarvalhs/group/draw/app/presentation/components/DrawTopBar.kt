@@ -22,11 +22,13 @@ internal fun DrawTopBar(
     TopAppBar(
         title = {
             Text(
-                text = if (isDrawn) {
-                    stringResource(R.string.draw_results)
-                } else {
-                    stringResource(R.string.secret_santa_draw)
-                },
+                text = stringResource(
+                    if (isDrawn) {
+                        R.string.draw_results
+                    } else {
+                        R.string.secret_santa_draw
+                    }
+                ),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
         },
