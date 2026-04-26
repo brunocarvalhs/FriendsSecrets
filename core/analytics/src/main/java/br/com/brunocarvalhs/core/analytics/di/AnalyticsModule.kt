@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.core.analytics.di
 
+import br.com.brunocarvalhs.core.analytics.AnalyticsManager
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
-import br.com.brunocarvalhs.core.analytics.FirebaseAnalyticsManager
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -19,7 +19,7 @@ abstract class AnalyticsModule {
     @Binds
     @Singleton
     abstract fun bindAnalyticsService(
-        analyticsManager: FirebaseAnalyticsManager
+        analyticsManager: AnalyticsManager
     ): AnalyticsService
 
     companion object {

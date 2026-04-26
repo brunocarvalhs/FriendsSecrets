@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import br.com.brunocarvalhs.biometric.BiometricService
 import br.com.brunocarvalhs.biometric.R
+import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,10 +15,12 @@ class BiometricUseCase @Inject constructor(
     private val biometricManager: BiometricService
 ) {
 
+    @AddTrace(name = "BiometricUseCase.canAuthenticate", enabled = true)
     fun canAuthenticate(): Boolean {
         return biometricManager.canAuthenticate()
     }
 
+    @AddTrace(name = "BiometricUseCase.authenticate", enabled = true)
     fun authenticate(activity: FragmentActivity): Flow<BiometricResult> = callbackFlow {
         val executor = ContextCompat.getMainExecutor(activity)
 

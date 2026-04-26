@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.chat.app.presentation
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,10 +11,12 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.ClearMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
-import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.core.navigation.routers.ChatGraph
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.domain.model.MessageModel
 import br.com.brunocarvalhs.core.domain.model.MessageModel.MessageStatus
+import br.com.brunocarvalhs.core.navigation.routers.ChatGraph
+import br.com.brunocarvalhs.deviceid.DeviceService
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +43,7 @@ internal class ChatViewModel @Inject constructor(
     private val clearMessagesUseCase: ClearMessagesUseCase,
     private val identifyUserUseCase: IdentifyUserUseCase,
     private val deviceService: DeviceService,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<ChatGraph>(ChatGraph.typeMap)
     private val _uiState = MutableStateFlow(
@@ -55,7 +59,14 @@ internal class ChatViewModel @Inject constructor(
         initializer()
     }
 
+    @AddTrace(name = "ChatViewModel.initializer", enabled = true)
     private fun initializer() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "initializer"
+            )
+        )
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
 
@@ -78,6 +89,12 @@ internal class ChatViewModel @Inject constructor(
 
     @AddTrace(name = "ChatViewModel.checkAndClearExpiredChat", enabled = true)
     private suspend fun checkAndClearExpiredChat() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "check_and_clear_expired_chat"
+            )
+        )
         val groupDateString = _uiState.value.groupModel.date ?: return
         runCatching {
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -103,12 +120,27 @@ internal class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.updateInput", enabled = true)
     private fun updateInput(text: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "update_input",
+                AnalyticsParam.PARAM to text
+            )
+        )
         _uiState.update { it.copy(inputText = text) }
     }
 
     @AddTrace(name = "ChatViewModel.identifyUser", enabled = true)
     private fun identifyUser(name: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "identify_user",
+                AnalyticsParam.PARAM to name
+            )
+        )
         if (name.isBlank()) return
         viewModelScope.launch {
             identifyUserUseCase.saveNickname(name)
@@ -129,6 +161,12 @@ internal class ChatViewModel @Inject constructor(
 
     @AddTrace(name = "ChatViewModel.sendMessage", enabled = true)
     private fun sendMessage() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "send_message"
+            )
+        )
         val messageText = _uiState.value.inputText
         if (messageText.isBlank()) return
 
@@ -172,6 +210,12 @@ internal class ChatViewModel @Inject constructor(
 
     @AddTrace(name = "ChatViewModel.observeMessages", enabled = true)
     private fun observeMessages() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "observe_messages"
+            )
+        )
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
@@ -195,7 +239,15 @@ internal class ChatViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ChatViewModel.MessageModel.toChatMessage", enabled = true)
     private fun MessageModel.toChatMessage(currentDeviceId: String): ChatMessage {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "to_chat_message",
+                AnalyticsParam.PARAM to this.toString()
+            )
+        )
         val groupMembers = _uiState.value.groupModel.members
         val member = groupMembers.find { it.id == senderId || it.phoneNumber == senderId }
 

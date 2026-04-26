@@ -1,8 +1,11 @@
 package br.com.brunocarvalhs.settings.app.appearence
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.remote.domain.ThemeService
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AppearanceViewModel @Inject constructor(
     private val themeService: ThemeService,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -39,12 +43,26 @@ internal class AppearanceViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "AppearanceViewModel.initializer", enabled = true)
     private fun initializer() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "initializer"
+            )
+        )
         viewModelScope.launch { themeService.initialize() }
     }
 
     @AddTrace(name = "AppearanceViewModel.setTheme", enabled = true)
     private fun setTheme(theme: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_theme",
+                AnalyticsParam.PARAM to theme
+            )
+        )
         viewModelScope.launch {
             themeService.setTheme(ThemeService.Theme.valueOf(theme.uppercase()))
             _state.update { it.copy(themeSelected = theme) }
@@ -53,6 +71,13 @@ internal class AppearanceViewModel @Inject constructor(
 
     @AddTrace(name = "AppearanceViewModel.setDynamicThemeEnabled", enabled = true)
     private fun setDynamicThemeEnabled(enabled: Boolean) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_dynamic_theme_enabled",
+                AnalyticsParam.PARAM to enabled.toString()
+            )
+        )
         viewModelScope.launch {
             themeService.setDynamicThemeEnabled(enabled)
             _state.update { it.copy(isDynamicThemeEnabled = enabled) }

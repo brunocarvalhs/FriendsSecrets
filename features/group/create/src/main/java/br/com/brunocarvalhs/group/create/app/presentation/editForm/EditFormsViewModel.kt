@@ -1,10 +1,13 @@
 package br.com.brunocarvalhs.group.create.app.presentation.editForm
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupEditUseCase
@@ -24,6 +27,7 @@ internal class EditFormsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val groupEditUseCase: GroupEditUseCase,
     private val imageService: GroupImageService,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<EditFormsGraph>(EditFormsGraph.typeMap)
@@ -56,7 +60,14 @@ internal class EditFormsViewModel @Inject constructor(
         is EditFormsIntent.UpdatePhoto -> updateState { copy(selectedPhoto = intent.photoUrl) }
     }
 
+    @AddTrace(name = "EditFormsViewModel.initializer", enabled = true)
     private fun initializer() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "initializer"
+            )
+        )
         viewModelScope.launch {
             imageService.availablePhotos.collectLatest { photos ->
                 _uiState.update {
@@ -69,14 +80,28 @@ internal class EditFormsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "EditFormsViewModel.updateState", enabled = true)
     private fun updateState(update: EditFormsUiState.() -> EditFormsUiState) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "update_state"
+            )
+        )
         _uiState.update { 
             val newState = it.update()
             validate(newState)
         }
     }
 
+    @AddTrace(name = "EditFormsViewModel.validate", enabled = true)
     private fun validate(state: EditFormsUiState): EditFormsUiState {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "validate"
+            )
+        )
         val min = state.minPrice.toLongOrNull() ?: 0L
         val max = state.maxPrice.toLongOrNull() ?: Long.MAX_VALUE
         
@@ -92,6 +117,12 @@ internal class EditFormsViewModel @Inject constructor(
 
     @AddTrace(name = "EditFormsViewModel.saveGroup", enabled = true)
     private fun saveGroup(onFinish: () -> Unit) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "save_group"
+            )
+        )
         viewModelScope.launch {
             val currentState = _uiState.value
             if (!currentState.isValid) return@launch

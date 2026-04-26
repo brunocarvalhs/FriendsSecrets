@@ -1,8 +1,11 @@
 package br.com.brunocarvalhs.group.list.app.presentation
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupListUseCase
@@ -21,6 +24,7 @@ import javax.inject.Inject
 internal class GroupListViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GroupListUiState())
@@ -36,16 +40,39 @@ internal class GroupListViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupListViewModel.searchGroups", enabled = true)
     private fun searchGroups(query: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SEARCH,
+            params = mapOf(
+                AnalyticsParam.ACTION to "search_groups",
+                AnalyticsParam.PARAM to query
+            )
+        )
         _uiState.update { it.copy(searchQuery = query) }
     }
 
+    @AddTrace(name = "GroupListViewModel.filterGroups", enabled = true)
     private fun filterGroups(tag: GroupFilterTag) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "filter_groups",
+                AnalyticsParam.PARAM to tag.name
+            )
+        )
         _uiState.update { it.copy(selectedTag = tag) }
     }
 
     @AddTrace(name = "GroupListViewModel.groupToEnter", enabled = true)
     private fun groupToEnter(token: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "group_to_enter",
+                AnalyticsParam.PARAM to token
+            )
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupByTokenUseCase.invoke(token)
@@ -56,6 +83,12 @@ internal class GroupListViewModel @Inject constructor(
 
     @AddTrace(name = "GroupListViewModel.fetchGroups", enabled = true)
     private fun fetchGroups() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "fetch_groups"
+            )
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupListUseCase.invoke()
@@ -64,7 +97,15 @@ internal class GroupListViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupListViewModel.success", enabled = true)
     private fun success(result: List<GroupModel>) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "success",
+                AnalyticsParam.PARAM to result.toString()
+            )
+        )
         _uiState.update {
             it.copy(
                 isLoading = false,
@@ -74,7 +115,15 @@ internal class GroupListViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "GroupListViewModel.error", enabled = true)
     private fun error(t: Throwable) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.ERROR,
+            params = mapOf(
+                AnalyticsParam.ACTION to "error",
+                AnalyticsParam.PARAM to t.message
+            )
+        )
         Timber.e(t)
         _uiState.update {
             it.copy(

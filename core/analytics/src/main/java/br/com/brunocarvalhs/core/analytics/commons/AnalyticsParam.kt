@@ -1,8 +1,8 @@
-enum class AnalyticsParam(val key: String) {
+enum class AnalyticsParam(val value: String) {
     SCREEN("screen"),
     ACTION("action"),
     TARGET("target"),
     FEATURE("feature"),
     RESULT("result"),
-    ERROR_MESSAGE("error_message")
+    PARAM("param"),
 }

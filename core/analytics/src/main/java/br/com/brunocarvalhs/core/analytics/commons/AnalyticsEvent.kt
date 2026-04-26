@@ -7,4 +7,5 @@ enum class AnalyticsEvent(val value: String) {
     SUBMIT("submit"),
     NAVIGATE("navigate"),
     ERROR("error"),
+    SEARCH("search"),
 }

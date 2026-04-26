@@ -1,13 +1,16 @@
 package br.com.brunocarvalhs.group.create.app.presentation.contacts
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.core.navigation.routers.ContactsRouter
 import br.com.brunocarvalhs.core.navigation.routers.EditFormsGraph
-import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GetContactsUseCase
 import br.com.brunocarvalhs.group.create.commons.navigation.FormsRouter
 import com.google.firebase.perf.metrics.AddTrace
@@ -24,6 +27,7 @@ import javax.inject.Inject
 internal class ContactsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getContactsUseCase: GetContactsUseCase,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<ContactsRouter>(ContactsRouter.typeMap)
@@ -68,7 +72,15 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.searchContacts", enabled = true)
     private fun searchContacts(query: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "search_contacts",
+                AnalyticsParam.PARAM to query
+            )
+        )
         _uiState.update { currentState ->
             currentState.copy(
                 searchQuery = query,
@@ -77,7 +89,15 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.toggleMember", enabled = true)
     private fun toggleMember(contact: UserModel) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "toggle_member",
+                AnalyticsParam.PARAM to contact.name
+            )
+        )
         _uiState.update { currentState ->
             val isAlreadySelected = currentState.members.any {
                 (contact.phoneNumber.isNotBlank() && it.phoneNumber == contact.phoneNumber) ||
@@ -97,7 +117,15 @@ internal class ContactsViewModel @Inject constructor(
         }
     }
 
+    @AddTrace(name = "ContactsViewModel.removeMember", enabled = true)
     private fun removeMember(contact: UserModel) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "remove_member",
+                AnalyticsParam.PARAM to contact.name
+            )
+        )
         _uiState.update { currentState ->
             currentState.copy(
                 members = currentState.members.filterNot { it.id == contact.id }
@@ -107,6 +135,13 @@ internal class ContactsViewModel @Inject constructor(
 
     @AddTrace(name = "ContactsViewModel.filterContacts", enabled = true)
     private fun filterContacts(contacts: List<UserModel>, query: String): List<UserModel> {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "filter_contacts",
+                AnalyticsParam.PARAM to query
+            )
+        )
         if (query.isBlank()) return contacts
         return contacts.filter {
             it.name.contains(query, ignoreCase = true) ||
@@ -116,6 +151,12 @@ internal class ContactsViewModel @Inject constructor(
 
     @AddTrace(name = "ContactsViewModel.next", enabled = true)
     private fun next(callback: (Any) -> Unit) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "next"
+            )
+        )
         val members = _uiState.value.members
         
         if (members.isEmpty()) {

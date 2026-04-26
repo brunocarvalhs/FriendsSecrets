@@ -58,9 +58,6 @@ appcompat = "1.7.1"
 material = "1.13.0"
 core = "1.18.0"
 coreKtxVersion = "1.7.0"
-aspectj-plugin = "8.13.0"
-aspectjrt = "1.9.25.1"
-aspectjweaver = "1.9.25.1"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -73,8 +70,6 @@ androidx-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing"
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startupRuntime" }
 androidx-tracing-perfetto = { module = "androidx.tracing:tracing-perfetto", version.ref = "tracingPerfetto" }
 androidx-tracing-perfetto-binary = { module = "androidx.tracing:tracing-perfetto-binary", version.ref = "tracingPerfettoBinary" }
-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
-aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjweaver" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
@@ -145,4 +140,3 @@ google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.re
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 gradle-javaLibrary = { id = "java-library" }
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
-aspectj-android = { id = "io.freefair.android.aspectj.post-compile-weaving", version.ref = "aspectj-plugin" }

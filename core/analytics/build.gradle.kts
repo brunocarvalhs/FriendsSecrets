@@ -45,8 +45,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
 
-    implementation(libs.aspectjrt)
-    compileOnly(libs.aspectjweaver)
-
     implementation(libs.timber)
 }

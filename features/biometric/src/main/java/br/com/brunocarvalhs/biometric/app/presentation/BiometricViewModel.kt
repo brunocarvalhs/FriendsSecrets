@@ -8,8 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.biometric.R
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricResult
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricUseCase
-import br.com.brunocarvalhs.core.analytics.annotation.Analytics
-import br.com.brunocarvalhs.core.analytics.annotation.Param
+import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class BiometricViewModel @Inject constructor(
     private val biometricUseCase: BiometricUseCase,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BiometricUiState())
@@ -40,29 +40,27 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
-    @Analytics(
-        event = AnalyticsEvent.VIEW,
-        params = [
-            Param(AnalyticsParam.FEATURE, FEATURE),
-            Param(AnalyticsParam.SCREEN, "biometric"),
-            Param(AnalyticsParam.ACTION, "check_can_authenticate")
-        ]
-    )
     @AddTrace(name = "$CLASS.checkCanAuthenticate", enabled = true)
     private fun checkCanAuthenticate() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(
+                AnalyticsParam.ACTION to "check_can_authenticate"
+            )
+        )
         val canAuthenticate = biometricUseCase.canAuthenticate()
         _state.update { it.copy(canAuthenticate = canAuthenticate) }
     }
 
-    @Analytics(
-        event = AnalyticsEvent.CLICK,
-        params = [
-            Param(AnalyticsParam.FEATURE, FEATURE),
-            Param(AnalyticsParam.ACTION, "authenticate")
-        ]
-    )
     @AddTrace(name = "$CLASS.authenticate")
     private fun authenticate(activity: FragmentActivity) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.FEATURE to FEATURE,
+                AnalyticsParam.ACTION to "authenticate"
+            )
+        )
         if (!_state.value.canAuthenticate) {
             _state.update { it.copy(isAuthenticated = true) }
             return
@@ -84,15 +82,15 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
-    @Analytics(
-        event = AnalyticsEvent.SUBMIT,
-        params = [
-            Param(AnalyticsParam.FEATURE, FEATURE),
-            Param(AnalyticsParam.RESULT, "success")
-        ]
-    )
     @AddTrace(name = "$CLASS.authenticate")
     private fun success() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.FEATURE to FEATURE,
+                AnalyticsParam.RESULT to "success"
+            )
+        )
         _state.update {
             it.copy(
                 isAuthenticated = true,
@@ -102,14 +100,15 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
-    @Analytics(
-        event = AnalyticsEvent.ERROR,
-        params = [
-            Param(AnalyticsParam.FEATURE, FEATURE),
-        ]
-    )
     @AddTrace(name = "$CLASS.error")
     private fun error(message: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.ERROR,
+            params = mapOf(
+                AnalyticsParam.ACTION to "error",
+                AnalyticsParam.PARAM to message
+            )
+        )
         _state.update {
             it.copy(
                 error = message,
@@ -119,15 +118,15 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
-    @Analytics(
-        event = AnalyticsEvent.SUBMIT,
-        params = [
-            Param(AnalyticsParam.FEATURE, FEATURE),
-            Param(AnalyticsParam.RESULT, "failed_attempt")
-        ]
-    )
     @AddTrace(name = "$CLASS.failedAttempt")
     private fun failedAttempt(activity: FragmentActivity) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.FEATURE to FEATURE,
+                AnalyticsParam.RESULT to "failed_attempt"
+            )
+        )
         _state.update {
             it.copy(
                 failedAttemptMessage = activity.getString(R.string.biometric_not_found)

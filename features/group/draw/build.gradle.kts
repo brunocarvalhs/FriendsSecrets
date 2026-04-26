@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.aspectj.android)
 }
 
 android {
@@ -50,7 +49,8 @@ detekt {
 
 dependencies {
     implementation(project(":core:navigation"))
-    api(project(":core:domain"))
+    implementation(project(":core:analytics"))
+    implementation(project(":core:domain"))
     implementation(project(":core:security"))
     implementation(project(":core:network"))
     implementation(project(":core:remote"))
@@ -110,8 +110,7 @@ dependencies {
     kspTest(libs.hilt.compiler)
     kspAndroidTest(libs.hilt.compiler)
 
-    // AspectJ
-    implementation(libs.aspectjrt)
+
 
     // firebase
     implementation(platform(libs.firebase.bom))

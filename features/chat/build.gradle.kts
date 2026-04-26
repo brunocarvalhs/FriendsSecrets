@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.aspectj.android)
+    
 }
 
 android {
@@ -49,6 +49,7 @@ detekt {
 }
 
 dependencies {
+    implementation(project(":core:analytics"))
     implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
@@ -120,8 +121,7 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // AspectJ
-    implementation(libs.aspectjrt)
+
 
     // Firebase Realtime Database
     implementation(libs.firebase.database)
