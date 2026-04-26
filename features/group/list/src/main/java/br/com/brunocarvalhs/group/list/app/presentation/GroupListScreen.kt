@@ -2,11 +2,13 @@ package br.com.brunocarvalhs.group.list.app.presentation
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -21,13 +23,16 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.friendssecrets.domain.model.UserModel
 import br.com.brunocarvalhs.group.list.app.presentation.components.EmptyGroupComponent
 import br.com.brunocarvalhs.group.list.app.presentation.components.ErrorComponent
+import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListAppBar
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListFab
+import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListFilterRow
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListItems
-import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListTopBar
+import br.com.brunocarvalhs.group.list.app.presentation.components.GroupListSearchField
 import br.com.brunocarvalhs.group.list.app.presentation.components.GroupToEnterBottomSheet
 import br.com.brunocarvalhs.group.list.app.presentation.components.LoadingProgress
 import br.com.brunocarvalhs.group.list.commons.options.OptionsMore
@@ -73,21 +78,37 @@ private fun ListContent(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
-            GroupListTopBar(
-                scrollBehavior = scrollBehavior,
-                searchQuery = uiState.searchQuery,
-                onSearchQueryChange = onSearchQueryChange,
-                selectedTag = uiState.selectedTag,
-                onTagSelect = onTagSelect,
-                tags = uiState.tags,
-                onJoinGroupClick = { showBottomSheet = true },
-                moreOptions = moreOptions
-            )
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shadowElevation = 4.dp
+            ) {
+                Column {
+                    GroupListAppBar(
+                        scrollBehavior = scrollBehavior,
+                        onJoinGroupClick = { showBottomSheet = true },
+                        moreOptions = moreOptions,
+                        expanded = expanded,
+                        onExpandedChange = { expanded = it }
+                    )
+
+                    GroupListSearchField(
+                        searchQuery = uiState.searchQuery,
+                        onSearchQueryChange = onSearchQueryChange
+                    )
+
+                    GroupListFilterRow(
+                        tags = uiState.tags,
+                        selectedTag = uiState.selectedTag,
+                        onTagSelect = onTagSelect
+                    )
+                }
+            }
         },
         floatingActionButton = {
             GroupListFab(onGroupToCreate = onGroupToCreate)

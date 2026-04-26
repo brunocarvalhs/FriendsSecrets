@@ -47,8 +47,12 @@ internal fun ErrorComponent(
 }
 
 @Composable
-private fun ErrorText(message: String) {
+private fun ErrorText(
+    message: String,
+    modifier: Modifier = Modifier
+) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

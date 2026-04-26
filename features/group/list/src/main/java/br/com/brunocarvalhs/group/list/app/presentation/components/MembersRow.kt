@@ -87,6 +87,6 @@ internal fun MembersRow(
 
 @Composable
 @Preview
-fun MembersRowPreview() {
+private fun MembersRowPreview() {
     MembersRow(members = listOf("A", "B", "C", "D", "E"))
 }
