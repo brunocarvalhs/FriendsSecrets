@@ -17,7 +17,7 @@ class AnalyticsAspect {
         try {
             val eventName: String = analyticsAnnotation.event.name
             val params = ConvertParameters.toBundle(
-                params = analyticsAnnotation.params.associate { it.key.name to it.value }
+                params = analyticsAnnotation.params.associate { it.key.key to it.value }
             )
             Timber.d("Log Analytics: Evento $eventName com params $params")
             Firebase.analytics.logEvent(

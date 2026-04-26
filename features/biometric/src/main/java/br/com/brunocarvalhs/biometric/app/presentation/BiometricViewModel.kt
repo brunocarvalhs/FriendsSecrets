@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.biometric.app.presentation
 
+import AnalyticsParam
 import androidx.compose.runtime.Stable
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.biometric.R
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricResult
 import br.com.brunocarvalhs.biometric.app.domain.useCases.BiometricUseCase
+import br.com.brunocarvalhs.core.analytics.annotation.Analytics
+import br.com.brunocarvalhs.core.analytics.annotation.Param
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,22 +29,39 @@ internal class BiometricViewModel @Inject constructor(
     private val _state = MutableStateFlow(BiometricUiState())
     val state: StateFlow<BiometricUiState> = _state.asStateFlow()
 
-    init { checkCanAuthenticate() }
+    init {
+        checkCanAuthenticate()
+    }
 
-    @AddTrace(name = "BiometricViewModel.handleIntent", enabled = true)
+    @AddTrace(name = "$CLASS.handleIntent", enabled = true)
     fun handleIntent(intent: BiometricIntent) {
         when (intent) {
             is BiometricIntent.Authenticate -> authenticate(intent.activity)
         }
     }
 
-    @AddTrace(name = "BiometricViewModel.checkCanAuthenticate", enabled = true)
+    @Analytics(
+        event = AnalyticsEvent.VIEW,
+        params = [
+            Param(AnalyticsParam.FEATURE, FEATURE),
+            Param(AnalyticsParam.SCREEN, "biometric"),
+            Param(AnalyticsParam.ACTION, "check_can_authenticate")
+        ]
+    )
+    @AddTrace(name = "$CLASS.checkCanAuthenticate", enabled = true)
     private fun checkCanAuthenticate() {
         val canAuthenticate = biometricUseCase.canAuthenticate()
         _state.update { it.copy(canAuthenticate = canAuthenticate) }
     }
 
-    @AddTrace(name = "BiometricViewModel.authenticate", enabled = true)
+    @Analytics(
+        event = AnalyticsEvent.CLICK,
+        params = [
+            Param(AnalyticsParam.FEATURE, FEATURE),
+            Param(AnalyticsParam.ACTION, "authenticate")
+        ]
+    )
+    @AddTrace(name = "$CLASS.authenticate")
     private fun authenticate(activity: FragmentActivity) {
         if (!_state.value.canAuthenticate) {
             _state.update { it.copy(isAuthenticated = true) }
@@ -63,6 +84,14 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
+    @Analytics(
+        event = AnalyticsEvent.SUBMIT,
+        params = [
+            Param(AnalyticsParam.FEATURE, FEATURE),
+            Param(AnalyticsParam.RESULT, "success")
+        ]
+    )
+    @AddTrace(name = "$CLASS.authenticate")
     private fun success() {
         _state.update {
             it.copy(
@@ -73,6 +102,13 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
+    @Analytics(
+        event = AnalyticsEvent.ERROR,
+        params = [
+            Param(AnalyticsParam.FEATURE, FEATURE),
+        ]
+    )
+    @AddTrace(name = "$CLASS.error")
     private fun error(message: String) {
         _state.update {
             it.copy(
@@ -83,11 +119,24 @@ internal class BiometricViewModel @Inject constructor(
         }
     }
 
+    @Analytics(
+        event = AnalyticsEvent.SUBMIT,
+        params = [
+            Param(AnalyticsParam.FEATURE, FEATURE),
+            Param(AnalyticsParam.RESULT, "failed_attempt")
+        ]
+    )
+    @AddTrace(name = "$CLASS.failedAttempt")
     private fun failedAttempt(activity: FragmentActivity) {
         _state.update {
             it.copy(
                 failedAttemptMessage = activity.getString(R.string.biometric_not_found)
             )
         }
+    }
+
+    companion object {
+        private const val FEATURE = "biometric"
+        private const val CLASS = "BiometricViewModel"
     }
 }

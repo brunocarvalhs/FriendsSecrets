@@ -49,6 +49,7 @@ detekt {
 
 dependencies {
     implementation(project(":core:navigation"))
+    implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
     implementation(project(":core:biometric"))
     implementation(project(":core:remote"))

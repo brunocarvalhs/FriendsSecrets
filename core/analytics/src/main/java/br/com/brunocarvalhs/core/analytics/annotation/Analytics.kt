@@ -1,6 +1,6 @@
 package br.com.brunocarvalhs.core.analytics.annotation
 
-import AnalyticsParameter
+import AnalyticsParam
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 
 @Target(AnnotationTarget.FUNCTION)
@@ -11,6 +11,6 @@ annotation class Analytics(
 )
 
 annotation class Param(
-    val key: AnalyticsParameter,
+    val key: AnalyticsParam,
     val value: String
 )
