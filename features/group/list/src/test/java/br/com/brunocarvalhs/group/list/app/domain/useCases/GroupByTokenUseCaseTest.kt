@@ -33,7 +33,7 @@ class GroupByTokenUseCaseTest {
         // Given
         val token = "VALID_TOKEN"
         val ownerId = "me"
-        val dto = GroupListDTO(id = "1", token = token, owner_id = ownerId)
+        val dto = GroupListDTO(id = "1", token = token, ownerId = ownerId)
         
         coEvery { device.getDeviceId() } returns ownerId
         coEvery { repository.searchByToken(token) } returns dto

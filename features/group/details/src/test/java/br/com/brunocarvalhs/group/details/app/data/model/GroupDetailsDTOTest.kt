@@ -17,12 +17,12 @@ class GroupDetailsDTOTest {
             minPrice = 10.0,
             maxPrice = 50.0,
             type = "Gift",
-            photo_base64 = "base64String",
+            photoBase64 = "base64String",
             members = listOf(UserDetailsDTO(id = "user1", name = "Bruno")),
             draws = mapOf("user1" to "user2"),
-            owner_id = "owner123",
-            is_owner = true,
-            created_at = 123456789L
+            ownerId = "owner123",
+            isOwner = true,
+            createdAt = 123456789L
         )
 
         // When
@@ -37,11 +37,11 @@ class GroupDetailsDTOTest {
         assertEquals(dto.minPrice, domain.minPrice)
         assertEquals(dto.maxPrice, domain.maxPrice)
         assertEquals(dto.type, domain.type)
-        assertEquals(dto.photo_base64, domain.photo)
+        assertEquals(dto.photoBase64, domain.photo)
         assertEquals(dto.members.size, domain.members.size)
         assertEquals(dto.draws, domain.draws)
-        assertEquals(dto.owner_id, domain.ownerId)
-        assertEquals(dto.is_owner, domain.isOwner)
-        assertEquals(dto.created_at, domain.createdAt)
+        assertEquals(dto.ownerId, domain.ownerId)
+        assertEquals(dto.isOwner, domain.isOwner)
+        assertEquals(dto.createdAt, domain.createdAt)
     }
 }

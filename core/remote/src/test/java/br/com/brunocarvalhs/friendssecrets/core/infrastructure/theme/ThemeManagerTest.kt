@@ -46,7 +46,6 @@ class ThemeManagerTest {
 
     private fun createManager(): ThemeManager {
         return ThemeManager(
-            context = mockk(relaxed = true),
             storage = storage
         )
     }

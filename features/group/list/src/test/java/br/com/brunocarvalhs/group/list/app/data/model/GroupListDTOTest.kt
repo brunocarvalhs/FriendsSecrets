@@ -15,12 +15,12 @@ class GroupListDTOTest {
             description = "Description",
             token = "ABC123",
             date = "2023-12-25",
-            photo_base64 = "photo",
+            photoBase64 = "photo",
             members = listOf(UserListDTO(id = "user1", name = "Bruno")),
             draws = mapOf("user1" to "user2"),
-            owner_id = "owner1",
-            is_owner = true,
-            created_at = 123456789L
+            ownerId = "owner1",
+            isOwner = true,
+            createdAt = 123456789L
         )
 
         // When
@@ -32,12 +32,12 @@ class GroupListDTOTest {
         assertEquals(dto.description, domain.description)
         assertEquals(dto.token, domain.token)
         assertEquals(dto.date, domain.date)
-        assertEquals(dto.photo_base64, domain.photo)
+        assertEquals(dto.photoBase64, domain.photo)
         assertEquals(dto.members.size, domain.members.size)
         assertEquals(dto.draws, domain.draws)
-        assertEquals(dto.owner_id, domain.ownerId)
-        assertEquals(dto.is_owner, domain.isOwner)
-        assertEquals(dto.created_at, domain.createdAt)
+        assertEquals(dto.ownerId, domain.ownerId)
+        assertEquals(dto.isOwner, domain.isOwner)
+        assertEquals(dto.createdAt, domain.createdAt)
     }
 
     @Test
@@ -57,7 +57,7 @@ class GroupListDTOTest {
         assertEquals(domain.id, dto.id)
         assertEquals(domain.name, dto.name)
         assertEquals(domain.token, dto.token)
-        assertEquals(domain.ownerId, dto.owner_id)
+        assertEquals(domain.ownerId, dto.ownerId)
     }
 
     @Test

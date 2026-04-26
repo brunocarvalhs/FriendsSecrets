@@ -1,11 +1,12 @@
 package br.com.brunocarvalhs.group.create.app.data.repository
 
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.data.model.GroupCreateDTO
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -21,23 +22,25 @@ class GroupCreateRepositoryImplTest {
         repository = GroupCreateRepositoryImpl(network)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `create should return success when network call succeeds`() = runTest {
         // Given
         val group = GroupModel(id = "1", name = "Test")
+
         coEvery {
             network.make(
-                request = NetworkRequest(
-                    endpoint = "groups",
-                    payload = any(),
-                    method = NetworkService.Method.POST
-                ),
+                request = match {
+                    it.endpoint == "groups" &&
+                            it.method == NetworkService.Method.POST
+                },
                 response = GroupCreateDTO::class
             )
-        } returns mockk<GroupCreateDTO>()
+        } returns mockk()
 
         // When
         val result = repository.create(group)
+        advanceUntilIdle()
 
         // Then
         assertTrue(result.isSuccess)
@@ -47,13 +50,13 @@ class GroupCreateRepositoryImplTest {
     fun `create should return failure when network returns null`() = runTest {
         // Given
         val group = GroupModel(id = "1", name = "Test")
+
         coEvery {
             network.make(
-                request = NetworkRequest(
-                    endpoint = "groups",
-                    payload = any(),
-                    method = NetworkService.Method.POST
-                ),
+                request = match {
+                    it.endpoint == "groups" &&
+                            it.method == NetworkService.Method.POST
+                },
                 response = GroupCreateDTO::class
             )
         } returns null
@@ -69,16 +72,16 @@ class GroupCreateRepositoryImplTest {
     fun `update should return success when network call succeeds`() = runTest {
         // Given
         val group = GroupModel(id = "1", name = "Test")
+
         coEvery {
             network.make(
-                request = NetworkRequest(
-                    endpoint = "groups/1",
-                    payload = any(),
-                    method = NetworkService.Method.PUT
-                ),
+                request = match {
+                    it.endpoint == "groups/1" &&
+                            it.method == NetworkService.Method.PUT
+                },
                 response = GroupCreateDTO::class
             )
-        } returns mockk<GroupCreateDTO>()
+        } returns mockk()
 
         // When
         val result = repository.update(group)

@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.group.list.app.data.repository
 
 import br.com.brunocarvalhs.deviceid.DeviceService
-import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkRequest
 import br.com.brunocarvalhs.friendssecrets.core.network.domain.NetworkService
 import br.com.brunocarvalhs.friendssecrets.domain.model.GroupModel
 import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
@@ -39,13 +38,13 @@ class GroupListRepositoryImplTest {
         val group2 = GroupListDTO(id = "2", token = "t2")
 
         coEvery { device.getDeviceId() } returns deviceId
+
         coEvery {
             network.make(
-                request = NetworkRequest(
-                    endpoint = GroupModel.COLLECTION_NAME,
-                    query = any(),
-                    method = NetworkService.Method.GET
-                ),
+                request = match {
+                    it.endpoint == GroupModel.COLLECTION_NAME &&
+                            it.method == NetworkService.Method.GET
+                },
                 response = Array<GroupListDTO>::class
             )
         } returns arrayOf(group1) andThen arrayOf(group1, group2)
@@ -64,13 +63,14 @@ class GroupListRepositoryImplTest {
         // Given
         val token = "ABC"
         val group = GroupListDTO(id = "1", token = token)
+
         coEvery {
             network.make(
-                request = NetworkRequest(
-                    endpoint = GroupModel.COLLECTION_NAME,
-                    query = mapOf(GroupModel.TOKEN to token),
-                    method = NetworkService.Method.GET
-                ),
+                request = match {
+                    it.endpoint == GroupModel.COLLECTION_NAME &&
+                            it.method == NetworkService.Method.GET &&
+                            it.query == mapOf(GroupModel.TOKEN to token)
+                },
                 response = Array<GroupListDTO>::class
             )
         } returns arrayOf(group)
@@ -86,8 +86,15 @@ class GroupListRepositoryImplTest {
     fun `searchByToken should return null when network returns null`() = runTest {
         // Given
         val token = "UNKNOWN"
+
         coEvery {
-            network.make<GroupListDTO>(any(), any())
+            network.make(
+                request = match {
+                    it.endpoint == GroupModel.COLLECTION_NAME &&
+                            it.method == NetworkService.Method.GET
+                },
+                response = Array<GroupListDTO>::class
+            )
         } returns null
 
         // When

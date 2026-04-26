@@ -20,7 +20,8 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 internal class BiometricViewModel @Inject constructor(
-    private val biometricUseCase: BiometricUseCase, private val analytics: BiometricAnalytics
+    private val biometricUseCase: BiometricUseCase,
+    private val analytics: BiometricAnalytics
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BiometricUiState())

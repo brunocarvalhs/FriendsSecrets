@@ -43,7 +43,7 @@ class GroupListUseCaseTest {
         // Given
         val tokens = arrayOf("token1")
         val ownerId = "me"
-        val dto = GroupListDTO(id = "1", owner_id = ownerId)
+        val dto = GroupListDTO(id = "1", ownerId = ownerId)
 
         coEvery { storage.load(GroupModel.COLLECTION_NAME, Array<String>::class) } returns tokens
         coEvery { deviceService.getDeviceId() } returns ownerId
