@@ -3,8 +3,6 @@ name: Build Application Debug
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
 
 env:
   # Configurações Gerais
@@ -89,22 +87,6 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Comment Failure
-        if: failure() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "❌ Ops, encontrado falhas nos testes unitários, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "-1 | confused"
-
-      - name: Comment Success
-        if: success() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "✅ Todos os testes unitários passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "+1"
-
   lint-check:
     runs-on: ubuntu-24.04
     name: Run Lint Check
@@ -123,22 +105,6 @@ jobs:
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
 
-      - name: Comment Failure
-        if: failure() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "❌ Ops, encontrado falhas no lint, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "-1 | confused"
-
-      - name: Comment Success
-        if: success() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "✅ Todos os lints passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "+1"
-
   detekt-check:
     runs-on: ubuntu-24.04
     name: Run Detekt Check
@@ -156,22 +122,6 @@ jobs:
         run: ./gradlew detekt
         env:
           GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
-
-      - name: Comment Failure
-        if: failure() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "❌ Ops, encontrado falhas no detekt, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "-1 | confused"
-
-      - name: Comment Success
-        if: success() && github.event_name == 'pull_request'
-        uses: mb2dev/github-action-comment-pull-request@1.0.0
-        with:
-          message: "✅ Todos os detekts passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-          reactions: "+1"
 
   build:
     runs-on: ubuntu-24.04
@@ -196,7 +146,6 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
 
   deploy-firebase:
-    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     name: Deploy to Firebase App Distribution
     needs: [build]
