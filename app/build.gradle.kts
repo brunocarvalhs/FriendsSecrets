@@ -102,6 +102,7 @@ dependencies {
     implementation(project(":core:security"))
     implementation(project(":core:navigation"))
     implementation(project(":core:biometric"))
+    implementation(project(":core:storage"))
 
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))
