@@ -5,6 +5,15 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [3.1.0] - 2026-04-27
+
+### Adicionado
+- Suporte a novos idiomas: Francês (fr), Alemão (de), Italiano (it), Holandês (nl) e Polonês (pl).
+- Internacionalização completa dos módulos de Biometria, Chat, Criação e Detalhes de Grupos, Sorteio e Configurações.
+
+### Melhorado
+- Atualização e sincronização das traduções em Espanhol (es) e Português (pt-BR) para paridade com o idioma principal.
+
 ## [3.0.0] - 2025-05-22
 
 ### Adicionado
