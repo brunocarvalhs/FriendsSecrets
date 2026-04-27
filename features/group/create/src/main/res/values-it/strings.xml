@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="success">Successo!</string>
+    <string name="ops">Ops!</string>
+    <string name="error_component_button_try_again">Riprova</string>
+    <string name="error_component_button_to_home">Torna alla home</string>
+    <string name="add_member_manual_title">Aggiungi manualmente</string>
+    <string name="add_member_manual_description">Sembra che non abbiamo accesso ai tuoi contatti o che la lista sia vuota. Puoi aggiungere persone inserendo i loro nomi qui sotto.</string>
+    <string name="add_member_manual_input_name">Nome del partecipante</string>
+    <string name="add_member_manual_input_name_place">Es: Mario Rossi</string>
+    <string name="add_member_manual_input_phone">Telefono (Opzionale)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_button">Aggiungi al gruppo</string>
+    <string name="search_field_place">Cerca nome o numero</string>
+    <string name="content_description_remove">Rimuovi</string>
+    <string name="contacts_adicional_members">Aggiungi membri</string>
+    <string name="contacts_adicional_members_subtitle_select">%1$d selezionati</string>
+    <string name="content_description_back">Indietro</string>
+    <string name="content_description_next">Avanti</string>
+    <string name="view_contact_list">Visualizza lista contatti</string>
+    <string name="add_manually">Aggiungi manualmente</string>
+    <string name="enable_contact_access">Abilita accesso ai contatti</string>
+    <string name="allow_contacts_in_settings">Consenti contatti nelle Impostazioni</string>
+    <string name="next">Avanti</string>
+    <string name="cancel">Annulla</string>
+    <string name="select_the_best_time">Seleziona l\'orario</string>
+    <string name="ok">OK</string>
+    <string name="edit_group">Modifica gruppo</string>
+    <string name="new_group">Nuovo gruppo</string>
+    <string name="save">Salva</string>
+    <string name="create">Crea</string>
+    <string name="group_name">Nome del gruppo</string>
+    <string name="description">Descrizione</string>
+    <string name="event_date">Data dell\'evento</string>
+    <string name="minimum_price">Prezzo min.</string>
+    <string name="maximum_price">Prezzo max.</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">Il prezzo minimo non può essere superiore al massimo</string>
+    <string name="members">Membri</string>
+</resources>
