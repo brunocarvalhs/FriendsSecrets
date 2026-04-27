@@ -160,6 +160,10 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
+      - name: Create google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_JSON }}" | base64 --decode > app/google-services.json
+
       - name: Extract Firebase Project ID
         run: |
           PROJECT_ID=$(jq -r '.project_info.project_id' app/google-services.json)
