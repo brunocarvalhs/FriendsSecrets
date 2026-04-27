@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Secret Santa</string>
+    <string name="ops">Ops!</string>
+    <string name="cancel">Annulla</string>
+    <string name="title_settings">Impostazioni</string>
+    <string name="home_title">Ehi</string>
+    <string name="home_action_create_group">Crea un nuovo gruppo</string>
+    <string name="search_groups">Cerca gruppi...</string>
+    <string name="new_group">Nuovo gruppo</string>
+    <string name="join_group">Unisciti a un gruppo</string>
+    <string name="more_options">Altre opzioni</string>
+    <string name="home_drop_menu_item_text_profile">Profilo</string>
+    <string name="home_drop_menu_item_text_join_a_group">Unisciti a un gruppo</string>
+    <string name="home_drop_menu_item_text_settings">Impostazioni</string>
+    <string name="home_drop_menu_item_text_logout">Esci</string>
+    <string name="empty_group_title">Uh-oh!</string>
+    <string name="empty_group_message">Nessun gruppo trovato</string>
+    <string name="empty_group_component_button_create_grup">Crea un gruppo</string>
+    <string name="empty_group_component_button_enter_grup">Entra in un gruppo</string>
+    <string name="group_to_enter_title">Inserisci il codice del gruppo</string>
+    <string name="group_to_enter_button_text">Convalida</string>
+    <string name="group_to_enter_button_enter_to_group">Entra nel gruppo</string>
+    <string name="group_to_enter_textfield_token_to_grup">Token del gruppo</string>
+    <string name="error_component_button_try_again">Riprova</string>
+    <string name="error_component_button_to_home">Torna alla home</string>
+    <string name="contact_photo_description">Foto profilo di %1$s</string>
+    <string name="group_list_filter_active">Attivo</string>
+    <string name="group_list_filter_archived">Archiviato</string>
+    <string name="group_list_filter_drawn">Sorteggiato</string>
+    <string name="group_list_filter_not_drawn">Non sorteggiato</string>
+    <string name="group_card_members_count">%1$d persone</string>
+    <string name="maintenance_title">Funzionalità non disponibile</string>
+    <string name="maintenance_message">Spiacenti, questa funzionalità è in fase di manutenzione per miglioramenti. Riprova più tardi.</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Indietro</string>
+    <string name="title_settings">Impostazioni</string>
+    <string name="settings_screen_general">Generale</string>
+    <string name="settings_screen_security">Impronta digitale</string>
+    <string name="settings_screen_support">Supporto</string>
+    <string name="title_report_an_issue">Segnala un problema</string>
+    <string name="title_review">Recensisci l\'app</string>
+    <string name="localized_description">Descrizione localizzata</string>
+    <string name="title_appearance">Aspetto</string>
+    <string name="appearance_screen_title">La selezione di un\'opzione specifica cambierà l\'aspetto (colore) dell\'app in base alle tue preferenze.</string>
+    <string name="appearance_screen_title_description">L\'abilitazione del Tema Dinamico consentirà all\'app di regolare automaticamente i suoi colori in base allo sfondo del tuo dispositivo.</string>
+    <string name="appearance_screen_dynamic_title">Tema Dinamico</string>
+    <string name="light_theme">Tema chiaro</string>
+    <string name="dark_theme">Tema scuro</string>
+    <string name="system_theme">Tema di sistema</string>
+    <string name="title_faq">FAQ</string>
+</resources>

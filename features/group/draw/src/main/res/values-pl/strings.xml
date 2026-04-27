@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Wróć</string>
+    <string name="draw_results_title">Wyniki losowania</string>
+    <string name="secret_santa_draw_title">Losowanie Secret Santa</string>
+    <string name="draw_complete_message">Losowanie zakończone! Udostępnij wyniki znajomym.</string>
+    <string name="ready_to_discover_title">Gotowy, aby poznać swojego Secret Santa?</string>
+    <string name="start_magic_subtitle">Naciśnij przycisk poniżej, aby zacząć magię!</string>
+    <string name="drawing_button">Losowanie...</string>
+    <string name="start_draw_button">Rozpocznij losowanie</string>
+    <string name="draw_results">Wyniki losowania</string>
+    <string name="secret_santa_draw">Losowanie Secret Santa</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">Losowanie zakończone! Udostępnij wyniki członkom grupy.</string>
+    <string name="ready_to_draw">Gotowy do losowania?</string>
+    <string name="tap_the_button_below_to_start_the_draw">Naciśnij przycisk poniżej, aby rozpocząć losowanie!</string>
+    <string name="scale">Skala</string>
+    <string name="drawing">Losowanie...</string>
+    <string name="just_drawn">Właśnie wylosowano</string>
+    <string name="share">Udostępnij</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Réduire les mentions j\'aime</string>
+    <string name="expand_likes_action">Afficher les mentions j\'aime</string>
+    <string name="likes_expanded_state">Développé</string>
+    <string name="likes_collapsed_state">Réduit</string>
+    <string name="contact_photo_description">Photo de contact de %1$s</string>
+    <string name="edit_participant_action">Modifier le participant %1$s</string>
+    <string name="remove_participant_action">Supprimer le participant %1$s</string>
+    <string name="back">Retour</string>
+    <string name="unnamed_group">Groupe sans nom</string>
+    <string name="group_participants">Groupe · %1$d participants</string>
+    <string name="invite">Inviter</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Révéler</string>
+    <string name="draw">Tirage au sort</string>
+    <string name="add_group_description">Ajouter une description au groupe</string>
+    <string name="created_at">Créé le %1$s</string>
+    <string name="draw_details">Détails du tirage</string>
+    <string name="draw_date">Date du tirage</string>
+    <string name="price_between_min_and_max">Entre %1$s et %2$s</string>
+    <string name="price_from_min">À partir de %1$s</string>
+    <string name="price_up_to">Jusqu\'à %1$s</string>
+    <string name="price_range">Tranche de prix</string>
+    <string name="gift_type">Type de cadeau</string>
+    <string name="participants">%1$d participants</string>
+    <string name="add_participants">Ajouter des participants</string>
+    <string name="edit_group_information">Modifier les informations du groupe</string>
+    <string name="delete_group">Supprimer le groupe</string>
+    <string name="leave_group">Quitter le groupe</string>
+    <string name="share_group_message">🎁 Vous avez été invité à un groupe Secret Santa : %1$s !\n\n📝 Description : %2$s\n🔑 Code du groupe : %3$s\n\nTéléchargez l\'application et rejoignez-nous dès maintenant !</string>
+    <string name="share_group_title">Partager le code</string>
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="success">Succes!</string>
+    <string name="ops">Oeps!</string>
+    <string name="error_component_button_try_again">Opnieuw proberen</string>
+    <string name="error_component_button_to_home">Ga naar home</string>
+    <string name="add_member_manual_title">Handmatig toevoegen</string>
+    <string name="add_member_manual_description">Het lijkt erop dat we geen toegang hebben tot je contacten of de lijst is leeg. Je kunt mensen toevoegen door hun namen hieronder in te vullen.</string>
+    <string name="add_member_manual_input_name">Naam deelnemer</string>
+    <string name="add_member_manual_input_name_place">Bijv. Jan Janssen</string>
+    <string name="add_member_manual_input_phone">Telefoon (Optioneel)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_button">Toevoegen aan groep</string>
+    <string name="search_field_place">Zoek naam of nummer</string>
+    <string name="content_description_remove">Verwijderen</string>
+    <string name="contacts_adicional_members">Leden toevoegen</string>
+    <string name="contacts_adicional_members_subtitle_select">%1$d geselecteerd</string>
+    <string name="content_description_back">Terug</string>
+    <string name="content_description_next">Volgende</string>
+    <string name="view_contact_list">Contactlijst bekijken</string>
+    <string name="add_manually">Handmatig toevoegen</string>
+    <string name="enable_contact_access">Toegang tot contacten inschakelen</string>
+    <string name="allow_contacts_in_settings">Contacten toestaan in Instellingen</string>
+    <string name="next">Volgende</string>
+    <string name="cancel">Annuleren</string>
+    <string name="select_the_best_time">Selecteer de tijd</string>
+    <string name="ok">OK</string>
+    <string name="edit_group">Groep bewerken</string>
+    <string name="new_group">Nieuwe groep</string>
+    <string name="save">Opslaan</string>
+    <string name="create">Aanmaken</string>
+    <string name="group_name">Groepsnaam</string>
+    <string name="description">Beschrijving</string>
+    <string name="event_date">Eventdatum</string>
+    <string name="minimum_price">Min. Prijs</string>
+    <string name="maximum_price">Max. Prijs</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">Minimumprijs mag niet hoger zijn dan maximumprijs</string>
+    <string name="members">Leden</string>
+</resources>

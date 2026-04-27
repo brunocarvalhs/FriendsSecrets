@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Indietro</string>
+    <string name="draw_results_title">Risultati del sorteggio</string>
+    <string name="secret_santa_draw_title">Sorteggio Secret Santa</string>
+    <string name="draw_complete_message">Il sorteggio è completo! Condividi i risultati con i tuoi amici.</string>
+    <string name="ready_to_discover_title">Pronto a scoprire il tuo Secret Santa?</string>
+    <string name="start_magic_subtitle">Tocca il pulsante qui sotto per iniziare la magia!</string>
+    <string name="drawing_button">Sorteggio in corso...</string>
+    <string name="start_draw_button">Inizia sorteggio</string>
+    <string name="draw_results">Risultati del sorteggio</string>
+    <string name="secret_santa_draw">Sorteggio Secret Santa</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">Il sorteggio è completo! Condividi i risultati con i membri del gruppo.</string>
+    <string name="ready_to_draw">Pronto per il sorteggio?</string>
+    <string name="tap_the_button_below_to_start_the_draw">Tocca il pulsante qui sotto per iniziare il sorteggio!</string>
+    <string name="scale">Scala</string>
+    <string name="drawing">Sorteggio in corso...</string>
+    <string name="just_drawn">Appena sorteggiato</string>
+    <string name="share">Condividi</string>
+</resources>

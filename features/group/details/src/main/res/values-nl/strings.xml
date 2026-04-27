@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Vind-ik-leuks inklappen</string>
+    <string name="expand_likes_action">Vind-ik-leuks uitklappen</string>
+    <string name="likes_expanded_state">Uitgeklapt</string>
+    <string name="likes_collapsed_state">Ingeklapt</string>
+    <string name="contact_photo_description">Contactfoto van %1$s</string>
+    <string name="edit_participant_action">Deelnemer %1$s bewerken</string>
+    <string name="remove_participant_action">Deelnemer %1$s verwijderen</string>
+    <string name="back">Terug</string>
+    <string name="unnamed_group">Naamloze groep</string>
+    <string name="group_participants">Groep · %1$d deelnemers</string>
+    <string name="invite">Uitnodigen</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Onthullen</string>
+    <string name="draw">Loting</string>
+    <string name="add_group_description">Groepsbeschrijving toevoegen</string>
+    <string name="created_at">Aangemaakt op %1$s</string>
+    <string name="draw_details">Loting details</string>
+    <string name="draw_date">Loting datum</string>
+    <string name="price_between_min_and_max">Tussen %1$s en %2$s</string>
+    <string name="price_from_min">Vanaf %1$s</string>
+    <string name="price_up_to">Tot %1$s</string>
+    <string name="price_range">Prijsklasse</string>
+    <string name="gift_type">Cadeautype</string>
+    <string name="participants">%1$d deelnemers</string>
+    <string name="add_participants">Deelnemers toevoegen</string>
+    <string name="edit_group_information">Groepsinformatie bewerken</string>
+    <string name="delete_group">Groep verwijderen</string>
+    <string name="leave_group">Groep verlaten</string>
+    <string name="share_group_message">🎁 Je bent uitgenodigd voor een Secret Santa-groep: %1$s!\n\n📝 Beschrijving: %2$s\n🔑 Groepscode: %3$s\n\nDownload de app en doe nu mee!</string>
+    <string name="share_group_title">Code delen</string>
+</resources>

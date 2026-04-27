@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Terug</string>
+    <string name="identify">Identificeer jezelf</string>
+    <string name="identify_message">Je staat niet in de ledenlijst van deze groep. Hoe wil je genoemd worden in de chat?</string>
+    <string name="identify_name">Je naam of bijnaam</string>
+    <string name="identify_save">Opslaan</string>
+    <string name="identify_cancela">Annuleren</string>
+    <string name="chat_input">Typ een bericht...</string>
+    <string name="chat_button_send">Verzenden</string>
+</resources>

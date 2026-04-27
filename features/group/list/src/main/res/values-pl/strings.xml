@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Secret Santa</string>
+    <string name="ops">Ojej!</string>
+    <string name="cancel">Anuluj</string>
+    <string name="title_settings">Ustawienia</string>
+    <string name="home_title">Hej</string>
+    <string name="home_action_create_group">Utwórz nową grupę</string>
+    <string name="search_groups">Szukaj grup...</string>
+    <string name="new_group">Nowa grupa</string>
+    <string name="join_group">Dołącz do grupy</string>
+    <string name="more_options">Więcej opcji</string>
+    <string name="home_drop_menu_item_text_profile">Profil</string>
+    <string name="home_drop_menu_item_text_join_a_group">Dołącz do grupy</string>
+    <string name="home_drop_menu_item_text_settings">Ustawienia</string>
+    <string name="home_drop_menu_item_text_logout">Wyloguj się</string>
+    <string name="empty_group_title">O-o!</string>
+    <string name="empty_group_message">Nie znaleziono żadnej grupy</string>
+    <string name="empty_group_component_button_create_grup">Utwórz grupę</string>
+    <string name="empty_group_component_button_enter_grup">Wejdź do grupy</string>
+    <string name="group_to_enter_title">Wprowadź kod grupy</string>
+    <string name="group_to_enter_button_text">Zatwierdź</string>
+    <string name="group_to_enter_button_enter_to_group">Wejdź do grupy</string>
+    <string name="group_to_enter_textfield_token_to_grup">Token grupy</string>
+    <string name="error_component_button_try_again">Spróbuj ponownie</string>
+    <string name="error_component_button_to_home">Wróć do strony głównej</string>
+    <string name="contact_photo_description">Zdjęcie kontaktu %1$s</string>
+    <string name="group_list_filter_active">Aktywne</string>
+    <string name="group_list_filter_archived">Zarchiwizowane</string>
+    <string name="group_list_filter_drawn">Wylosowane</string>
+    <string name="group_list_filter_not_drawn">Niewylosowane</string>
+    <string name="group_card_members_count">Liczba osób: %1$d</string>
+    <string name="maintenance_title">Funkcja niedostępna</string>
+    <string name="maintenance_message">Przepraszamy, ta funkcja jest w trakcie prac konserwacyjnych. Spróbuj ponownie później.</string>
+</resources>
