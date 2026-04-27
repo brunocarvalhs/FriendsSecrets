@@ -102,6 +102,7 @@ dependencies {
     implementation(project(":core:security"))
     implementation(project(":core:navigation"))
     implementation(project(":core:biometric"))
+    implementation(project(":core:storage"))
 
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))
@@ -126,6 +127,7 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.window)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.core.splashscreen)

@@ -4,11 +4,18 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
+<<<<<<<< HEAD:features/group/details/build.gradle.kts
+}
+
+android {
+    namespace = "br.com.brunocarvalhs.group.details"
+========
     
 }
 
 android {
     namespace = "br.com.brunocarvalhs.group.list"
+>>>>>>>> master:features/group/list/build.gradle.kts
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -50,12 +57,20 @@ detekt {
 
 dependencies {
     implementation(project(":core:navigation"))
+<<<<<<<< HEAD:features/group/details/build.gradle.kts
+    implementation(project(":core:analytics"))
+    implementation(project(":core:domain"))
+========
     api(project(":core:domain"))
+>>>>>>>> master:features/group/list/build.gradle.kts
     implementation(project(":core:network"))
     implementation(project(":core:storage"))
     implementation(project(":core:deviceid"))
     implementation(project(":core:remote"))
+<<<<<<<< HEAD:features/group/details/build.gradle.kts
+========
     implementation(project(":core:analytics"))
+>>>>>>>> master:features/group/list/build.gradle.kts
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
@@ -116,7 +131,10 @@ dependencies {
     kspAndroidTest(libs.hilt.compiler)
 
 
+<<<<<<<< HEAD:features/group/details/build.gradle.kts
+========
 
+>>>>>>>> master:features/group/list/build.gradle.kts
     // firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
