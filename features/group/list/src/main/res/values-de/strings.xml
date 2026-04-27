@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wichteln</string>
+    <string name="ops">Hoppla!</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="home_title">Hey</string>
+    <string name="home_action_create_group">Neue Gruppe erstellen</string>
+    <string name="search_groups">Gruppen suchen...</string>
+    <string name="new_group">Neue Gruppe</string>
+    <string name="join_group">Gruppe beitreten</string>
+    <string name="more_options">Weitere Optionen</string>
+    <string name="home_drop_menu_item_text_profile">Profil</string>
+    <string name="home_drop_menu_item_text_join_a_group">Gruppe beitreten</string>
+    <string name="home_drop_menu_item_text_settings">Einstellungen</string>
+    <string name="home_drop_menu_item_text_logout">Abmelden</string>
+    <string name="empty_group_title">Oh-oh!</string>
+    <string name="empty_group_message">Keine Gruppe gefunden</string>
+    <string name="empty_group_component_button_create_grup">Gruppe erstellen</string>
+    <string name="empty_group_component_button_enter_grup">Gruppe beitreten</string>
+    <string name="group_to_enter_title">Gruppencode eingeben</string>
+    <string name="group_to_enter_button_text">Validieren</string>
+    <string name="group_to_enter_button_enter_to_group">Gruppe beitreten</string>
+    <string name="group_to_enter_textfield_token_to_grup">Gruppen-Token</string>
+    <string name="error_component_button_try_again">Erneut versuchen</string>
+    <string name="error_component_button_to_home">Zur Startseite</string>
+    <string name="contact_photo_description">Kontaktfoto von %1$s</string>
+    <string name="group_list_filter_active">Aktiv</string>
+    <string name="group_list_filter_archived">Archiviert</string>
+    <string name="group_list_filter_drawn">Ausgelost</string>
+    <string name="group_list_filter_not_drawn">Nicht ausgelost</string>
+    <string name="group_card_members_count">%1$d Personen</string>
+    <string name="maintenance_title">Funktion nicht verfügbar</string>
+    <string name="maintenance_message">Entschuldigung, diese Funktion wird zur Verbesserung gewartet. Bitte versuchen Sie es später erneut.</string>
+</resources>
