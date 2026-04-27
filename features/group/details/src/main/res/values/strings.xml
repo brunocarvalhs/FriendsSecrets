@@ -7,8 +7,8 @@
     <string name="contact_photo_description">Contact photo of %1$s</string>
     <string name="edit_participant_action">Edit participant %1$s</string>
     <string name="remove_participant_action">Remove participant %1$s</string>
-    <string name="group_photo_description">Foto do grupo %1$s</string>
-    <string name="back">Voltar</string>
+    <string name="group_photo_description">Group photo of %1$s</string>
+    <string name="back">Back</string>
     <string name="unnamed_group">Unnamed group</string>
     <string name="group_participants">Group · %1$d participants</string>
     <string name="invite">Invite</string>

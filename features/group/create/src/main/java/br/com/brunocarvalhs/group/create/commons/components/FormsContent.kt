@@ -69,8 +69,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.create.R
-import br.com.brunocarvalhs.group.create.commons.components.LoadingProgress
-import br.com.brunocarvalhs.group.create.commons.components.MemberAvatarItem
 import br.com.brunocarvalhs.group.create.commons.extensions.CurrencyVisualTransformation
 import coil.compose.AsyncImage
 import java.text.SimpleDateFormat

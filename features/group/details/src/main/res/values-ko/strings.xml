@@ -7,6 +7,7 @@
     <string name="contact_photo_description">%1$s의 연락처 사진</string>
     <string name="edit_participant_action">참가자 %1$s 편집</string>
     <string name="remove_participant_action">참가자 %1$s 삭제</string>
+    <string name="group_photo_description">%1$s의 그룹 사진</string>
     <string name="back">뒤로</string>
     <string name="unnamed_group">이름 없는 그룹</string>
     <string name="group_participants">그룹 · %1$d명의 참가자</string>

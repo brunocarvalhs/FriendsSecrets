@@ -38,7 +38,7 @@ internal fun GroupListFilterRow(
                 modifier = Modifier.semantics {
                     contentDescription = description
                     selected = (selectedTag == tag)
-                    role = Role.Tab // Ou Role.RadioButton dependendo do contexto, Tab costuma funcionar bem para filtros
+                    role = Role.Tab
                 },
                 selected = selectedTag == tag,
                 onClick = { onTagSelect(tag) },
