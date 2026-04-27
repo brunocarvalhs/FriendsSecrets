@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Zurück</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="settings_screen_general">Allgemein</string>
+    <string name="settings_screen_security">Fingerabdruck</string>
+    <string name="settings_screen_support">Support</string>
+    <string name="title_report_an_issue">Ein Problem melden</string>
+    <string name="title_review">App bewerten</string>
+    <string name="localized_description">Lokalisierte Beschreibung</string>
+    <string name="title_appearance">Erscheinungsbild</string>
+    <string name="appearance_screen_title">Die Auswahl einer bestimmten Option ändert das Erscheinungsbild (Farbe) der App entsprechend Ihren Präferenzen.</string>
+    <string name="appearance_screen_title_description">Die Aktivierung des dynamischen Designs ermöglicht es der App, ihre Farben automatisch basierend auf dem Hintergrundbild Ihres Geräts anzupassen.</string>
+    <string name="appearance_screen_dynamic_title">Dynamisches Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="system_theme">System-Design</string>
+    <string name="title_faq">FAQ</string>
+</resources>

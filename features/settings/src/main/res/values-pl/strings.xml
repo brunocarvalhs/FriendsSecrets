@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Wróć</string>
+    <string name="title_settings">Ustawienia</string>
+    <string name="settings_screen_general">Ogólne</string>
+    <string name="settings_screen_security">Odcisk palca</string>
+    <string name="settings_screen_support">Wsparcie</string>
+    <string name="title_report_an_issue">Zgłoś problem</string>
+    <string name="title_review">Oceń aplikację</string>
+    <string name="localized_description">Opis lokalny</string>
+    <string name="title_appearance">Wygląd</string>
+    <string name="appearance_screen_title">Wybranie konkretnej opcji zmieni wygląd (kolor) aplikacji zgodnie z Twoimi preferencjami.</string>
+    <string name="appearance_screen_title_description">Włączenie motywu dynamicznego pozwoli aplikacji automatycznie dostosowywać kolory na podstawie tapety urządzenia.</string>
+    <string name="appearance_screen_dynamic_title">Motyw dynamiczny</string>
+    <string name="light_theme">Jasny motyw</string>
+    <string name="dark_theme">Ciemny motyw</string>
+    <string name="system_theme">Motyw systemowy</string>
+    <string name="title_faq">FAQ</string>
+</resources>
