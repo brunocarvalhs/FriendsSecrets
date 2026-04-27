@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_biometric">Bezpieczne uwierzytelnianie</string>
+    <string name="subtitle_biometric">Dostęp za pomocą biometrii lub hasła urządzenia</string>
+    <string name="biometric_required">Wymagane uwierzytelnienie</string>
+    <string name="biometric_message">Użyj swojej biometrii, aby bezpiecznie uzyskać dostęp do FriendsSecrets.</string>
+    <string name="biometric_button_authentic">Uwierzytelnij</string>
+    <string name="biometric_not_found">Nie rozpoznano odcisku palca. Spróbuj ponownie.</string>
+</resources>

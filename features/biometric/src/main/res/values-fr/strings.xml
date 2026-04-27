@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_biometric">Authentification sécurisée</string>
+    <string name="subtitle_biometric">Accès par biométrie ou mot de passe de l\'appareil</string>
+    <string name="biometric_required">Authentification requise</string>
+    <string name="biometric_message">Utilisez votre biométrie pour accéder à FriendsSecrets en toute sécurité.</string>
+    <string name="biometric_button_authentic">S\'authentifier</string>
+    <string name="biometric_not_found">Empreinte digitale non reconnue. Réessayez.</string>
+</resources>
