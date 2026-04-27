@@ -4,9 +4,11 @@ This directory contains Maestro tests for the FriendsSecrets app.
 
 ## Prerequisites
 
-- Install Maestro: `curl -fsSL "https://get.maestro.mobile.dev" | bash`
-- Add Maestro to your PATH: `export PATH="$PATH":"$HOME/.maestro/bin"`
-- Have an Android emulator or device connected
+- **Java JDK**: Maestro requires Java. Ensure `JAVA_HOME` is set.
+  - On macOS: `export JAVA_HOME=$(/usr/libexec/java_home)`
+- **Maestro CLI**: `curl -fsSL "https://get.maestro.mobile.dev" | bash`
+- **PATH**: Add Maestro to your PATH: `export PATH="$PATH":"$HOME/.maestro/bin"`
+- **Running Emulator/Device**: Have an Android emulator or device connected.
 
 ## Running Tests
 

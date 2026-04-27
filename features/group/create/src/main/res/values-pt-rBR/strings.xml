@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="success">Sucesso!</string>
+    <string name="ops">Ops!</string>
+    <string name="error_component_button_try_again">Tentar novamente</string>
+    <string name="error_component_button_to_home">Ir para o início</string>
+    <string name="add_member_manual_title">Adicionar Manualmente</string>
+    <string name="add_member_manual_description">Parece que não temos acesso aos seus contatos ou a lista está vazia. Você pode adicionar pessoas inserindo os nomes abaixo.</string>
+    <string name="add_member_manual_input_name">Nome do Participante</string>
+    <string name="add_member_manual_input_name_place">Ex: João Silva</string>
+    <string name="add_member_manual_input_phone">Telefone (Opcional)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_button">Adicionar ao Grupo</string>
+    <string name="search_field_place">Buscar nome ou número</string>
+    <string name="content_description_remove">Remover</string>
+    <string name="contacts_adicional_members">Adicionar membros</string>
+    <string name="contacts_adicional_members_subtitle_select">%1$d selecionados</string>
+    <string name="content_description_back">Voltar</string>
+    <string name="content_description_next">Próximo</string>
+    <string name="view_contact_list">Ver lista de contatos</string>
+    <string name="add_manually">Adicionar manualmente</string>
+    <string name="enable_contact_access">Ativar acesso aos contatos</string>
+    <string name="allow_contacts_in_settings">Permitir contatos nas Configurações</string>
+    <string name="next">Próximo</string>
+    <string name="cancel">Cancelar</string>
+    <string name="select_the_best_time">Selecionar o horário</string>
+    <string name="ok">OK</string>
+    <string name="edit_group">Editar grupo</string>
+    <string name="new_group">Novo grupo</string>
+    <string name="save">Salvar</string>
+    <string name="create">Criar</string>
+    <string name="group_name">Nome do grupo</string>
+    <string name="description">Descrição</string>
+    <string name="event_date">Data do evento</string>
+    <string name="minimum_price">Preço Mín.</string>
+    <string name="maximum_price">Preço Máx.</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">O preço mínimo não pode ser maior que o máximo</string>
+    <string name="members">Membros</string>
+</resources>

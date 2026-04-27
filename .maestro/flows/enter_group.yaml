@@ -1,0 +1,16 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Chat Flow
+---
+- launchApp
+- tapOn: "Enter a group"
+- inputText: "YFZ6H5ZH"
+- tapOn: "Validate"
+- assertVisible: "teste 2"
+- tapOn: "teste 2"
+- assertVisible: "teste 2"
+- scrollUntilVisible:
+    element: "Leave group"
+- tapOn: "Leave group"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible: "teste 2"

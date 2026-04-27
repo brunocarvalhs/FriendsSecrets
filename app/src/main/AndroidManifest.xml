@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FriendsSecrets"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -26,11 +27,38 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="friendssecrets" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.FirebaseInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.AnalyticsInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.CrashlyticsInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.PerformanceInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.LoggerInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="br.com.brunocarvalhs.friendssecrets.initializers.RealtimeInitializer"
+                android:value="androidx.startup" />
+        </provider>
 
         <meta-data
             android:name="firebase_performance_logcat_enabled"

@@ -1,8 +1,11 @@
-name: FriendsSecrets Test Suite
-description: Test suite for FriendsSecrets app
-flows:
-  - anonymous_login_flow.yaml
-  - login_flow.yaml
-  - home_flow.yaml
-  - create_group_flow.yaml
-  - settings_flow.yaml
+appId: br.com.brunocarvalhs.friendssecrets
+---
+- runFlow: flows/home_flow.yaml
+- runFlow: flows/create_group_flow.yaml
+- runFlow: flows/group_details_flow.yaml
+- runFlow: flows/group_edit_flow.yaml
+- runFlow: flows/chat_flow.yaml
+- runFlow: flows/draw_flow.yaml
+- runFlow: flows/search_filter_flow.yaml
+- runFlow: flows/enter_group.yaml
+- runFlow: flows/settings_flow.yaml

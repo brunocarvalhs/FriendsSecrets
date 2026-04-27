@@ -9,6 +9,25 @@ plugins {
     alias(libs.plugins.google.firebase.crashlytics) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.android.library) apply false
-    id("com.google.dagger.hilt.android") version "2.56.2" apply false
-    id("com.google.devtools.ksp") version "2.1.10-1.0.31" apply false
+    alias(libs.plugins.android.test) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.google.dagger.hilt.android) apply false
+    alias(libs.plugins.google.devtools.ksp) apply false
+}
+
+subprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    extensions.configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension>("detekt") {
+        config.setFrom(files("$rootDir/detekt.yml"))
+        parallel = true
+        buildUponDefaultConfig = true
+        autoCorrect = true
+    }
+
+    dependencies {
+        val libs = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        "detektPlugins"(libs.findLibrary("detekt-rules-compose").get())
+    }
 }

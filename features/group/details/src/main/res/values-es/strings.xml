@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Contraer gustos</string>
+    <string name="expand_likes_action">Expandir gustos</string>
+    <string name="likes_expanded_state">Expandido</string>
+    <string name="likes_collapsed_state">Contraído</string>
+    <string name="contact_photo_description">Foto de contacto de %1$s</string>
+    <string name="edit_participant_action">Editar participante %1$s</string>
+    <string name="remove_participant_action">Eliminar participante %1$s</string>
+    <string name="back">Volver</string>
+    <string name="unnamed_group">Grupo sin nombre</string>
+    <string name="group_participants">Grupo · %1$d participantes</string>
+    <string name="invite">Invitar</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Revelar</string>
+    <string name="draw">Sorteo</string>
+    <string name="add_group_description">Añadir descripción del grupo</string>
+    <string name="created_at">Creado el %1$s</string>
+    <string name="draw_details">Detalles del sorteo</string>
+    <string name="draw_date">Fecha del sorteo</string>
+    <string name="price_between_min_and_max">Entre %1$s y %2$s</string>
+    <string name="price_from_min">Desde %1$s</string>
+    <string name="price_up_to">Hasta %1$s</string>
+    <string name="price_range">Rango de precio</string>
+    <string name="gift_type">Tipo de regalo</string>
+    <string name="participants">%1$d participantes</string>
+    <string name="add_participants">Añadir participantes</string>
+    <string name="edit_group_information">Editar información del grupo</string>
+    <string name="delete_group">Eliminar grupo</string>
+    <string name="leave_group">Salir del grupo</string>
+    <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n¡Descarga la app y únete ahora!</string>
+    <string name="share_group_title">Compartir código</string>
+</resources>

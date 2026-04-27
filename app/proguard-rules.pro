@@ -40,7 +40,7 @@
 -keep class org.junit.** { *; }
 -keep class androidx.test.** { *; }
 
-# Manter anotações de Retrofit (caso use)
+# Manter anotações de Retrofit
 -keepattributes *Annotation*
 
 # Manter anotações de Gson

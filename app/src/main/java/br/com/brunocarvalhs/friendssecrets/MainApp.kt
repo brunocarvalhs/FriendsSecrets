@@ -1,37 +1,32 @@
 package br.com.brunocarvalhs.friendssecrets
 
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.brunocarvalhs.auth.AuthInitializer
-import br.com.brunocarvalhs.friendssecrets.common.navigation.AuthGraphRoute
-import br.com.brunocarvalhs.friendssecrets.common.remote.toggle.ToggleManager
-import br.com.brunocarvalhs.group.GroupInitializer
-import br.com.brunocarvalhs.settings.SettingsInitializer
+import br.com.brunocarvalhs.core.navigation.FeatureInitializer
+import br.com.brunocarvalhs.core.navigation.routers.BiometricGraph
+import br.com.brunocarvalhs.core.navigation.routers.GroupListGraph
 
 @Composable
-fun MainApp(
-    activity: ComponentActivity,
-    toggleManager: ToggleManager,
-    navController: NavHostController,
+fun NavHostController.mainApp(
+    isBiometric: Boolean = false,
+    initializers: Set<FeatureInitializer> = emptySet()
 ) {
+    val startRoute: Any = remember(isBiometric) {
+        if (isBiometric) {
+            BiometricGraph
+        } else {
+            GroupListGraph
+        }
+    }
 
-    NavHost(navController = navController, startDestination = AuthGraphRoute) {
-        AuthInitializer.Builder()
-            .activity(activity = activity)
-            .toggleManager(toggleManager = toggleManager)
-            .navController(navController = navController)
-            .build(navGraphBuilder = this)
-
-        GroupInitializer.Builder()
-            .navController(navController = navController)
-            .toggleManager(toggleManager = toggleManager)
-            .build(navGraphBuilder = this)
-
-        SettingsInitializer.Builder()
-            .navController(navController = navController)
-            .toggleManager(toggleManager = toggleManager)
-            .build(navGraphBuilder = this)
+    NavHost(
+        navController = this@mainApp,
+        startDestination = startRoute
+    ) {
+        initializers.forEach {
+            it.register(this, this@mainApp)
+        }
     }
 }

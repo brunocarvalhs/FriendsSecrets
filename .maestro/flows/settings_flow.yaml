@@ -2,25 +2,24 @@ appId: br.com.brunocarvalhs.friendssecrets
 name: Settings Flow
 ---
 - launchApp
-- runFlow: anonymous_login_flow.yaml
-- tapOn:
-    id: ".*MoreVert.*"
-- tapOn: "Configurações"
-- assertVisible: "Configurações"
-- assertVisible: "Geral"
-- assertVisible: "Segurança"
-- assertVisible: "Aparência"
-- assertVisible: "Suporte"
-- assertVisible: "Reportar problema"
-- assertVisible: "Perguntas frequentes"
-- tapOn: "Aparência"
-- assertVisible: "Aparência"
-- assertVisible: "Tema"
+- tapOn: "More options"
+- tapOn: "Settings"
+- assertVisible: "General"
+- assertVisible: "Appearance"
+- assertVisible: "Report an issue"
+- assertVisible: "FAQ"
+- assertVisible: "Review App"
+- tapOn: "Appearance"
+- assertVisible: "Appearance"
+- assertVisible: "Light theme"
+- assertVisible: "Dark theme"
+- assertVisible: "System theme"
+- assertVisible: "Dynamic Theme"
 - back
-- tapOn: "Reportar problema"
-- assertVisible: "Reportar problema"
+- tapOn: "Report an issue"
 - back
-- tapOn: "Perguntas frequentes"
-- assertVisible: "Perguntas frequentes"
+- tapOn: "FAQ"
+- back
+- assertVisible: "Review App"
 - back
 - back

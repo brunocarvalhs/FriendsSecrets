@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="identify">Identify yourself</string>
+    <string name="identify_message">You are not in the member list of this group. How would you like to be called in the chat?</string>
+    <string name="identify_name">Your Name or Nickname</string>
+    <string name="identify_save">Save</string>
+    <string name="identify_cancela">Cancel</string>
+    <string name="chat_input">Type a message...</string>
+    <string name="chat_button_send">Send</string>
+</resources>

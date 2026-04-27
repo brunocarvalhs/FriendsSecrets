@@ -1,0 +1,10 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Search and Filter Flow
+---
+- launchApp
+- tapOn: "Search groups..."
+- inputText: "Grupo"
+- tapOn: "Archived"
+- tapOn: "Drawn"
+- tapOn: "Not drawn"
+- tapOn: "Active"

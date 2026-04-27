@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Volver</string>
+    <string name="draw_results_title">Resultados del Sorteo</string>
+    <string name="secret_santa_draw_title">Sorteo de Amigo Invisible</string>
+    <string name="draw_complete_message">¡El sorteo ha terminado! Comparte los resultados con tus amigos.</string>
+    <string name="ready_to_discover_title">¿Listo para descubrir a tu Amigo Invisible?</string>
+    <string name="start_magic_subtitle">¡Toca el botón de abajo para empezar la magia!</string>
+    <string name="drawing_button">Sorteando...</string>
+    <string name="start_draw_button">Empezar Sorteo</string>
+    <string name="draw_results">Resultados del Sorteo</string>
+    <string name="secret_santa_draw">Sorteo de Amigo Invisible</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">¡El sorteo ha terminado! Comparte los resultados con los miembros del grupo.</string>
+    <string name="ready_to_draw">¿Listo para sortear?</string>
+    <string name="tap_the_button_below_to_start_the_draw">¡Toca el botón de abajo para empezar el sorteo!</string>
+    <string name="scale">Escala</string>
+    <string name="drawing">Sorteando...</string>
+    <string name="just_drawn">Recién Sorteado</string>
+    <string name="share">Compartir</string>
+</resources>
