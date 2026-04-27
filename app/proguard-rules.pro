@@ -46,9 +46,39 @@
 # Manter anotações de Gson
 -keep @com.google.gson.annotations.SerializedName class * { *; }
 
+# Kotlin Serialization
+-keepattributes *Annotation*, InnerClasses
+-keep,allowobfuscation,allowshrinking class * {
+    @kotlinx.serialization.Serializable *;
+}
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializer *;
+}
+-keepclassmembers class * {
+    *** Companion;
+    *** $serializer;
+}
+
 # Desativar avisos desnecessários
 -dontwarn okhttp3.**
 -dontwarn org.codehaus.mojo.animal_sniffer.**
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**
+
+# Manter classes de navegação customizadas
+-keep class br.com.brunocarvalhs.core.navigation.routers.** { *; }
+-dontwarn br.com.brunocarvalhs.core.navigation.routers.**
+
+# Hilt / Dagger
+-keep class com.google.dagger.** { *; }
+-keep class dagger.hilt.** { *; }
+-keep @dagger.hilt.EntryPoint class *
+-keep @dagger.hilt.InstallIn class *
+
+# Segurança adicional: Ofuscação agressiva para o resto do app
+-repackageclasses ''
+-allowaccessmodification
+-overloadaggressively
 
 # Para facilitar o diagnóstico
 -printmapping mapping.txt
