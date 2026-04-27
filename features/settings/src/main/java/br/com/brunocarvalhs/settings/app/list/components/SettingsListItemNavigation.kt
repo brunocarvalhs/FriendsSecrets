@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import br.com.brunocarvalhs.settings.R
 
 @Composable
@@ -21,18 +24,25 @@ internal fun SettingsListItemNavigation(
     onClick: () -> Unit = {},
 ) {
     ListItem(
-        modifier = Modifier.clickable { onClick.invoke() },
+        modifier = Modifier
+            .clickable(
+                onClickLabel = stringResource(R.string.open), // WCAG: Indica a ação do clique
+                onClick = onClick
+            )
+            .semantics {
+                role = Role.Button
+            },
         headlineContent = { Text(stringResource(title)) },
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = stringResource(R.string.localized_description),
+                contentDescription = null, // WCAG: Decorativo, já que o contexto é navegação
             )
         },
         leadingContent = {
             Icon(
                 imageVector = icon,
-                contentDescription = stringResource(title),
+                contentDescription = null, // WCAG: O título já descreve a seção
             )
         }
     )

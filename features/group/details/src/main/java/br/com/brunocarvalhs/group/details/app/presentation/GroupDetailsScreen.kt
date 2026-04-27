@@ -44,6 +44,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -242,7 +244,7 @@ private fun GroupDetailsHeader(
         Spacer(modifier = Modifier.height(16.dp))
         AsyncImage(
             model = photoUrl,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.group_photo_description, name),
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape)
@@ -253,7 +255,8 @@ private fun GroupDetailsHeader(
         Text(
             text = name.ifBlank { stringResource(R.string.unnamed_group) },
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.semantics { heading() }
         )
         Text(
             text = stringResource(R.string.group_participants, memberCount),

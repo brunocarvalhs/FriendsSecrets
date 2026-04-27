@@ -27,6 +27,7 @@ internal fun GroupListSearchField(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         placeholder = { Text(stringResource(R.string.search_groups)) },
+        label = { Text(stringResource(R.string.search_groups)) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         shape = MaterialTheme.shapes.medium,
         singleLine = true,

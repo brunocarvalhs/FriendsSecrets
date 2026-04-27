@@ -8,4 +8,8 @@
     <string name="identify_cancela">취소</string>
     <string name="chat_input">메시지 입력...</string>
     <string name="chat_button_send">전송</string>
+    <string name="status_sending">전송 중</string>
+    <string name="status_sent">전송됨</string>
+    <string name="status_error">전송 실패</string>
+    <string name="message_from">보낸 사람: %1$s</string>
 </resources>

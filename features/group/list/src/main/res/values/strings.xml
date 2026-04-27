@@ -37,6 +37,7 @@
     <string name="error_component_button_to_home">Go to home</string>
 
     <!-- Accessibility/Descriptions -->
+    <string name="loading">Loading</string>
     <string name="contact_photo_description">Contact photo of %1$s</string>
     <string name="group_list_filter_active">Active</string>
     <string name="group_list_filter_archived">Archived</string>

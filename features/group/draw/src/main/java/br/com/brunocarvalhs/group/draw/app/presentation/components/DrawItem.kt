@@ -16,6 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,16 +38,26 @@ internal fun DrawItem(
         members.find { it.name == member }
     }
 
+    val shareDescription = stringResource(R.string.share)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+                onClick(label = shareDescription) {
+                    onShare()
+                    true
+                }
+            }
             .clickable { onShare() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ContactAvatar(
             name = drawMember?.name ?: member,
-            photoUrl = drawMember?.photoUrl
+            photoUrl = drawMember?.photoUrl,
+            modifier = Modifier.clearAndSetSemantics { }
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -53,10 +69,13 @@ internal fun DrawItem(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        IconButton(onClick = onShare) {
+        IconButton(
+            onClick = onShare,
+            modifier = Modifier.clearAndSetSemantics { }
+        ) {
             Icon(
                 imageVector = Icons.Default.Share,
-                contentDescription = stringResource(R.string.share),
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
         }

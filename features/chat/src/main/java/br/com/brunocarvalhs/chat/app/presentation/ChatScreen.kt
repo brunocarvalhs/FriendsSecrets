@@ -55,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.semantics
 import br.com.brunocarvalhs.chat.R
 import br.com.brunocarvalhs.chat.app.data.extensions.toLocalDateTime
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
@@ -189,7 +190,10 @@ fun ChatMessageItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .semantics(mergeDescendants = true) {
+                // WCAG: Agrupa toda a informação da mensagem em um único anúncio
+            },
         contentAlignment = alignment
     ) {
         Card(
@@ -240,10 +244,10 @@ fun StatusIcon(
     status: MessageStatus,
     modifier: Modifier = Modifier
 ) {
-    val icon = when (status) {
-        MessageStatus.SENDING -> Icons.Default.AccessTime
-        MessageStatus.SENT -> Icons.Default.Check
-        MessageStatus.ERROR -> Icons.Default.Error
+    val (icon, descriptionRes) = when (status) {
+        MessageStatus.SENDING -> Icons.Default.AccessTime to R.string.status_sending
+        MessageStatus.SENT -> Icons.Default.Check to R.string.status_sent
+        MessageStatus.ERROR -> Icons.Default.Error to R.string.status_error
     }
     
     val color = when (status) {
@@ -253,7 +257,7 @@ fun StatusIcon(
 
     Icon(
         imageVector = icon,
-        contentDescription = status.name,
+        contentDescription = stringResource(descriptionRes),
         modifier = modifier.size(12.dp),
         tint = color
     )
@@ -280,6 +284,7 @@ fun ChatInputBar(
                 value = text,
                 onValueChange = onTextChange,
                 modifier = Modifier.weight(1f),
+                label = { Text(stringResource(R.string.chat_input)) },
                 placeholder = { Text(text = stringResource(R.string.chat_input)) },
                 maxLines = 4,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),

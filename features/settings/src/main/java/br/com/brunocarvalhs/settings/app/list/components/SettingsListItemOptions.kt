@@ -1,7 +1,6 @@
 package br.com.brunocarvalhs.settings.app.list.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
 import androidx.compose.material3.HorizontalDivider
@@ -16,6 +15,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -27,26 +30,33 @@ internal fun SettingsListItemOptions(
 ) {
     var checked by rememberSaveable { mutableStateOf(value = selected) }
 
-    fun onClick(value: Boolean) {
+    fun onToggle(value: Boolean) {
         checked = value
         onClick.invoke(value)
     }
 
     ListItem(
         modifier = Modifier
-            .clickable { onClick(checked.not()) }
-            .selectableGroup(),
+            .toggleable(
+                value = checked,
+                role = Role.Switch,
+                onValueChange = { onToggle(it) }
+            )
+            .semantics {
+                // WCAG: Limpamos para que o TalkBack leia como um único controle consolidado
+                toggleableState = if (checked) ToggleableState.On else ToggleableState.Off
+            },
         headlineContent = { Text(title) },
         trailingContent = {
             Switch(
                 checked = checked,
-                onCheckedChange = { onClick(it) }
+                onCheckedChange = null // WCAG: O clique é tratado pelo ListItem pai
             )
         },
         leadingContent = {
             Icon(
                 imageVector = icon,
-                contentDescription = title,
+                contentDescription = null, // WCAG: O título já é autoexplicativo
             )
         }
     )

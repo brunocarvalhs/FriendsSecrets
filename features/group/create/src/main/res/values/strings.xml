@@ -36,4 +36,9 @@
     <string name="maximum_price">Max. Price</string>
     <string name="minimum_price_cannot_be_greater_than_maximum">Minimum price cannot be greater than maximum</string>
     <string name="members">Members</string>
+    <string name="selected_group_photo">Selected group photo</string>
+    <string name="no_photo_selected">No photo selected</string>
+    <string name="photo_option_index">Photo option %1$d</string>
+    <string name="group_info_header">Group Information</string>
+    <string name="group_price_header">Draw Details</string>
 </resources>

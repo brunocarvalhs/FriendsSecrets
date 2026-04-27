@@ -8,4 +8,8 @@
     <string name="identify_cancela">Cancelar</string>
     <string name="chat_input">Escribe un mensaje...</string>
     <string name="chat_button_send">Enviar</string>
+    <string name="status_sending">Enviando</string>
+    <string name="status_sent">Enviado</string>
+    <string name="status_error">Error al enviar</string>
+    <string name="message_from">De: %1$s</string>
 </resources>

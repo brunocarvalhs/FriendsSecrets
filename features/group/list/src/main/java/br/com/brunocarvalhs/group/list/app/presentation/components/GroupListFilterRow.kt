@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.group.list.app.presentation.GroupFilterTag
 
@@ -28,10 +33,16 @@ internal fun GroupListFilterRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(tags) { tag ->
+            val description = stringResource(tag.description)
             FilterChip(
+                modifier = Modifier.semantics {
+                    contentDescription = description
+                    selected = (selectedTag == tag)
+                    role = Role.Tab // Ou Role.RadioButton dependendo do contexto, Tab costuma funcionar bem para filtros
+                },
                 selected = selectedTag == tag,
                 onClick = { onTagSelect(tag) },
-                label = { Text(stringResource(tag.description)) }
+                label = { Text(description) }
             )
         }
     }

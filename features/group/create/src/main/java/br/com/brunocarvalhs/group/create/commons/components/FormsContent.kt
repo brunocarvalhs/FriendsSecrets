@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,6 +59,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -262,15 +270,21 @@ internal fun FormsContent(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+                val photoDescription = if (selectedPhoto != null) {
+                    stringResource(R.string.selected_group_photo)
+                } else {
+                    stringResource(R.string.no_photo_selected)
+                }
+
                 Box(
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .semantics {
+                            role = Role.Image
+                            contentDescription = photoDescription
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     if (selectedPhoto != null) {
@@ -296,7 +310,8 @@ internal fun FormsContent(
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(availablePhotos) { photoUrl ->
+                    itemsIndexed(availablePhotos) { index, photoUrl ->
+                        val optionDesc = stringResource(R.string.photo_option_index, index + 1)
                         Box(
                             modifier = Modifier
                                 .size(60.dp)
@@ -311,6 +326,11 @@ internal fun FormsContent(
                                     shape = CircleShape
                                 )
                                 .clickable { onPhotoChange(photoUrl) }
+                                .semantics {
+                                    role = Role.RadioButton
+                                    selected = (selectedPhoto == photoUrl)
+                                    contentDescription = optionDesc
+                                }
                         ) {
                             AsyncImage(
                                 model = photoUrl,
@@ -345,6 +365,7 @@ internal fun FormsContent(
                         TextField(
                             value = name,
                             onValueChange = { onNameChange(it) },
+                            label = { Text(stringResource(R.string.group_name)) },
                             placeholder = {
                                 Text(
                                     stringResource(R.string.group_name),
@@ -386,6 +407,7 @@ internal fun FormsContent(
                         TextField(
                             value = description,
                             onValueChange = { onDescriptionChange(it) },
+                            label = { Text(stringResource(R.string.description)) },
                             placeholder = {
                                 Text(
                                     stringResource(R.string.description),
@@ -529,7 +551,9 @@ internal fun FormsContent(
                             text = stringResource(R.string.minimum_price_cannot_be_greater_than_maximum),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                            modifier = Modifier
+                                .padding(start = 16.dp, bottom = 8.dp)
+                                .semantics { liveRegion = LiveRegionMode.Assertive }
                         )
                     }
                 }

@@ -38,6 +38,7 @@
     <string name="error_component_button_to_home">Ir para o início</string>
 
     <!-- Accessibility/Descriptions -->
+    <string name="loading">Carregando</string>
     <string name="contact_photo_description">Foto do contato de %1$s</string>
     <string name="group_list_filter_active">Ativo</string>
     <string name="group_list_filter_archived">Arquivado</string>
@@ -46,7 +47,7 @@
 
 
     <!-- Maintenance -->
-    <string name="group_card_members_count">%1$d personas</string>
+    <string name="group_card_members_count">%1$d pessoas</string>
     <string name="maintenance_title">Funcionalidade Indisponível</string>
     <string name="maintenance_message">Desculpe, esta funcionalidade está em manutenção para melhorias. Por favor, tente novamente mais tarde.</string>
 </resources>
