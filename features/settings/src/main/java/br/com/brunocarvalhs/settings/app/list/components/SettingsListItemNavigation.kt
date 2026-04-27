@@ -26,7 +26,7 @@ internal fun SettingsListItemNavigation(
     ListItem(
         modifier = Modifier
             .clickable(
-                onClickLabel = stringResource(R.string.open), // WCAG: Indica a ação do clique
+                onClickLabel = stringResource(R.string.open),
                 onClick = onClick
             )
             .semantics {

@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.group.create.app.presentation.forms.components
+package br.com.brunocarvalhs.group.create.commons.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

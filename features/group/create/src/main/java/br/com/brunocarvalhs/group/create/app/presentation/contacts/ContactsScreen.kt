@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import br.com.brunocarvalhs.group.create.commons.components.LoadingProgress
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,7 +51,7 @@ import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.Ad
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.ContactList
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SearchField
 import br.com.brunocarvalhs.group.create.app.presentation.contacts.components.SelectedMembersRow
-import br.com.brunocarvalhs.group.create.app.presentation.forms.components.LoadingProgress
+import br.com.brunocarvalhs.group.create.commons.components.LoadingProgress
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState

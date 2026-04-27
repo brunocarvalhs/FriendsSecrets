@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="back">뒤로</string>
+    <string name="open">열기</string>
 
     <!-- Settings -->
     <string name="title_settings">설정</string>
