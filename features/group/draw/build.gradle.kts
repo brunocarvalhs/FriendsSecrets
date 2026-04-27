@@ -4,18 +4,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-<<<<<<<< HEAD:features/biometric/build.gradle.kts
-    
-}
-
-android {
-    namespace = "br.com.brunocarvalhs.biometric"
-========
 }
 
 android {
     namespace = "br.com.brunocarvalhs.group.draw"
->>>>>>>> master:features/group/draw/build.gradle.kts
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -27,16 +19,8 @@ android {
 
     buildTypes {
         release {
-<<<<<<<< HEAD:features/biometric/build.gradle.kts
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-========
             isMinifyEnabled = false
             consumerProguardFiles("consumer-rules.pro")
->>>>>>>> master:features/group/draw/build.gradle.kts
         }
     }
     compileOptions {
@@ -64,12 +48,8 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
-<<<<<<<< HEAD:features/biometric/build.gradle.kts
-    implementation(project(":core:biometric"))
-========
     implementation(project(":core:security"))
     implementation(project(":core:network"))
->>>>>>>> master:features/group/draw/build.gradle.kts
     implementation(project(":core:remote"))
 
     // Compose Core

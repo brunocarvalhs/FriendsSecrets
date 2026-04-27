@@ -4,18 +4,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-<<<<<<<< HEAD:features/group/draw/build.gradle.kts
-}
-
-android {
-    namespace = "br.com.brunocarvalhs.group.draw"
-========
-    
 }
 
 android {
     namespace = "br.com.brunocarvalhs.biometric"
->>>>>>>> master:features/biometric/build.gradle.kts
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -56,12 +48,9 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
-<<<<<<<< HEAD:features/group/draw/build.gradle.kts
     implementation(project(":core:security"))
     implementation(project(":core:network"))
-========
     implementation(project(":core:biometric"))
->>>>>>>> master:features/biometric/build.gradle.kts
     implementation(project(":core:remote"))
 
     // Compose Core
