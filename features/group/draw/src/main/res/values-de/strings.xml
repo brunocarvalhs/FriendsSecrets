@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Zurück</string>
+    <string name="draw_results_title">Ergebnisse der Auslosung</string>
+    <string name="secret_santa_draw_title">Wichtel-Auslosung</string>
+    <string name="draw_complete_message">Die Auslosung ist abgeschlossen! Teile die Ergebnisse mit deinen Freunden.</string>
+    <string name="ready_to_discover_title">Bereit, deinen Wichtel zu entdecken?</string>
+    <string name="start_magic_subtitle">Tippe auf die Schaltfläche unten, um die Magie zu starten!</string>
+    <string name="drawing_button">Auslosung läuft...</string>
+    <string name="start_draw_button">Auslosung starten</string>
+    <string name="draw_results">Ergebnisse der Auslosung</string>
+    <string name="secret_santa_draw">Wichtel-Auslosung</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">Die Auslosung ist abgeschlossen! Teile die Ergebnisse mit den Gruppenmitgliedern.</string>
+    <string name="ready_to_draw">Bereit für die Auslosung?</string>
+    <string name="tap_the_button_below_to_start_the_draw">Tippe auf die Schaltfläche unten, um die Auslosung zu starten!</string>
+    <string name="scale">Skala</string>
+    <string name="drawing">Auslosung läuft...</string>
+    <string name="just_drawn">Gerade ausgelost</string>
+    <string name="share">Teilen</string>
+</resources>
