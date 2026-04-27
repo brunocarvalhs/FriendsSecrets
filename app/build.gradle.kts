@@ -21,7 +21,7 @@ android {
         applicationId = "br.com.brunocarvalhs.friendssecrets"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        
+
         versionCode = 14
         versionName = "3.0.0"
 
