@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Likes einklappen</string>
+    <string name="expand_likes_action">Likes ausklappen</string>
+    <string name="likes_expanded_state">Ausgeklappt</string>
+    <string name="likes_collapsed_state">Eingeklappt</string>
+    <string name="contact_photo_description">Kontaktfoto von %1$s</string>
+    <string name="edit_participant_action">Teilnehmer %1$s bearbeiten</string>
+    <string name="remove_participant_action">Teilnehmer %1$s entfernen</string>
+    <string name="back">Zurück</string>
+    <string name="unnamed_group">Unbenannte Gruppe</string>
+    <string name="group_participants">Gruppe · %1$d Teilnehmer</string>
+    <string name="invite">Einladen</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Enthüllen</string>
+    <string name="draw">Auslosung</string>
+    <string name="add_group_description">Gruppenbeschreibung hinzufügen</string>
+    <string name="created_at">Erstellt am %1$s</string>
+    <string name="draw_details">Auslosungsdetails</string>
+    <string name="draw_date">Auslosungsdatum</string>
+    <string name="price_between_min_and_max">Zwischen %1$s und %2$s</string>
+    <string name="price_from_min">Ab %1$s</string>
+    <string name="price_up_to">Bis zu %1$s</string>
+    <string name="price_range">Preisspanne</string>
+    <string name="gift_type">Geschenkart</string>
+    <string name="participants">%1$d Teilnehmer</string>
+    <string name="add_participants">Teilnehmer hinzufügen</string>
+    <string name="edit_group_information">Gruppeninformationen bearbeiten</string>
+    <string name="delete_group">Gruppe löschen</string>
+    <string name="leave_group">Gruppe verlassen</string>
+    <string name="share_group_message">🎁 Du wurdest zu einer Wichtelgruppe eingeladen: %1$s!\n\n📝 Beschreibung: %2$s\n🔑 Gruppencode: %3$s\n\nLade die App herunter und mache jetzt mit!</string>
+    <string name="share_group_title">Code teilen</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Comprimi mi piace</string>
+    <string name="expand_likes_action">Espandi mi piace</string>
+    <string name="likes_expanded_state">Espanso</string>
+    <string name="likes_collapsed_state">Compresso</string>
+    <string name="contact_photo_description">Foto profilo di %1$s</string>
+    <string name="edit_participant_action">Modifica partecipante %1$s</string>
+    <string name="remove_participant_action">Rimuovi partecipante %1$s</string>
+    <string name="back">Indietro</string>
+    <string name="unnamed_group">Gruppo senza nome</string>
+    <string name="group_participants">Gruppo · %1$d partecipanti</string>
+    <string name="invite">Invita</string>
+    <string name="chat">Chat</string>
+    <string name="reveal">Rivelare</string>
+    <string name="draw">Sorteggio</string>
+    <string name="add_group_description">Aggiungi descrizione gruppo</string>
+    <string name="created_at">Creato il %1$s</string>
+    <string name="draw_details">Dettagli sorteggio</string>
+    <string name="draw_date">Data sorteggio</string>
+    <string name="price_between_min_and_max">Tra %1$s e %2$s</string>
+    <string name="price_from_min">Da %1$s</string>
+    <string name="price_up_to">Fino a %1$s</string>
+    <string name="price_range">Fascia di prezzo</string>
+    <string name="gift_type">Tipo di regalo</string>
+    <string name="participants">%1$d partecipanti</string>
+    <string name="add_participants">Aggiungi partecipanti</string>
+    <string name="edit_group_information">Modifica informazioni gruppo</string>
+    <string name="delete_group">Elimina gruppo</string>
+    <string name="leave_group">Lascia il gruppo</string>
+    <string name="share_group_message">🎁 Sei stato invitato a un gruppo Secret Santa: %1$s!\n\n📝 Descrizione: %2$s\n🔑 Codice gruppo: %3$s\n\nScarica l\'app e unisciti ora!</string>
+    <string name="share_group_title">Condividi Codice</string>
+</resources>

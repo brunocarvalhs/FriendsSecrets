@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="collapse_likes_action">Zwiń polubienia</string>
+    <string name="expand_likes_action">Rozwiń polubienia</string>
+    <string name="likes_expanded_state">Rozwinięte</string>
+    <string name="likes_collapsed_state">Zwinięte</string>
+    <string name="contact_photo_description">Zdjęcie kontaktu %1$s</string>
+    <string name="edit_participant_action">Edytuj uczestnika %1$s</string>
+    <string name="remove_participant_action">Usuń uczestnika %1$s</string>
+    <string name="back">Wróć</string>
+    <string name="unnamed_group">Grupa bez nazwy</string>
+    <string name="group_participants">Grupa · %1$d uczestników</string>
+    <string name="invite">Zaproś</string>
+    <string name="chat">Czat</string>
+    <string name="reveal">Ujawnij</string>
+    <string name="draw">Losowanie</string>
+    <string name="add_group_description">Dodaj opis grupy</string>
+    <string name="created_at">Utworzono %1$s</string>
+    <string name="draw_details">Szczegóły losowania</string>
+    <string name="draw_date">Data losowania</string>
+    <string name="price_between_min_and_max">Między %1$s a %2$s</string>
+    <string name="price_from_min">Od %1$s</string>
+    <string name="price_up_to">Do %1$s</string>
+    <string name="price_range">Zakres cenowy</string>
+    <string name="gift_type">Rodzaj prezentu</string>
+    <string name="participants">%1$d uczestników</string>
+    <string name="add_participants">Dodaj uczestników</string>
+    <string name="edit_group_information">Edytuj informacje o grupie</string>
+    <string name="delete_group">Usuń grupę</string>
+    <string name="leave_group">Opuść grupę</string>
+    <string name="share_group_message">🎁 Zostałeś zaproszony do grupy Secret Santa: %1$s!\n\n📝 Opis: %2$s\n🔑 Kod grupy: %3$s\n\nPobierz aplikację i dołącz teraz!</string>
+    <string name="share_group_title">Udostępnij kod</string>
+</resources>
