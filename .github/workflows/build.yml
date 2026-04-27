@@ -160,28 +160,25 @@ jobs:
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      - name: Setup Firebase Auth
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
-
       - name: Prepare Release Notes
         run: |
           cat <<EOF > notes.txt
           🚀 Build ${{ github.run_number }}
           📦 Branch: ${{ github.ref_name }}
-    
+
           📝 Changes:
           ${{ github.event.head_commit.message || 'Automatic deploy' }}
           EOF
-          
+
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           cat notes.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Upload APK to Firebase App Distribution
         run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
+
           firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --groups "maintainers" \
             --release-notes "${{ env.RELEASE_NOTES }}"
