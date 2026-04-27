@@ -36,4 +36,9 @@
     <string name="maximum_price">Precio máx.</string>
     <string name="minimum_price_cannot_be_greater_than_maximum">El precio mínimo no puede ser mayor que el máximo</string>
     <string name="members">Miembros</string>
+    <string name="selected_group_photo">Foto de grupo seleccionada</string>
+    <string name="no_photo_selected">Ninguna foto seleccionada</string>
+    <string name="photo_option_index">Opción de foto %1$d</string>
+    <string name="group_info_header">Información del grupo</string>
+    <string name="group_price_header">Detalles del sorteo</string>
 </resources>

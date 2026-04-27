@@ -36,4 +36,9 @@
     <string name="maximum_price">최대 가격</string>
     <string name="minimum_price_cannot_be_greater_than_maximum">최소 가격은 최대 가격보다 클 수 없습니다</string>
     <string name="members">멤버</string>
+    <string name="selected_group_photo">선택된 그룹 사진</string>
+    <string name="no_photo_selected">사진이 선택되지 않음</string>
+    <string name="photo_option_index">사진 옵션 %1$d</string>
+    <string name="group_info_header">그룹 정보</string>
+    <string name="group_price_header">추첨 상세 정보</string>
 </resources>
