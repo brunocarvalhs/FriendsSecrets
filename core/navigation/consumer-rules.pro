@@ -1,4 +1,8 @@
-# Keep serialization classes
+# Navigation Core
+-keep class br.com.brunocarvalhs.core.navigation.** { *; }
+-dontwarn br.com.brunocarvalhs.core.navigation.**
+
+# Kotlin Serialization
 -keep,allowobfuscation,allowshrinking class * {
     @kotlinx.serialization.Serializable *;
 }
@@ -6,7 +10,3 @@
     *** Companion;
     *** $serializer;
 }
-
-# Keep navigation routers
--keep class br.com.brunocarvalhs.core.navigation.routers.** { *; }
--dontwarn br.com.brunocarvalhs.core.navigation.routers.**

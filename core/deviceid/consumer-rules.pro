@@ -1,3 +1,3 @@
 # Device ID
--keep class br.com.brunocarvalhs.core.deviceid.** { *; }
--dontwarn br.com.brunocarvalhs.core.deviceid.**
+-keep class br.com.brunocarvalhs.deviceid.** { *; }
+-dontwarn br.com.brunocarvalhs.deviceid.**
