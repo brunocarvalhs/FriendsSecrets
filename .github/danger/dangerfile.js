@@ -3,11 +3,27 @@ const fs = require('fs');
 
 // --- Helper Functions ---
 
+/**
+ * Lê bibliotecas de um arquivo, ignorando comentários (#)
+ * e extraindo sugestões de substituição (->).
+ */
 function getLibsFromFile(fileName) {
   try {
     const fileContent = fs.readFileSync(fileName, 'utf-8');
-    return fileContent.split('\n').map(lib => lib.trim()).filter(lib => lib.length > 0);
+    return fileContent.split('\n')
+      .map(line => {
+        const commentFree = line.split('#')[0].trim();
+        if (!commentFree) return null;
+
+        const parts = commentFree.split('->');
+        return {
+          id: parts[0].trim(),
+          replacement: parts[1] ? parts[1].trim() : null
+        };
+      })
+      .filter(lib => lib !== null);
   } catch (error) {
+    console.error(`Erro ao ler arquivo de libs: ${fileName}`, error);
     return [];
   }
 }
@@ -18,11 +34,6 @@ const deprecatedLibs = getLibsFromFile('.github/danger/deprecatedLibs.txt');
 function isAndroidFile(file) {
   const ignoredPrefixes = ['.github/', 'docs/', 'scripts/', '.gradle/', 'fastlane/'];
   return !ignoredPrefixes.some(prefix => file.startsWith(prefix));
-}
-
-function hasAndroidChanges(files) {
-  const criticalPatterns = ['AndroidManifest.xml', 'build.gradle', 'settings.gradle', 'proguard-rules.pro', '/src/', '/res/'];
-  return files.some(file => criticalPatterns.some(pattern => file.includes(pattern)));
 }
 
 // --- PR Checks ---
@@ -104,6 +115,9 @@ function checkAndroidCoreFiles(files) {
   }
 }
 
+/**
+ * Valida se novas dependências adicionadas estão bloqueadas ou depreciadas.
+ */
 async function checkDependencies(files) {
   const gradleFiles = files.filter(f => f.endsWith('.kts') || f.includes('toml'));
   if (gradleFiles.length === 0) return;
@@ -117,20 +131,33 @@ async function checkDependencies(files) {
     const addedLines = content.diff.split('\n').filter(l => l.startsWith('+'));
 
     blockedLibs.forEach(lib => {
-      if (addedLines.some(line => line.includes(lib))) foundBlocked.push({ lib, file });
+      if (addedLines.some(line => line.includes(lib.id))) {
+        foundBlocked.push({ id: lib.id, file });
+      }
     });
 
     deprecatedLibs.forEach(lib => {
-      if (addedLines.some(line => line.includes(lib))) foundDeprecated.push({ lib, file });
+      if (addedLines.some(line => line.includes(lib.id))) {
+        foundDeprecated.push({ id: lib.id, replacement: lib.replacement, file });
+      }
     });
   }
 
   if (foundBlocked.length > 0) {
-    fail(`### 🚫 Dependências Bloqueadas\nRemova as seguintes libs proibidas:\n${foundBlocked.map(f => `- \`${f.lib}\` (em ${f.file})`).join('\n')}`);
+    const blockedList = foundBlocked.map(f => `- \`${f.id}\` (em \`${f.file}\`)`).join('\n');
+    fail(`### 🚫 Dependências Bloqueadas\nRemova as seguintes bibliotecas proibidas, pois possuem vulnerabilidades ou ferem a arquitetura:\n${blockedList}`);
   }
 
   if (foundDeprecated.length > 0) {
-    warn(`### ⚠️ Dependências Depreciadas\nConsidere atualizar as seguintes bibliotecas:\n${foundDeprecated.map(f => `- \`${f.lib}\` (em ${f.file})`).join('\n')}`);
+    const deprecatedList = foundDeprecated.map(f => {
+      let msg = `- \`${f.id}\` (em \`${f.file}\`)`;
+      if (f.replacement) {
+        msg += `\n  - **Sugestão de Experiência:** migrar para \`${f.replacement}\`.`;
+      }
+      return msg;
+    }).join('\n');
+
+    warn(`### ⚠️ Dependências Depreciadas\nDetectamos bibliotecas que possuem alternativas mais modernas e performáticas:\n${deprecatedList}`);
   }
 }
 
