@@ -74,9 +74,17 @@
 -keep class dagger.hilt.** { *; }
 -keep @dagger.hilt.EntryPoint class *
 -keep @dagger.hilt.InstallIn class *
+-keep @dagger.Module class *
+-keep @javax.inject.Inject class *
+
+# Preserve Feature Initializers used in multibinding
+-keep class * implements br.com.brunocarvalhs.core.navigation.FeatureInitializer { *; }
+-keepclassmembers class * implements br.com.brunocarvalhs.core.navigation.FeatureInitializer {
+    <init>(...);
+}
 
 # Segurança adicional: Ofuscação agressiva para o resto do app
--repackageclasses ''
+#-repackageclasses '' # Commeting this out as it often causes issues with DI and navigation
 -allowaccessmodification
 -overloadaggressively
 
