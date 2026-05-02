@@ -1,0 +1,32 @@
+# Friends Secrets: Global AI Context
+
+This file provides context for any AI assistant (Gemini, Claude, GPT) working on this repository.
+
+## Project Identity
+- **Name:** Friends Secrets
+- **Domain:** Privacy-focused Social/Secret Santa Android App.
+- **Tech Stack:** Kotlin 2.x, Jetpack Compose (Material 3), Clean Architecture, Hilt, Coroutines/Flow, Firebase, Gemini SDK.
+
+## Key Instructions for Gemini
+Gemini models (1.5 Pro/Flash) should leverage their long-context window to analyze cross-module relationships.
+
+### 1. Architecture Guardrails
+- **Modularization:** Features must be isolated in `:features:*`.
+- **Domain First:** Business logic must be framework-independent in `:core:domain` or feature domain layers.
+- **Navigation:** Use `:core:navigation` for all inter-module routing.
+
+### 2. Privacy & Security (Strict)
+- Always prioritize on-device processing for sensitive user data.
+- Refer to `:core:biometric` for all authentication-related security.
+- Follow GDPR/LGPD compliance patterns found in `docs/PrivacyPolicy.md`.
+
+### 3. Coding Style
+- Prefer **Kotlin context parameters** for dependency passing when applicable (Kotlin 2.x).
+- All UI must be **Stateless Composables** where the state is hoisted to ViewModels.
+- Use **KDoc** for all public APIs to assist semantic search.
+
+## Reference Documentation
+- **Architecture:** `docs/ARCHITECTURE.md`
+- **Decisions:** `docs/adr/*.md`
+- **Maintenance:** `docs/AI_MAINTENANCE_CONTEXT.md`
+- **Best Practices:** `docs/BEST_PRACTICES.md`

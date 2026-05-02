@@ -34,6 +34,8 @@ Detailed documentation is available in the [`docs/`](docs/) directory:
 - [Global Terms & Conditions](docs/TermsEndConditions.md)
 - [Installation Guide](docs/SETUP.md)
 - [Development Best Practices](docs/BEST_PRACTICES.md)
+- [AI Maintenance Context](docs/AI_MAINTENANCE_CONTEXT.md)
+- [Architecture Decision Records (ADRs)](docs/adr/README.md)
 
 ## 🛠 Setup & Installation
 
