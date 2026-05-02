@@ -1,248 +1,72 @@
-# Documentação de Arquitetura
-
-## Visão Geral
-
-O Friends Secrets segue os princípios da **Clean Architecture** combinados com o padrão **MVVM** (Model-View-ViewModel). Esta abordagem proporciona uma separação clara de responsabilidades, facilitando a manutenção, testabilidade e escalabilidade do código.
-
-## Princípios Arquiteturais
-
-### Clean Architecture
-
-A Clean Architecture, proposta por Robert C. Martin, organiza o código em camadas concêntricas, onde cada camada tem uma responsabilidade específica e depende apenas das camadas mais internas. No Friends Secrets, implementamos três camadas principais:
-
-1. **Camada de Apresentação (Presentation Layer)**
-2. **Camada de Domínio (Domain Layer)**
-3. **Camada de Dados (Data Layer)**
-
-### MVVM (Model-View-ViewModel)
-
-O padrão MVVM é utilizado na camada de apresentação para separar a lógica de apresentação da interface do usuário. Isso facilita a testabilidade e permite uma melhor separação de responsabilidades.
-
-## Estrutura de Camadas
-
-### 1. Camada de Apresentação (Presentation Layer)
-
-A camada de apresentação é responsável pela interface do usuário e pela lógica de apresentação.
-
-#### Componentes:
-
-- **Views**: Implementadas usando Jetpack Compose, são responsáveis por exibir os dados ao usuário e capturar interações.
-- **ViewModels**: Mantêm o estado da UI e processam eventos do usuário, comunicando-se com a camada de domínio.
-- **UI Components**: Componentes reutilizáveis da interface do usuário.
-
-#### Fluxo de Dados:
-
-1. A View observa o estado do ViewModel
-2. O usuário interage com a View
-3. A View notifica o ViewModel sobre a interação
-4. O ViewModel processa a interação e atualiza seu estado
-5. A View reage às mudanças de estado e se atualiza
-
-### 2. Camada de Domínio (Domain Layer)
-
-A camada de domínio contém a lógica de negócios da aplicação e é independente de frameworks externos.
-
-#### Componentes:
-
-- **Entidades**: Representam os objetos de negócio da aplicação.
-- **Casos de Uso (Use Cases)**: Encapsulam operações específicas de negócio que podem ser executadas na aplicação.
-- **Repositórios (Interfaces)**: Definem contratos para acesso a dados, sem especificar implementações.
-
-#### Características:
-
-- Não depende de nenhuma outra camada
-- Contém regras de negócio puras
-- Não tem conhecimento sobre a origem dos dados
-- Não contém código relacionado a UI
-
-### 3. Camada de Dados (Data Layer)
-
-A camada de dados é responsável por fornecer dados para a aplicação, abstraindo suas fontes.
-
-#### Componentes:
-
-- **Repositórios (Implementações)**: Implementam as interfaces definidas na camada de domínio.
-- **Fontes de Dados**: Podem ser remotas (Firebase) ou locais (banco de dados, preferências).
-- **Modelos de Dados**: Representações dos dados para persistência ou comunicação com APIs.
-
-#### Características:
-
-- Implementa interfaces definidas na camada de domínio
-- Gerencia múltiplas fontes de dados
-- Converte dados entre formatos internos e externos
-- Lida com detalhes de persistência e comunicação de rede
-
-## Fluxo de Dados
-
-O fluxo de dados no Friends Secrets segue um padrão unidirecional:
-
-1. **UI (View)** → Captura interações do usuário e as envia para o ViewModel
-2. **ViewModel** → Processa eventos e chama casos de uso apropriados
-3. **Use Cases** → Executam lógica de negócios e chamam repositórios
-4. **Repositories** → Acessam fontes de dados e retornam resultados
-5. **ViewModel** → Atualiza o estado com base nos resultados
-6. **UI (View)** → Reflete o novo estado para o usuário
-
-## Injeção de Dependência
-
-O Friends Secrets utiliza injeção de dependência manual para gerenciar dependências entre componentes. Isso facilita a testabilidade e a modularidade do código.
-
-### Princípios:
-
-- Componentes não instanciam suas dependências diretamente
-- Dependências são fornecidas através de construtores
-- Interfaces são usadas para abstrair implementações concretas
-
-## Gerenciamento de Estado
-
-O gerenciamento de estado na UI é feito através de estados imutáveis expostos pelos ViewModels como `StateFlow`. Isso proporciona uma fonte única de verdade para a UI e facilita o rastreamento de mudanças.
-
-### Padrão de Estado:
-
-```kotlin
-data class UiState<T>(
-    val isLoading: Boolean = false,
-    val data: T? = null,
-    val error: Throwable? = null
-)
-```
-
-## Tratamento de Erros
-
-O tratamento de erros segue um padrão consistente em toda a aplicação:
-
-1. **Camada de Dados**: Erros são capturados e convertidos em exceções específicas do domínio
-2. **Camada de Domínio**: Exceções são propagadas ou tratadas conforme a lógica de negócios
-3. **Camada de Apresentação**: Erros são convertidos em estados de UI apropriados
-
-## Comunicação com Firebase
-
-O Firebase é a principal fonte de dados remota do aplicativo, utilizado para:
-
-- **Firestore**: Armazenamento de dados estruturados
-- **Authentication**: Autenticação de usuários
-- **Remote Config**: Configurações remotas e feature flags
-- **Crashlytics**: Monitoramento de erros
-- **Analytics**: Análise de uso
-
-### Padrão de Acesso:
-
-```
-View → ViewModel → UseCase → Repository → FirebaseService
-```
-
-## Testes
-
-A arquitetura foi projetada para facilitar diferentes tipos de testes:
-
-### Testes Unitários:
-- **ViewModels**: Testados com dependências simuladas (mocked)
-- **Use Cases**: Testados com repositórios simulados
-- **Repositories**: Testados com fontes de dados simuladas
-
-### Testes de Integração:
-- Testam a interação entre componentes reais
-
-### Testes de UI:
-- Testam a interface do usuário usando Espresso e Compose Testing
-
-## Diagramas
-
-### Diagrama de Arquitetura
-
-```
-┌─────────────────────────────────────────────────────┐
-│                  Presentation Layer                  │
-│                                                     │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────┐  │
-│  │   Activity  │    │   Fragment  │    │ Compose │  │
-│  └──────┬──────┘    └──────┬──────┘    └────┬────┘  │
-│         │                  │                │       │
-│         └──────────┬───────┴────────┬──────┘       │
-│                    │                │              │
-│            ┌───────▼────────┐       │              │
-│            │    ViewModel   │◄──────┘              │
-│            └───────┬────────┘                      │
-└────────────────────┼──────────────────────────────┘
-                     │
-┌────────────────────▼──────────────────────────────┐
-│                   Domain Layer                     │
-│                                                   │
-│  ┌─────────────┐    ┌─────────────┐              │
-│  │  Use Cases  │    │  Entities   │              │
-│  └──────┬──────┘    └─────────────┘              │
-│         │                                        │
-│  ┌──────▼──────┐                                 │
-│  │ Repositories│ (Interfaces)                    │
-│  └──────┬──────┘                                 │
-└─────────┼───────────────────────────────────────┘
-          │
-┌─────────▼───────────────────────────────────────┐
-│                   Data Layer                     │
-│                                                 │
-│  ┌─────────────┐    ┌─────────────────────┐     │
-│  │ Repositories│    │     Data Sources    │     │
-│  │(Implementation)  │  (Remote & Local)   │     │
-│  └──────┬──────┘    └──────────┬──────────┘     │
-│         │                      │                │
-│         └──────────┬───────────┘                │
-│                    │                            │
-│            ┌───────▼────────┐                   │
-│            │  Data Models   │                   │
-│            └────────────────┘                   │
-└───────────────────────────────────────────────┘
-```
-
-### Diagrama de Fluxo de Autenticação
-
-```
-┌──────────┐     ┌───────────┐     ┌───────────────┐     ┌──────────────┐
-│   Login  │────►│ ViewModel │────►│ AuthUseCase   │────►│ AuthRepository│
-│   View   │     │           │     │               │     │               │
-└──────────┘     └─────┬─────┘     └───────┬───────┘     └───────┬──────┘
-                       │                   │                     │
-                       │                   │                     │
-                       │                   │                     ▼
-                       │                   │             ┌──────────────┐
-                       │                   │             │ Firebase     │
-                       │                   │             │ Authentication│
-                       │                   │             └───────┬──────┘
-                       │                   │                     │
-                       │                   ▼                     │
-                       │           ┌───────────────┐            │
-                       │           │ Success/Error │◄───────────┘
-                       │           └───────┬───────┘
-                       ▼                   │
-                 ┌───────────┐             │
-                 │ UI State  │◄────────────┘
-                 └───────────┘
-```
-
-## Considerações de Desempenho
-
-Para garantir um bom desempenho, a arquitetura implementa:
-
-- **Lazy Loading**: Carregamento sob demanda de dados
-- **Caching**: Armazenamento em cache de dados frequentemente acessados
-- **Coroutines**: Para operações assíncronas eficientes
-- **Paginação**: Para conjuntos de dados grandes
-
-## Segurança
-
-A arquitetura implementa várias medidas de segurança:
-
-- **Autenticação**: Gerenciada pelo Firebase Authentication
-- **Autorização**: Regras de segurança do Firestore
-- **Criptografia**: Dados sensíveis são criptografados
-- **Validação**: Entrada do usuário é validada em múltiplas camadas
-
-## Conclusão
-
-A arquitetura do Friends Secrets foi projetada para ser:
-
-- **Modular**: Componentes podem ser desenvolvidos e testados independentemente
-- **Testável**: Facilita a escrita de testes unitários e de integração
-- **Escalável**: Novas funcionalidades podem ser adicionadas com facilidade
-- **Manutenível**: Código organizado e com responsabilidades bem definidas
-
-Esta abordagem arquitetural permite que o aplicativo evolua de forma sustentável, mantendo a qualidade do código e facilitando a colaboração entre desenvolvedores.
+# Architecture Documentation: Friends Secrets
+
+## 1. Executive Summary
+Friends Secrets is built on the principles of **Clean Architecture** combined with the **MVVM (Model-View-ViewModel)** pattern. This architectural choice ensures a strict separation of concerns, high testability, and the modularity required for a global-scale Android application.
+
+## 2. Architectural Principles
+
+### 2.1 Clean Architecture
+The codebase is organized into concentric layers, where dependencies flow inward toward the business logic.
+1.  **Presentation Layer:** UI components and state management.
+2.  **Domain Layer:** Pure business logic and entity definitions (Framework-independent).
+3.  **Data Layer:** Data sources, repositories, and persistence logic.
+
+### 2.2 Modularization Strategy
+To support scalability, the project is divided into feature-based and core-logic modules:
+*   **`:app`**: The main entry point, handling dependency injection and global configuration.
+*   **`:features:*`**: Self-contained modules (e.g., `:features:chat`, `:features:group:create`) containing their own UI and ViewModels.
+*   **`:core:*`**: Shared utilities and low-level logic (e.g., `:core:network`, `:core:biometric`, `:core:analytics`).
+
+## 3. Layer Breakdown
+
+### 3.1 Presentation Layer (Jetpack Compose)
+*   **Views:** Built entirely with declarative UI (Jetpack Compose) using Material 3.
+*   **ViewModels:** Utilize `StateFlow` to expose immutable UI states. They handle user intent and communicate with Use Cases.
+*   **UI State Pattern:**
+    ```kotlin
+    data class UiState<out T>(
+        val isLoading: Boolean = false,
+        val data: T? = null,
+        val error: Throwable? = null
+    )
+    ```
+
+### 3.2 Domain Layer (Pure Kotlin)
+*   **Entities:** Business models that are consistent across the entire application.
+*   **Use Cases (Interactors):** Single-purpose classes that encapsulate specific business rules (e.g., `DrawSecretSantaUseCase`).
+*   **Repository Interfaces:** Define the data contracts required by the domain.
+
+### 3.3 Data Layer
+*   **Repository Implementations:** Coordinate data between multiple sources (Local vs. Remote).
+*   **Data Sources:**
+    *   **Remote:** Firebase Firestore, Cloud Functions, and Gemini AI API.
+    *   **Local:** Encrypted Shared Preferences and Room (if applicable).
+*   **Mappers:** Convert Data Transfer Objects (DTOs) into Domain Entities.
+
+## 4. Technical Specifications (2026 Stack)
+
+### 4.1 Dependency Injection
+We use a modularized approach to DI (Hilt/Koin) to ensure that components are decoupled and easily swappable for testing.
+
+### 4.2 Asynchronous Programming
+**Kotlin Coroutines and Flow** are the standard for all background operations, ensuring non-blocking UI and efficient resource management.
+
+### 4.3 Security & Privacy
+*   **Biometric Integration:** Secured via the `:core:biometric` module using the Android Biometric Security hardware.
+*   **On-Device Processing:** Sensitive data like contact filtering is performed locally to comply with global privacy standards (GDPR/LGPD).
+
+## 5. Data Flow (Unidirectional Data Flow)
+1.  **User Action** → View captures the event.
+2.  **Intent** → ViewModel receives the action.
+3.  **Execution** → Use Case processes business logic.
+4.  **Data Retrieval** → Repository fetches data from Source.
+5.  **State Update** → ViewModel updates `StateFlow`.
+6.  **Rendering** → View recomposes based on the new state.
+
+## 6. Testing Strategy
+*   **Unit Tests:** Target Use Cases and ViewModels using MockK/Turbine.
+*   **Integration Tests:** Verify Repository-to-DataSource interactions.
+*   **UI Tests:** Screenshot testing and Compose UI tests for critical user journeys.
+
+---
+© 2026 Brunocarvalhs. All rights reserved.

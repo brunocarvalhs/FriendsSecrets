@@ -1,380 +1,125 @@
-# Casos de Uso
+# Use Cases: Friends Secrets
 
-Este documento descreve os principais casos de uso do aplicativo Friends Secrets, detalhando as interações entre os usuários e o sistema.
+This document outlines the primary use cases for the Friends Secrets mobile application, detailing the interactions between users (Actors) and the system.
 
-## Índice
+## Index
 
-1. [UC01 - Autenticação de Usuário](#uc01---autenticação-de-usuário)
-2. [UC02 - Gerenciamento de Perfil](#uc02---gerenciamento-de-perfil)
-3. [UC03 - Criação de Grupo](#uc03---criação-de-grupo)
-4. [UC04 - Gerenciamento de Grupo](#uc04---gerenciamento-de-grupo)
-5. [UC05 - Sorteio de Amigos Secretos](#uc05---sorteio-de-amigos-secretos)
-6. [UC06 - Visualização de Amigo Secreto](#uc06---visualização-de-amigo-secreto)
-7. [UC07 - Obtenção de Sugestões de Presentes](#uc07---obtenção-de-sugestões-de-presentes)
-8. [UC08 - Personalização de Tema](#uc08---personalização-de-tema)
-9. [UC09 - Compartilhamento de Grupo](#uc09---compartilhamento-de-grupo)
-10. [UC10 - Envio de Feedback](#uc10---envio-de-feedback)
-
----
-
-## UC01 - Autenticação de Usuário
-
-**Atores:** Usuário
-
-**Descrição:** Este caso de uso descreve o processo de autenticação do usuário no aplicativo.
-
-**Pré-condições:**
-- O usuário possui o aplicativo instalado
-- O usuário possui um número de telefone válido
-
-**Fluxo Principal:**
-1. O usuário abre o aplicativo
-2. O sistema exibe a tela de login
-3. O usuário seleciona a opção de login com telefone
-4. O usuário insere seu número de telefone
-5. O sistema envia um código de verificação via SMS
-6. O usuário insere o código recebido
-7. O sistema valida o código
-8. O sistema autentica o usuário e exibe a tela principal
-
-**Fluxos Alternativos:**
-
-*A1: Usuário já autenticado anteriormente*
-1. O usuário abre o aplicativo
-2. O sistema detecta uma sessão válida
-3. O sistema exibe a tela de autenticação biométrica (se ativada)
-4. O usuário fornece sua biometria
-5. O sistema autentica o usuário e exibe a tela principal
-
-*A2: Código de verificação inválido*
-1. No passo 7 do fluxo principal, o sistema identifica que o código é inválido
-2. O sistema exibe uma mensagem de erro
-3. O sistema permite que o usuário tente novamente ou solicite um novo código
-
-**Pós-condições:**
-- O usuário está autenticado no sistema
-- O sistema exibe a tela principal do aplicativo
+1. [UC01 - Secure User Authentication](#uc01---secure-user-authentication)
+2. [UC02 - Profile & Preference Management](#uc02---profile--preference-management)
+3. [UC03 - Group Creation & Orchestration](#uc03---group-creation--orchestration)
+4. [UC04 - Group Management](#uc04---group-management)
+5. [UC05 - Automated Secret Santa Draw](#uc05---automated-secret-santa-draw)
+6. [UC06 - Result Retrieval](#uc06---result-retrieval)
+7. [UC07 - AI-Enhanced Gift Assistance](#uc07---ai-enhanced-gift-assistance)
+8. [UC08 - System Personalization](#uc08---system-personalization)
+9. [UC09 - Secure Group Sharing](#uc09---secure-group-sharing)
+10. [UC10 - Support & Feedback](#uc10---support--feedback)
 
 ---
 
-## UC02 - Gerenciamento de Perfil
+## UC01 - Secure User Authentication
 
-**Atores:** Usuário autenticado
+**Actors:** User
 
-**Descrição:** Este caso de uso descreve como o usuário pode criar e gerenciar seu perfil.
+**Description:** Standard process for identifying and authenticating the user within the platform using multi-factor methods.
 
-**Pré-condições:**
-- O usuário está autenticado no sistema
+**Pre-conditions:**
+- The App is installed on a compatible Android device.
+- Active cellular or internet connection.
 
-**Fluxo Principal:**
-1. O usuário acessa a seção de perfil
-2. O sistema exibe as informações atuais do perfil
-3. O usuário seleciona a opção de editar perfil
-4. O sistema exibe um formulário com os campos editáveis
-5. O usuário atualiza seu nome e/ou foto
-6. O usuário confirma as alterações
-7. O sistema valida e salva as informações
-8. O sistema exibe uma mensagem de sucesso
+**Main Flow:**
+1. User opens the App.
+2. System presents the authentication gateway.
+3. User selects "Phone Authentication".
+4. User enters their phone number.
+5. System triggers a secure verification code via SMS (Firebase Auth).
+6. User enters the received code.
+7. System validates the session and grants access.
+8. System prompts for Biometric enrollment (if supported and not yet enabled).
 
-**Fluxos Alternativos:**
+**Alternative Flows:**
 
-*A1: Usuário cancela a edição*
-1. Em qualquer ponto após o passo 3, o usuário cancela a operação
-2. O sistema descarta as alterações não salvas
-3. O sistema retorna à visualização do perfil
+*A1: Returning User (Biometric)*
+1. User opens the App.
+2. System detects an active session and requests Biometric verification.
+3. User provides biometric input (Fingerprint/Face).
+4. System grants immediate access to the Dashboard.
 
-*A2: Erro ao salvar alterações*
-1. No passo 7, ocorre um erro ao salvar as informações
-2. O sistema exibe uma mensagem de erro
-3. O sistema mantém o formulário aberto com os dados inseridos
+*A2: Authentication Failure*
+1. At step 7, the code is invalid or expired.
+2. System provides an error message and the option to resend.
 
-**Pós-condições:**
-- O perfil do usuário está atualizado no sistema
-
----
-
-## UC03 - Criação de Grupo
-
-**Atores:** Usuário autenticado
-
-**Descrição:** Este caso de uso descreve como o usuário pode criar um novo grupo de amigos secretos.
-
-**Pré-condições:**
-- O usuário está autenticado no sistema
-
-**Fluxo Principal:**
-1. O usuário acessa a tela principal
-2. O usuário seleciona a opção de criar novo grupo
-3. O sistema exibe um formulário para criação do grupo
-4. O usuário preenche o nome do grupo
-5. O usuário adiciona uma descrição (opcional)
-6. O usuário confirma a criação
-7. O sistema gera um token único para o grupo
-8. O sistema cria o grupo e adiciona o usuário como administrador
-9. O sistema exibe a tela de detalhes do grupo recém-criado
-
-**Fluxos Alternativos:**
-
-*A1: Usuário cancela a criação*
-1. Em qualquer ponto após o passo 2, o usuário cancela a operação
-2. O sistema descarta as informações não salvas
-3. O sistema retorna à tela principal
-
-*A2: Erro na criação do grupo*
-1. No passo 8, ocorre um erro ao criar o grupo
-2. O sistema exibe uma mensagem de erro
-3. O sistema permite que o usuário tente novamente
-
-**Pós-condições:**
-- Um novo grupo é criado no sistema
-- O usuário é definido como administrador do grupo
-- O sistema gera um token único para o grupo
+**Post-conditions:**
+- User is securely logged in with a valid JWT/Session token.
 
 ---
 
-## UC04 - Gerenciamento de Grupo
+## UC03 - Group Creation & Orchestration
 
-**Atores:** Usuário autenticado (administrador do grupo)
+**Actors:** Authenticated User (Organizer)
 
-**Descrição:** Este caso de uso descreve como o administrador pode gerenciar um grupo existente.
+**Description:** The process of initiating a new Secret Santa event.
 
-**Pré-condições:**
-- O usuário está autenticado no sistema
-- O usuário é administrador de pelo menos um grupo
+**Pre-conditions:**
+- User is authenticated.
 
-**Fluxo Principal:**
-1. O usuário acessa a lista de grupos
-2. O usuário seleciona um grupo que administra
-3. O sistema exibe os detalhes do grupo
-4. O usuário seleciona a opção de editar grupo
-5. O sistema exibe um formulário com os campos editáveis
-6. O usuário atualiza as informações do grupo
-7. O usuário confirma as alterações
-8. O sistema valida e salva as informações
-9. O sistema exibe uma mensagem de sucesso
+**Main Flow:**
+1. User selects "Create New Group".
+2. User provides group details (Name, Description, Gift Budget, Event Date).
+3. User interacts with the Local Contact Picker to add participants.
+4. System filters and processes contact data locally (Privacy-First).
+5. User confirms creation.
+6. System generates a unique Group ID and secure Invitation Token.
+7. System designates the creator as "Administrator".
 
-**Fluxos Alternativos:**
-
-*A1: Adicionar membros ao grupo*
-1. No passo 3, o usuário seleciona a opção de adicionar membros
-2. O sistema exibe uma interface para adicionar membros
-3. O usuário adiciona novos membros por contato ou compartilha o token
-4. O sistema adiciona os novos membros ao grupo
-
-*A2: Remover membros do grupo*
-1. No passo 3, o usuário seleciona um membro do grupo
-2. O usuário seleciona a opção de remover membro
-3. O sistema solicita confirmação
-4. O usuário confirma a remoção
-5. O sistema remove o membro do grupo
-
-*A3: Excluir grupo*
-1. No passo 3, o usuário seleciona a opção de excluir grupo
-2. O sistema solicita confirmação
-3. O usuário confirma a exclusão
-4. O sistema exclui o grupo e notifica todos os membros
-
-**Pós-condições:**
-- As alterações no grupo são salvas no sistema
-- Os membros afetados são notificados quando apropriado
+**Post-conditions:**
+- Group is persisted in the cloud.
+- Administrator can now share the access token.
 
 ---
 
-## UC05 - Sorteio de Amigos Secretos
+## UC05 - Automated Secret Santa Draw
 
-**Atores:** Usuário autenticado (administrador do grupo)
+**Actors:** Group Administrator
 
-**Descrição:** Este caso de uso descreve como o administrador realiza o sorteio de amigos secretos em um grupo.
+**Description:** The core logic execution where participants are matched.
 
-**Pré-condições:**
-- O usuário está autenticado no sistema
-- O usuário é administrador de pelo menos um grupo
-- O grupo possui pelo menos 3 membros
-- O sorteio ainda não foi realizado
+**Pre-conditions:**
+- Group has at least 3 participants.
+- The draw hasn't been executed yet.
 
-**Fluxo Principal:**
-1. O usuário acessa os detalhes do grupo
-2. O usuário seleciona a opção de realizar sorteio
-3. O sistema exibe uma tela de confirmação
-4. O usuário confirma o sorteio
-5. O sistema realiza o sorteio aleatório
-6. O sistema armazena os resultados do sorteio
-7. O sistema notifica todos os membros
-8. O sistema exibe uma mensagem de sucesso
+**Main Flow:**
+1. Administrator accesses Group Settings.
+2. Administrator triggers "Execute Draw".
+3. System runs the randomized matching algorithm (ensuring no self-draws).
+4. System encrypts individual results.
+5. System triggers push notifications to all participants.
+6. Group status changes to "Drawn".
 
-**Fluxos Alternativos:**
-
-*A1: Grupo com menos de 3 membros*
-1. No passo 5, o sistema detecta que o grupo possui menos de 3 membros
-2. O sistema exibe uma mensagem informando que são necessários pelo menos 3 membros
-3. O sistema cancela o sorteio
-
-*A2: Sorteio já realizado*
-1. No passo 2, o sistema detecta que o sorteio já foi realizado
-2. O sistema exibe uma mensagem informando que o sorteio já foi realizado
-3. O sistema oferece a opção de realizar um novo sorteio (cancelando o anterior)
-
-**Pós-condições:**
-- O sorteio é realizado e os resultados são armazenados
-- Cada membro pode ver apenas quem ele tirou
-- O administrador pode ver todos os resultados
+**Post-conditions:**
+- Results are locked and available for individual viewing.
 
 ---
 
-## UC06 - Visualização de Amigo Secreto
+## UC07 - AI-Enhanced Gift Assistance
 
-**Atores:** Usuário autenticado (membro do grupo)
+**Actors:** Authenticated User (Participant)
 
-**Descrição:** Este caso de uso descreve como o usuário visualiza quem ele tirou no sorteio.
+**Description:** Leveraging Generative AI to find the perfect gift for a drawn partner.
 
-**Pré-condições:**
-- O usuário está autenticado no sistema
-- O usuário é membro de pelo menos um grupo
-- O sorteio já foi realizado no grupo
+**Pre-conditions:**
+- User has successfully drawn a partner in a group.
+- Partner has provided "Wish List" or preferences.
 
-**Fluxo Principal:**
-1. O usuário acessa a lista de grupos
-2. O usuário seleciona um grupo onde participou do sorteio
-3. O sistema exibe os detalhes do grupo
-4. O sistema exibe quem o usuário tirou no sorteio
-5. O usuário pode ver informações sobre a pessoa que tirou
+**Main Flow:**
+1. User views their drawn partner's profile.
+2. User selects "Get AI Suggestions".
+3. System feeds anonymized preferences and budget into the Generative AI engine (Gemini).
+4. System displays a curated list of gift ideas with direct links (if applicable).
+5. User can refine suggestions through a conversational interface.
 
-**Fluxos Alternativos:**
-
-*A1: Sorteio ainda não realizado*
-1. No passo 3, o sistema detecta que o sorteio ainda não foi realizado
-2. O sistema exibe uma mensagem informando que o sorteio ainda não foi realizado
-3. O sistema não exibe informações sobre o amigo secreto
-
-**Pós-condições:**
-- O usuário visualiza quem ele tirou no sorteio
+**Post-conditions:**
+- User obtains personalized gift ideas.
 
 ---
-
-## UC07 - Obtenção de Sugestões de Presentes
-
-**Atores:** Usuário autenticado (membro do grupo)
-
-**Descrição:** Este caso de uso descreve como o usuário obtém sugestões de presentes para seu amigo secreto.
-
-**Pré-condições:**
-- O usuário está autenticado no sistema
-- O usuário é membro de pelo menos um grupo
-- O sorteio já foi realizado no grupo
-
-**Fluxo Principal:**
-1. O usuário acessa os detalhes do grupo
-2. O usuário visualiza quem ele tirou no sorteio
-3. O usuário seleciona a opção de obter sugestões
-4. O sistema abre o chat com IA
-5. O usuário descreve preferências ou características do amigo secreto
-6. O sistema gera sugestões personalizadas de presentes
-7. O usuário visualiza as sugestões
-
-**Fluxos Alternativos:**
-
-*A1: Usuário inicia chat diretamente*
-1. O usuário acessa a seção de chat com IA
-2. O usuário informa sobre quem deseja sugestões
-3. O sistema gera sugestões baseadas nas informações fornecidas
-
-*A2: Erro na geração de sugestões*
-1. No passo 6, ocorre um erro na geração de sugestões
-2. O sistema exibe uma mensagem de erro
-3. O sistema permite que o usuário tente novamente
-
-**Pós-condições:**
-- O usuário recebe sugestões personalizadas de presentes
-
----
-
-## UC08 - Personalização de Tema
-
-**Atores:** Usuário autenticado
-
-**Descrição:** Este caso de uso descreve como o usuário personaliza o tema do aplicativo.
-
-**Pré-condições:**
-- O usuário está autenticado no sistema
-
-**Fluxo Principal:**
-1. O usuário acessa as configurações do aplicativo
-2. O usuário seleciona a opção de aparência
-3. O sistema exibe as opções de tema disponíveis
-4. O usuário seleciona o tema desejado (claro, escuro ou sistema)
-5. O sistema aplica o tema selecionado imediatamente
-6. O sistema salva a preferência do usuário
-
-**Fluxos Alternativos:**
-
-*A1: Usuário seleciona tema do sistema*
-1. No passo 4, o usuário seleciona a opção "Seguir sistema"
-2. O sistema configura o tema para seguir as configurações do dispositivo
-3. O sistema salva a preferência do usuário
-
-**Pós-condições:**
-- O tema do aplicativo é alterado conforme a seleção do usuário
-- A preferência é salva para futuros acessos
-
----
-
-## UC09 - Compartilhamento de Grupo
-
-**Atores:** Usuário autenticado (administrador do grupo)
-
-**Descrição:** Este caso de uso descreve como o administrador compartilha o acesso ao grupo.
-
-**Pré-condições:**
-- O usuário está autenticado no sistema
-- O usuário é administrador de pelo menos um grupo
-
-**Fluxo Principal:**
-1. O usuário acessa os detalhes do grupo
-2. O usuário seleciona a opção de compartilhar grupo
-3. O sistema exibe o token de acesso ao grupo
-4. O usuário seleciona o método de compartilhamento
-5. O sistema abre a interface de compartilhamento do dispositivo
-6. O usuário compartilha o token com os contatos desejados
-
-**Fluxos Alternativos:**
-
-*A1: Usuário copia o token*
-1. No passo 3, o usuário seleciona a opção de copiar token
-2. O sistema copia o token para a área de transferência
-3. O sistema exibe uma mensagem de confirmação
-
-**Pós-condições:**
-- O token de acesso ao grupo é compartilhado com potenciais novos membros
-
----
-
-## UC10 - Envio de Feedback
-
-**Atores:** Usuário autenticado
-
-**Descrição:** Este caso de uso descreve como o usuário envia feedback sobre o aplicativo.
-
-**Pré-condições:**
-- O usuário está autenticado no sistema
-
-**Fluxo Principal:**
-1. O usuário acessa as configurações do aplicativo
-2. O usuário seleciona a opção de feedback
-3. O sistema exibe um formulário para envio de feedback
-4. O usuário preenche o formulário com sua mensagem
-5. O usuário envia o feedback
-6. O sistema registra o feedback
-7. O sistema exibe uma mensagem de agradecimento
-
-**Fluxos Alternativos:**
-
-*A1: Usuário reporta um problema*
-1. No passo 3, o usuário seleciona a opção de reportar problema
-2. O sistema exibe um formulário específico para relato de problemas
-3. O usuário preenche os detalhes do problema
-4. O usuário envia o relatório
-5. O sistema registra o problema
-6. O sistema exibe uma mensagem de confirmação
-
-**Pós-condições:**
-- O feedback ou relatório de problema é registrado no sistema
+© 2026 Brunocarvalhs. All rights reserved.
