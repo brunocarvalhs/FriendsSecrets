@@ -2,12 +2,19 @@ package br.com.brunocarvalhs.settings.app.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.sharp.Fingerprint
@@ -15,15 +22,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,21 +48,23 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
     onAppearance: () -> Unit = {},
-    onReportIssue: () -> Unit = {},
-    onFAQ: () -> Unit = {},
+    onPrivacyPolicy: () -> Unit = {},
+    onTermsAndConditions: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
 
     SettingsContent(
         isBiometricPromptEnabled = state.isBiometricPromptEnabled,
         isBiometricSupported = state.isBiometricSupported,
+        versionName = state.versionName,
+        versionCode = state.versionCode,
         onBack = onBack,
         onBiometricPrompt = {
             viewModel.handleIntent(SettingsIntent.SetBiometricPromptEnabled(it))
         },
         onAppearance = onAppearance,
-        onReportIssue = onReportIssue,
-        onFAQ = onFAQ
+        onPrivacyPolicy = onPrivacyPolicy,
+        onTermsAndConditions = onTermsAndConditions
     )
 }
 
@@ -60,36 +73,42 @@ internal fun SettingsScreen(
 private fun SettingsContent(
     isBiometricPromptEnabled: Boolean = false,
     isBiometricSupported: Boolean = false,
+    versionName: String = "",
+    versionCode: String = "",
     onBack: () -> Unit = {},
     onBiometricPrompt: (Boolean) -> Unit = {},
     onAppearance: () -> Unit = {},
-    onReportIssue: () -> Unit = {},
-    onFAQ: () -> Unit = {},
+    onPrivacyPolicy: () -> Unit = {},
+    onTermsAndConditions: () -> Unit = {}
 ) {
     val requestReview = rememberReviewRequester()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    Scaffold(topBar = {
-        LargeTopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = MaterialTheme.colorScheme.onBackground,
-            ),
-            title = { Text(text = stringResource(R.string.title_settings)) },
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back)
-                    )
-                }
-            },
-            scrollBehavior = scrollBehavior
-        )
-    }) {
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            LargeTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                ),
+                title = { Text(text = stringResource(R.string.title_settings)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }) {
         Column(
             modifier = Modifier
                 .padding(it)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
             GeneralSection(
@@ -100,9 +119,28 @@ private fun SettingsContent(
             )
 
             SupportSection(
-                onReportIssue = onReportIssue,
-                onFAQ = onFAQ,
-                onReview = { requestReview() }
+                onReview = { requestReview() },
+                onPrivacyPolicy = onPrivacyPolicy,
+                onTermsAndConditions = onTermsAndConditions
+            )
+
+            ListItem(
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null
+                    )
+                },
+                headlineContent = {
+                    Text(
+                        text = stringResource(R.string.settings_version_name, versionName),
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        text = stringResource(R.string.settings_version_code, versionCode),
+                    )
+                }
             )
         }
     }
@@ -138,9 +176,9 @@ private fun GeneralSection(
 
 @Composable
 private fun SupportSection(
-    onReportIssue: () -> Unit,
-    onFAQ: () -> Unit,
-    onReview: () -> Unit
+    onReview: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
+    onTermsAndConditions: () -> Unit
 ) {
     Column {
         Text(
@@ -148,19 +186,23 @@ private fun SupportSection(
             modifier = Modifier.padding(top = 16.dp)
         )
         SettingsListItemNavigation(
-            title = R.string.title_report_an_issue,
-            icon = Icons.Outlined.Report,
-            onClick = onReportIssue
-        )
-        SettingsListItemNavigation(
-            title = R.string.title_faq,
-            icon = Icons.Outlined.Info,
-            onClick = onFAQ
-        )
-        SettingsListItemNavigation(
             title = R.string.title_review,
             icon = Icons.Outlined.Star,
             onClick = onReview
+        )
+        Text(
+            text = stringResource(R.string.settings_screen_legal),
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        SettingsListItemNavigation(
+            title = R.string.title_privacy_policy,
+            icon = Icons.Outlined.PrivacyTip,
+            onClick = onPrivacyPolicy
+        )
+        SettingsListItemNavigation(
+            title = R.string.title_terms_and_conditions,
+            icon = Icons.Outlined.Description,
+            onClick = onTermsAndConditions
         )
     }
 }
@@ -172,11 +214,11 @@ internal fun SettingsContentPreview() {
     SettingsContent(
         isBiometricPromptEnabled = true,
         isBiometricSupported = true,
+        versionName = "1.0.0",
+        versionCode = "1",
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
-        onReportIssue = {},
-        onFAQ = {}
     )
 }
 
@@ -187,10 +229,10 @@ internal fun SettingsContentIsBiometricPromptDisabledPreview() {
     SettingsContent(
         isBiometricPromptEnabled = false,
         isBiometricSupported = false,
+        versionName = "1.0.0",
+        versionCode = "1",
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
-        onReportIssue = {},
-        onFAQ = {}
     )
 }

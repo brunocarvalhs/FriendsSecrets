@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.settings.app.report
+package br.com.brunocarvalhs.settings.app.termsAndConditions
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -9,33 +9,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import br.com.brunocarvalhs.settings.R
-import br.com.brunocarvalhs.settings.app.report.ReportIssueViewModel.Companion.DEFAULT_URL
+import br.com.brunocarvalhs.settings.app.termsAndConditions.TermsAndConditionsViewModel.Companion.DEFAULT_URL
 import br.com.brunocarvalhs.settings.commons.components.WebViewContent
 
 @Composable
-internal fun ReportIssueScreen(
+internal fun TermsAndConditionScreen(
     onBack: () -> Unit,
-    viewModel: ReportIssueViewModel = hiltViewModel()
+    viewModel: TermsAndConditionsViewModel = hiltViewModel()
 ) {
     val url by viewModel.url.collectAsState()
 
-    ReportIssueContent(
+    TermsAndConditionsContent(
         url = url,
         onBack = onBack
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ReportIssueContent(
+private fun TermsAndConditionsContent(
     url: String,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit
 ) {
     WebViewContent(
         url = url,
         title = {
-            Text(text = stringResource(R.string.title_report_an_issue))
+            Text(text = stringResource(R.string.title_terms_and_conditions))
         },
         onBack = onBack
     )
@@ -43,8 +42,8 @@ private fun ReportIssueContent(
 
 @Composable
 @Preview
-private fun ReportIssuePreview() {
-    ReportIssueContent(
+internal fun TermsAndConditionsContentPreview() {
+    TermsAndConditionsContent(
         url = DEFAULT_URL,
         onBack = {}
     )

@@ -4,11 +4,14 @@ name: Settings Flow
 - launchApp
 - tapOn: "More options"
 - tapOn: "Settings"
+
 - assertVisible: "General"
 - assertVisible: "Appearance"
-- assertVisible: "Report an issue"
-- assertVisible: "FAQ"
 - assertVisible: "Review App"
+- assertVisible: "Legal"
+- assertVisible: "Privacy Policy"
+- assertVisible: "Terms and Conditions"
+
 - tapOn: "Appearance"
 - assertVisible: "Appearance"
 - assertVisible: "Light theme"
@@ -16,10 +19,12 @@ name: Settings Flow
 - assertVisible: "System theme"
 - assertVisible: "Dynamic Theme"
 - back
-- tapOn: "Report an issue"
+
+- tapOn: "Review App"
 - back
-- tapOn: "FAQ"
+
+- tapOn: "Privacy Policy"
 - back
-- assertVisible: "Review App"
-- back
+
+- tapOn: "Terms and Conditions"
 - back

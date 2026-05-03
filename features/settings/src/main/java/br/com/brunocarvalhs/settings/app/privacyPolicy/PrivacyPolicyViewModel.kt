@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.settings.app.report
+package br.com.brunocarvalhs.settings.app.privacyPolicy
 
 import AnalyticsParam
 import androidx.lifecycle.ViewModel
@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ReportIssueViewModel @Inject constructor(
+internal class PrivacyPolicyViewModel @Inject constructor(
     private val configurationService: ConfigurationService,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _url = MutableStateFlow(
         configurationService.getString(
-            key = URL_REPORT_ISSUE,
+            key = URL_PRIVACY_POLICY,
             defaultValue = DEFAULT_URL
         )
     )
@@ -30,7 +30,7 @@ internal class ReportIssueViewModel @Inject constructor(
         loadUrl()
     }
 
-    @AddTrace(name = "ReportIssueViewModel.loadUrl", enabled = true)
+    @AddTrace(name = "PrivacyPolicyViewModel.loadUrl", enabled = true)
     private fun loadUrl() {
         analyticsService.logEvent(
             name = AnalyticsEvent.VIEW,
@@ -39,13 +39,14 @@ internal class ReportIssueViewModel @Inject constructor(
             )
         )
         _url.value = configurationService.getString(
-            key = URL_REPORT_ISSUE,
+            key = URL_PRIVACY_POLICY,
             defaultValue = DEFAULT_URL
         )
     }
 
     companion object {
-        private const val URL_REPORT_ISSUE = "url_report_issue"
-        const val DEFAULT_URL = "https://forms.office.com/r/wiU92mGZ53"
+        private const val URL_PRIVACY_POLICY = "url_privacy_policy"
+        const val DEFAULT_URL =
+            "https://raw.githubusercontent.com/brunocarvalhs/FriendsSecrets/refs/heads/develop/docs/PrivacyPolicy.md"
     }
 }
