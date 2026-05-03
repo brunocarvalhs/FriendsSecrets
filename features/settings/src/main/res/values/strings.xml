@@ -30,4 +30,10 @@
 
     <string name="settings_version_name">Version %1$s</string>
     <string name="settings_version_code">Build %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Reload</string>
+    <string name="webview_open_in_browser">Open in browser</string>
+    <string name="webview_error_title">Oops! An error occurred while loading the page.</string>
+    <string name="webview_error_description">Check your internet connection and try again.</string>
+    <string name="webview_error_retry">Try again</string>
 </resources>

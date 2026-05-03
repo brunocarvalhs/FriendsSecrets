@@ -30,4 +30,10 @@
 
     <string name="settings_version_name">Versión %1$s</string>
     <string name="settings_version_code">Build %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Recargar</string>
+    <string name="webview_open_in_browser">Abrir en el navegador</string>
+    <string name="webview_error_title">¡Vaya! Se ha producido un error al cargar la página.</string>
+    <string name="webview_error_description">Comprueba tu conexión a Internet e inténtalo de nuevo.</string>
+    <string name="webview_error_retry">Reintentar</string>
 </resources>
