@@ -30,8 +30,6 @@ class SettingsInitializer(private val builder: Builder) {
                     viewModel = hiltViewModel(),
                     onBack = builder.onBack,
                     onAppearance = { builder.navController.navigate(AppearanceScreenRoute) },
-                    onReportIssue = { builder.navController.navigate(ReportIssueScreenRoute) },
-                    onFAQ = { builder.navController.navigate(FAQScreenRoute) },
                     onPrivacyPolicy = { builder.navController.navigate(PrivacyPolicyScreenRoute) },
                     onTermsAndConditions = { builder.navController.navigate(TermsAndConditionsScreenRoute) }
                 )

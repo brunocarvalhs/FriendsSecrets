@@ -48,8 +48,6 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel,
     onBack: () -> Unit,
     onAppearance: () -> Unit = {},
-    onReportIssue: () -> Unit = {},
-    onFAQ: () -> Unit = {},
     onPrivacyPolicy: () -> Unit = {},
     onTermsAndConditions: () -> Unit = {}
 ) {
@@ -65,8 +63,6 @@ internal fun SettingsScreen(
             viewModel.handleIntent(SettingsIntent.SetBiometricPromptEnabled(it))
         },
         onAppearance = onAppearance,
-        onReportIssue = onReportIssue,
-        onFAQ = onFAQ,
         onPrivacyPolicy = onPrivacyPolicy,
         onTermsAndConditions = onTermsAndConditions
     )
@@ -82,8 +78,6 @@ private fun SettingsContent(
     onBack: () -> Unit = {},
     onBiometricPrompt: (Boolean) -> Unit = {},
     onAppearance: () -> Unit = {},
-    onReportIssue: () -> Unit = {},
-    onFAQ: () -> Unit = {},
     onPrivacyPolicy: () -> Unit = {},
     onTermsAndConditions: () -> Unit = {}
 ) {
@@ -125,8 +119,6 @@ private fun SettingsContent(
             )
 
             SupportSection(
-                onReportIssue = onReportIssue,
-                onFAQ = onFAQ,
                 onReview = { requestReview() },
                 onPrivacyPolicy = onPrivacyPolicy,
                 onTermsAndConditions = onTermsAndConditions
@@ -184,8 +176,6 @@ private fun GeneralSection(
 
 @Composable
 private fun SupportSection(
-    onReportIssue: () -> Unit,
-    onFAQ: () -> Unit,
     onReview: () -> Unit,
     onPrivacyPolicy: () -> Unit,
     onTermsAndConditions: () -> Unit
@@ -194,16 +184,6 @@ private fun SupportSection(
         Text(
             text = stringResource(R.string.settings_screen_support),
             modifier = Modifier.padding(top = 16.dp)
-        )
-        SettingsListItemNavigation(
-            title = R.string.title_report_an_issue,
-            icon = Icons.Outlined.Report,
-            onClick = onReportIssue
-        )
-        SettingsListItemNavigation(
-            title = R.string.title_faq,
-            icon = Icons.Outlined.Info,
-            onClick = onFAQ
         )
         SettingsListItemNavigation(
             title = R.string.title_review,
@@ -239,8 +219,6 @@ internal fun SettingsContentPreview() {
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
-        onReportIssue = {},
-        onFAQ = {}
     )
 }
 
@@ -256,7 +234,5 @@ internal fun SettingsContentIsBiometricPromptDisabledPreview() {
         onBack = {},
         onBiometricPrompt = {},
         onAppearance = {},
-        onReportIssue = {},
-        onFAQ = {}
     )
 }
