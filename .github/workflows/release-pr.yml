@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   # Branches
   DEVELOP_BRANCH: develop
   MASTER_BRANCH: master
@@ -32,7 +33,7 @@ jobs:
       breaking: ${{ steps.count_breaking.outputs.breaking }}
     steps:
       - name: Checkout develop
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.DEVELOP_BRANCH }}
@@ -118,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout develop
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.DEVELOP_BRANCH }}
@@ -159,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout develop
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.DEVELOP_BRANCH }}
