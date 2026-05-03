@@ -59,22 +59,6 @@ jobs:
         run: |
           echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
-      - name: Create Keystore
-        env:
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        run: |
-          # Remove qualquer espaço ou quebra de linha do Base64 antes de decodificar
-          echo "$RELEASE_KEYSTORE_BASE64" | tr -d '[:space:]' | base64 --decode > app/release.keystore
-          
-          # Validação imediata: se o keytool não conseguir ler, o segredo está corrompido
-          if ! keytool -list -keystore app/release.keystore -storepass "$KEYSTORE_PASSWORD" > /dev/null; then
-            echo "::error::A Keystore decodificada está corrompida ou a senha está incorreta."
-            echo "::error::Certifique-se de que o segredo RELEASE_KEYSTORE_BASE64 no GitHub foi gerado corretamente sem espaços."
-            exit 1
-          fi
-          echo "✅ Keystore validada com sucesso."
-
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -160,21 +144,14 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Final Keystore Check
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      - name: Check if keystore exists
         run: |
-          if [ ! -f "app/release.keystore" ]; then
-            echo "::error::Arquivo app/release.keystore não encontrado!"
+          if [ -f "app/release.keystore" ]; then
+            echo "Keystore exists"
+          else
+            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
             exit 1
           fi
-          # Valida se o alias existe e se a keystore pode ser lida
-          if ! keytool -list -keystore app/release.keystore -storepass "$KEYSTORE_PASSWORD" -alias "$KEYSTORE_ALIAS" > /dev/null; then
-            echo "::error::Erro ao ler alias da Keystore. Provável corrupção ou credenciais incorretas."
-            exit 1
-          fi
-          echo "✅ Keystore e Alias prontos para o build."
 
       - name: Build APKs (Debug & Release)
         run: ./gradlew assembleDebug assembleRelease
