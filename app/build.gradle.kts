@@ -91,6 +91,14 @@ android {
     }
 }
 
+androidComponents {
+    onVariants { variant ->
+        variant.instrumentation.setAsmFramesComputationMode(
+            com.android.build.api.instrumentation.FramesComputationMode.COPY_FRAMES
+        )
+    }
+}
+
 dependencies {
     baselineProfile(project(":baselineprofile"))
     implementation(project(":core:ui"))

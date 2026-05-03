@@ -23,6 +23,9 @@ env:
   APK_RELEASE_PATH: app/build/outputs/apk/release/*.apk
 
   # 🔑 Secrets (configurados no repo)
+  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+  KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
   GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
   FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
   FIREBASE_APP_ID: "1:212108336384:android:e74d22bacd5f156e2427e5"
@@ -57,8 +60,20 @@ jobs:
           echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Create Keystore
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
-          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
+          # O uso de printf "%s" evita que o shell interprete caracteres especiais no Base64
+          printf "%s" "$RELEASE_KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          
+          # Validação imediata: se o keytool não conseguir ler, o segredo está corrompido
+          if ! keytool -list -keystore app/release.keystore -storepass "$KEYSTORE_PASSWORD" > /dev/null; then
+            echo "::error::A Keystore decodificada está corrompida ou a senha está incorreta."
+            echo "::error::Verifique se o segredo RELEASE_KEYSTORE_BASE64 no GitHub não possui espaços ou quebras de linha."
+            exit 1
+          fi
+          echo "✅ Keystore validada com sucesso."
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -132,6 +147,10 @@ jobs:
     runs-on: ubuntu-24.04
     name: Build
     needs: [unit-tests, lint-check, detekt-check]
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v4
@@ -141,12 +160,30 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Build APKs (Debug & Release)
-        run: ./gradlew assembleDebug assembleRelease
+      - name: Check Keystore Integrity
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -f "app/release.keystore" ]; then
+            echo "✅ Keystore file found."
+            # Verifica se o arquivo não está vazio e se o keytool consegue lê-lo
+            if [ ! -s "app/release.keystore" ]; then
+                echo "::error::Keystore file is empty!"
+                exit 1
+            fi
+            keytool -list -keystore app/release.keystore -storepass "$KEYSTORE_PASSWORD" > /dev/null
+            if [ $? -ne 0 ]; then
+              echo "::error::Keystore is invalid or password incorrect. (Tag number over 30 error often means corruption during base64 decode)"
+              exit 1
+            fi
+            echo "✅ Keystore integrity verified."
+          else
+            echo "::error::Keystore file 'app/release.keystore' not found!"
+            exit 1
+          fi
+
+      - name: Build APKs (Debug & Release)
+        run: ./gradlew assembleDebug assembleRelease
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
