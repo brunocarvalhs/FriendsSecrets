@@ -5,7 +5,25 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [3.0.0] - 2025-05-22
+## [3.0.1] - 2026-05-02
+
+### Adicionado
+- Configuração de Keystore e automação de deploy para **Firebase App Distribution** (suporte a builds de Debug e Release).
+- Sistema de governança de dependências no CI via Danger para bloquear bibliotecas obsoletas ou com vulnerabilidades.
+
+### Melhorado
+- Scripts do **Danger CI** totalmente refatorados:
+    - Relatórios de arquivos modificados agora são agrupados por módulo.
+    - Verificação obrigatória de testes unitários para PRs do tipo `feat` e `fix`.
+    - Validação de conformidade com **Conventional Commits** nos títulos de PR.
+- Otimização do pipeline de CI para suportar assinaturas de APK e upload de múltiplos artefatos.
+- Atualização do **Template de Pull Request** para padronizar as informações de review e garantia de qualidade.
+
+### Corrigido
+- Ajuste crítico nas regras do **ProGuard/R8** para evitar quebras na Injeção de Dependências (Hilt) e na inicialização de módulos (`FeatureInitializer`) em builds de produção (Release).
+- Desativada a minificação individual no módulo `:features:group:list` para garantir a estabilidade do código ofuscado.
+
+## [3.0.0] - 2026-04-26
 
 ### Adicionado
 - Nova arquitetura modular
