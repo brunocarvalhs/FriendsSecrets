@@ -10,11 +10,15 @@ import br.com.brunocarvalhs.settings.app.appearence.AppearanceScreen
 import br.com.brunocarvalhs.settings.app.appearence.AppearanceViewModel
 import br.com.brunocarvalhs.settings.app.faq.FAQScreen
 import br.com.brunocarvalhs.settings.app.list.SettingsScreen
+import br.com.brunocarvalhs.settings.app.privacyPolicy.PrivacyPolicyScreen
 import br.com.brunocarvalhs.settings.app.report.ReportIssueScreen
+import br.com.brunocarvalhs.settings.app.termsAndConditions.TermsAndConditionScreen
 import br.com.brunocarvalhs.settings.commons.navigation.AppearanceScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.FAQScreenRoute
+import br.com.brunocarvalhs.settings.commons.navigation.PrivacyPolicyScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.ReportIssueScreenRoute
 import br.com.brunocarvalhs.settings.commons.navigation.SettingsScreenRoute
+import br.com.brunocarvalhs.settings.commons.navigation.TermsAndConditionsScreenRoute
 import kotlin.properties.Delegates
 
 class SettingsInitializer(private val builder: Builder) {
@@ -27,7 +31,9 @@ class SettingsInitializer(private val builder: Builder) {
                     onBack = builder.onBack,
                     onAppearance = { builder.navController.navigate(AppearanceScreenRoute) },
                     onReportIssue = { builder.navController.navigate(ReportIssueScreenRoute) },
-                    onFAQ = { builder.navController.navigate(FAQScreenRoute) }
+                    onFAQ = { builder.navController.navigate(FAQScreenRoute) },
+                    onPrivacyPolicy = { builder.navController.navigate(PrivacyPolicyScreenRoute) },
+                    onTermsAndConditions = { builder.navController.navigate(TermsAndConditionsScreenRoute) }
                 )
             }
             composable<AppearanceScreenRoute> {
@@ -44,6 +50,16 @@ class SettingsInitializer(private val builder: Builder) {
             }
             composable<ReportIssueScreenRoute> {
                 ReportIssueScreen(
+                    onBack = builder.onBack
+                )
+            }
+            composable<PrivacyPolicyScreenRoute> {
+                PrivacyPolicyScreen(
+                    onBack = builder.onBack
+                )
+            }
+            composable<TermsAndConditionsScreenRoute> {
+                TermsAndConditionScreen(
                     onBack = builder.onBack
                 )
             }

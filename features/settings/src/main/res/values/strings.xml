@@ -22,4 +22,12 @@
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>
+
+    <!-- Legal -->
+    <string name="settings_screen_legal">Legal</string>
+    <string name="title_terms_and_conditions">Terms and Conditions</string>
+    <string name="title_privacy_policy">Privacy Policy</string>
+
+    <string name="settings_version_name">Version %1$s</string>
+    <string name="settings_version_code">Build %1$s</string>
 </resources>

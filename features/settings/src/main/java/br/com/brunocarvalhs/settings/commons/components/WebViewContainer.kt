@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.settings.app.report.components
+package br.com.brunocarvalhs.settings.commons.components
 
 import android.annotation.SuppressLint
 import android.webkit.WebView
