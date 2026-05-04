@@ -178,44 +178,42 @@ jobs:
         run: curl -sL https://firebase.tools | bash
 
       - name: Prepare Release Notes
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          # Limitar a mensagem de commit para 1000 caracteres
-          CLEAN_MSG=$(echo "${{ github.event.head_commit.message || 'Automatic deploy' }}" | head -c 1000)
-          
-          # Criar base das notas
-          cat <<EOF > notes-base.txt
-          🚀 Build ${{ github.run_number }}
-          📦 Branch: ${{ github.ref_name }}
+          # 1. Limitar a mensagem e sanitizar aspas para não quebrar o shell no upload
+          MSG="${COMMIT_MSG:-Automatic deploy}"
+          CLEAN_MSG=$(echo "$MSG" | head -c 500 | tr '"' "'")
 
-          📝 Changes:
-          $CLEAN_MSG
-          EOF
+          # 2. Exportar as notas para o ambiente
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "🚀 Build ${{ github.run_number }}"
+            echo "📦 Branch: ${{ github.ref_name }}"
+            echo ""
+            echo "📝 Changes:"
+            echo "$CLEAN_MSG"
+            echo "EOF"
+          } >> $GITHUB_ENV
 
-          # Gerar arquivos específicos para evitar manipulação de string nos passos de upload
-          cp notes-base.txt notes-debug.txt
-          echo " (Debug)" >> notes-debug.txt
-          
-          cp notes-base.txt notes-release.txt
-          echo " (Release)" >> notes-release.txt
-
-          # Definir o caminho de um único APK (o primeiro encontrado)
-          echo "DEBUG_APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)" >> $GITHUB_ENV
-          echo "RELEASE_APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)" >> $GITHUB_ENV
+          # 3. Limitar a apenas um APK por pasta para que o wildcard (*.apk) no Upload funcione sem erros
+          ls app/build/outputs/apk/debug/*.apk | tail -n +2 | xargs -r rm -f || true
+          ls app/build/outputs/apk/release/*.apk | tail -n +2 | xargs -r rm -f || true
 
       - name: Upload Debug APK to Firebase
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
-          firebase appdistribution:distribute "$DEBUG_APK" \
+          firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes-file notes-debug.txt
+            --release-notes "${{ env.RELEASE_NOTES }} (Debug)"
 
       - name: Upload Release APK to Firebase
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
-          firebase appdistribution:distribute "$RELEASE_APK" \
+          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes-file notes-release.txt
+            --release-notes "${{ env.RELEASE_NOTES }} (Release)"
