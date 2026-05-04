@@ -178,18 +178,27 @@ jobs:
         run: curl -sL https://firebase.tools | bash
 
       - name: Prepare Release Notes
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          cat <<EOF > notes.txt
-          🚀 Build ${{ github.run_number }}
-          📦 Branch: ${{ github.ref_name }}
+          # 1. Limitar a mensagem e sanitizar aspas para não quebrar o shell no upload
+          MSG="${COMMIT_MSG:-Automatic deploy}"
+          CLEAN_MSG=$(echo "$MSG" | head -c 500 | tr '"' "'")
 
-          📝 Changes:
-          ${{ github.event.head_commit.message || 'Automatic deploy' }}
-          EOF
+          # 2. Exportar as notas para o ambiente
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "🚀 Build ${{ github.run_number }}"
+            echo "📦 Branch: ${{ github.ref_name }}"
+            echo ""
+            echo "📝 Changes:"
+            echo "$CLEAN_MSG"
+            echo "EOF"
+          } >> $GITHUB_ENV
 
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          cat notes.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          # 3. Limitar a apenas um APK por pasta para que o wildcard (*.apk) no Upload funcione sem erros
+          ls app/build/outputs/apk/debug/*.apk | tail -n +2 | xargs -r rm -f || true
+          ls app/build/outputs/apk/release/*.apk | tail -n +2 | xargs -r rm -f || true
 
       - name: Upload Debug APK to Firebase
         run: |

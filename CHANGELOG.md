@@ -8,10 +8,12 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [3.0.1] - 2026-05-02
 
 ### Adicionado
+- Internacionalização completa do componente de visualização de conteúdo (WebView) com suporte a Inglês, Português, Espanhol e Coreano.
 - Configuração de Keystore e automação de deploy para **Firebase App Distribution** (suporte a builds de Debug e Release).
 - Sistema de governança de dependências no CI via Danger para bloquear bibliotecas obsoletas ou com vulnerabilidades.
 
 ### Melhorado
+- Padronização de nomes de parâmetros lambda em componentes Compose (`WebViewContainer`) para o tempo presente, seguindo as melhores práticas e regras de Lint.
 - Scripts do **Danger CI** totalmente refatorados:
     - Relatórios de arquivos modificados agora são agrupados por módulo.
     - Verificação obrigatória de testes unitários para PRs do tipo `feat` e `fix`.
