@@ -179,32 +179,43 @@ jobs:
 
       - name: Prepare Release Notes
         run: |
-          cat <<EOF > notes.txt
+          # Limitar a mensagem de commit para 1000 caracteres
+          CLEAN_MSG=$(echo "${{ github.event.head_commit.message || 'Automatic deploy' }}" | head -c 1000)
+          
+          # Criar base das notas
+          cat <<EOF > notes-base.txt
           🚀 Build ${{ github.run_number }}
           📦 Branch: ${{ github.ref_name }}
 
           📝 Changes:
-          ${{ github.event.head_commit.message || 'Automatic deploy' }}
+          $CLEAN_MSG
           EOF
 
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          cat notes.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          # Gerar arquivos específicos para evitar manipulação de string nos passos de upload
+          cp notes-base.txt notes-debug.txt
+          echo " (Debug)" >> notes-debug.txt
+          
+          cp notes-base.txt notes-release.txt
+          echo " (Release)" >> notes-release.txt
+
+          # Definir o caminho de um único APK (o primeiro encontrado)
+          echo "DEBUG_APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)" >> $GITHUB_ENV
+          echo "RELEASE_APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)" >> $GITHUB_ENV
 
       - name: Upload Debug APK to Firebase
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
-          firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
+          firebase appdistribution:distribute "$DEBUG_APK" \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes "${{ env.RELEASE_NOTES }} (Debug)"
+            --release-notes-file notes-debug.txt
 
       - name: Upload Release APK to Firebase
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
-          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+          firebase appdistribution:distribute "$RELEASE_APK" \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes "${{ env.RELEASE_NOTES }} (Release)"
+            --release-notes-file notes-release.txt
