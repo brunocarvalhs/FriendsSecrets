@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-    
 }
 
 android {
@@ -20,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -50,12 +49,12 @@ detekt {
 
 dependencies {
     implementation(project(":core:navigation"))
-    api(project(":core:domain"))
+    implementation(project(":core:analytics"))
+    implementation(project(":core:domain"))
     implementation(project(":core:network"))
     implementation(project(":core:storage"))
     implementation(project(":core:deviceid"))
     implementation(project(":core:remote"))
-    implementation(project(":core:analytics"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))
@@ -114,8 +113,6 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
     kspAndroidTest(libs.hilt.compiler)
-
-
 
     // firebase
     implementation(platform(libs.firebase.bom))

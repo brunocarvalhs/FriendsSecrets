@@ -22,8 +22,8 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
-        versionCode = 14
-        versionName = "3.0.0"
+        versionCode = 15
+        versionName = "3.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -88,6 +88,14 @@ android {
     lint {
         disable += "NullSafeMutableLiveData"
         baseline = file("lint-baseline.xml")
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.instrumentation.setAsmFramesComputationMode(
+            com.android.build.api.instrumentation.FramesComputationMode.COPY_FRAMES
+        )
     }
 }
 

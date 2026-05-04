@@ -7,33 +7,36 @@ on:
       - develop
       - master
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   danger:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'  # Especifica a versão do Node.js
+          node-version: '20'
 
       - name: Install dependencies
         run: |
           npm install -g danger conventional-changelog
 
       - name: Run Danger
-        run: danger ci --dangerfile .github/danger/dangerfile.js  # Executa o Danger usando o arquivo no caminho especificado
+        run: danger ci --dangerfile .github/danger/dangerfile.js
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Passa o GITHUB_TOKEN como variável de ambiente
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Install GitHub CLI
-        run: sudo apt-get install gh  # Instala o GitHub CLI
+        run: sudo apt-get install gh
 
       - name: Approve PR
-        if: success() && !failure()  # Verifica se todas as etapas anteriores foram bem-sucedidas
+        if: success() && !failure()
         run: |
           if [[ "${{ github.actor }}" == "${{ github.event.pull_request.user.login }}" ]]; then
             echo "Você não pode aprovar seu próprio PR. Por favor, peça a um revisor para aprovar."
@@ -42,4 +45,4 @@ jobs:
             gh pr review "${{ github.event.pull_request.number }}" --approve --body "Aprovado automaticamente pelo DangerJS."
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Usa o token padrão do GitHub Actions
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}

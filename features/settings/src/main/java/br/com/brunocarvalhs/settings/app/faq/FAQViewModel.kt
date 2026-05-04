@@ -46,6 +46,6 @@ internal class FAQViewModel @Inject constructor(
 
     companion object {
         private const val URL_FAQ = "url_faq"
-        private const val DEFAULT_URL = "https://github.com/brunocarvalhs/FriendsSecrets/wiki/FAQ"
+        const val DEFAULT_URL = "https://forms.office.com/r/rJ0WHvvPnd"
     }
 }

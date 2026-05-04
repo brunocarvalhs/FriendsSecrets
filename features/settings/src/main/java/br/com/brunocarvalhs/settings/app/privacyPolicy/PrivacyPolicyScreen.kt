@@ -1,4 +1,4 @@
-package br.com.brunocarvalhs.settings.app.report
+package br.com.brunocarvalhs.settings.app.privacyPolicy
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -9,33 +9,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import br.com.brunocarvalhs.settings.R
-import br.com.brunocarvalhs.settings.app.report.ReportIssueViewModel.Companion.DEFAULT_URL
+import br.com.brunocarvalhs.settings.app.privacyPolicy.PrivacyPolicyViewModel.Companion.DEFAULT_URL
 import br.com.brunocarvalhs.settings.commons.components.WebViewContent
 
 @Composable
-internal fun ReportIssueScreen(
+internal fun PrivacyPolicyScreen(
     onBack: () -> Unit,
-    viewModel: ReportIssueViewModel = hiltViewModel()
+    viewModel: PrivacyPolicyViewModel = hiltViewModel()
 ) {
     val url by viewModel.url.collectAsState()
 
-    ReportIssueContent(
+    PrivacyPolicyContent(
         url = url,
         onBack = onBack
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ReportIssueContent(
+private fun PrivacyPolicyContent(
     url: String,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit
 ) {
     WebViewContent(
         url = url,
         title = {
-            Text(text = stringResource(R.string.title_report_an_issue))
+            Text(text = stringResource(R.string.title_privacy_policy))
         },
         onBack = onBack
     )
@@ -43,9 +42,10 @@ private fun ReportIssueContent(
 
 @Composable
 @Preview
-private fun ReportIssuePreview() {
-    ReportIssueContent(
+internal fun PrivacyPolicyContentPreview() {
+    PrivacyPolicyContent(
         url = DEFAULT_URL,
         onBack = {}
     )
 }
+

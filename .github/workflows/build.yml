@@ -6,6 +6,7 @@ on:
 
 env:
   # Configurações Gerais
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   JDK_VERSION: 17
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
@@ -22,6 +23,9 @@ env:
   APK_RELEASE_PATH: app/build/outputs/apk/release/*.apk
 
   # 🔑 Secrets (configurados no repo)
+  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+  KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
   GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
   FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
   FIREBASE_APP_ID: "1:212108336384:android:e74d22bacd5f156e2427e5"
@@ -35,16 +39,16 @@ jobs:
     name: Checkout and Setup Environment
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '${{ env.JDK_VERSION }}'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
 
       - name: Create local.properties
         run: |
@@ -56,7 +60,7 @@ jobs:
           echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Cache Gradle
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
@@ -127,6 +131,10 @@ jobs:
     runs-on: ubuntu-24.04
     name: Build
     needs: [unit-tests, lint-check, detekt-check]
+    env:
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v4
@@ -136,14 +144,23 @@ jobs:
       - name: Give execution permissions to gradlew
         run: chmod +x gradlew
 
-      - name: Build APK Debug
-        run: ./gradlew assembleDebug
+      - name: Check if keystore exists
+        run: |
+          if [ -f "app/release.keystore" ]; then
+            echo "Keystore exists"
+          else
+            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
+            exit 1
+          fi
 
-      - name: Upload Debug APK
+      - name: Build APKs (Debug & Release)
+        run: ./gradlew assembleDebug assembleRelease
+
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apk-debug
-          path: app/build/outputs/apk/debug/*.apk
+          name: ${{ env.APP_NAME }}-apks
+          path: app/build/outputs/apk/
 
   deploy-firebase:
     runs-on: ubuntu-24.04
@@ -151,34 +168,52 @@ jobs:
     needs: [ build ]
 
     steps:
-      - name: Download APK Artifact
+      - name: Download APK Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apk-debug
-          path: app/build/outputs/apk/debug/
+          name: ${{ env.APP_NAME }}-apks
+          path: app/build/outputs/apk/
 
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
       - name: Prepare Release Notes
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          cat <<EOF > notes.txt
-          🚀 Build ${{ github.run_number }}
-          📦 Branch: ${{ github.ref_name }}
+          # 1. Limitar a mensagem e sanitizar aspas para não quebrar o shell no upload
+          MSG="${COMMIT_MSG:-Automatic deploy}"
+          CLEAN_MSG=$(echo "$MSG" | head -c 500 | tr '"' "'")
 
-          📝 Changes:
-          ${{ github.event.head_commit.message || 'Automatic deploy' }}
-          EOF
+          # 2. Exportar as notas para o ambiente
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "🚀 Build ${{ github.run_number }}"
+            echo "📦 Branch: ${{ github.ref_name }}"
+            echo ""
+            echo "📝 Changes:"
+            echo "$CLEAN_MSG"
+            echo "EOF"
+          } >> $GITHUB_ENV
 
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          cat notes.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          # 3. Limitar a apenas um APK por pasta para que o wildcard (*.apk) no Upload funcione sem erros
+          ls app/build/outputs/apk/debug/*.apk | tail -n +2 | xargs -r rm -f || true
+          ls app/build/outputs/apk/release/*.apk | tail -n +2 | xargs -r rm -f || true
 
-      - name: Upload APK to Firebase App Distribution
+      - name: Upload Debug APK to Firebase
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
           firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
             --app "${{ env.FIREBASE_APP_ID }}" \
-            --release-notes "${{ env.RELEASE_NOTES }}"
+            --release-notes "${{ env.RELEASE_NOTES }} (Debug)"
+
+      - name: Upload Release APK to Firebase
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
+
+          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
+            --app "${{ env.FIREBASE_APP_ID }}" \
+            --release-notes "${{ env.RELEASE_NOTES }} (Release)"

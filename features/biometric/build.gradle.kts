@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.detekt)
-    
 }
 
 android {
@@ -49,6 +48,8 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
+    implementation(project(":core:security"))
+    implementation(project(":core:network"))
     implementation(project(":core:biometric"))
     implementation(project(":core:remote"))
 

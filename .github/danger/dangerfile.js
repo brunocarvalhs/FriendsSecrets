@@ -1,17 +1,29 @@
 const { danger, message, warn, fail } = require('danger');
 const fs = require('fs');
 
-// Lê bibliotecas bloqueadas e depreciadas
+// --- Helper Functions ---
+
+/**
+ * Lê bibliotecas de um arquivo, ignorando comentários (#)
+ * e extraindo sugestões de substituição (->).
+ */
 function getLibsFromFile(fileName) {
   try {
     const fileContent = fs.readFileSync(fileName, 'utf-8');
-    return fileContent.split('\n').map(lib => lib.trim()).filter(lib => lib.length > 0);
+    return fileContent.split('\n')
+      .map(line => {
+        const commentFree = line.split('#')[0].trim();
+        if (!commentFree) return null;
+
+        const parts = commentFree.split('->');
+        return {
+          id: parts[0].trim(),
+          replacement: parts[1] ? parts[1].trim() : null
+        };
+      })
+      .filter(lib => lib !== null);
   } catch (error) {
-    if (error.code === 'ENOENT') {
-      message(`Arquivo ${fileName} não encontrado.`);
-    } else {
-      fail(`Erro ao ler ${fileName}: ${error.message}`);
-    }
+    console.error(`Erro ao ler arquivo de libs: ${fileName}`, error);
     return [];
   }
 }
@@ -19,165 +31,158 @@ function getLibsFromFile(fileName) {
 const blockedLibs = getLibsFromFile('.github/danger/blockedLibs.txt');
 const deprecatedLibs = getLibsFromFile('.github/danger/deprecatedLibs.txt');
 
-// Filtra arquivos que impactam o Android
 function isAndroidFile(file) {
-  const ignoredPrefixes = ['.github/', 'docs/', 'scripts/'];
+  const ignoredPrefixes = ['.github/', 'docs/', 'scripts/', '.gradle/', 'fastlane/'];
   return !ignoredPrefixes.some(prefix => file.startsWith(prefix));
 }
 
-// Verifica se algum arquivo crítico foi alterado
-function hasAndroidChanges(files) {
-  const criticalPatterns = [
-    'AndroidManifest.xml',
-    'build.gradle',
-    'settings.gradle',
-    'proguard-rules.pro',
-    '/src/',
-    '/res/',
-    '/assets/',
-    '/libs/',
-    '.gradle',
-  ];
-  return files.some(file => criticalPatterns.some(pattern => file.includes(pattern)));
-}
+// --- PR Checks ---
 
-// Checagens de PR
 function checkPRDescription() {
   const prDescription = danger.github.pr.body || '';
   if (prDescription.length < 10) {
-    fail("A descrição do PR deve ter pelo menos 10 caracteres.");
+    fail("### 📝 Descrição insuficiente\nPor favor, forneça uma descrição detalhada das mudanças para facilitar o review.");
   }
 }
 
 function checkPRTitle() {
   const prTitle = danger.github.pr.title;
-  const pattern = /^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|revert|BREAKING CHANGE): .+/;
+  const pattern = /^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|revert|release|BREAKING CHANGE): .+/;
   if (!pattern.test(prTitle)) {
-    fail("O título do PR deve seguir o Conventional Commit.");
+    fail("### 🔤 Título fora do padrão\nO título do PR deve seguir o [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).\nExemplo: `feat: add user login` ou `release: v3.0.0`.");
   }
 }
 
-// Verifica libs.versions.gradle
-function checkLibsVersionsFile(files) {
-  if (files.includes('libs.versions.gradle')) {
-    message("O arquivo `libs.versions.gradle` foi alterado.");
+function getModule(file) {
+  const parts = file.split('/');
+  if (parts.length > 1) {
+    if (parts[0] === 'core' || parts[0] === 'features') {
+      return `:${parts[0]}:${parts[1]}`;
+    }
+    return `:${parts[0]}`;
   }
+  return 'root';
 }
 
-// Verifica arquivos Kotlin e XML
 function checkModifiedFiles(files) {
   const kotlinFiles = files.filter(f => f.endsWith('.kt'));
   const xmlFiles = files.filter(f => f.endsWith('.xml'));
 
-  if (kotlinFiles.length > 0) message(`Arquivos Kotlin modificados: ${kotlinFiles.join(', ')}`);
-  if (xmlFiles.length > 0) message(`Arquivos XML modificados: ${xmlFiles.join(', ')}`);
-}
+  if (kotlinFiles.length > 0 || xmlFiles.length > 0) {
+    let output = "### 📂 Arquivos Modificados\n\n";
 
-// Verifica arquivos de teste
-function checkForUnitTests(created, modified, deleted) {
-  const testPattern = /Test/;
-  const testModified = modified.filter(f => testPattern.test(f));
-  const testCreated = created.filter(f => testPattern.test(f));
-  const testDeleted = deleted.filter(f => testPattern.test(f));
+    const modules = {};
+    [...kotlinFiles, ...xmlFiles].forEach(file => {
+      const module = getModule(file);
+      if (!modules[module]) modules[module] = [];
+      modules[module].push(file);
+    });
 
-  if (testModified.length === 0 && testCreated.length === 0 && testDeleted.length === 0) {
-    message("Nenhum arquivo de teste foi criado, modificado ou deletado.");
+    Object.keys(modules).sort().forEach(module => {
+      const moduleFiles = modules[module];
+      output += `<details><summary><b>📦 ${module} (${moduleFiles.length} arquivos)</b></summary>\n\n- ${moduleFiles.join('\n- ')}\n</details>\n\n`;
+    });
+
+    message(output);
   }
 }
 
-// Arquivos Jetpack Compose
+function checkForUnitTests(created, modified) {
+  const testPattern = /Test/;
+  const hasTests = [...created, ...modified].some(f => testPattern.test(f));
+  const isFeatureOrFix = danger.github.pr.title.startsWith('feat') || danger.github.pr.title.startsWith('fix');
+
+  if (!hasTests && isFeatureOrFix) {
+    warn("⚠️ **Aviso:** Nenhum arquivo de teste foi identificado neste PR. Para `feat` e `fix`, recomendamos fortemente a inclusão de testes unitários.");
+  } else if (hasTests) {
+    message("✅ **Garantia de Qualidade:** Testes identificados no PR. Bom trabalho!");
+  }
+}
+
 function checkForComposeFiles(files) {
   const composeFiles = files.filter(f => f.includes('Composable') || f.includes('Compose'));
   if (composeFiles.length > 0) {
-    message(`Arquivos Jetpack Compose modificados: ${composeFiles.join(', ')}`);
+    message(`### ⚛️ UI Compose\nDetectamos alterações em **${composeFiles.length}** arquivos do Jetpack Compose.`);
   }
 }
 
-// Arquivos críticos Android
 function checkAndroidCoreFiles(files) {
-  const criticalPatterns = [
-    'AndroidManifest.xml',
-    'build.gradle',
-    'settings.gradle',
-    'proguard-rules.pro',
-    '/src/',
-    '/res/',
-    '/assets/',
-    '/libs/',
-    '.gradle',
-  ];
-  const criticalChanged = files.some(f => criticalPatterns.some(p => f.includes(p)));
+  const criticalPatterns = ['AndroidManifest.xml', 'build.gradle', 'settings.gradle', 'proguard-rules.pro', 'libs.versions.toml'];
+  const changedCore = files.filter(f => criticalPatterns.some(p => f.includes(p)));
 
-  if (criticalChanged) {
-    message("Arquivos principais do Android foram modificados.");
-  } else {
-    message("Nenhum arquivo principal do Android foi modificado.");
+  if (changedCore.length > 0) {
+    warn(`### 🛠️ Core do Projeto\nForam alterados arquivos sensíveis:\n<details><summary>Ver arquivos críticos</summary>\n\n- ${changedCore.join('\n- ')}\n</details>`);
   }
 }
 
-// Verifica libs bloqueadas
-async function checkForBlockedLibs(files) {
-  const gradleFiles = files.filter(f => f.endsWith('build.gradle.kts') || f.includes('libs.versions.toml'));
+/**
+ * Valida se novas dependências adicionadas estão bloqueadas ou depreciadas.
+ */
+async function checkDependencies(files) {
+  const gradleFiles = files.filter(f => f.endsWith('.kts') || f.includes('toml'));
+  if (gradleFiles.length === 0) return;
+
+  const foundBlocked = [];
+  const foundDeprecated = [];
+
   for (const file of gradleFiles) {
     const content = await danger.git.diffForFile(file);
-    if (content?.diff) {
-      const addedLines = content.diff.split('\n').filter(l => l.startsWith('+'));
-      blockedLibs.forEach(lib => {
-        const regex = new RegExp(`\\b${lib.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`);
-        if (addedLines.some(line => regex.test(line))) {
-          fail(`Biblioteca bloqueada ${lib} adicionada em ${file}.`);
-        }
-      });
-    }
+    if (!content) continue;
+    const addedLines = content.diff.split('\n').filter(l => l.startsWith('+'));
+
+    blockedLibs.forEach(lib => {
+      if (addedLines.some(line => line.includes(lib.id))) {
+        foundBlocked.push({ id: lib.id, file });
+      }
+    });
+
+    deprecatedLibs.forEach(lib => {
+      if (addedLines.some(line => line.includes(lib.id))) {
+        foundDeprecated.push({ id: lib.id, replacement: lib.replacement, file });
+      }
+    });
+  }
+
+  if (foundBlocked.length > 0) {
+    const blockedList = foundBlocked.map(f => `- \`${f.id}\` (em \`${f.file}\`)`).join('\n');
+    fail(`### 🚫 Dependências Bloqueadas\nRemova as seguintes bibliotecas proibidas, pois possuem vulnerabilidades ou ferem a arquitetura:\n${blockedList}`);
+  }
+
+  if (foundDeprecated.length > 0) {
+    const deprecatedList = foundDeprecated.map(f => {
+      let msg = `- \`${f.id}\` (em \`${f.file}\`)`;
+      if (f.replacement) {
+        msg += `\n  - **Sugestão de Experiência:** migrar para \`${f.replacement}\`.`;
+      }
+      return msg;
+    }).join('\n');
+
+    warn(`### ⚠️ Dependências Depreciadas\nDetectamos bibliotecas que possuem alternativas mais modernas e performáticas:\n${deprecatedList}`);
   }
 }
 
-// Verifica libs depreciadas
-async function checkForDeprecatedLibs(files) {
-  const gradleFiles = files.filter(f => f.endsWith('build.gradle.kts') || f.includes('libs.versions.toml'));
-  for (const file of gradleFiles) {
-    const content = await danger.git.diffForFile(file);
-    if (content?.diff) {
-      const addedLines = content.diff.split('\n').filter(l => l.startsWith('+'));
-      deprecatedLibs.forEach(lib => {
-        if (addedLines.some(line => line.includes(lib) || line.includes(lib.split(':')[0]))) {
-          message(`Biblioteca depreciada ${lib} adicionada em ${file}.`);
-        }
-      });
-    }
-  }
-}
+// --- Main execution ---
 
-// Executa verificações
 async function runPRChecks() {
   checkPRDescription();
   checkPRTitle();
 
-  const createdFiles = danger.git.created_files || [];
-  const modifiedFiles = danger.git.modified_files || [];
-  const deletedFiles = danger.git.deleted_files || [];
-  const allFiles = [...createdFiles, ...modifiedFiles, ...deletedFiles];
-
-  // Filtra arquivos Android relevantes
+  const allFiles = [...danger.git.created_files, ...danger.git.modified_files];
   const androidFiles = allFiles.filter(isAndroidFile);
 
-  const androidChanges = hasAndroidChanges(androidFiles);
+  if (androidFiles.length > 0) {
+    checkModifiedFiles(androidFiles);
+    await checkDependencies(androidFiles);
 
-  // Checagens sempre executadas
-  checkLibsVersionsFile(androidFiles);
-  checkModifiedFiles(androidFiles);
-  await checkForBlockedLibs(androidFiles);
-  await checkForDeprecatedLibs(androidFiles);
+    const criticalPatterns = ['/src/', '/res/', 'AndroidManifest.xml', 'build.gradle'];
+    const hasCoreChanges = androidFiles.some(f => criticalPatterns.some(p => f.includes(p)));
 
-  // Checagens condicionais só se houver impacto no Android
-  if (androidChanges) {
-    checkForUnitTests(createdFiles.filter(isAndroidFile), modifiedFiles.filter(isAndroidFile), deletedFiles.filter(isAndroidFile));
-    checkForComposeFiles(androidFiles);
-    checkAndroidCoreFiles(androidFiles);
-  } else {
-    message("PR não impacta arquivos críticos do Android, warnings de testes e core foram ignorados.");
+    if (hasCoreChanges) {
+      checkForUnitTests(danger.git.created_files, danger.git.modified_files);
+      checkForComposeFiles(androidFiles);
+      checkAndroidCoreFiles(androidFiles);
+    }
   }
 }
 
-// Rodar Danger
 runPRChecks();
