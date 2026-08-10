@@ -34,16 +34,32 @@ stages:
     command: "./gradlew detekt"
   build:
     enabled: true
-    command: "./gradlew assembleDebug"
-    artifact_name: "FriendsSecrets-apk-debug"
+    variants:
+      - name: "debug"
+        command: "./gradlew assembleDebug"
+        path: "app/build/outputs/apk/debug/*.apk"
+        artifact_name: "FriendsSecrets-apk-debug"
+      - name: "release"
+        command: "./gradlew assembleRelease"
+        path: "app/build/outputs/apk/release/*.apk"
+        artifact_name: "FriendsSecrets-apk-release"
   deploy_firebase:
     enabled: true
     release_notes: "release automatica"
+    variants:
+      - name: "debug"
+        label: "DEBUG"
+      - name: "release"
+        label: "RELEASE"
   release:
     enabled: true
     command_aab: "./gradlew bundleRelease"
+    github_release:
+      draft: false
+      prerelease: false
     google_play:
-      tracks: ["production", "beta", "internal"]
+      track: "production"
+      status: "completed"
       user_fraction: 0.5
 
 danger:
