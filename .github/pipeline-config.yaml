@@ -2,9 +2,9 @@
 
 project:
   name: "FriendsSecrets"
-  jdk_version: 17
+  jdk_version: 21
   gradle_opts: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
-  build_tools_version: "34.0.0"
+  build_tools_version: "35.0.0"
   package_name: "br.com.brunocarvalhs.friendssecrets"
 
 git:
@@ -48,4 +48,4 @@ stages:
 
 danger:
   enabled: true
-  node_version: 20
+  node_version: 24
