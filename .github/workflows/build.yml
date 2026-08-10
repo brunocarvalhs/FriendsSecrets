@@ -4,206 +4,164 @@ on:
   push:
     branches: [ develop ]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
 jobs:
-  checkout-and-setup:
+  prepare:
     runs-on: ubuntu-24.04
-    name: Checkout and Setup Environment
     outputs:
       jdk_version: ${{ steps.config.outputs.jdk_version }}
       gradle_opts: ${{ steps.config.outputs.gradle_opts }}
       app_name: ${{ steps.config.outputs.app_name }}
+      ut_enabled: ${{ steps.config.outputs.ut_enabled }}
+      lint_enabled: ${{ steps.config.outputs.lint_enabled }}
+      detekt_enabled: ${{ steps.config.outputs.detekt_enabled }}
+      build_enabled: ${{ steps.config.outputs.build_enabled }}
+      deploy_enabled: ${{ steps.config.outputs.deploy_enabled }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Load Pipeline Configuration
-        id: config
+      - uses: actions/checkout@v4
+      - id: config
         run: |
           echo "jdk_version=$(yq '.project.jdk_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
           echo "gradle_opts=$(yq '.project.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
           echo "app_name=$(yq '.project.name' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '${{ steps.config.outputs.jdk_version }}'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Create local.properties
-        run: |
-          echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
-
-      - name: Create google-services.json
-        run: |
-          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Upload Workspace
-        uses: actions/upload-artifact@v4
-        with:
-          name: workspace
-          path: ./
+          echo "ut_enabled=$(yq '.stages.unit_tests.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "lint_enabled=$(yq '.stages.lint.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "detekt_enabled=$(yq '.stages.detekt.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "build_enabled=$(yq '.stages.build.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "deploy_enabled=$(yq '.stages.deploy_firebase.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
   unit-tests:
+    needs: [prepare]
+    if: needs.prepare.outputs.ut_enabled == 'true'
     runs-on: ubuntu-24.04
     name: Run Unit Tests
-    needs: checkout-and-setup
     steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+        with:
+          jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
+          google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Unit Tests
-        run: $(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
+        run: |
+          COMMAND=$(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
+          chmod +x gradlew
+          $COMMAND
         env:
-          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
+          GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   lint-check:
+    needs: [prepare]
+    if: needs.prepare.outputs.lint_enabled == 'true'
     runs-on: ubuntu-24.04
     name: Run Lint Check
-    needs: checkout-and-setup
     steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+        with:
+          jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
+          google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Lint
-        run: $(yq '.stages.lint.command' .github/pipeline-config.yaml)
+        run: |
+          COMMAND=$(yq '.stages.lint.command' .github/pipeline-config.yaml)
+          chmod +x gradlew
+          $COMMAND
         env:
-          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
+          GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   detekt-check:
+    needs: [prepare]
+    if: needs.prepare.outputs.detekt_enabled == 'true'
     runs-on: ubuntu-24.04
     name: Run Detekt Check
-    needs: checkout-and-setup
     steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+        with:
+          jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
+          google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Detekt
-        run: $(yq '.stages.detekt.command' .github/pipeline-config.yaml)
+        run: |
+          COMMAND=$(yq '.stages.detekt.command' .github/pipeline-config.yaml)
+          chmod +x gradlew
+          $COMMAND
         env:
-          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
+          GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   build:
+    needs: [prepare, unit-tests, lint-check, detekt-check]
+    if: |
+      always() && 
+      needs.prepare.outputs.build_enabled == 'true' && 
+      (needs.unit-tests.result == 'success' || needs.unit-tests.result == 'skipped') &&
+      (needs.lint-check.result == 'success' || needs.lint-check.result == 'skipped') &&
+      (needs.detekt-check.result == 'success' || needs.detekt-check.result == 'skipped')
     runs-on: ubuntu-24.04
     name: Build
-    needs: [checkout-and-setup, unit-tests, lint-check, detekt-check]
-    env:
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
-      - name: Download Workspace
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
         with:
-          name: workspace
+          jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
+          google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
-      - name: Give execution permissions to gradlew
-        run: chmod +x gradlew
-
-      - name: Check if keystore exists
+      - name: Build APK Debug
         run: |
-          KEYSTORE_PATH=$(yq '.paths.keystore' .github/pipeline-config.yaml)
-          if [ -f "$KEYSTORE_PATH" ]; then
-            echo "Keystore exists"
-          else
-            echo "::error::Keystore file '$KEYSTORE_PATH' does not exist."
-            exit 1
-          fi
+          COMMAND=$(yq '.stages.build.command' .github/pipeline-config.yaml)
+          chmod +x gradlew
+          $COMMAND
+        env:
+          GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
-      - name: Build APKs (Debug & Release)
-        run: ./gradlew assembleDebug assembleRelease
-
-      - name: Upload APKs
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ needs.checkout-and-setup.outputs.app_name }}-apks
-          path: app/build/outputs/apk/
+          name: ${{ needs.prepare.outputs.app_name }}-apk-debug
+          path: app/build/outputs/apk/debug/*.apk
 
   deploy-firebase:
+    needs: [prepare, build]
+    if: needs.prepare.outputs.deploy_enabled == 'true' && needs.build.result == 'success'
     runs-on: ubuntu-24.04
     name: Deploy to Firebase App Distribution
-    needs: [ checkout-and-setup, build ]
-
     steps:
-      - name: Download APK Artifacts
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download APK Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.checkout-and-setup.outputs.app_name }}-apks
-          path: app/build/outputs/apk/
+          name: ${{ needs.prepare.outputs.app_name }}-apk-debug
+          path: app/build/outputs/apk/release/
 
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      - name: Prepare Release Notes
-        env:
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
+      - name: Upload APK to Firebase App Distribution
         run: |
-          MSG="${COMMIT_MSG:-$(yq '.stages.deploy_firebase.release_notes' .github/pipeline-config.yaml)}"
-          CLEAN_MSG=$(echo "$MSG" | head -c 500 | tr '"' "'")
-
-          {
-            echo "RELEASE_NOTES<<EOF"
-            echo "🚀 Build ${{ github.run_number }}"
-            echo "📦 Branch: ${{ github.ref_name }}"
-            echo ""
-            echo "📝 Changes:"
-            echo "$CLEAN_MSG"
-            echo "EOF"
-          } >> $GITHUB_ENV
-
-          ls app/build/outputs/apk/debug/*.apk | tail -n +2 | xargs -r rm -f || true
-          ls app/build/outputs/apk/release/*.apk | tail -n +2 | xargs -r rm -f || true
-
-      - name: Upload Debug APK to Firebase
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
+          APK_PATH=$(yq '.stages.deploy_firebase.artifact_path' .github/pipeline-config.yaml)
+          APP_ID="${{ secrets.FIREBASE_APP_ID }}"
+          TOKEN="${{ secrets.FIREBASE_AUTH_TOKEN }}"
+          NOTES=$(yq '.stages.deploy_firebase.release_notes' .github/pipeline-config.yaml)
           
-          FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}"
-          APK_PATH=$(yq '.paths.apk_debug' .github/pipeline-config.yaml)
-
           firebase appdistribution:distribute $APK_PATH \
-            --app "$FIREBASE_APP_ID" \
-            --release-notes "${{ env.RELEASE_NOTES }} (Debug)"
-
-      - name: Upload Release APK to Firebase
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
-
-          FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}"
-          APK_PATH=$(yq '.paths.apk_release' .github/pipeline-config.yaml)
-
-          firebase appdistribution:distribute $APK_PATH \
-            --app "$FIREBASE_APP_ID" \
-            --release-notes "${{ env.RELEASE_NOTES }} (Release)"
+            --app "$APP_ID" \
+            --release-notes "$NOTES" \
+            --token "$TOKEN"

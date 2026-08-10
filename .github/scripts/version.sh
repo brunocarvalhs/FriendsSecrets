@@ -108,8 +108,4 @@ fi
 >&2 echo "Versionamento completo."
 
 # 7️⃣ Retorna a nova versão para o workflow
-if [ -n "${GITHUB_OUTPUT:-}" ]; then
-    echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
-    echo "new_version_code=$new_version_code" >> "$GITHUB_OUTPUT"
-fi
 echo "$new_version"
