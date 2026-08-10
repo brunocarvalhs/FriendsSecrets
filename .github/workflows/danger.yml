@@ -13,15 +13,20 @@ env:
 jobs:
   danger:
     runs-on: ubuntu-latest
-
+    if: $(yq '.danger.enabled' .github/pipeline-config.yaml) == "true"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Load Config
+        id: config
+        run: |
+          echo "node_version=$(yq '.danger.node_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ steps.config.outputs.node_version }}
 
       - name: Install dependencies
         run: |

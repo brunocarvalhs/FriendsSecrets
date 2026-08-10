@@ -5,47 +5,33 @@ on:
     branches: [ develop ]
 
 env:
-  # Configurações Gerais
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  JDK_VERSION: 17
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
-
-  # Android
-  BUILD_TOOLS_VERSION: "34.0.0"
-  ANDROID_LOCAL_PROPERTIES: local.properties
-
-  # Projeto
-  APP_NAME: "FriendsSecrets"
-
-  # Caminhos
-  APK_DEBUG_PATH: app/build/outputs/apk/debug/*.apk
-  APK_RELEASE_PATH: app/build/outputs/apk/release/*.apk
-
-  # 🔑 Secrets (configurados no repo)
-  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-  KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-  GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
-  FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
-  FIREBASE_APP_ID: "1:212108336384:android:e74d22bacd5f156e2427e5"
-
-  # Variaveis
-  API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
   checkout-and-setup:
     runs-on: ubuntu-24.04
     name: Checkout and Setup Environment
+    outputs:
+      jdk_version: ${{ steps.config.outputs.jdk_version }}
+      gradle_opts: ${{ steps.config.outputs.gradle_opts }}
+      app_name: ${{ steps.config.outputs.app_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Load Pipeline Configuration
+        id: config
+        run: |
+          echo "jdk_version=$(yq '.project.jdk_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "gradle_opts=$(yq '.project.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "app_name=$(yq '.project.name' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '${{ env.JDK_VERSION }}'
+          java-version: '${{ steps.config.outputs.jdk_version }}'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -53,11 +39,11 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ env.API_KEY }}" >> local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
 
       - name: Create google-services.json
         run: |
-          echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -87,9 +73,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests
-        run: ./gradlew testDebug
+        run: $(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   lint-check:
     runs-on: ubuntu-24.04
@@ -105,9 +91,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Lint
-        run: ./gradlew lintDebug
+        run: $(yq '.stages.lint.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   detekt-check:
     runs-on: ubuntu-24.04
@@ -123,14 +109,14 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Detekt
-        run: ./gradlew detekt
+        run: $(yq '.stages.detekt.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   build:
     runs-on: ubuntu-24.04
     name: Build
-    needs: [unit-tests, lint-check, detekt-check]
+    needs: [checkout-and-setup, unit-tests, lint-check, detekt-check]
     env:
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
@@ -146,10 +132,11 @@ jobs:
 
       - name: Check if keystore exists
         run: |
-          if [ -f "app/release.keystore" ]; then
+          KEYSTORE_PATH=$(yq '.paths.keystore' .github/pipeline-config.yaml)
+          if [ -f "$KEYSTORE_PATH" ]; then
             echo "Keystore exists"
           else
-            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
+            echo "::error::Keystore file '$KEYSTORE_PATH' does not exist."
             exit 1
           fi
 
@@ -159,19 +146,19 @@ jobs:
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apks
+          name: ${{ needs.checkout-and-setup.outputs.app_name }}-apks
           path: app/build/outputs/apk/
 
   deploy-firebase:
     runs-on: ubuntu-24.04
     name: Deploy to Firebase App Distribution
-    needs: [ build ]
+    needs: [ checkout-and-setup, build ]
 
     steps:
       - name: Download APK Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apks
+          name: ${{ needs.checkout-and-setup.outputs.app_name }}-apks
           path: app/build/outputs/apk/
 
       - name: Install Firebase CLI
@@ -181,11 +168,9 @@ jobs:
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          # 1. Limitar a mensagem e sanitizar aspas para não quebrar o shell no upload
-          MSG="${COMMIT_MSG:-Automatic deploy}"
+          MSG="${COMMIT_MSG:-$(yq '.stages.deploy_firebase.release_notes' .github/pipeline-config.yaml)}"
           CLEAN_MSG=$(echo "$MSG" | head -c 500 | tr '"' "'")
 
-          # 2. Exportar as notas para o ambiente
           {
             echo "RELEASE_NOTES<<EOF"
             echo "🚀 Build ${{ github.run_number }}"
@@ -196,7 +181,6 @@ jobs:
             echo "EOF"
           } >> $GITHUB_ENV
 
-          # 3. Limitar a apenas um APK por pasta para que o wildcard (*.apk) no Upload funcione sem erros
           ls app/build/outputs/apk/debug/*.apk | tail -n +2 | xargs -r rm -f || true
           ls app/build/outputs/apk/release/*.apk | tail -n +2 | xargs -r rm -f || true
 
@@ -204,9 +188,12 @@ jobs:
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
+          
+          FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}"
+          APK_PATH=$(yq '.paths.apk_debug' .github/pipeline-config.yaml)
 
-          firebase appdistribution:distribute app/build/outputs/apk/debug/*.apk \
-            --app "${{ env.FIREBASE_APP_ID }}" \
+          firebase appdistribution:distribute $APK_PATH \
+            --app "$FIREBASE_APP_ID" \
             --release-notes "${{ env.RELEASE_NOTES }} (Debug)"
 
       - name: Upload Release APK to Firebase
@@ -214,6 +201,9 @@ jobs:
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/service-account.json
 
-          firebase appdistribution:distribute app/build/outputs/apk/release/*.apk \
-            --app "${{ env.FIREBASE_APP_ID }}" \
+          FIREBASE_APP_ID="${{ secrets.FIREBASE_APP_ID }}"
+          APK_PATH=$(yq '.paths.apk_release' .github/pipeline-config.yaml)
+
+          firebase appdistribution:distribute $APK_PATH \
+            --app "$FIREBASE_APP_ID" \
             --release-notes "${{ env.RELEASE_NOTES }} (Release)"

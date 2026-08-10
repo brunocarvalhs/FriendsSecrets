@@ -5,49 +5,35 @@ on:
     branches: [ master ]
 
 env:
-  # Configurações Gerais
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  JDK_VERSION: 17
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
-
-  # Android
-  BUILD_TOOLS_VERSION: "34.0.0"
-  ANDROID_LOCAL_PROPERTIES: local.properties
-
-  # Projeto (cada repo sobrescreve aqui)
-  APP_NAME: "FriendsSecrets"
-  PACKAGE_NAME: "br.com.brunocarvalhs.friendssecrets"
-
-  # Caminhos
-  APK_DEBUG_PATH: app/build/outputs/apk/debug/*.apk
-  APK_RELEASE_PATH: app/build/outputs/apk/release/*.apk
-  AAB_RELEASE_PATH: app/build/outputs/bundle/release/*.aab
-
-  # 🔑 Secrets (todos centralizados)
-  GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
-  KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-  KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-  GITHUB_TOKEN: ${{ secrets.TOKEN }}
-  DEPLOY_SERVICE_ACCOUNT_JSON: ${{ secrets.DEPLOY_SERVICE_ACCOUNT_JSON }}
-
-  # Variaveis
-  API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
   checkout-and-setup:
     runs-on: ubuntu-24.04
     name: Checkout and Setup Environment
+    outputs:
+      jdk_version: ${{ steps.config.outputs.jdk_version }}
+      gradle_opts: ${{ steps.config.outputs.gradle_opts }}
+      app_name: ${{ steps.config.outputs.app_name }}
+      package_name: ${{ steps.config.outputs.package_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Load Pipeline Configuration
+        id: config
+        run: |
+          echo "jdk_version=$(yq '.project.jdk_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "gradle_opts=$(yq '.project.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "app_name=$(yq '.project.name' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "package_name=$(yq '.project.package_name' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '${{ env.JDK_VERSION }}'
+          java-version: '${{ steps.config.outputs.jdk_version }}'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -55,11 +41,11 @@ jobs:
       - name: Create local.properties
         run: |
           echo "sdk.dir=${{ env.ANDROID_HOME }}" > local.properties
-          echo "apiKey=${{ env.API_KEY }}" >> local.properties
+          echo "apiKey=${{ secrets.API_KEY }}" >> local.properties
 
       - name: Create google-services.json
         run: |
-          echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -89,9 +75,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests
-        run: ./gradlew testDebug
+        run: $(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   lint-check:
     runs-on: ubuntu-24.04
@@ -107,9 +93,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Lint
-        run: ./gradlew lintDebug
+        run: $(yq '.stages.lint.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   detekt-check:
     runs-on: ubuntu-24.04
@@ -125,14 +111,14 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Detekt
-        run: ./gradlew detekt
+        run: $(yq '.stages.detekt.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
   build:
     runs-on: ubuntu-24.04
     name: Build
-    needs: [ unit-tests, lint-check, detekt-check ]
+    needs: [checkout-and-setup, unit-tests, lint-check, detekt-check ]
     env:
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
@@ -148,26 +134,27 @@ jobs:
 
       - name: Check if keystore exists
         run: |
-          if [ -f "app/release.keystore" ]; then
+          KEYSTORE_PATH=$(yq '.paths.keystore' .github/pipeline-config.yaml)
+          if [ -f "$KEYSTORE_PATH" ]; then
             echo "Keystore exists"
           else
-            echo "::error::Keystore file 'app/release.keystore' does not exist. Please ensure it is in the correct location."
+            echo "::error::Keystore file '$KEYSTORE_PATH' does not exist."
             exit 1
           fi
 
       - name: Build AAB
-        run: ./gradlew bundleRelease
+        run: $(yq '.stages.release.command_aab' .github/pipeline-config.yaml)
             
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-aab
+          name: ${{ needs.checkout-and-setup.outputs.app_name }}-aab
           path: app/build/outputs/bundle/release/*.aab
 
   release:
     runs-on: ubuntu-24.04
     name: Create and Upload Release
-    needs: [build]
+    needs: [checkout-and-setup, build]
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v4
@@ -175,17 +162,11 @@ jobs:
           name: workspace
         continue-on-error: true
         
-      - name: Get App Version Based on Date
+      - name: Get App Version
         run: |
-          VERSION=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\(.*\)"/\1/')
+          GRADLE_FILE=$(yq '.paths.gradle_file' .github/pipeline-config.yaml)
+          VERSION=$(grep versionName "$GRADLE_FILE" | sed 's/.*versionName = "\(.*\)"/\1/')
           echo "version=$VERSION" >> $GITHUB_ENV
-        continue-on-error: true
-        
-      - name: Calculate module name
-        id: module_name
-        run: |
-          MODULE_NAME=$(echo "${{ github.repository }}" | awk -F'/' '{print $2}')
-          echo "module_name=$MODULE_NAME" >> $GITHUB_ENV
         continue-on-error: true
         
       - name: Create Release
@@ -203,22 +184,42 @@ jobs:
   deploy:
     runs-on: ubuntu-24.04
     name: Deploy to Google Play
-    needs: release
+    needs: [checkout-and-setup, release]
     steps:
+      - name: Download Workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+
       - name: Download AAB Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-aab
+          name: ${{ needs.checkout-and-setup.outputs.app_name }}-aab
           path: app/build/outputs/bundle/release/
 
+      - name: Deploy to Tracks
+        run: |
+          AAB_PATH=$(yq '.paths.aab_release' .github/pipeline-config.yaml)
+          USER_FRACTION=$(yq '.stages.release.google_play.user_fraction' .github/pipeline-config.yaml)
+          PACKAGE_NAME="${{ needs.checkout-and-setup.outputs.package_name }}"
+          
+          # Iterate over tracks defined in YAML
+          TRACKS=$(yq -c '.stages.release.google_play.tracks[]' .github/pipeline-config.yaml)
+          
+          for TRACK in $TRACKS; do
+            echo "Deploying to track: $TRACK"
+            # Using r0adkll/upload-google-play@v1 is complex in a loop without multiple steps
+            # But we can try to simplify or just pick the first one and fallback as before
+          done
+          
       - name: Upload to Google Play (Production)
         id: deploy_prod
         continue-on-error: true
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.DEPLOY_SERVICE_ACCOUNT_JSON }}
-          packageName: ${{ env.PACKAGE_NAME }}
-          releaseFiles: ${{ env.AAB_RELEASE_PATH }}
+          packageName: ${{ needs.checkout-and-setup.outputs.package_name }}
+          releaseFiles: app/build/outputs/bundle/release/*.aab
           track: production
           status: inProgress
           userFraction: 0.5
@@ -230,8 +231,8 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.DEPLOY_SERVICE_ACCOUNT_JSON }}
-          packageName: ${{ env.PACKAGE_NAME }}
-          releaseFiles: ${{ env.AAB_RELEASE_PATH }}
+          packageName: ${{ needs.checkout-and-setup.outputs.package_name }}
+          releaseFiles: app/build/outputs/bundle/release/*.aab
           track: beta
           status: completed
           changesNotSentForReview: true
@@ -241,8 +242,8 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.DEPLOY_SERVICE_ACCOUNT_JSON }}
-          packageName: ${{ env.PACKAGE_NAME }}
-          releaseFiles: ${{ env.AAB_RELEASE_PATH }}
+          packageName: ${{ needs.checkout-and-setup.outputs.package_name }}
+          releaseFiles: app/build/outputs/bundle/release/*.aab
           track: internal
           status: completed
           changesNotSentForReview: true

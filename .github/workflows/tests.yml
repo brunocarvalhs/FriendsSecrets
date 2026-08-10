@@ -5,31 +5,33 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  # 🔧 Configuração do ambiente
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  JDK_VERSION: 17
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
-  BUILD_TOOLS_VERSION: "34.0.0"
-  APP_NAME: "FriendsSecrets"
-
-  # 🔑 Secrets
-  GITHUB_TOKEN: ${{ secrets.TOKEN }}
-  GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
 jobs:
   checkout-and-setup:
     runs-on: ubuntu-24.04
     name: Checkout and Setup Environment
+    outputs:
+      jdk_version: ${{ steps.config.outputs.jdk_version }}
+      gradle_opts: ${{ steps.config.outputs.gradle_opts }}
+      app_name: ${{ steps.config.outputs.app_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Load Pipeline Configuration
+        id: config
+        run: |
+          echo "jdk_version=$(yq '.project.jdk_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "gradle_opts=$(yq '.project.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "app_name=$(yq '.project.name' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ env.JDK_VERSION }}
+          java-version: ${{ steps.config.outputs.jdk_version }}
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -40,7 +42,7 @@ jobs:
 
       - name: Create google-services.json
         run: |
-          echo ${{ env.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
+          echo ${{ secrets.GOOGLE_SERVICE_JSON }} | base64 --decode > app/google-services.json
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -70,16 +72,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests
-        run: ./gradlew testDebug
+        run: $(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
       - name: Comment Failure
         if: ${{ failure() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "❌ Ops, encontrado falhas nos testes unitários, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "-1 | confused"
 
       - name: Comment Success
@@ -87,7 +89,7 @@ jobs:
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "✅ Todos os testes unitários passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "+1"
 
 
@@ -105,16 +107,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Lint
-        run: ./gradlew lintDebug
+        run: $(yq '.stages.lint.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
       - name: Comment Failure
         if: ${{ failure() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "❌ Ops, encontrado falhas no lint, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "-1 | confused"
 
       - name: Comment Success
@@ -122,7 +124,7 @@ jobs:
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "✅ Todos os lints passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "+1"
 
   detekt-check:
@@ -139,16 +141,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Detekt
-        run: ./gradlew detekt
+        run: $(yq '.stages.detekt.command' .github/pipeline-config.yaml)
         env:
-          GRADLE_OPTS: ${{ env.GRADLE_OPTS }}
+          GRADLE_OPTS: ${{ needs.checkout-and-setup.outputs.gradle_opts }}
 
       - name: Comment Failure
         if: ${{ failure() }}
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "❌ Ops, encontrado falhas no detekt, por favor corrija."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "-1 | confused"
 
       - name: Comment Success
@@ -156,13 +158,13 @@ jobs:
         uses: mb2dev/github-action-comment-pull-request@1.0.0
         with:
           message: "✅ Todos os detekts passaram com sucesso! Bom trabalho."
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           reactions: "+1"
 
   build:
     runs-on: ubuntu-24.04
     name: Build
-    needs: [unit-tests, lint-check, detekt-check]
+    needs: [checkout-and-setup, unit-tests, lint-check, detekt-check]
     steps:
       - name: Download Workspace
         uses: actions/download-artifact@v4
@@ -173,10 +175,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK Debug
-        run: ./gradlew assembleDebug
+        run: $(yq '.stages.build.command' .github/pipeline-config.yaml)
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APP_NAME }}-apk-debug
+          name: ${{ needs.checkout-and-setup.outputs.app_name }}-apk-debug
           path: app/build/outputs/apk/debug/*.apk
