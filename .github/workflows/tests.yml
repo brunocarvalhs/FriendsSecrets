@@ -1,4 +1,4 @@
-name: Android Tests
+name: Continuous Integration - Pull Request Validation
 
 on:
   pull_request:
@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       jdk_version: ${{ steps.config.outputs.jdk_version }}
+      java_distribution: ${{ steps.config.outputs.java_distribution }}
       gradle_opts: ${{ steps.config.outputs.gradle_opts }}
       ut_enabled: ${{ steps.config.outputs.ut_enabled }}
       lint_enabled: ${{ steps.config.outputs.lint_enabled }}
@@ -17,17 +18,18 @@ jobs:
       - uses: actions/checkout@v4
       - id: config
         run: |
-          echo "jdk_version=$(yq '.project.jdk_version' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
-          echo "gradle_opts=$(yq '.project.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
-          echo "ut_enabled=$(yq '.stages.unit_tests.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
-          echo "lint_enabled=$(yq '.stages.lint.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
-          echo "detekt_enabled=$(yq '.stages.detekt.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "jdk_version=$(yq '.build."java-version"' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "java_distribution=$(yq '.build."java-distribution" // "temurin"' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "gradle_opts=$(yq '.build.gradle_opts' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "ut_enabled=$(yq '.test[] | select(.name == "unit_tests") | .enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "lint_enabled=$(yq '.linters.lint.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
+          echo "detekt_enabled=$(yq '.linters.detekt.enabled' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
   unit-tests:
     needs: [prepare]
     if: needs.prepare.outputs.ut_enabled == 'true'
     runs-on: ubuntu-24.04
-    name: Run Unit Tests
+    name: 🧪 Unit Testing
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,12 +38,13 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          java-distribution: ${{ needs.prepare.outputs.java_distribution }}
           dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
           google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Unit Tests
         run: |
-          COMMAND=$(yq '.stages.unit_tests.command' .github/pipeline-config.yaml)
+          COMMAND=$(yq '.test[] | select(.name == "unit_tests") | .command' .github/pipeline-config.yaml)
           chmod +x gradlew
           $COMMAND
         env:
@@ -67,7 +70,7 @@ jobs:
     needs: [prepare]
     if: needs.prepare.outputs.lint_enabled == 'true'
     runs-on: ubuntu-24.04
-    name: Run Lint Check
+    name: 🧹 Code Style (Lint)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,12 +79,13 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          java-distribution: ${{ needs.prepare.outputs.java_distribution }}
           dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
           google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Lint
         run: |
-          COMMAND=$(yq '.stages.lint.command' .github/pipeline-config.yaml)
+          COMMAND=$(yq '.linters.lint.command' .github/pipeline-config.yaml)
           chmod +x gradlew
           $COMMAND
         env:
@@ -107,7 +111,7 @@ jobs:
     needs: [prepare]
     if: needs.prepare.outputs.detekt_enabled == 'true'
     runs-on: ubuntu-24.04
-    name: Run Detekt Check
+    name: 🔍 Static Analysis (Detekt)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -116,12 +120,13 @@ jobs:
         uses: ./.github/actions/setup-env
         with:
           jdk-version: ${{ needs.prepare.outputs.jdk_version }}
+          java-distribution: ${{ needs.prepare.outputs.java_distribution }}
           dotenv: ${{ secrets.DOTENV || vars.DOTENV }}
           google-services-json: ${{ secrets.GOOGLE_SERVICE_JSON }}
 
       - name: Run Detekt
         run: |
-          COMMAND=$(yq '.stages.detekt.command' .github/pipeline-config.yaml)
+          COMMAND=$(yq '.linters.detekt.command' .github/pipeline-config.yaml)
           chmod +x gradlew
           $COMMAND
         env:
