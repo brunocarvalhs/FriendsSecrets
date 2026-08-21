@@ -2,24 +2,33 @@
 
 <div align="center">
   <img src="app/src/main/ic_launcher-playstore.png" alt="Friends Secrets Logo" width="200"/>
-  <h3>Compartilhe segredos de forma anônima com seus amigos</h3>
+  <h3>Amigo Secreto 2.0: Mistério, Diversão e Conexão Anônima</h3>
+  <p><i>Transforme a troca de segredos e presentes em uma experiência digital inesquecível.</i></p>
 </div>
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/brunocarvalhs/FriendsSecrets)](https://github.com/brunocarvalhs/FriendsSecrets/releases)
 [![License](https://img.shields.io/github/license/brunocarvalhs/FriendsSecrets)](LICENSE)
 
-## 📋 Descrição
+## 📋 O que é o Friends Secrets?
 
-**Friends Secrets** é um aplicativo Android projetado para facilitar a troca de segredos e mensagens de forma anônima entre amigos. O aplicativo combina interações divertidas com uma interface intuitiva, permitindo que os usuários compartilhem segredos sem revelar suas identidades. Com uma arquitetura modular baseada em Clean Architecture e MVVM, o projeto é altamente escalável e manutenível.
+O **Friends Secrets** não é apenas mais um app de mensagens; é o seu novo aliado para organizar Amigos Secretos e interagir com seus círculos de confiança de forma totalmente anônima. 
 
-### 🎯 Objetivos do Projeto
+Sabe aquele mistério de quem tirou quem? Ou aquela vontade de enviar um elogio (ou uma brincadeira) sem se identificar? O Friends Secrets torna isso digital, seguro e extremamente divertido.
 
-- Proporcionar um ambiente seguro e divertido para a troca de segredos
-- Facilitar a interação social entre amigos de maneira anônima
-- Implementar uma arquitetura robusta que suporte futuras expansões e novas funcionalidades
-- Oferecer uma experiência de usuário intuitiva e agradável
+### 🎯 Por que usar?
 
-## ✨ Funcionalidades
+- **Amigo Secreto Sem Papel**: Crie grupos, convide amigos e faça o sorteio instantaneamente. Nada de papéis perdidos ou sorteios repetidos.
+- **Anonimato Seguro**: Envie mensagens e dicas anônimas dentro dos seus grupos. O mistério é garantido, mas a segurança também.
+- **Consultoria de IA**: Não sabe o que dar de presente? Nossa IA integrada analisa o perfil e dá sugestões criativas para você não errar no presente.
+- **Privacidade em Primeiro Lugar**: Autenticação biométrica e segurança Firebase para que seus segredos continuem sendo... segredos.
+
+## ✨ Funcionalidades Principais
+
+- **🎭 Mistério Garantido**: Envio de mensagens anônimas e sistema de dicas para apimentar o Amigo Secreto.
+- **🎲 Sorteio Inteligente**: Algoritmo de sorteio automático com notificações instantâneas para todos os membros.
+- **🤖 IA Amiga**: Chat generativo para sugestões de presentes e ideias de surpresas.
+- **🔐 Blindagem Digital**: Login via telefone, biometria e exclusão total de dados sob demanda.
+- **🎨 Experiência Premium**: Interface moderna com suporte a Material You (Tema Dinâmico) e animações fluidas.
 
 - **Autenticação Segura**: 
   - Login com número de telefone
@@ -51,7 +60,8 @@
 
 - **Linguagem**: [Kotlin](https://kotlinlang.org/)
 - **UI Framework**: [Jetpack Compose](https://developer.android.com/jetpack/compose)
-- **Arquitetura**: Clean Architecture + MVVM
+- **Arquitetura**: Clean Architecture + MVVM + MVI Pattern
+- **Injeção de Dependência**: [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - **Firebase**:
   - [Firestore](https://firebase.google.com/docs/firestore) (Banco de dados)
   - [Authentication](https://firebase.google.com/docs/auth) (Autenticação)
@@ -168,49 +178,27 @@ O projeto segue os princípios de **Clean Architecture** combinados com o padrã
 
 ## 📊 Estrutura do Projeto
 
+O projeto utiliza uma estrutura modular para garantir escalabilidade e separação de interesses:
+
 ```
-app/
-├── src/
-│   ├── main/
-│   │   ├── java/br/com/brunocarvalhs/friendssecrets/
-│   │   │   ├── commons/           # Utilitários e componentes comuns
-│   │   │   │   ├── analytics/     # Rastreamento de eventos
-│   │   │   │   ├── extensions/    # Extensões Kotlin
-│   │   │   │   ├── initialization/# Inicialização de SDKs
-│   │   │   │   ├── logger/        # Sistema de logs
-│   │   │   │   ├── navigation/    # Navegação entre telas
-│   │   │   │   ├── remote/        # Configurações remotas
-│   │   │   │   ├── security/      # Segurança e criptografia
-│   │   │   │   └── theme/         # Temas e estilos
-│   │   │   │
-│   │   │   ├── data/              # Camada de dados
-│   │   │   │   ├── exceptions/    # Exceções personalizadas
-│   │   │   │   ├── manager/       # Gerenciadores de dados
-│   │   │   │   ├── model/         # Modelos de dados
-│   │   │   │   ├── repository/    # Implementações de repositórios
-│   │   │   │   └── service/       # Serviços de API
-│   │   │   │
-│   │   │   ├── domain/            # Camada de domínio
-│   │   │   │   ├── entities/      # Entidades de domínio
-│   │   │   │   ├── repository/    # Interfaces de repositório
-│   │   │   │   └── useCases/      # Casos de uso
-│   │   │   │
-│   │   │   └── presentation/      # Camada de apresentação
-│   │   │       ├── ui/            # Componentes de UI reutilizáveis
-│   │   │       └── views/         # Telas do aplicativo
-│   │   │           ├── auth/      # Autenticação
-│   │   │           ├── generative/# Chat com IA
-│   │   │           ├── group/     # Gerenciamento de grupos
-│   │   │           ├── home/      # Tela principal
-│   │   │           └── settings/  # Configurações
-│   │   │
-│   │   └── res/                   # Recursos (layouts, strings, etc.)
-│   │
-│   ├── androidTest/               # Testes de instrumentação
-│   └── test/                      # Testes unitários
-│
-├── build.gradle.kts               # Configuração do Gradle
-└── proguard-rules.pro             # Regras ProGuard
+├── app/                   # Módulo principal que orquestra a aplicação
+├── core/                  # Módulos compartilhados entre as features
+│   ├── analytics/         # Rastreamento de eventos
+│   ├── biometric/         # Abstração de biometria
+│   ├── domain/            # Entidades e utilitários globais
+│   ├── navigation/        # Hub de navegação centralizado
+│   ├── network/           # Configuração de rede e Firebase
+│   ├── security/          # Segurança e criptografia
+│   ├── ui/                # Design System e componentes comuns
+│   └── ...
+└── features/              # Módulos de funcionalidades específicas
+    ├── auth/              # Fluxo de autenticação
+    ├── chat/              # Chat com IA
+    ├── group/             # Sub-módulos de gerenciamento de grupos
+    │   ├── list/
+    │   ├── details/
+    │   └── create/
+    └── settings/          # Configurações do app
 ```
 
 ## 🧪 Testes

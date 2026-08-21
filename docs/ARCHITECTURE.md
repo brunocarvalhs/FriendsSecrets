@@ -2,17 +2,58 @@
 
 ## Visão Geral
 
-O Friends Secrets segue os princípios da **Clean Architecture** combinados com o padrão **MVVM** (Model-View-ViewModel). Esta abordagem proporciona uma separação clara de responsabilidades, facilitando a manutenção, testabilidade e escalabilidade do código.
+O Friends Secrets utiliza uma **Arquitetura Multi-Módulo Baseada em Features**, fundamentada nos princípios da **Clean Architecture** e no padrão **MVVM/MVI**. Esta estrutura visa o desacoplamento total entre as funcionalidades e a facilidade de testes automatizados.
 
-## Princípios Arquiteturais
+## Grafo de Módulos (Visual)
 
-### Clean Architecture
+```mermaid
+graph TD
+    App[":app"] --> Features
+    App --> Core
+    
+    subgraph Features ["Feature Modules (:features:*)"]
+        Chat[":chat"]
+        Group[":group:list, :group:details, :group:create"]
+        Biometric[":biometric"]
+        Settings[":settings"]
+    end
+    
+    subgraph Core ["Core Modules (:core:*)"]
+        Nav[":navigation"]
+        Network[":network"]
+        Domain[":domain (Global)"]
+        UI[":ui (Design System)"]
+        Analytics[":analytics"]
+    end
+    
+    Features --> Nav
+    Features --> Domain
+    Features --> UI
+    Features --> Network
+```
 
-A Clean Architecture, proposta por Robert C. Martin, organiza o código em camadas concêntricas, onde cada camada tem uma responsabilidade específica e depende apenas das camadas mais internas. No Friends Secrets, implementamos três camadas principais:
+## Fluxo de Navegação Desacoplado
 
-1. **Camada de Apresentação (Presentation Layer)**
-2. **Camada de Domínio (Domain Layer)**
-3. **Camada de Dados (Data Layer)**
+A comunicação entre features é feita via **Interfaces de Navegação** no módulo `:core:navigation`. Nenhuma feature depende diretamente de outra.
+
+```mermaid
+sequenceDiagram
+    participant F1 as Feature A (ex: List)
+    participant N as Core Navigation (AppNavigator)
+    participant F2 as Feature B (ex: Details)
+    
+    F1->>N: navigateToDetails(group)
+    Note over N: Resolve via Serializable Route
+    N->>F2: Open Screen(group)
+```
+
+## Camada de Dados e Abstração
+
+Para proteger o domínio de detalhes de implementação do Firebase, utilizamos o padrão de **Network Service Abstraction**:
+
+1.  **NetworkService**: Uma interface genérica no módulo `:core:network` que gerencia requisições assíncronas.
+2.  **Firebase Implementation**: O Firestore é encapsulado como um "provider" de rede, permitindo que a troca para uma API REST seja transparente para os repositórios.
+3.  **Mappers**: DTOs (Data Transfer Objects) são convertidos em Entidades de Domínio estritamente na camada de dados.
 
 ### MVVM (Model-View-ViewModel)
 
@@ -85,13 +126,14 @@ O fluxo de dados no Friends Secrets segue um padrão unidirecional:
 
 ## Injeção de Dependência
 
-O Friends Secrets utiliza injeção de dependência manual para gerenciar dependências entre componentes. Isso facilita a testabilidade e a modularidade do código.
+O Friends Secrets utiliza **Dagger Hilt** para gerenciar a injeção de dependência. Isso facilita a testabilidade, a modularidade do código e automatiza o gerenciamento de escopos de componentes Android.
 
 ### Princípios:
 
-- Componentes não instanciam suas dependências diretamente
-- Dependências são fornecidas através de construtores
-- Interfaces são usadas para abstrair implementações concretas
+- **Escopo por Feature**: Cada módulo de feature define seus próprios módulos Hilt para prover dependências locais (Repositories, UseCases).
+- **Injeção de Construtor**: Componentes não instanciam suas dependências diretamente; elas são injetadas no construtor.
+- **Interfaces e Abstrações**: Interfaces são usadas para desacoplar a camada de domínio das implementações na camada de dados.
+- **Single Source of Truth**: Instâncias de serviços globais (como Firebase) são providas em escopo de Singleton nos módulos `:core`.
 
 ## Gerenciamento de Estado
 
@@ -146,52 +188,21 @@ A arquitetura foi projetada para facilitar diferentes tipos de testes:
 ### Testes de UI:
 - Testam a interface do usuário usando Espresso e Compose Testing
 
-## Diagramas
+## Estrutura Modular e Navegação
 
-### Diagrama de Arquitetura
+O projeto utiliza um sistema de **Navegação Modular Desacoplada** baseada em:
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  Presentation Layer                  │
-│                                                     │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────┐  │
-│  │   Activity  │    │   Fragment  │    │ Compose │  │
-│  └──────┬──────┘    └──────┬──────┘    └────┬────┘  │
-│         │                  │                │       │
-│         └──────────┬───────┴────────┬──────┘       │
-│                    │                │              │
-│            ┌───────▼────────┐       │              │
-│            │    ViewModel   │◄──────┘              │
-│            └───────┬────────┘                      │
-└────────────────────┼──────────────────────────────┘
-                     │
-┌────────────────────▼──────────────────────────────┐
-│                   Domain Layer                     │
-│                                                   │
-│  ┌─────────────┐    ┌─────────────┐              │
-│  │  Use Cases  │    │  Entities   │              │
-│  └──────┬──────┘    └─────────────┘              │
-│         │                                        │
-│  ┌──────▼──────┐                                 │
-│  │ Repositories│ (Interfaces)                    │
-│  └──────┬──────┘                                 │
-└─────────┼───────────────────────────────────────┘
-          │
-┌─────────▼───────────────────────────────────────┐
-│                   Data Layer                     │
-│                                                 │
-│  ┌─────────────┐    ┌─────────────────────┐     │
-│  │ Repositories│    │     Data Sources    │     │
-│  │(Implementation)  │  (Remote & Local)   │     │
-│  └──────┬──────┘    └──────────┬──────────┘     │
-│         │                      │                │
-│         └──────────┬───────────┘                │
-│                    │                            │
-│            ┌───────▼────────┐                   │
-│            │  Data Models   │                   │
-│            └────────────────┘                   │
-└───────────────────────────────────────────────┘
-```
+1.  **Feature Initializers**: Cada módulo de feature implementa uma interface `FeatureInitializer` que registra suas próprias rotas no grafo de navegação.
+2.  **AppNavigator**: Centraliza as intenções de navegação, permitindo que uma feature navegue para outra sem depender do módulo concreto da mesma.
+3.  **Type-Safety**: As rotas são definidas como classes `@Serializable` (Kotlin Serialization), garantindo segurança de tipos na passagem de argumentos complexos (como `GroupModel`).
+
+## Camada de Dados e Abstração de Rede
+
+Para evitar o acoplamento direto com o Firebase, o projeto utiliza um **NetworkService** genérico:
+
+- **Abstração**: Repositórios interagem com o `NetworkService` usando objetos `NetworkRequest` (endpoints e queries).
+- **Flexibilidade**: Esta camada abstrai a implementação subjacente do Firestore, facilitando a transição para uma API REST convencional se necessário.
+- **DTOs**: O mapeamento entre modelos de dados remotos e entidades de domínio é feito rigorosamente na camada de dados.
 
 ### Diagrama de Fluxo de Autenticação
 

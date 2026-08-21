@@ -6,10 +6,10 @@ Este documento fornece instruções detalhadas para configurar o ambiente de des
 
 ### Software Necessário
 
-- **Android Studio**: Arctic Fox (2020.3.1) ou superior
-- **JDK (Java Development Kit)**: Versão 11 ou superior
-- **Gradle**: Versão 7.0 ou superior (geralmente gerenciado pelo Android Studio)
-- **Git**: Para controle de versão
+- **Android Studio**: Ladybug (2024.2.1) ou superior recomendado.
+- **JDK (Java Development Kit)**: Versão 17 (obrigatória para as versões atuais do Gradle e AGP).
+- **Gradle**: Versão 8.x ou superior (gerenciado pelo wrapper).
+- **Git**: Para controle de versão.
 
 ### Hardware Recomendado
 

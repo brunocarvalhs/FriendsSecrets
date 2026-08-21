@@ -13,16 +13,42 @@ Este documento descreve as melhores práticas a serem seguidas durante o desenvo
 - [Versionamento](#versionamento)
 - [Documentação](#documentação)
 
-## Estilo de Código
+## Metodologia SDD (Spec-Driven Development)
 
-### Convenções de Nomenclatura
+Todas as novas funcionalidades devem seguir o fluxo de desenvolvimento orientado a especificações:
 
-- **Packages**: Nomes em minúsculas, sem underscores (ex: `br.com.brunocarvalhs.friendssecrets.domain.entities`)
-- **Classes**: PascalCase (ex: `UserRepository`, `LoginViewModel`)
-- **Funções/Métodos**: camelCase (ex: `getUserById()`, `validateInput()`)
-- **Variáveis**: camelCase (ex: `userName`, `isLoading`)
-- **Constantes**: SNAKE_CASE_MAIÚSCULO (ex: `MAX_RETRY_COUNT`, `API_BASE_URL`)
-- **Arquivos de Layout**: snake_case (ex: `activity_main.xml`, `item_message.xml`)
+1.  **Specify**: Definir requisitos em formato EARS (.specs/features/[feature]/spec.md).
+2.  **Design**: Documentar decisões técnicas e diagramas no `design.md`.
+3.  **Tasks**: Quebrar a implementação em tarefas atômicas e verificáveis.
+4.  **Execute**: Implementar com um commit atômico por tarefa.
+
+## Gerenciamento de Estado (MVI Pattern)
+
+Embora usemos ViewModels, o padrão de estado deve seguir a imutabilidade e o fluxo unidirecional (UDF):
+
+- **UiState**: Uma `data class` única representando todo o estado da tela.
+- **UiIntent**: Classes seladas (`sealed class`) representando as intenções do usuário.
+- **StateFlow**: Expor o estado via `StateFlow` e coletar no Compose com `collectAsStateWithLifecycle()`.
+
+```kotlin
+data class GroupListState(
+    val items: List<Group> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
+
+sealed class GroupListIntent {
+    object LoadGroups : GroupListIntent()
+    data class OnGroupClick(val id: String) : GroupListIntent()
+}
+```
+
+## Qualidade de Código e Linting
+
+O projeto utiliza **Detekt** para análise estática.
+- Execute `./gradlew detekt` antes de cada commit.
+- Siga as regras de complexidade ciclomática e nomes de funções estabelecidas no `detekt.yml`.
+- Conventional Commits são obrigatórios (feat, fix, docs, chore, refactor, test).
 
 ### Formatação
 

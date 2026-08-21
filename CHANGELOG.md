@@ -5,6 +5,17 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [3.0.2] - 2026-08-20
+
+### Adicionado
+- Inicialização da infraestrutura de **Spec-Driven Development (SDD)** com diretório `.specs/`.
+- Registro de Decisões Arquiteturais (ADRs) iniciais no `STATE.md` (AD-001 a AD-005).
+- Especificação de Baseline Estrutural validada via metodologia EARS.
+
+### Melhorado
+- Atualização completa da documentação técnica (`README.md` e `ARCHITECTURE.md`) para refletir a arquitetura multi-módulo real e o uso de **Dagger Hilt**.
+- Sincronização do mapeamento de pacotes e UseCases entre os documentos e o código-fonte.
+
 ## [3.0.1] - 2026-05-02
 
 ### Adicionado
