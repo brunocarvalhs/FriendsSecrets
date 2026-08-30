@@ -4,5 +4,6 @@ internal sealed interface GroupDetailsIntent {
     data object Refresh : GroupDetailsIntent
     data class Delete(val callback: () -> Unit) : GroupDetailsIntent
     data object Share : GroupDetailsIntent
+    data object ShareQr : GroupDetailsIntent
     data class Exit(val callback: () -> Unit) : GroupDetailsIntent
 }

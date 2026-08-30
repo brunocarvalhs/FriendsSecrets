@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -106,6 +107,7 @@ internal fun GroupDetailsScreen(
         onChat = { onChat.invoke(group) },
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
+        onShareQrCode = { viewModel.handleIntent(GroupDetailsIntent.ShareQr) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
         onAddMembers = { onAddMembers.invoke(group) }
@@ -133,6 +135,7 @@ private fun GroupDetailsContent(
     onDelete: () -> Unit,
     onExit: () -> Unit,
     onShareGroup: () -> Unit,
+    onShareQrCode: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
 ) {
@@ -159,6 +162,7 @@ private fun GroupDetailsContent(
                 GroupDetailsActions(
                     isDrawn = isDrawn,
                     onShareGroup = onShareGroup,
+                    onShareQrCode = onShareQrCode,
                     onChat = onChat,
                     onDraw = onDraw
                 )
@@ -268,6 +272,7 @@ private fun GroupDetailsHeader(
 private fun GroupDetailsActions(
     isDrawn: Boolean,
     onShareGroup: () -> Unit,
+    onShareQrCode: () -> Unit,
     onChat: () -> Unit,
     onDraw: () -> Unit
 ) {
@@ -281,6 +286,10 @@ private fun GroupDetailsActions(
             ActionIconCard(
                 Icons.Default.Share,
                 stringResource(R.string.invite), onShareGroup
+            )
+            ActionIconCard(
+                Icons.Default.QrCode,
+                stringResource(R.string.qr_code), onShareQrCode
             )
             ActionIconCard(
                 Icons.AutoMirrored.Filled.Chat,
@@ -445,6 +454,7 @@ private fun GroupDetailsPreview() {
         onDelete = {},
         onExit = {},
         onShareGroup = {},
+        onShareQrCode = {},
         onEdit = {},
         onAddMembers = {}
     )

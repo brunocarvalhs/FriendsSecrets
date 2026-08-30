@@ -57,6 +57,7 @@ material = "1.13.0"
 core = "1.18.0"
 coreKtxVersion = "1.7.0"
 window = "1.5.1"
+zxingCore = "3.5.3"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -121,6 +122,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

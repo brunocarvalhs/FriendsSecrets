@@ -30,4 +30,5 @@
     <string name="leave_group">그룹 나가기</string>
     <string name="share_group_message">🎁 당신은 시크릿 산타 그룹에 초대되었습니다: %1$s!\n\n📝 설명: %2$s\n🔑 그룹 코드: %3$s\n\n앱을 다운로드하고 지금 참여하세요!</string>
     <string name="share_group_title">코드 공유</string>
+    <string name="qr_code">QR 코드</string>
 </resources>
