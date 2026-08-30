@@ -30,4 +30,12 @@
     <string name="leave_group">Leave group</string>
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
+    <string name="edit_likes_title">Your wishlist</string>
+    <string name="edit_likes_description">Add things you like to help your Secret Santa pick the perfect gift.</string>
+    <string name="edit_likes_add_hint">E.g. Books, Games…</string>
+    <string name="edit_likes_add_action">Add</string>
+    <string name="edit_likes_save_action">Save</string>
+    <string name="edit_likes_cancel_action">Cancel</string>
+    <string name="edit_likes_remove_action">Remove %1$s</string>
+    <string name="edit_likes_empty_state">No interests added yet</string>
 </resources>
