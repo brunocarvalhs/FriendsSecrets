@@ -13,6 +13,8 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.IsGroupReminderEnabledUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.ToggleGroupReminderUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +33,17 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val toggleReminderUseCase: ToggleGroupReminderUseCase,
+    private val isReminderEnabledUseCase: IsGroupReminderEnabledUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
     private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
+
+    init {
+        loadReminderState()
+    }
 
     @AddTrace(name = "GroupDetailsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: GroupDetailsIntent) = when (intent) {
@@ -43,6 +51,34 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        is GroupDetailsIntent.ToggleReminder -> toggleReminder(intent.enabled)
+    }
+
+    private fun loadReminderState() {
+        viewModelScope.launch {
+            val enabled = isReminderEnabledUseCase(_uiState.value.group.id)
+            _uiState.update { it.copy(isReminderEnabled = enabled) }
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.toggleReminder", enabled = true)
+    private fun toggleReminder(enabled: Boolean) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "toggle_group_reminder"
+            )
+        )
+        viewModelScope.launch {
+            toggleReminderUseCase(_uiState.value.group, enabled)
+                .onSuccess { isEnabled ->
+                    _uiState.update { it.copy(isReminderEnabled = isEnabled) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error toggling group reminder")
+                    _uiState.update { it.copy(error = "Erro ao configurar o lembrete") }
+                }
+        }
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
