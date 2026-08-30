@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.RemoveMemberUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val removeMemberUseCase: RemoveMemberUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
@@ -43,6 +45,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        is GroupDetailsIntent.RemoveMember -> removeMember(intent.memberId)
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
@@ -99,6 +102,27 @@ internal class GroupDetailsViewModel @Inject constructor(
         )
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.removeMember", enabled = true)
+    private fun removeMember(memberId: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "remove_member"
+            )
+        )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            removeMemberUseCase(_uiState.value.group, memberId)
+                .onSuccess { group ->
+                    _uiState.update { it.copy(isLoading = false, group = group) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error removing member")
+                    _uiState.update { it.copy(isLoading = false, error = "Erro ao remover participante") }
+                }
         }
     }
 

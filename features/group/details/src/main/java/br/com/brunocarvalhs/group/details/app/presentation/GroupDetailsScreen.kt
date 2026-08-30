@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,12 +33,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,6 +78,7 @@ internal fun GroupDetailsScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.group
+    var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -108,8 +114,34 @@ internal fun GroupDetailsScreen(
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
-        onAddMembers = { onAddMembers.invoke(group) }
+        onAddMembers = { onAddMembers.invoke(group) },
+        onRemoveMember = { member -> memberPendingRemoval = member }
     )
+
+    memberPendingRemoval?.let { member ->
+        AlertDialog(
+            onDismissRequest = { memberPendingRemoval = null },
+            title = { Text(stringResource(R.string.remove_participant_confirmation_title)) },
+            text = {
+                Text(
+                    stringResource(R.string.remove_participant_confirmation_message, member.name)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.handleIntent(GroupDetailsIntent.RemoveMember(member.id))
+                    memberPendingRemoval = null
+                }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { memberPendingRemoval = null }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_cancel))
+                }
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,6 +167,7 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    onRemoveMember: (UserModel) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -200,6 +233,11 @@ private fun GroupDetailsContent(
                 MemberItem(
                     participant = member.name,
                     isAdministrator = isOwner,
+                    onRemove = if (isOwner && !isDrawn) {
+                        { onRemoveMember(member) }
+                    } else {
+                        null
+                    },
                 )
             }
 

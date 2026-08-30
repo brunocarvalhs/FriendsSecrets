@@ -30,4 +30,8 @@
     <string name="leave_group">Leave group</string>
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
+    <string name="remove_participant_confirmation_title">Remove participant</string>
+    <string name="remove_participant_confirmation_message">Remove %1$s from this group? This cannot be undone.</string>
+    <string name="remove_participant_confirmation_confirm">Remove</string>
+    <string name="remove_participant_confirmation_cancel">Cancel</string>
 </resources>

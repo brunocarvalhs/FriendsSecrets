@@ -30,4 +30,8 @@
     <string name="leave_group">그룹 나가기</string>
     <string name="share_group_message">🎁 당신은 시크릿 산타 그룹에 초대되었습니다: %1$s!\n\n📝 설명: %2$s\n🔑 그룹 코드: %3$s\n\n앱을 다운로드하고 지금 참여하세요!</string>
     <string name="share_group_title">코드 공유</string>
+    <string name="remove_participant_confirmation_title">참가자 삭제</string>
+    <string name="remove_participant_confirmation_message">%1$s님을 이 그룹에서 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</string>
+    <string name="remove_participant_confirmation_confirm">삭제</string>
+    <string name="remove_participant_confirmation_cancel">취소</string>
 </resources>

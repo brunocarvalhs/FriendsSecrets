@@ -30,4 +30,8 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="remove_participant_confirmation_title">Remover participante</string>
+    <string name="remove_participant_confirmation_message">Remover %1$s deste grupo? Essa ação não pode ser desfeita.</string>
+    <string name="remove_participant_confirmation_confirm">Remover</string>
+    <string name="remove_participant_confirmation_cancel">Cancelar</string>
 </resources>
