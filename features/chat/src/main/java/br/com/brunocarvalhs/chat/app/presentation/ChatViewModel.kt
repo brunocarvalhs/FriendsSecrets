@@ -11,6 +11,7 @@ import br.com.brunocarvalhs.chat.app.domain.usecase.ClearMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.GetMessagesUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.IdentifyUserUseCase
 import br.com.brunocarvalhs.chat.app.domain.usecase.SendMessageUseCase
+import br.com.brunocarvalhs.chat.app.domain.usecase.ToggleMessageReactionUseCase
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.domain.model.MessageModel
@@ -42,6 +43,7 @@ internal class ChatViewModel @Inject constructor(
     private val sendMessageUseCase: SendMessageUseCase,
     private val clearMessagesUseCase: ClearMessagesUseCase,
     private val identifyUserUseCase: IdentifyUserUseCase,
+    private val toggleMessageReactionUseCase: ToggleMessageReactionUseCase,
     private val deviceService: DeviceService,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
@@ -117,6 +119,28 @@ internal class ChatViewModel @Inject constructor(
             is ChatIntent.IdentifyUser -> identifyUser(intent.name)
             is ChatIntent.DismissIdentification -> _uiState.update { it.copy(showIdentificationModal = false) }
             is ChatIntent.ClearChat -> {}
+            is ChatIntent.ToggleReaction -> toggleReaction(intent.messageId, intent.emoji)
+        }
+    }
+
+    @AddTrace(name = "ChatViewModel.toggleReaction", enabled = true)
+    private fun toggleReaction(messageId: String, emoji: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "toggle_message_reaction",
+                AnalyticsParam.PARAM to emoji
+            )
+        )
+        val message = _uiState.value.messages.find { it.id == messageId } ?: return
+        viewModelScope.launch {
+            toggleMessageReactionUseCase(
+                groupId = _uiState.value.groupModel.id,
+                messageId = messageId,
+                deviceId = deviceId,
+                currentReactions = message.reactions,
+                emoji = emoji
+            )
         }
     }
 
@@ -266,7 +290,8 @@ internal class ChatViewModel @Inject constructor(
             senderId = senderId,
             senderName = displayName,
             timestamp = timestamp,
-            status = status
+            status = status,
+            reactions = reactions
         )
     }
 }

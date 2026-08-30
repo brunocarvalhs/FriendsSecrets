@@ -7,4 +7,5 @@ internal sealed class ChatIntent {
     object ClearChat : ChatIntent()
     data class IdentifyUser(val name: String) : ChatIntent()
     object DismissIdentification : ChatIntent()
+    data class ToggleReaction(val messageId: String, val emoji: String) : ChatIntent()
 }
