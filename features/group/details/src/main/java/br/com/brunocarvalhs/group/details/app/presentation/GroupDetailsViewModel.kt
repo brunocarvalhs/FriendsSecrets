@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareWishlistUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val shareWishlistUseCase: ShareWishlistUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
@@ -43,6 +45,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        GroupDetailsIntent.ShareWishlist -> shareWishlist()
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
@@ -99,6 +102,23 @@ internal class GroupDetailsViewModel @Inject constructor(
         )
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.shareWishlist", enabled = true)
+    private fun shareWishlist() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "share_wishlist"
+            )
+        )
+        viewModelScope.launch {
+            shareWishlistUseCase(group = _uiState.value.group)
+                .onFailure { error ->
+                    Timber.e(error, "Error sharing wishlist")
+                    _uiState.update { it.copy(error = "Adicione itens à sua lista antes de compartilhar") }
+                }
         }
     }
 
