@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.RegisterGroupPushTokenUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +32,24 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val registerPushTokenUseCase: RegisterGroupPushTokenUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
     private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
+
+    init {
+        registerPushToken()
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.registerPushToken", enabled = true)
+    private fun registerPushToken() {
+        viewModelScope.launch {
+            registerPushTokenUseCase(_uiState.value.group.id)
+                .onFailure { error -> Timber.w(error, "Could not register push token for group") }
+        }
+    }
 
     @AddTrace(name = "GroupDetailsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: GroupDetailsIntent) = when (intent) {
