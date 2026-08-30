@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareGroupInviteCardUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val shareInviteCardUseCase: ShareGroupInviteCardUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
@@ -43,6 +45,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        GroupDetailsIntent.ShareInviteCard -> shareInviteCard()
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
@@ -99,6 +102,23 @@ internal class GroupDetailsViewModel @Inject constructor(
         )
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.shareInviteCard", enabled = true)
+    private fun shareInviteCard() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "share_group_invite_card"
+            )
+        )
+        viewModelScope.launch {
+            shareInviteCardUseCase(_uiState.value.group)
+                .onFailure { error ->
+                    Timber.e(error, "Error sharing group invite card")
+                    _uiState.update { it.copy(error = "Erro ao gerar o cartão de convite") }
+                }
         }
     }
 

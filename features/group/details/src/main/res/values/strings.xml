@@ -30,4 +30,5 @@
     <string name="leave_group">Leave group</string>
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
+    <string name="invite_card">Card</string>
 </resources>
