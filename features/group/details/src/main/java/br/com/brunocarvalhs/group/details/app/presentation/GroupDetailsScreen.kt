@@ -145,7 +145,6 @@ private fun GroupDetailsContent(
     maxPrice: Double?,
     giftType: String?,
     members: List<UserModel>,
-    currentDeviceId: String = "",
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onChat: () -> Unit,
@@ -154,6 +153,7 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
 ) {
     Scaffold(
