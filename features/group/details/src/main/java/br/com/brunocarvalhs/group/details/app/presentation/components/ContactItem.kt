@@ -20,6 +20,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +51,7 @@ internal fun ContactItem(
     isSelected: Boolean = false,
     isLikedExpanded: Boolean = false,
     paddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+    onSuggestGifts: (() -> Unit)? = null,
     action: @Composable ((HashMap<String?, String?>, Boolean) -> Unit)? = null,
 ) {
     val filteredLikes = remember(likes) {
@@ -161,15 +163,26 @@ internal fun ContactItem(
 
             if (filteredLikes.isNotEmpty()) {
                 AnimatedVisibility(visible = isLiked) {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, bottom = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(filteredLikes) { like ->
-                            if (like.isNotBlank()) {
-                                AssistChip(onClick = {}, label = { Text(like) })
+                    Column {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, bottom = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(filteredLikes) { like ->
+                                if (like.isNotBlank()) {
+                                    AssistChip(onClick = {}, label = { Text(like) })
+                                }
+                            }
+                        }
+
+                        if (onSuggestGifts != null) {
+                            TextButton(
+                                onClick = onSuggestGifts,
+                                modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+                            ) {
+                                Text(stringResource(R.string.suggest_gifts_action))
                             }
                         }
                     }

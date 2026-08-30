@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -55,6 +58,7 @@ import br.com.brunocarvalhs.core.domain.extensions.toFormattedDate
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
+import br.com.brunocarvalhs.group.details.app.domain.model.GiftSuggestion
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
@@ -108,7 +112,59 @@ internal fun GroupDetailsScreen(
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
-        onAddMembers = { onAddMembers.invoke(group) }
+        onAddMembers = { onAddMembers.invoke(group) },
+        onSuggestGifts = { interests ->
+            viewModel.handleIntent(GroupDetailsIntent.SuggestGifts(interests))
+        }
+    )
+
+    if (uiState.isSuggestingGifts || uiState.giftSuggestions != null) {
+        GiftSuggestionsDialog(
+            isLoading = uiState.isSuggestingGifts,
+            suggestions = uiState.giftSuggestions.orEmpty(),
+            onDismiss = { viewModel.handleIntent(GroupDetailsIntent.DismissGiftSuggestions) }
+        )
+    }
+}
+
+@Composable
+private fun GiftSuggestionsDialog(
+    isLoading: Boolean,
+    suggestions: List<GiftSuggestion>,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.suggest_gifts_title)) },
+        text = {
+            if (isLoading) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                }
+            } else if (suggestions.isEmpty()) {
+                Text(stringResource(R.string.suggest_gifts_empty_state))
+            } else {
+                Column {
+                    suggestions.forEach { suggestion ->
+                        Text(
+                            text = suggestion.title,
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                        Text(
+                            text = suggestion.reason,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.suggest_gifts_close_action))
+            }
+        }
     )
 }
 
@@ -135,6 +191,7 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    onSuggestGifts: (List<String>) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -199,7 +256,9 @@ private fun GroupDetailsContent(
             items(members) { member ->
                 MemberItem(
                     participant = member.name,
+                    likes = member.likes,
                     isAdministrator = isOwner,
+                    onSuggestGifts = { onSuggestGifts(member.likes) },
                 )
             }
 

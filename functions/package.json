@@ -1,0 +1,25 @@
+{
+  "name": "friendssecrets-functions",
+  "description": "Cloud Functions backing the Friends Secrets app",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^5.1.1",
+    "zod": "^4.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

@@ -19,11 +19,14 @@ internal fun MemberItem(
     isAdministrator: Boolean = false,
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
+    onSuggestGifts: (() -> Unit)? = null,
 ) {
     val hasLikes = likes.any { it.isNotBlank() }
 
     ContactItem(
         name = participant,
+        likes = likes,
+        onSuggestGifts = onSuggestGifts,
         action = { _, isLiked ->
 
             if (hasLikes) {

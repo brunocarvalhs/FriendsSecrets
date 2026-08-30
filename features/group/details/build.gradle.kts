@@ -116,4 +116,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.perf)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.functions)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

@@ -30,4 +30,8 @@
     <string name="leave_group">Leave group</string>
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
+    <string name="suggest_gifts_action">💡 AI gift ideas</string>
+    <string name="suggest_gifts_title">Gift ideas</string>
+    <string name="suggest_gifts_empty_state">No suggestions right now. Try again later.</string>
+    <string name="suggest_gifts_close_action">Close</string>
 </resources>

@@ -13,6 +13,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.SuggestGiftsUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val suggestGiftsUseCase: SuggestGiftsUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
@@ -43,6 +45,8 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        is GroupDetailsIntent.SuggestGifts -> suggestGifts(intent.interests)
+        GroupDetailsIntent.DismissGiftSuggestions -> dismissGiftSuggestions()
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
@@ -100,6 +104,37 @@ internal class GroupDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
         }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.suggestGifts", enabled = true)
+    private fun suggestGifts(interests: List<String>) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "suggest_gifts"
+            )
+        )
+        val group = _uiState.value.group
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSuggestingGifts = true, giftSuggestions = null) }
+            suggestGiftsUseCase(interests, group.minPrice, group.maxPrice, group.type)
+                .onSuccess { suggestions ->
+                    _uiState.update { it.copy(isSuggestingGifts = false, giftSuggestions = suggestions) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error suggesting gifts")
+                    _uiState.update {
+                        it.copy(
+                            isSuggestingGifts = false,
+                            error = "Erro ao gerar sugestões de presente"
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun dismissGiftSuggestions() {
+        _uiState.update { it.copy(giftSuggestions = null, isSuggestingGifts = false) }
     }
 
     @AddTrace(name = "GroupDetailsViewModel.readGroup", enabled = true)

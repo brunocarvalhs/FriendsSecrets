@@ -30,4 +30,8 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="suggest_gifts_action">💡 Ideias de presente com IA</string>
+    <string name="suggest_gifts_title">Ideias de presente</string>
+    <string name="suggest_gifts_empty_state">Nenhuma sugestão no momento. Tente novamente mais tarde.</string>
+    <string name="suggest_gifts_close_action">Fechar</string>
 </resources>
