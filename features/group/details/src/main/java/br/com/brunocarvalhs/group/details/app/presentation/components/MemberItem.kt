@@ -24,6 +24,7 @@ internal fun MemberItem(
 
     ContactItem(
         name = participant,
+        likes = likes,
         action = { _, isLiked ->
 
             if (hasLikes) {
