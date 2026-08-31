@@ -4,6 +4,7 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 
 internal data class GroupDetailsUiState(
     val group: GroupModel,
+    val currentDeviceId: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,
 )

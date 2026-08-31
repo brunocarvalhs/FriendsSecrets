@@ -60,7 +60,7 @@ class GroupDetailsDTOTest {
             maxPrice = 50.0,
             type = "Gift",
             photo = "base64String",
-            members = listOf(UserModel(id = "user1", name = "Bruno")),
+            members = listOf(UserModel(id = "user1", name = "Bruno", likes = listOf("Coding"))),
             draws = mapOf("user1" to "user2"),
             ownerId = "owner123",
             isOwner = true,
@@ -81,6 +81,7 @@ class GroupDetailsDTOTest {
         assertEquals(model.type, dto.type)
         assertEquals(model.photo, dto.photoBase64)
         assertEquals(model.members.size, dto.members.size)
+        assertEquals(model.members.first().likes, dto.members.first().likes)
         assertEquals(model.draws, dto.draws)
         assertEquals(model.ownerId, dto.ownerId)
         assertEquals(model.isOwner, dto.isOwner)

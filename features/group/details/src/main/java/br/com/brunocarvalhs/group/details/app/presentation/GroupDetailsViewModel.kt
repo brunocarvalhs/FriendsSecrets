@@ -9,11 +9,14 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.navigation.routers.GroupDetailsGraph
+import br.com.brunocarvalhs.deviceid.DeviceService
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.RemoveMemberUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareWishlistUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.UpdateMemberLikesUseCase
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,11 +36,18 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
     private val removeMemberUseCase: RemoveMemberUseCase,
+    private val shareWishlistUseCase: ShareWishlistUseCase,
+    private val updateMemberLikesUseCase: UpdateMemberLikesUseCase,
+    private val deviceService: DeviceService,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
     private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
+
+    init {
+        loadCurrentDeviceId()
+    }
 
     @AddTrace(name = "GroupDetailsViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: GroupDetailsIntent) = when (intent) {
@@ -46,6 +56,35 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
         is GroupDetailsIntent.RemoveMember -> removeMember(intent.memberId)
+        GroupDetailsIntent.ShareWishlist -> shareWishlist()
+        is GroupDetailsIntent.UpdateLikes -> updateLikes(intent.likes)
+    }
+
+    private fun loadCurrentDeviceId() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(currentDeviceId = deviceService.getDeviceId()) }
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.updateLikes", enabled = true)
+    private fun updateLikes(likes: List<String>) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "update_member_likes"
+            )
+        )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            updateMemberLikesUseCase(_uiState.value.group, likes)
+                .onSuccess { group ->
+                    _uiState.update { it.copy(isLoading = false, group = group) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error updating member likes")
+                    _uiState.update { it.copy(isLoading = false, error = "Erro ao salvar interesses") }
+                }
+        }
     }
 
     @AddTrace(name = "GroupDetailsViewModel.deleteGroup", enabled = true)
@@ -122,6 +161,23 @@ internal class GroupDetailsViewModel @Inject constructor(
                 .onFailure { error ->
                     Timber.e(error, "Error removing member")
                     _uiState.update { it.copy(isLoading = false, error = "Erro ao remover participante") }
+                }
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.shareWishlist", enabled = true)
+    private fun shareWishlist() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "share_wishlist"
+            )
+        )
+        viewModelScope.launch {
+            shareWishlistUseCase(group = _uiState.value.group)
+                .onFailure { error ->
+                    Timber.e(error, "Error sharing wishlist")
+                    _uiState.update { it.copy(error = "Adicione itens à sua lista antes de compartilhar") }
                 }
         }
     }
