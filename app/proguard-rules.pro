@@ -1,16 +1,7 @@
-# Manter classes e métodos do Android
--keep class android.** { *; }
--keep class androidx.** { *; }
-
-# Manter classes do ciclo de vida e ViewModel
--keep class androidx.lifecycle.** { *; }
--keepclassmembers class androidx.lifecycle.** { *; }
--keep class androidx.activity.** { *; }
-
-# Manter classes do Jetpack Compose
--keep class androidx.compose.** { *; }
--keep class androidx.ui.** { *; }
--keep class androidx.material3.** { *; }
+# AndroidX / Compose / platform classes are NOT kept here: every AndroidX and
+# Compose artifact ships its own consumer-rules.pro that AGP merges
+# automatically, so a blanket app-level -keep only bloats the APK and blocks
+# R8 from shrinking/obfuscating the largest chunk of the app's bytecode.
 
 # Manter classes do Firebase
 -keep class com.google.firebase.** { *; }
@@ -18,8 +9,7 @@
 
 # Manter classes do Gson
 -keep class com.google.gson.** { *; }
--keepattributes Signature
--keepattributes *Annotation*
+-keepattributes Signature,*Annotation*,InnerClasses
 
 # Manter classes do Timber
 -keep class com.jakewharton.timber.** { *; }
@@ -27,27 +17,14 @@
 # Manter classes do Lottie
 -keep class com.airbnb.lottie.** { *; }
 
-# Manter classes do Generative AI (caso tenha anotações específicas)
--keep class com.generativeai.** { *; }
-
-# Manter classes de navegação
--keep class androidx.navigation.** { *; }
-
-# Manter classes de animação
--keep class androidx.compose.animation.** { *; }
-
 # Regras de testes
 -keep class org.junit.** { *; }
 -keep class androidx.test.** { *; }
-
-# Manter anotações de Retrofit
--keepattributes *Annotation*
 
 # Manter anotações de Gson
 -keep @com.google.gson.annotations.SerializedName class * { *; }
 
 # Kotlin Serialization
--keepattributes *Annotation*, InnerClasses
 -keep,allowobfuscation,allowshrinking class * {
     @kotlinx.serialization.Serializable *;
 }
@@ -83,10 +60,14 @@
     <init>(...);
 }
 
-# Segurança adicional: Ofuscação agressiva para o resto do app
+# Segurança adicional: ofuscação agressiva para o resto do app
 #-repackageclasses '' # Commeting this out as it often causes issues with DI and navigation
 -allowaccessmodification
--overloadaggressively
+
+# Mantém o número da linha para stack traces legíveis via mapping.txt, mas
+# troca o nome do arquivo-fonte real por "SourceFile" no APK final.
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
 # Para facilitar o diagnóstico
 -printmapping mapping.txt
