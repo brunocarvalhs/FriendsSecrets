@@ -21,4 +21,13 @@ class ChatRepositoryImpl @Inject constructor(
     override suspend fun clearMessages(groupId: String): Result<Unit> {
         return chatService.clearMessages(groupId)
     }
+
+    override suspend fun setReaction(
+        groupId: String,
+        messageId: String,
+        deviceId: String,
+        emoji: String?
+    ): Result<Unit> {
+        return chatService.setReaction(groupId, messageId, deviceId, emoji)
+    }
 }

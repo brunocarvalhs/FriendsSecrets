@@ -3,7 +3,9 @@ package br.com.brunocarvalhs.group.details.commons.di
 import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.group.details.GroupDetailsInitializerImpl
 import br.com.brunocarvalhs.group.details.app.data.repository.GroupDetailsRepositoryImpl
+import br.com.brunocarvalhs.group.details.app.data.services.AlarmManagerGroupReminderService
 import br.com.brunocarvalhs.group.details.app.domain.repository.GroupDetailsRepository
+import br.com.brunocarvalhs.group.details.app.domain.services.GroupReminderService
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,4 +24,9 @@ abstract class GroupDetailsModule {
     internal abstract fun bindGroupDetailsRepository(
         impl: GroupDetailsRepositoryImpl
     ): GroupDetailsRepository
+
+    @Binds
+    internal abstract fun bindGroupReminderService(
+        impl: AlarmManagerGroupReminderService
+    ): GroupReminderService
 }

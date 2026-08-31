@@ -7,7 +7,8 @@ data class MessageModel(
     val senderId: String = "",
     val senderName: String = "",
     val timestamp: Long = System.currentTimeMillis(),
-    val status: MessageStatus = MessageStatus.SENT
+    val status: MessageStatus = MessageStatus.SENT,
+    val reactions: Map<String, String> = emptyMap()
 ) {
     enum class MessageStatus {
         SENDING, SENT, ERROR

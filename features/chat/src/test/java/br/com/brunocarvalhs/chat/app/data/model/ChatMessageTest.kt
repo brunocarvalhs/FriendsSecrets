@@ -51,5 +51,18 @@ class ChatMessageTest {
         assertEquals("", message.text)
         assertEquals(MessageModel.MessageStatus.SENT, message.status)
         assertEquals(false, message.isFromMe)
+        assertEquals(emptyMap<String, String>(), message.reactions)
+    }
+
+    @Test
+    fun `constructor should set reactions`() {
+        // Given
+        val reactions = mapOf("device-1" to "👍")
+
+        // When
+        val message = ChatMessage(reactions = reactions)
+
+        // Then
+        assertEquals(reactions, message.reactions)
     }
 }

@@ -31,4 +31,24 @@
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
     <string name="qr_code">QR Code</string>
+    <string name="reminder_enable_action">Remind me on the draw date</string>
+    <string name="reminder_disable_action">Turn off reminder</string>
+    <string name="reminder_notification_channel_name">Secret Santa reminders</string>
+    <string name="reminder_notification_title">It’s Secret Santa day! 🎁</string>
+    <string name="reminder_notification_message">Today is the big day for %1$s. Don’t forget your gift!</string>
+    <string name="remove_participant_confirmation_title">Remove participant</string>
+    <string name="remove_participant_confirmation_message">Remove %1$s from this group? This cannot be undone.</string>
+    <string name="remove_participant_confirmation_confirm">Remove</string>
+    <string name="remove_participant_confirmation_cancel">Cancel</string>
+    <string name="share_wishlist_action">Share my wishlist</string>
+    <string name="share_wishlist_title">Share Wishlist</string>
+    <string name="share_wishlist_message">🎁 Here’s my wishlist for the Secret Santa group %1$s:\n\n%2$s</string>
+    <string name="edit_likes_title">Your wishlist</string>
+    <string name="edit_likes_description">Add things you like to help your Secret Santa pick the perfect gift.</string>
+    <string name="edit_likes_add_hint">E.g. Books, Games…</string>
+    <string name="edit_likes_add_action">Add</string>
+    <string name="edit_likes_save_action">Save</string>
+    <string name="edit_likes_cancel_action">Cancel</string>
+    <string name="edit_likes_remove_action">Remove %1$s</string>
+    <string name="edit_likes_empty_state">No interests added yet</string>
 </resources>

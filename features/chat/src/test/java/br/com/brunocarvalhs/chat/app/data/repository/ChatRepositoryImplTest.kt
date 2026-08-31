@@ -62,4 +62,20 @@ class ChatRepositoryImplTest {
         assertTrue(result === expectedFlow)
         coVerify { chatService.getMessages(groupId) }
     }
+
+    @Test
+    fun `setReaction should call service and return success`() = runTest {
+        // Given
+        val groupId = "group1"
+        val messageId = "msg1"
+        val deviceId = "device1"
+        coEvery { chatService.setReaction(groupId, messageId, deviceId, "👍") } returns Result.success(Unit)
+
+        // When
+        val result = repository.setReaction(groupId, messageId, deviceId, "👍")
+
+        // Then
+        assertTrue(result.isSuccess)
+        coVerify { chatService.setReaction(groupId, messageId, deviceId, "👍") }
+    }
 }

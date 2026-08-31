@@ -7,4 +7,10 @@ interface ChatService {
     fun getMessages(groupId: String): Flow<List<MessageModel>>
     suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit>
     suspend fun clearMessages(groupId: String): Result<Unit>
+    suspend fun setReaction(
+        groupId: String,
+        messageId: String,
+        deviceId: String,
+        emoji: String?
+    ): Result<Unit>
 }
