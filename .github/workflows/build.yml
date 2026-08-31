@@ -5,7 +5,44 @@ on:
     branches: [ develop ]
 
 jobs:
+  version:
+    runs-on: ubuntu-24.04
+    name: 🔢 Version Bump
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.bump.outputs.sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version, commit and push
+        id: bump
+        run: |
+          BOT_NAME=$(yq '.git.bot_name' .github/pipeline-config.yaml)
+          BOT_EMAIL=$(yq '.git.bot_email' .github/pipeline-config.yaml)
+          GRADLE_FILE=$(yq '.paths.gradle_file' .github/pipeline-config.yaml)
+          CHANGELOG_FILE=$(yq '.paths.changelog' .github/pipeline-config.yaml)
+          git config user.name "$BOT_NAME"
+          git config user.email "$BOT_EMAIL"
+
+          chmod +x .github/scripts/version.sh
+          new_version=$(.github/scripts/version.sh)
+
+          if [ -n "$new_version" ]; then
+            git add "$GRADLE_FILE" "$CHANGELOG_FILE"
+            # [skip ci] on the bump commit itself avoids re-triggering this
+            # workflow; the current run keeps going with the bumped files.
+            git commit -m "chore: bump version to $new_version [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
   prepare:
+    needs: [version]
     runs-on: ubuntu-24.04
     outputs:
       jdk_version: ${{ steps.config.outputs.jdk_version }}
@@ -20,6 +57,8 @@ jobs:
       deploy_enabled: ${{ steps.config.outputs.deploy_enabled }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
       - id: config
         run: |
           echo "jdk_version=$(yq '.build."java-version"' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
@@ -34,13 +73,15 @@ jobs:
           echo "deploy_enabled=$(yq '.release.firebase.enabled // false' .github/pipeline-config.yaml)" >> $GITHUB_OUTPUT
 
   unit-tests:
-    needs: [prepare]
+    needs: [version, prepare]
     if: needs.prepare.outputs.ut_enabled == 'true'
     runs-on: ubuntu-24.04
     name: 🧪 Unit Testing
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
@@ -59,13 +100,15 @@ jobs:
           GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   lint-check:
-    needs: [prepare]
+    needs: [version, prepare]
     if: needs.prepare.outputs.lint_enabled == 'true'
     runs-on: ubuntu-24.04
     name: 🧹 Code Style (Lint)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
@@ -84,13 +127,15 @@ jobs:
           GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   detekt-check:
-    needs: [prepare]
+    needs: [version, prepare]
     if: needs.prepare.outputs.detekt_enabled == 'true'
     runs-on: ubuntu-24.04
     name: 🔍 Static Analysis (Detekt)
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
@@ -109,10 +154,10 @@ jobs:
           GRADLE_OPTS: ${{ needs.prepare.outputs.gradle_opts }}
 
   build:
-    needs: [prepare, unit-tests, lint-check, detekt-check]
+    needs: [version, prepare, unit-tests, lint-check, detekt-check]
     if: |
-      always() && 
-      needs.prepare.outputs.build_enabled == 'true' && 
+      always() &&
+      needs.prepare.outputs.build_enabled == 'true' &&
       (needs.unit-tests.result == 'success' || needs.unit-tests.result == 'skipped') &&
       (needs.lint-check.result == 'success' || needs.lint-check.result == 'skipped') &&
       (needs.detekt-check.result == 'success' || needs.detekt-check.result == 'skipped')
@@ -124,6 +169,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
@@ -150,7 +197,7 @@ jobs:
           path: ${{ matrix.variant.path }}
 
   deploy-firebase:
-    needs: [prepare, build]
+    needs: [version, prepare, build]
     if: needs.prepare.outputs.deploy_enabled == 'true'
     strategy:
       fail-fast: false
@@ -161,6 +208,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.sha }}
 
       - name: Check Deployment and Get Label
         id: firebase_config
