@@ -14,5 +14,6 @@ data class ChatMessage(
     val timestamp: Long = System.currentTimeMillis(),
     val senderName: String = "",
     val senderId: String = "",
-    val status: MessageModel.MessageStatus = MessageModel.MessageStatus.SENT
+    val status: MessageModel.MessageStatus = MessageModel.MessageStatus.SENT,
+    val reactions: Map<String, String> = emptyMap()
 )
