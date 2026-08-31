@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">Groepsupdates</string>
+    <string name="group_sync_draw_completed_title">🎉 Loting voltooid!</string>
+    <string name="group_sync_draw_completed_message">De loting voor %1$s is klaar. Open de app om je Geheime Lootjes te zien!</string>
+    <string name="group_sync_new_message_title">💬 Nieuw bericht</string>
+    <string name="group_sync_new_message_message">Je hebt een nieuw bericht in %1$s</string>
+</resources>

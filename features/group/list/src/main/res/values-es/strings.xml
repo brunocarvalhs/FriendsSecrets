@@ -45,7 +45,7 @@
     <string name="group_list_filter_not_drawn">No sorteado</string>
 
     <!-- Maintenance -->
-    <string name="group_card_members_count">%1$d pessoas</string>
+    <string name="group_card_members_count">%1$d personas</string>
     <string name="maintenance_title">Funcionalidad no disponible</string>
     <string name="maintenance_message">Lo sentimos, esta funcionalidad está en mantenimiento para mejoras. Por favor, inténtelo de nuevo más tarde.</string>
 </resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="app_name">Sekretny Mikołaj</string>
+    <string name="ops">Ups!</string>
+    <string name="cancel">Anuluj</string>
+    <string name="title_settings">Ustawienia</string>
+
+    <!-- Home/Group List -->
+    <string name="home_title">Cześć</string>
+    <string name="home_action_create_group">Utwórz nową grupę</string>
+    <string name="search_groups">Szukaj grup...</string>
+    <string name="new_group">Nowa grupa</string>
+    <string name="join_group">Dołącz do grupy</string>
+    <string name="more_options">Więcej opcji</string>
+
+    <!-- Home Menu Items -->
+    <string name="home_drop_menu_item_text_profile">Profil</string>
+    <string name="home_drop_menu_item_text_join_a_group">Dołącz do grupy</string>
+    <string name="home_drop_menu_item_text_settings">Ustawienia</string>
+    <string name="home_drop_menu_item_text_logout">Wyloguj</string>
+
+    <!-- Empty State -->
+    <string name="empty_group_title">Ojej!</string>
+    <string name="empty_group_message">Nie znaleziono grupy</string>
+    <string name="empty_group_component_button_create_grup">Utwórz grupę</string>
+    <string name="empty_group_component_button_enter_grup">Dołącz do grupy</string>
+
+    <!-- Group Join/Enter -->
+    <string name="group_to_enter_title">Wpisz kod grupy</string>
+    <string name="group_to_enter_button_text">Zatwierdź</string>
+    <string name="group_to_enter_button_enter_to_group">Wejdź do grupy</string>
+    <string name="group_to_enter_textfield_token_to_grup">Token grupy</string>
+
+    <!-- Error State -->
+    <string name="error_component_button_try_again">Spróbuj ponownie</string>
+    <string name="error_component_button_to_home">Przejdź do strony głównej</string>
+
+    <!-- Accessibility/Descriptions -->
+    <string name="contact_photo_description">Zdjęcie kontaktu %1$s</string>
+    <string name="group_list_filter_active">Aktywne</string>
+    <string name="group_list_filter_archived">Zarchiwizowane</string>
+    <string name="group_list_filter_drawn">Wylosowane</string>
+    <string name="group_list_filter_not_drawn">Niewylosowane</string>
+    <string name="group_card_members_count">%1$d osób</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">Funkcja niedostępna</string>
+    <string name="maintenance_message">Przepraszamy, ta funkcja jest w trakcie konserwacji. Spróbuj ponownie później.</string>
+</resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="app_name">Père Noël secret</string>
+    <string name="ops">Oups !</string>
+    <string name="cancel">Annuler</string>
+    <string name="title_settings">Paramètres</string>
+
+    <!-- Home/Group List -->
+    <string name="home_title">Salut</string>
+    <string name="home_action_create_group">Créer un nouveau groupe</string>
+    <string name="search_groups">Rechercher des groupes...</string>
+    <string name="new_group">Nouveau groupe</string>
+    <string name="join_group">Rejoindre un groupe</string>
+    <string name="more_options">Plus d\'options</string>
+
+    <!-- Home Menu Items -->
+    <string name="home_drop_menu_item_text_profile">Profil</string>
+    <string name="home_drop_menu_item_text_join_a_group">Rejoindre un groupe</string>
+    <string name="home_drop_menu_item_text_settings">Paramètres</string>
+    <string name="home_drop_menu_item_text_logout">Déconnexion</string>
+
+    <!-- Empty State -->
+    <string name="empty_group_title">Oh non !</string>
+    <string name="empty_group_message">Aucun groupe trouvé</string>
+    <string name="empty_group_component_button_create_grup">Créer un groupe</string>
+    <string name="empty_group_component_button_enter_grup">Rejoindre un groupe</string>
+
+    <!-- Group Join/Enter -->
+    <string name="group_to_enter_title">Entrez le code du groupe</string>
+    <string name="group_to_enter_button_text">Valider</string>
+    <string name="group_to_enter_button_enter_to_group">Rejoindre le groupe</string>
+    <string name="group_to_enter_textfield_token_to_grup">Jeton du groupe</string>
+
+    <!-- Error State -->
+    <string name="error_component_button_try_again">Réessayer</string>
+    <string name="error_component_button_to_home">Aller à l\'accueil</string>
+
+    <!-- Accessibility/Descriptions -->
+    <string name="contact_photo_description">Photo de contact de %1$s</string>
+    <string name="group_list_filter_active">Actif</string>
+    <string name="group_list_filter_archived">Archivé</string>
+    <string name="group_list_filter_drawn">Tiré au sort</string>
+    <string name="group_list_filter_not_drawn">Non tiré au sort</string>
+    <string name="group_card_members_count">%1$d personnes</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">Fonctionnalité indisponible</string>
+    <string name="maintenance_message">Désolé, cette fonctionnalité est en maintenance pour des améliorations. Veuillez réessayer plus tard.</string>
+</resources>

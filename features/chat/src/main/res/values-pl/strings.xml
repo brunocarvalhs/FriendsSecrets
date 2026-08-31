@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Wstecz</string>
+    <string name="identify">Zidentyfikuj się</string>
+    <string name="identify_message">Nie znajdujesz się na liście członków tej grupy. Jak chcesz być nazywany na czacie?</string>
+    <string name="identify_name">Twoje imię lub pseudonim</string>
+    <string name="identify_save">Zapisz</string>
+    <string name="identify_cancela">Anuluj</string>
+    <string name="chat_input">Napisz wiadomość...</string>
+    <string name="chat_button_send">Wyślij</string>
+    <string name="react_to_message">Zareaguj na wiadomość</string>
+</resources>

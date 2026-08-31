@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="app_name">Geheime Lootjes</string>
+    <string name="ops">Oeps!</string>
+    <string name="cancel">Annuleren</string>
+    <string name="title_settings">Instellingen</string>
+
+    <!-- Home/Group List -->
+    <string name="home_title">Hoi</string>
+    <string name="home_action_create_group">Nieuwe groep maken</string>
+    <string name="search_groups">Groepen zoeken...</string>
+    <string name="new_group">Nieuwe groep</string>
+    <string name="join_group">Deelnemen aan een groep</string>
+    <string name="more_options">Meer opties</string>
+
+    <!-- Home Menu Items -->
+    <string name="home_drop_menu_item_text_profile">Profiel</string>
+    <string name="home_drop_menu_item_text_join_a_group">Deelnemen aan een groep</string>
+    <string name="home_drop_menu_item_text_settings">Instellingen</string>
+    <string name="home_drop_menu_item_text_logout">Uitloggen</string>
+
+    <!-- Empty State -->
+    <string name="empty_group_title">Oeps!</string>
+    <string name="empty_group_message">Geen groep gevonden</string>
+    <string name="empty_group_component_button_create_grup">Groep maken</string>
+    <string name="empty_group_component_button_enter_grup">Groep binnengaan</string>
+
+    <!-- Group Join/Enter -->
+    <string name="group_to_enter_title">Voer de groepscode in</string>
+    <string name="group_to_enter_button_text">Valideren</string>
+    <string name="group_to_enter_button_enter_to_group">Groep binnengaan</string>
+    <string name="group_to_enter_textfield_token_to_grup">Groepstoken</string>
+
+    <!-- Error State -->
+    <string name="error_component_button_try_again">Opnieuw proberen</string>
+    <string name="error_component_button_to_home">Naar home</string>
+
+    <!-- Accessibility/Descriptions -->
+    <string name="contact_photo_description">Contactfoto van %1$s</string>
+    <string name="group_list_filter_active">Actief</string>
+    <string name="group_list_filter_archived">Gearchiveerd</string>
+    <string name="group_list_filter_drawn">Geloot</string>
+    <string name="group_list_filter_not_drawn">Niet geloot</string>
+    <string name="group_card_members_count">%1$d personen</string>
+
+    <!-- Maintenance -->
+    <string name="maintenance_title">Functie niet beschikbaar</string>
+    <string name="maintenance_message">Sorry, deze functie is in onderhoud voor verbeteringen. Probeer het later opnieuw.</string>
+</resources>
