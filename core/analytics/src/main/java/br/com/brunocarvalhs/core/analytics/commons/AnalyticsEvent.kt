@@ -30,4 +30,8 @@ enum class AnalyticsEvent(val value: String) {
     INVITE_SHARE_CODE("invite_share_code"),
     INVITE_SHARE_QR("invite_share_qr"),
     INVITE_SHARE_CARD("invite_share_card"),
+
+    // Chat engagement funnel
+    CHAT_OPENED("chat_opened"),
+    CHAT_MESSAGE_SENT("chat_message_sent"),
 }

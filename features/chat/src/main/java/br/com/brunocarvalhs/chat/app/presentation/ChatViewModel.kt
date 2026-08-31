@@ -69,6 +69,7 @@ internal class ChatViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "initializer"
             )
         )
+        analyticsService.logEvent(name = AnalyticsEvent.CHAT_OPENED)
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
 
@@ -220,7 +221,9 @@ internal class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             val result = sendMessageUseCase(_uiState.value.groupModel.id, newMessage)
 
-            if (result.isFailure) {
+            if (result.isSuccess) {
+                analyticsService.logEvent(name = AnalyticsEvent.CHAT_MESSAGE_SENT)
+            } else {
                 _uiState.update { state ->
                     state.copy(
                         messages = state.messages.map {

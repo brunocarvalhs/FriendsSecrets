@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsUserProperty
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.navigation.DeepLinkHandler
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupByTokenUseCase
@@ -96,6 +97,10 @@ internal class GroupListViewModel @Inject constructor(
                     analyticsService.logEvent(
                         name = AnalyticsEvent.GROUP_JOIN_COMPLETED,
                         params = mapOf(AnalyticsParam.PARAM to token)
+                    )
+                    analyticsService.setUserProperty(
+                        AnalyticsUserProperty.HAS_JOINED_GROUP.value,
+                        "true"
                     )
                     fetchGroups()
                 }

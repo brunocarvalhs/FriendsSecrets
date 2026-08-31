@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsUserProperty
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
@@ -138,6 +139,10 @@ internal class FormsViewModel @Inject constructor(
                 analyticsService.logEvent(
                     name = AnalyticsEvent.GROUP_CREATE_COMPLETED,
                     params = mapOf(AnalyticsParam.PARAM to group.token)
+                )
+                analyticsService.setUserProperty(
+                    AnalyticsUserProperty.HAS_CREATED_GROUP.value,
+                    "true"
                 )
                 onFinish(group.token)
             }.onFailure { error(it.message) }
