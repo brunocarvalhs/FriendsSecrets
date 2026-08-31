@@ -31,4 +31,25 @@
     <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n¡Descarga la app y únete ahora!</string>
     <string name="share_group_title">Compartir código</string>
     <string name="invite_card">Tarjeta</string>
+    <string name="qr_code">Código QR</string>
+    <string name="reminder_enable_action">Recordarme en la fecha del sorteo</string>
+    <string name="reminder_disable_action">Desactivar recordatorio</string>
+    <string name="reminder_notification_channel_name">Recordatorios de Amigo Invisible</string>
+    <string name="reminder_notification_title">¡Hoy es el día del Amigo Invisible! 🎁</string>
+    <string name="reminder_notification_message">Hoy es el gran día de %1$s. ¡No olvides tu regalo!</string>
+    <string name="remove_participant_confirmation_title">Eliminar participante</string>
+    <string name="remove_participant_confirmation_message">¿Eliminar a %1$s de este grupo? Esta acción no se puede deshacer.</string>
+    <string name="remove_participant_confirmation_confirm">Eliminar</string>
+    <string name="remove_participant_confirmation_cancel">Cancelar</string>
+    <string name="share_wishlist_action">Compartir mi lista de deseos</string>
+    <string name="share_wishlist_title">Compartir Lista de Deseos</string>
+    <string name="share_wishlist_message">🎁 Aquí está mi lista de deseos para el Amigo Invisible %1$s:\n\n%2$s</string>
+    <string name="edit_likes_title">Tus intereses</string>
+    <string name="edit_likes_description">Añade cosas que te gustan para ayudar a tu amigo invisible a elegir el regalo perfecto.</string>
+    <string name="edit_likes_add_hint">Ej: Libros, Juegos…</string>
+    <string name="edit_likes_add_action">Añadir</string>
+    <string name="edit_likes_save_action">Guardar</string>
+    <string name="edit_likes_cancel_action">Cancelar</string>
+    <string name="edit_likes_remove_action">Eliminar %1$s</string>
+    <string name="edit_likes_empty_state">Aún no se agregaron intereses</string>
 </resources>

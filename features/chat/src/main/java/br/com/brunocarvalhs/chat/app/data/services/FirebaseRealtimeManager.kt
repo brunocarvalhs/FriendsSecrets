@@ -82,9 +82,28 @@ class FirebaseRealtimeManager @Inject constructor(
         database.getReference(PATH).child(groupId).removeValue().await()
     }
 
+    override suspend fun setReaction(
+        groupId: String,
+        messageId: String,
+        deviceId: String,
+        emoji: String?
+    ): Result<Unit> = runCatching {
+        val reference = database.getReference(PATH).child(groupId).child(messageId)
+            .child(KEY_REACTIONS).child(deviceId)
+
+        if (emoji.isNullOrBlank()) {
+            reference.removeValue().await()
+        } else {
+            reference.setValue(emoji).await()
+        }
+    }
+
     private fun Map<String, Any>.toMessageModel(key: String, groupId: String): MessageModel {
         val statusOrdinal = (this[KEY_STATUS] as? Long)?.toInt() ?: MessageStatus.SENT.ordinal
         val status = MessageStatus.entries.getOrElse(statusOrdinal) { MessageStatus.SENT }
+
+        @Suppress("UNCHECKED_CAST")
+        val reactions = (this[KEY_REACTIONS] as? Map<String, String>) ?: emptyMap()
 
         return MessageModel(
             id = key,
@@ -93,7 +112,8 @@ class FirebaseRealtimeManager @Inject constructor(
             senderId = this[KEY_SENDER_ID] as? String ?: EMPTY_STRING,
             senderName = this[KEY_SENDER_NAME] as? String ?: EMPTY_STRING,
             timestamp = (this[KEY_TIMESTAMP] as? Long) ?: System.currentTimeMillis(),
-            status = status
+            status = status,
+            reactions = reactions
         )
     }
 
@@ -104,6 +124,7 @@ class FirebaseRealtimeManager @Inject constructor(
         const val KEY_SENDER_NAME = "sn"
         const val KEY_TIMESTAMP = "ts"
         const val KEY_STATUS = "s"
+        const val KEY_REACTIONS = "r"
         const val LIMIT_TO_LAST = 20
         const val EMPTY_STRING = ""
     }
