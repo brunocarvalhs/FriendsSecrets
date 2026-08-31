@@ -33,8 +33,8 @@ internal class GiftSuggestionRepositoryImpl @Inject constructor(
         const val CALLABLE_NAME = "suggestGifts"
 
         internal fun parseSuggestions(data: Any?): List<GiftSuggestion> {
-            val map = data as? Map<*, *> ?: return emptyList()
-            val suggestions = map["suggestions"] as? List<*> ?: return emptyList()
+            val suggestions = (data as? Map<*, *>)?.get("suggestions") as? List<*>
+                ?: return emptyList()
 
             return suggestions.mapNotNull { entry ->
                 val fields = entry as? Map<*, *> ?: return@mapNotNull null
