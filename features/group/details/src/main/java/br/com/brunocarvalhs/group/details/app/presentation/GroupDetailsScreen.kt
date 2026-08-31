@@ -1,5 +1,7 @@
 package br.com.brunocarvalhs.group.details.app.presentation
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,8 @@ import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
@@ -66,7 +70,11 @@ import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
 import coil.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
@@ -81,6 +89,12 @@ internal fun GroupDetailsScreen(
     val group = uiState.group
     var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
     var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
+
+    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -118,6 +132,16 @@ internal fun GroupDetailsScreen(
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
         onAddMembers = { onAddMembers.invoke(group) },
+        isReminderEnabled = uiState.isReminderEnabled,
+        onToggleReminder = { enabled ->
+            if (enabled &&
+                notificationPermissionState != null &&
+                !notificationPermissionState.status.isGranted
+            ) {
+                notificationPermissionState.launchPermissionRequest()
+            }
+            viewModel.handleIntent(GroupDetailsIntent.ToggleReminder(enabled))
+        },
         onRemoveMember = { member -> memberPendingRemoval = member },
         onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
         onEditLikes = { member -> editingLikesMember = member }
@@ -183,6 +207,8 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    isReminderEnabled: Boolean = false,
+    onToggleReminder: (Boolean) -> Unit = {},
     onRemoveMember: (UserModel) -> Unit = {},
     onShareWishlist: () -> Unit = {},
     currentDeviceId: String = "",
@@ -229,7 +255,9 @@ private fun GroupDetailsContent(
                     drawDate = drawDate,
                     minPrice = minPrice,
                     maxPrice = maxPrice,
-                    giftType = giftType
+                    giftType = giftType,
+                    isReminderEnabled = isReminderEnabled,
+                    onToggleReminder = onToggleReminder
                 )
             }
 
@@ -414,18 +442,45 @@ private fun GroupDrawDetails(
     drawDate: String?,
     minPrice: Double?,
     maxPrice: Double?,
-    giftType: String?
+    giftType: String?,
+    isReminderEnabled: Boolean = false,
+    onToggleReminder: (Boolean) -> Unit = {},
 ) {
     val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
     if (hasDrawDetails) {
         Column {
             SectionHeader(title = stringResource(R.string.draw_details))
             drawDate?.let {
-                SettingItem(
-                    Icons.Default.CalendarToday,
-                    stringResource(R.string.draw_date),
-                    it
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        SettingItem(
+                            Icons.Default.CalendarToday,
+                            stringResource(R.string.draw_date),
+                            it
+                        )
+                    }
+                    IconButton(onClick = { onToggleReminder(!isReminderEnabled) }) {
+                        Icon(
+                            imageVector = if (isReminderEnabled) {
+                                Icons.Default.NotificationsActive
+                            } else {
+                                Icons.Default.NotificationsNone
+                            },
+                            contentDescription = stringResource(
+                                if (isReminderEnabled) {
+                                    R.string.reminder_disable_action
+                                } else {
+                                    R.string.reminder_enable_action
+                                }
+                            ),
+                            tint = if (isReminderEnabled) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    }
+                }
             }
             if (minPrice != null || maxPrice != null) {
                 val priceRange = if (minPrice != null && maxPrice != null) {

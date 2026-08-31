@@ -30,6 +30,11 @@
     <string name="leave_group">Salir del grupo</string>
     <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n¡Descarga la app y únete ahora!</string>
     <string name="share_group_title">Compartir código</string>
+    <string name="reminder_enable_action">Recordarme en la fecha del sorteo</string>
+    <string name="reminder_disable_action">Desactivar recordatorio</string>
+    <string name="reminder_notification_channel_name">Recordatorios de Amigo Invisible</string>
+    <string name="reminder_notification_title">¡Hoy es el día del Amigo Invisible! 🎁</string>
+    <string name="reminder_notification_message">Hoy es el gran día de %1$s. ¡No olvides tu regalo!</string>
     <string name="remove_participant_confirmation_title">Eliminar participante</string>
     <string name="remove_participant_confirmation_message">¿Eliminar a %1$s de este grupo? Esta acción no se puede deshacer.</string>
     <string name="remove_participant_confirmation_confirm">Eliminar</string>

@@ -30,6 +30,11 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="reminder_enable_action">Lembrar na data do sorteio</string>
+    <string name="reminder_disable_action">Desativar lembrete</string>
+    <string name="reminder_notification_channel_name">Lembretes de Amigo Secreto</string>
+    <string name="reminder_notification_title">Hoje é o dia do Amigo Secreto! 🎁</string>
+    <string name="reminder_notification_message">Hoje é o grande dia do %1$s. Não esqueça o seu presente!</string>
     <string name="remove_participant_confirmation_title">Remover participante</string>
     <string name="remove_participant_confirmation_message">Remover %1$s deste grupo? Essa ação não pode ser desfeita.</string>
     <string name="remove_participant_confirmation_confirm">Remover</string>
