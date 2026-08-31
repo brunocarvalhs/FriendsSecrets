@@ -153,6 +153,7 @@ jobs:
     needs: [prepare, build]
     if: needs.prepare.outputs.deploy_enabled == 'true'
     strategy:
+      fail-fast: false
       matrix:
         variant: ${{ fromJson(needs.prepare.outputs.variants) }}
     runs-on: ubuntu-24.04
@@ -197,9 +198,6 @@ jobs:
         run: |
           APP_ID="${{ steps.firebase_config.outputs.app_id }}"
           RAW_NOTES=$(yq '.release.firebase.release_notes // "release automatica"' .github/pipeline-config.yaml)
-          GROUPS=$(yq '.release.firebase.groups // ""' .github/pipeline-config.yaml)
-          TESTERS=$(yq '.release.firebase.testers // ""' .github/pipeline-config.yaml)
-          NOTIFICATIONS=$(yq '.release.firebase.notifications // true' .github/pipeline-config.yaml)
 
           # Create service account file from secret
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > service-account.json
@@ -212,15 +210,7 @@ jobs:
           # Find the APK file
           APK_FILE=$(find output/ -name "*.apk" | head -n 1)
 
-          # yq always returns the literal string "true"/"false", so a plain
-          # ${NOTIFICATIONS:-...} fallback never triggers; translate it explicitly.
-          NOTIFY_FLAG="--no-notifications"
-          [ "$NOTIFICATIONS" == "true" ] && NOTIFY_FLAG=""
-
           # Distribute using service account credentials
           firebase appdistribution:distribute "$APK_FILE" \
             --app "$APP_ID" \
-            --release-notes "$NOTES" \
-            ${GROUPS:+--groups "$GROUPS"} \
-            ${TESTERS:+--testers "$TESTERS"} \
-            $NOTIFY_FLAG
+            --release-notes "$NOTES"

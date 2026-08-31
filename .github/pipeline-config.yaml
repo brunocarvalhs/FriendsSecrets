@@ -88,8 +88,6 @@ release:
   command_aab: "./gradlew bundleRelease"
   firebase:
     enabled: true
-    groups: "testers"
-    notifications: false
   github_release:
     draft: false
     prerelease: false
