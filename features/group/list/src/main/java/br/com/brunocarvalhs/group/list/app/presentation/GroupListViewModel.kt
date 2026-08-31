@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.navigation.DeepLinkHandler
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupListUseCase
 import com.google.firebase.perf.metrics.AddTrace
@@ -24,11 +25,16 @@ import javax.inject.Inject
 internal class GroupListViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    private val deepLinkHandler: DeepLinkHandler,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GroupListUiState())
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
+
+    init {
+        deepLinkHandler.consumePendingJoinCode()?.let { code -> groupToEnter(code) }
+    }
 
     @AddTrace(name = "GroupListViewModel.handleEvent", enabled = true)
     fun handleEvent(intent: GroupListIntent) {

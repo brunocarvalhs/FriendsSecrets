@@ -1,5 +1,5 @@
 appId: br.com.brunocarvalhs.friendssecrets
-name: Group Details Flow
+name: Group Edit Flow
 ---
 - launchApp
 - tapOn: "Archived"

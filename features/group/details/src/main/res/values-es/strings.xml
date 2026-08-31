@@ -28,7 +28,7 @@
     <string name="edit_group_information">Editar información del grupo</string>
     <string name="delete_group">Eliminar grupo</string>
     <string name="leave_group">Salir del grupo</string>
-    <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n¡Descarga la app y únete ahora!</string>
+    <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n📲 ¿Ya tienes la app? Únete aquí: %4$s\n⬇️ ¿Aún no la tienes? Descárgala aquí: %5$s</string>
     <string name="share_group_title">Compartir código</string>
     <string name="invite_card">Tarjeta</string>
     <string name="qr_code">Código QR</string>

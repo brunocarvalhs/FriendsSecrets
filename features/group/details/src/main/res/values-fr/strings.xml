@@ -28,7 +28,7 @@
     <string name="edit_group_information">Modifier les informations du groupe</string>
     <string name="delete_group">Supprimer le groupe</string>
     <string name="leave_group">Quitter le groupe</string>
-    <string name="share_group_message">🎁 Vous avez été invité(e) à un groupe de Père Noël secret : %1$s !\n\n📝 Description : %2$s\n🔑 Code du groupe : %3$s\n\nTéléchargez l\'application et rejoignez-nous dès maintenant !</string>
+    <string name="share_group_message">🎁 Vous avez été invité(e) à un groupe de Père Noël secret : %1$s !\n\n📝 Description : %2$s\n🔑 Code du groupe : %3$s\n\n📲 Vous avez déjà l\'application ? Rejoignez ici : %4$s\n⬇️ Pas encore ? Téléchargez-la ici : %5$s</string>
     <string name="share_group_title">Partager le code</string>
     <string name="invite_card">Carte</string>
     <string name="qr_code">Code QR</string>

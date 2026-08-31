@@ -1,10 +1,13 @@
 appId: br.com.brunocarvalhs.friendssecrets
-name: Enter Group Flow
+name: Deeplink Flow
 ---
-- launchApp
-- tapOn: "Enter a group"
-- inputText: "YFZ6H5ZH"
-- tapOn: "Validate"
+- stopApp
+- openLink: "friendssecrets://"
+- assertVisible: "Friends Secrets"
+
+# Testa o deep link de entrar em um grupo por código (friendssecrets://join?code=...)
+- stopApp
+- openLink: "friendssecrets://join?code=YFZ6H5ZH"
 - assertVisible: "teste 2"
 - tapOn: "teste 2"
 - assertVisible: "teste 2"

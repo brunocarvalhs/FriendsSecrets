@@ -28,7 +28,7 @@
     <string name="edit_group_information">Edytuj informacje o grupie</string>
     <string name="delete_group">Usuń grupę</string>
     <string name="leave_group">Opuść grupę</string>
-    <string name="share_group_message">🎁 Zostałeś zaproszony do grupy Sekretnego Mikołaja: %1$s!\n\n📝 Opis: %2$s\n🔑 Kod grupy: %3$s\n\nPobierz aplikację i dołącz już teraz!</string>
+    <string name="share_group_message">🎁 Zostałeś zaproszony do grupy Sekretnego Mikołaja: %1$s!\n\n📝 Opis: %2$s\n🔑 Kod grupy: %3$s\n\n📲 Masz już aplikację? Dołącz tutaj: %4$s\n⬇️ Nie masz jej jeszcze? Pobierz tutaj: %5$s</string>
     <string name="share_group_title">Udostępnij kod</string>
     <string name="invite_card">Karta</string>
     <string name="qr_code">Kod QR</string>

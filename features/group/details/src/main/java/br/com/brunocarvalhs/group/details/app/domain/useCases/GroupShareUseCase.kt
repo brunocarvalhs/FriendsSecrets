@@ -15,7 +15,9 @@ internal class GroupShareUseCase @Inject constructor(
             R.string.share_group_message,
             group.name,
             group.description,
-            group.token
+            group.token,
+            "$DEEP_LINK_SCHEME${group.token}",
+            "$PLAY_STORE_URL${context.packageName}"
         )
 
         val sendIntent = Intent().apply {
@@ -37,5 +39,7 @@ internal class GroupShareUseCase @Inject constructor(
 
     companion object {
         private const val TYPE = "text/plain"
+        private const val DEEP_LINK_SCHEME = "friendssecrets://join?code="
+        private const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id="
     }
 }

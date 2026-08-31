@@ -28,7 +28,7 @@
     <string name="edit_group_information">Groepsinformatie bewerken</string>
     <string name="delete_group">Groep verwijderen</string>
     <string name="leave_group">Groep verlaten</string>
-    <string name="share_group_message">🎁 Je bent uitgenodigd voor een Geheime Lootjes-groep: %1$s!\n\n📝 Beschrijving: %2$s\n🔑 Groepscode: %3$s\n\nDownload de app en doe nu mee!</string>
+    <string name="share_group_message">🎁 Je bent uitgenodigd voor een Geheime Lootjes-groep: %1$s!\n\n📝 Beschrijving: %2$s\n🔑 Groepscode: %3$s\n\n📲 Heb je de app al? Doe hier mee: %4$s\n⬇️ Nog niet? Download hem hier: %5$s</string>
     <string name="share_group_title">Code delen</string>
     <string name="invite_card">Kaart</string>
     <string name="qr_code">QR-code</string>

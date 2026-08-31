@@ -28,7 +28,7 @@
     <string name="edit_group_information">Edit group information</string>
     <string name="delete_group">Delete group</string>
     <string name="leave_group">Leave group</string>
-    <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
+    <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\n📲 Already have the app? Tap to join: %4$s\n⬇️ Don\'t have it yet? Download here: %5$s</string>
     <string name="share_group_title">Share Code</string>
     <string name="invite_card">Card</string>
     <string name="qr_code">QR Code</string>

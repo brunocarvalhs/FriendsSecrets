@@ -28,7 +28,7 @@
     <string name="edit_group_information">Gruppeninformationen bearbeiten</string>
     <string name="delete_group">Gruppe löschen</string>
     <string name="leave_group">Gruppe verlassen</string>
-    <string name="share_group_message">🎁 Du wurdest zu einer Wichtel-Gruppe eingeladen: %1$s!\n\n📝 Beschreibung: %2$s\n🔑 Gruppencode: %3$s\n\nLade die App herunter und tritt jetzt bei!</string>
+    <string name="share_group_message">🎁 Du wurdest zu einer Wichtel-Gruppe eingeladen: %1$s!\n\n📝 Beschreibung: %2$s\n🔑 Gruppencode: %3$s\n\n📲 Hast du die App schon? Hier beitreten: %4$s\n⬇️ Noch nicht? Hier herunterladen: %5$s</string>
     <string name="share_group_title">Code teilen</string>
     <string name="invite_card">Karte</string>
     <string name="qr_code">QR-Code</string>
