@@ -33,4 +33,12 @@
     <string name="share_wishlist_action">내 위시리스트 공유</string>
     <string name="share_wishlist_title">위시리스트 공유</string>
     <string name="share_wishlist_message">🎁 시크릿 산타 그룹 %1$s를 위한 제 위시리스트입니다:\n\n%2$s</string>
+    <string name="edit_likes_title">나의 관심사</string>
+    <string name="edit_likes_description">시크릿 산타가 완벽한 선물을 고를 수 있도록 좋아하는 것을 추가하세요.</string>
+    <string name="edit_likes_add_hint">예: 책, 게임…</string>
+    <string name="edit_likes_add_action">추가</string>
+    <string name="edit_likes_save_action">저장</string>
+    <string name="edit_likes_cancel_action">취소</string>
+    <string name="edit_likes_remove_action">%1$s 삭제</string>
+    <string name="edit_likes_empty_state">아직 추가된 관심사가 없습니다</string>
 </resources>

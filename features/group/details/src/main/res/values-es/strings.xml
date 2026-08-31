@@ -33,4 +33,12 @@
     <string name="share_wishlist_action">Compartir mi lista de deseos</string>
     <string name="share_wishlist_title">Compartir Lista de Deseos</string>
     <string name="share_wishlist_message">🎁 Aquí está mi lista de deseos para el Amigo Invisible %1$s:\n\n%2$s</string>
+    <string name="edit_likes_title">Tus intereses</string>
+    <string name="edit_likes_description">Añade cosas que te gustan para ayudar a tu amigo invisible a elegir el regalo perfecto.</string>
+    <string name="edit_likes_add_hint">Ej: Libros, Juegos…</string>
+    <string name="edit_likes_add_action">Añadir</string>
+    <string name="edit_likes_save_action">Guardar</string>
+    <string name="edit_likes_cancel_action">Cancelar</string>
+    <string name="edit_likes_remove_action">Eliminar %1$s</string>
+    <string name="edit_likes_empty_state">Aún no se agregaron intereses</string>
 </resources>
