@@ -76,6 +76,8 @@ jobs:
     needs: [version_manager]
     if: needs.version_manager.outputs.updated == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout develop
         uses: actions/checkout@v4
@@ -101,6 +103,8 @@ jobs:
   pr_release:
     needs: [version_manager, update_version]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout develop
         uses: actions/checkout@v4
