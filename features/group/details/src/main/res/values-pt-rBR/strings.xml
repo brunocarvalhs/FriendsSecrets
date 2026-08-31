@@ -30,4 +30,12 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="edit_likes_title">Seus interesses</string>
+    <string name="edit_likes_description">Adicione coisas que você gosta para ajudar seu amigo secreto a escolher o presente perfeito.</string>
+    <string name="edit_likes_add_hint">Ex: Livros, Jogos…</string>
+    <string name="edit_likes_add_action">Adicionar</string>
+    <string name="edit_likes_save_action">Salvar</string>
+    <string name="edit_likes_cancel_action">Cancelar</string>
+    <string name="edit_likes_remove_action">Remover %1$s</string>
+    <string name="edit_likes_empty_state">Nenhum interesse adicionado ainda</string>
 </resources>

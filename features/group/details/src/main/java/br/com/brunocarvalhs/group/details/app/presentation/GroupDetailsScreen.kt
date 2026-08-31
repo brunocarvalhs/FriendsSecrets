@@ -38,6 +38,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +59,7 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
+import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesDialog
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
@@ -73,6 +77,7 @@ internal fun GroupDetailsScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.group
+    var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -101,6 +106,7 @@ internal fun GroupDetailsScreen(
         maxPrice = group.maxPrice,
         giftType = group.type,
         members = group.members,
+        currentDeviceId = uiState.currentDeviceId,
         onBack = onBack,
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
@@ -108,8 +114,20 @@ internal fun GroupDetailsScreen(
         onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
-        onAddMembers = { onAddMembers.invoke(group) }
+        onAddMembers = { onAddMembers.invoke(group) },
+        onEditLikes = { member -> editingLikesMember = member }
     )
+
+    editingLikesMember?.let { member ->
+        EditLikesDialog(
+            initialLikes = member.likes,
+            onDismiss = { editingLikesMember = null },
+            onSave = { likes ->
+                viewModel.handleIntent(GroupDetailsIntent.UpdateLikes(likes))
+                editingLikesMember = null
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,6 +153,8 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    currentDeviceId: String = "",
+    onEditLikes: (UserModel) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -197,9 +217,17 @@ private fun GroupDetailsContent(
             }
 
             items(members) { member ->
+                val isCurrentUser = currentDeviceId.isNotBlank() &&
+                    (member.id == currentDeviceId || member.phoneNumber == currentDeviceId)
                 MemberItem(
                     participant = member.name,
+                    likes = member.likes,
                     isAdministrator = isOwner,
+                    onEdit = if (isCurrentUser) {
+                        { onEditLikes(member) }
+                    } else {
+                        null
+                    },
                 )
             }
 
