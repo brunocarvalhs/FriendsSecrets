@@ -40,6 +40,10 @@ internal class DrawViewModel @Inject constructor(
     )
     val uiState: StateFlow<DrawUiState> = _uiState.asStateFlow()
 
+    init {
+        analyticsService.logEvent(name = AnalyticsEvent.DRAW_STARTED)
+    }
+
     @AddTrace(name = "DrawViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: DrawIntent) = when (intent) {
         is DrawIntent.Share -> share(intent.secret)
@@ -69,6 +73,7 @@ internal class DrawViewModel @Inject constructor(
         )
         viewModelScope.launch {
             drawUseCase(group = args.group).onSuccess { results ->
+                analyticsService.logEvent(name = AnalyticsEvent.DRAW_COMPLETED)
                 _uiState.value = _uiState.value.copy(
                     results = results,
                     isDrawn = true
@@ -85,6 +90,7 @@ internal class DrawViewModel @Inject constructor(
                 AnalyticsParam.RESULT to "success"
             )
         )
+        analyticsService.logEvent(name = AnalyticsEvent.DRAW_REVEALED)
         Timber.d("Draw success")
     }
 

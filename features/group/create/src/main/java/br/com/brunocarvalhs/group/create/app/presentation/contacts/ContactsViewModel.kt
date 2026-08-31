@@ -40,6 +40,9 @@ internal class ContactsViewModel @Inject constructor(
     val uiState: StateFlow<ContactsUiState> = _uiState.asStateFlow()
 
     init {
+        if (args.group == null) {
+            analyticsService.logEvent(name = AnalyticsEvent.GROUP_CREATE_STARTED)
+        }
         handleIntent(ContactsIntent.LoadContacts)
     }
 
@@ -176,6 +179,10 @@ internal class ContactsViewModel @Inject constructor(
                 )
             )
         } ?: run {
+            analyticsService.logEvent(
+                name = AnalyticsEvent.GROUP_CREATE_MEMBERS_SELECTED,
+                params = mapOf(AnalyticsParam.PARAM to members.size.toString())
+            )
             callback(
                 FormsRouter(
                     members = members,

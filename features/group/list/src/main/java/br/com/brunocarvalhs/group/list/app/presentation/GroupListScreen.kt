@@ -60,6 +60,7 @@ internal fun GroupListScreen(
         onJoinGroup = { token ->
             viewModel.handleEvent(GroupListIntent.GroupToEnter(token))
         },
+        onJoinGroupOpen = { viewModel.handleEvent(GroupListIntent.JoinGroupStarted) },
         moreOptions = moreOptions
     )
 }
@@ -74,6 +75,7 @@ private fun ListContent(
     onGroupToEnter: (GroupModel) -> Unit,
     onGroupToCreate: () -> Unit,
     onJoinGroup: (String) -> Unit,
+    onJoinGroupOpen: () -> Unit,
     moreOptions: List<OptionsMore>,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -91,7 +93,7 @@ private fun ListContent(
                 Column {
                     GroupListAppBar(
                         scrollBehavior = scrollBehavior,
-                        onJoinGroupClick = { showBottomSheet = true },
+                        onJoinGroupClick = { showBottomSheet = true; onJoinGroupOpen() },
                         moreOptions = moreOptions,
                         expanded = expanded,
                         onExpandedChange = { expanded = it }
@@ -118,7 +120,7 @@ private fun ListContent(
             uiState = uiState,
             onFetchGroups = onFetchGroups,
             onGroupToEnter = onGroupToEnter,
-            onJoinGroupClick = { showBottomSheet = true },
+            onJoinGroupClick = { showBottomSheet = true; onJoinGroupOpen() },
             onGroupToCreate = onGroupToCreate,
             modifier = Modifier.padding(paddingValues)
         )
@@ -220,6 +222,7 @@ private fun ListContentPreview(
         onGroupToEnter = {},
         onGroupToCreate = {},
         onJoinGroup = {},
+        onJoinGroupOpen = {},
         moreOptions = emptyList()
     )
 }

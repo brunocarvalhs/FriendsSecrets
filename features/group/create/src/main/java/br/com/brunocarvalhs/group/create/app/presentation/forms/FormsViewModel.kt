@@ -135,6 +135,10 @@ internal class FormsViewModel @Inject constructor(
             
             groupCreateUseCase(group).onSuccess {
                 success()
+                analyticsService.logEvent(
+                    name = AnalyticsEvent.GROUP_CREATE_COMPLETED,
+                    params = mapOf(AnalyticsParam.PARAM to group.token)
+                )
                 onFinish(group.token)
             }.onFailure { error(it.message) }
         }
@@ -162,6 +166,10 @@ internal class FormsViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "error",
                 AnalyticsParam.PARAM to message
             )
+        )
+        analyticsService.logEvent(
+            name = AnalyticsEvent.GROUP_CREATE_FAILED,
+            params = mapOf(AnalyticsParam.PARAM to message)
         )
         _uiState.value = _uiState.value.copy(
             isLoading = false,

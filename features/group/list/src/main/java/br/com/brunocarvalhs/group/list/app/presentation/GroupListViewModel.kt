@@ -40,10 +40,16 @@ internal class GroupListViewModel @Inject constructor(
     fun handleEvent(intent: GroupListIntent) {
         when (intent) {
             GroupListIntent.FetchGroups -> fetchGroups()
+            GroupListIntent.JoinGroupStarted -> joinGroupStarted()
             is GroupListIntent.GroupToEnter -> groupToEnter(intent.token)
             is GroupListIntent.OnSearchQueryChange -> searchGroups(intent.query)
             is GroupListIntent.OnTagSelected -> filterGroups(intent.tag)
         }
+    }
+
+    @AddTrace(name = "GroupListViewModel.joinGroupStarted", enabled = true)
+    private fun joinGroupStarted() {
+        analyticsService.logEvent(name = AnalyticsEvent.GROUP_JOIN_STARTED)
     }
 
     @AddTrace(name = "GroupListViewModel.searchGroups", enabled = true)
@@ -79,11 +85,27 @@ internal class GroupListViewModel @Inject constructor(
                 AnalyticsParam.PARAM to token
             )
         )
+        analyticsService.logEvent(
+            name = AnalyticsEvent.GROUP_JOIN_SUBMITTED,
+            params = mapOf(AnalyticsParam.PARAM to token)
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupByTokenUseCase.invoke(token)
-                .onSuccess { fetchGroups() }
-                .onFailure(::error)
+                .onSuccess {
+                    analyticsService.logEvent(
+                        name = AnalyticsEvent.GROUP_JOIN_COMPLETED,
+                        params = mapOf(AnalyticsParam.PARAM to token)
+                    )
+                    fetchGroups()
+                }
+                .onFailure {
+                    analyticsService.logEvent(
+                        name = AnalyticsEvent.GROUP_JOIN_FAILED,
+                        params = mapOf(AnalyticsParam.PARAM to token)
+                    )
+                    error(it)
+                }
         }
     }
 

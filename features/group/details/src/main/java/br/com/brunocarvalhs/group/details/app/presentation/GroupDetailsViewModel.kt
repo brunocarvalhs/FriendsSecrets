@@ -179,6 +179,7 @@ internal class GroupDetailsViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "share_group"
             )
         )
+        analyticsService.logEvent(name = AnalyticsEvent.INVITE_SHARE_CODE)
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
         }
@@ -192,6 +193,7 @@ internal class GroupDetailsViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "share_group_invite_card"
             )
         )
+        analyticsService.logEvent(name = AnalyticsEvent.INVITE_SHARE_CARD)
         viewModelScope.launch {
             shareInviteCardUseCase(_uiState.value.group)
                 .onFailure { error ->
@@ -209,6 +211,7 @@ internal class GroupDetailsViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "share_group_qr_code"
             )
         )
+        analyticsService.logEvent(name = AnalyticsEvent.INVITE_SHARE_QR)
         viewModelScope.launch {
             shareQrCodeUseCase(_uiState.value.group)
                 .onFailure { error ->
