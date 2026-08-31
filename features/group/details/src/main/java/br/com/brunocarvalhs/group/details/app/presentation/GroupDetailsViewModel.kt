@@ -14,6 +14,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.RemoveMemberUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareWishlistUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.UpdateMemberLikesUseCase
 import com.google.firebase.perf.metrics.AddTrace
@@ -34,6 +35,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val removeMemberUseCase: RemoveMemberUseCase,
     private val shareWishlistUseCase: ShareWishlistUseCase,
     private val updateMemberLikesUseCase: UpdateMemberLikesUseCase,
     private val deviceService: DeviceService,
@@ -53,6 +55,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        is GroupDetailsIntent.RemoveMember -> removeMember(intent.memberId)
         GroupDetailsIntent.ShareWishlist -> shareWishlist()
         is GroupDetailsIntent.UpdateLikes -> updateLikes(intent.likes)
     }
@@ -138,6 +141,27 @@ internal class GroupDetailsViewModel @Inject constructor(
         )
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.removeMember", enabled = true)
+    private fun removeMember(memberId: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "remove_member"
+            )
+        )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            removeMemberUseCase(_uiState.value.group, memberId)
+                .onSuccess { group ->
+                    _uiState.update { it.copy(isLoading = false, group = group) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error removing member")
+                    _uiState.update { it.copy(isLoading = false, error = "Erro ao remover participante") }
+                }
         }
     }
 

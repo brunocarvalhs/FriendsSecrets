@@ -30,6 +30,10 @@
     <string name="leave_group">Salir del grupo</string>
     <string name="share_group_message">🎁 ¡Has sido invitado a un Amigo Secreto: %1$s!\n\n📝 Descripción: %2$s\n🔑 Código del grupo: %3$s\n\n¡Descarga la app y únete ahora!</string>
     <string name="share_group_title">Compartir código</string>
+    <string name="remove_participant_confirmation_title">Eliminar participante</string>
+    <string name="remove_participant_confirmation_message">¿Eliminar a %1$s de este grupo? Esta acción no se puede deshacer.</string>
+    <string name="remove_participant_confirmation_confirm">Eliminar</string>
+    <string name="remove_participant_confirmation_cancel">Cancelar</string>
     <string name="share_wishlist_action">Compartir mi lista de deseos</string>
     <string name="share_wishlist_title">Compartir Lista de Deseos</string>
     <string name="share_wishlist_message">🎁 Aquí está mi lista de deseos para el Amigo Invisible %1$s:\n\n%2$s</string>

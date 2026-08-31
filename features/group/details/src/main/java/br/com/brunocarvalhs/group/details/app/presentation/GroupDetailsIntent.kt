@@ -6,5 +6,6 @@ internal sealed interface GroupDetailsIntent {
     data object Share : GroupDetailsIntent
     data object ShareWishlist : GroupDetailsIntent
     data class Exit(val callback: () -> Unit) : GroupDetailsIntent
+    data class RemoveMember(val memberId: String) : GroupDetailsIntent
     data class UpdateLikes(val likes: List<String>) : GroupDetailsIntent
 }
