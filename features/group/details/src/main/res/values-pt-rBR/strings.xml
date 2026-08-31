@@ -30,6 +30,9 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="share_wishlist_action">Compartilhar minha lista de desejos</string>
+    <string name="share_wishlist_title">Compartilhar Lista de Desejos</string>
+    <string name="share_wishlist_message">🎁 Aqui está minha lista de desejos para o Amigo Secreto %1$s:\n\n%2$s</string>
     <string name="edit_likes_title">Seus interesses</string>
     <string name="edit_likes_description">Adicione coisas que você gosta para ajudar seu amigo secreto a escolher o presente perfeito.</string>
     <string name="edit_likes_add_hint">Ex: Livros, Jogos…</string>

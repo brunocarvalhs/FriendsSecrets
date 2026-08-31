@@ -115,6 +115,7 @@ internal fun GroupDetailsScreen(
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
         onAddMembers = { onAddMembers.invoke(group) },
+        onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
         onEditLikes = { member -> editingLikesMember = member }
     )
 
@@ -153,6 +154,7 @@ private fun GroupDetailsContent(
     onShareGroup: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    onShareWishlist: () -> Unit = {},
     currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
 ) {
@@ -236,7 +238,8 @@ private fun GroupDetailsContent(
                     isOwner = isOwner,
                     onEdit = onEdit,
                     onDelete = onDelete,
-                    onExit = onExit
+                    onExit = onExit,
+                    onShareWishlist = onShareWishlist
                 )
             }
         }
@@ -426,10 +429,16 @@ private fun GroupDetailsFooter(
     isOwner: Boolean,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onExit: () -> Unit
+    onExit: () -> Unit,
+    onShareWishlist: () -> Unit = {}
 ) {
     Column {
         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+        SettingItem(
+            Icons.Default.CardGiftcard,
+            stringResource(R.string.share_wishlist_action),
+            onClick = onShareWishlist
+        )
         if (isOwner) {
             SettingItem(
                 Icons.Default.Edit,

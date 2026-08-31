@@ -30,6 +30,9 @@
     <string name="leave_group">그룹 나가기</string>
     <string name="share_group_message">🎁 당신은 시크릿 산타 그룹에 초대되었습니다: %1$s!\n\n📝 설명: %2$s\n🔑 그룹 코드: %3$s\n\n앱을 다운로드하고 지금 참여하세요!</string>
     <string name="share_group_title">코드 공유</string>
+    <string name="share_wishlist_action">내 위시리스트 공유</string>
+    <string name="share_wishlist_title">위시리스트 공유</string>
+    <string name="share_wishlist_message">🎁 시크릿 산타 그룹 %1$s를 위한 제 위시리스트입니다:\n\n%2$s</string>
     <string name="edit_likes_title">나의 관심사</string>
     <string name="edit_likes_description">시크릿 산타가 완벽한 선물을 고를 수 있도록 좋아하는 것을 추가하세요.</string>
     <string name="edit_likes_add_hint">예: 책, 게임…</string>
