@@ -212,10 +212,15 @@ jobs:
           # Find the APK file
           APK_FILE=$(find output/ -name "*.apk" | head -n 1)
 
+          # yq always returns the literal string "true"/"false", so a plain
+          # ${NOTIFICATIONS:-...} fallback never triggers; translate it explicitly.
+          NOTIFY_FLAG="--no-notifications"
+          [ "$NOTIFICATIONS" == "true" ] && NOTIFY_FLAG=""
+
           # Distribute using service account credentials
           firebase appdistribution:distribute "$APK_FILE" \
             --app "$APP_ID" \
             --release-notes "$NOTES" \
             ${GROUPS:+--groups "$GROUPS"} \
             ${TESTERS:+--testers "$TESTERS"} \
-            ${NOTIFICATIONS:+ } ${NOTIFICATIONS:- --no-notifications}
+            $NOTIFY_FLAG
