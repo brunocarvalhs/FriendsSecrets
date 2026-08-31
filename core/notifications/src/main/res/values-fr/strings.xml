@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">Mises à jour du groupe</string>
+    <string name="group_sync_draw_completed_title">🎉 Tirage terminé !</string>
+    <string name="group_sync_draw_completed_message">Le tirage pour %1$s est terminé. Ouvrez l\'application pour découvrir votre Père Noël secret !</string>
+    <string name="group_sync_new_message_title">💬 Nouveau message</string>
+    <string name="group_sync_new_message_message">Vous avez un nouveau message dans %1$s</string>
+</resources>
