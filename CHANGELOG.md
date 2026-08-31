@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1] - 2026-08-31
+
+* Merge pull request #72 from brunocarvalhs/fix/group-details-scroll-and-qr-join
+* fix(group-details): scrollable action cards + QR scan to join a group
+* chore: bump version to 3.2.0 [skip ci]
+
+
 ## [3.2.0] - 2026-08-31
 
 * Merge pull request #71 from brunocarvalhs/feat/add-fr-de-nl-pl-locales
