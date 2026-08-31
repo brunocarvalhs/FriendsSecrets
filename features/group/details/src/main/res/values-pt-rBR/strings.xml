@@ -30,6 +30,7 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="invite_card">Cartão</string>
     <string name="qr_code">QR Code</string>
     <string name="reminder_enable_action">Lembrar na data do sorteio</string>
     <string name="reminder_disable_action">Desativar lembrete</string>
