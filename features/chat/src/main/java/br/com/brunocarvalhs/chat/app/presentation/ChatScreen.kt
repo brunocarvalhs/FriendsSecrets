@@ -184,8 +184,8 @@ fun IdentificationDialog(
 @Composable
 fun ChatMessageItem(
     message: ChatMessage,
+    modifier: Modifier = Modifier,
     onToggleReaction: (String) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     var showReactionPicker by remember { mutableStateOf(false) }
     val alignment = if (message.isFromMe) Alignment.CenterEnd else Alignment.CenterStart
