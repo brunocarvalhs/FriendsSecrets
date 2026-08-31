@@ -2,6 +2,6 @@
 -keep class br.com.brunocarvalhs.core.ui.** { *; }
 -dontwarn br.com.brunocarvalhs.core.ui.**
 
-# Keep Compose internal classes that might be needed
--keep class androidx.compose.ui.** { *; }
--keep class androidx.compose.material3.** { *; }
+# androidx.compose.ui / androidx.compose.material3 are not kept here: those
+# artifacts ship their own consumer-rules.pro, and an app/module-level
+# blanket -keep only blocks R8 from shrinking and obfuscating them.
