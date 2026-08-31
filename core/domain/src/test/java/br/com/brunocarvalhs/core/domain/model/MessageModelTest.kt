@@ -18,6 +18,7 @@ class MessageModelTest {
 
         assertTrue(message.timestamp > 0)
         assertEquals(MessageModel.MessageStatus.SENT, message.status)
+        assertTrue(message.reactions.isEmpty())
     }
 
     @Test
@@ -80,5 +81,14 @@ class MessageModelTest {
         val after = System.currentTimeMillis()
 
         assertTrue(message.timestamp in before..after)
+    }
+
+    @Test
+    fun shouldSupportReactionsPerDevice() {
+        val message = MessageModel(reactions = mapOf("device-1" to "👍", "device-2" to "❤️"))
+
+        assertEquals(2, message.reactions.size)
+        assertEquals("👍", message.reactions["device-1"])
+        assertEquals("❤️", message.reactions["device-2"])
     }
 }

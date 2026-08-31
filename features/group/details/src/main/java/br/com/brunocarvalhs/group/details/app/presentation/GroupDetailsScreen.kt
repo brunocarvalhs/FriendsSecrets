@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -36,12 +37,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,6 +65,7 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
+import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesDialog
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
@@ -81,6 +87,8 @@ internal fun GroupDetailsScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.group
+    var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
+    var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
 
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
@@ -115,6 +123,7 @@ internal fun GroupDetailsScreen(
         maxPrice = group.maxPrice,
         giftType = group.type,
         members = group.members,
+        currentDeviceId = uiState.currentDeviceId,
         onBack = onBack,
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
@@ -132,8 +141,47 @@ internal fun GroupDetailsScreen(
                 notificationPermissionState.launchPermissionRequest()
             }
             viewModel.handleIntent(GroupDetailsIntent.ToggleReminder(enabled))
-        }
+        },
+        onRemoveMember = { member -> memberPendingRemoval = member },
+        onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
+        onEditLikes = { member -> editingLikesMember = member }
     )
+
+    memberPendingRemoval?.let { member ->
+        AlertDialog(
+            onDismissRequest = { memberPendingRemoval = null },
+            title = { Text(stringResource(R.string.remove_participant_confirmation_title)) },
+            text = {
+                Text(
+                    stringResource(R.string.remove_participant_confirmation_message, member.name)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.handleIntent(GroupDetailsIntent.RemoveMember(member.id))
+                    memberPendingRemoval = null
+                }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { memberPendingRemoval = null }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_cancel))
+                }
+            }
+        )
+    }
+
+    editingLikesMember?.let { member ->
+        EditLikesDialog(
+            initialLikes = member.likes,
+            onDismiss = { editingLikesMember = null },
+            onSave = { likes ->
+                viewModel.handleIntent(GroupDetailsIntent.UpdateLikes(likes))
+                editingLikesMember = null
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,6 +209,10 @@ private fun GroupDetailsContent(
     onAddMembers: () -> Unit,
     isReminderEnabled: Boolean = false,
     onToggleReminder: (Boolean) -> Unit = {},
+    onRemoveMember: (UserModel) -> Unit = {},
+    onShareWishlist: () -> Unit = {},
+    currentDeviceId: String = "",
+    onEditLikes: (UserModel) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -225,9 +277,22 @@ private fun GroupDetailsContent(
             }
 
             items(members) { member ->
+                val isCurrentUser = currentDeviceId.isNotBlank() &&
+                    (member.id == currentDeviceId || member.phoneNumber == currentDeviceId)
                 MemberItem(
                     participant = member.name,
+                    likes = member.likes,
                     isAdministrator = isOwner,
+                    onRemove = if (isOwner && !isDrawn) {
+                        { onRemoveMember(member) }
+                    } else {
+                        null
+                    },
+                    onEdit = if (isCurrentUser) {
+                        { onEditLikes(member) }
+                    } else {
+                        null
+                    },
                 )
             }
 
@@ -236,7 +301,8 @@ private fun GroupDetailsContent(
                     isOwner = isOwner,
                     onEdit = onEdit,
                     onDelete = onDelete,
-                    onExit = onExit
+                    onExit = onExit,
+                    onShareWishlist = onShareWishlist
                 )
             }
         }
@@ -453,10 +519,16 @@ private fun GroupDetailsFooter(
     isOwner: Boolean,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onExit: () -> Unit
+    onExit: () -> Unit,
+    onShareWishlist: () -> Unit = {}
 ) {
     Column {
         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+        SettingItem(
+            Icons.Default.CardGiftcard,
+            stringResource(R.string.share_wishlist_action),
+            onClick = onShareWishlist
+        )
         if (isOwner) {
             SettingItem(
                 Icons.Default.Edit,

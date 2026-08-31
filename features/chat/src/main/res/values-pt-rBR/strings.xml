@@ -8,4 +8,5 @@
     <string name="identify_cancela">Cancelar</string>
     <string name="chat_input">Digite uma mensagem...</string>
     <string name="chat_button_send">Enviar</string>
+    <string name="react_to_message">Reagir à mensagem</string>
 </resources>
