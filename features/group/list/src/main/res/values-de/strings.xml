@@ -31,6 +31,9 @@
     <string name="group_to_enter_button_text">Bestätigen</string>
     <string name="group_to_enter_button_enter_to_group">Der Gruppe beitreten</string>
     <string name="group_to_enter_textfield_token_to_grup">Gruppen-Token</string>
+    <string name="group_to_enter_divider">oder</string>
+    <string name="group_to_enter_scan_qr_code">QR-Code scannen</string>
+    <string name="group_to_enter_scan_prompt">Richte deine Kamera auf den QR-Code der Gruppe</string>
 
     <!-- Error State -->
     <string name="error_component_button_try_again">Erneut versuchen</string>

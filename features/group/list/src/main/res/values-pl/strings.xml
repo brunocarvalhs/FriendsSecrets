@@ -31,6 +31,9 @@
     <string name="group_to_enter_button_text">Zatwierdź</string>
     <string name="group_to_enter_button_enter_to_group">Wejdź do grupy</string>
     <string name="group_to_enter_textfield_token_to_grup">Token grupy</string>
+    <string name="group_to_enter_divider">lub</string>
+    <string name="group_to_enter_scan_qr_code">Zeskanuj kod QR</string>
+    <string name="group_to_enter_scan_prompt">Skieruj aparat na kod QR grupy</string>
 
     <!-- Error State -->
     <string name="error_component_button_try_again">Spróbuj ponownie</string>
