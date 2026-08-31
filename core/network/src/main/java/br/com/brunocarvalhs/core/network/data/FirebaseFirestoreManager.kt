@@ -3,6 +3,7 @@ package br.com.brunocarvalhs.core.network.data
 import br.com.brunocarvalhs.core.network.domain.NetworkService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -88,7 +89,7 @@ class FirebaseFirestoreManager @Inject constructor(
         if (updateData.isNotEmpty()) {
             firebaseFirestore.collection(collection)
                 .document(id)
-                .update(updateData)
+                .set(updateData, SetOptions.merge())
                 .await()
         }
         return true

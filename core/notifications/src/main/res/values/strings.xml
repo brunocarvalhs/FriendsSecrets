@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">Group updates</string>
+    <string name="group_sync_draw_completed_title">🎉 Draw completed!</string>
+    <string name="group_sync_draw_completed_message">The draw for %1$s is done. Open the app to see your Secret Santa!</string>
+    <string name="group_sync_new_message_title">💬 New message</string>
+    <string name="group_sync_new_message_message">You have a new message in %1$s</string>
+</resources>

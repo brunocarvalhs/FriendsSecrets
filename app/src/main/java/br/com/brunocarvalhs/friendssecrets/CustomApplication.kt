@@ -1,7 +1,9 @@
 package br.com.brunocarvalhs.friendssecrets
 
 import android.app.Application
+import br.com.brunocarvalhs.core.notifications.domain.GroupSyncScheduler
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 /**
  * Application class with Hilt dependency injection setup.
@@ -14,4 +16,13 @@ import dagger.hilt.android.HiltAndroidApp
  * to catch potential performance issues during development.
  */
 @HiltAndroidApp
-class CustomApplication : Application()
+class CustomApplication : Application() {
+
+    @Inject
+    lateinit var groupSyncScheduler: GroupSyncScheduler
+
+    override fun onCreate() {
+        super.onCreate()
+        groupSyncScheduler.schedule()
+    }
+}
