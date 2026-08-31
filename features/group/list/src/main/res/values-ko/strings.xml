@@ -32,6 +32,9 @@
     <string name="group_to_enter_button_text">확인</string>
     <string name="group_to_enter_button_enter_to_group">그룹 입장</string>
     <string name="group_to_enter_textfield_token_to_grup">그룹 토큰</string>
+    <string name="group_to_enter_divider">또는</string>
+    <string name="group_to_enter_scan_qr_code">QR 코드 스캔</string>
+    <string name="group_to_enter_scan_prompt">그룹의 QR 코드에 카메라를 비추세요</string>
 
     <!-- Error State -->
     <string name="error_component_button_try_again">다시 시도</string>

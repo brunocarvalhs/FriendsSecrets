@@ -59,6 +59,7 @@ coreKtxVersion = "1.7.0"
 window = "1.5.1"
 workRuntimeKtx = "2.10.0"
 zxingCore = "3.5.3"
+zxingAndroidEmbedded = "4.3.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -125,6 +126,7 @@ androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
+zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

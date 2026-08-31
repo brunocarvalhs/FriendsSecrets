@@ -31,6 +31,9 @@
     <string name="group_to_enter_button_text">Valider</string>
     <string name="group_to_enter_button_enter_to_group">Rejoindre le groupe</string>
     <string name="group_to_enter_textfield_token_to_grup">Jeton du groupe</string>
+    <string name="group_to_enter_divider">ou</string>
+    <string name="group_to_enter_scan_qr_code">Scanner le code QR</string>
+    <string name="group_to_enter_scan_prompt">Pointez votre caméra vers le code QR du groupe</string>
 
     <!-- Error State -->
     <string name="error_component_button_try_again">Réessayer</string>
