@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0] - 2026-08-31
+
+* Merge pull request #71 from brunocarvalhs/feat/add-fr-de-nl-pl-locales
+* feat(i18n): add French, German, Dutch and Polish translations
+* chore: bump version to 3.1.0 [skip ci]
+
+
 ## [3.1.0] - 2026-08-31
 
 * Merge pull request #70 from brunocarvalhs/fix/develop-version-bump
