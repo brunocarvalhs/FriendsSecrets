@@ -111,6 +111,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:biometric"))
     implementation(project(":core:storage"))
+    implementation(project(":core:notifications"))
 
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))

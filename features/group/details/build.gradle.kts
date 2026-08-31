@@ -52,7 +52,6 @@ dependencies {
     implementation(project(":core:storage"))
     implementation(project(":core:deviceid"))
     implementation(project(":core:remote"))
-    implementation(project(":core:notifications"))
 
     // Compose Core
     implementation(platform(libs.androidx.compose.bom))

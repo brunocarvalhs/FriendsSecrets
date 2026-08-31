@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">그룹 업데이트</string>
+    <string name="group_sync_draw_completed_title">🎉 추첨 완료!</string>
+    <string name="group_sync_draw_completed_message">%1$s의 추첨이 완료되었습니다. 앱을 열어 시크릿 산타를 확인하세요!</string>
+    <string name="group_sync_new_message_title">💬 새 메시지</string>
+    <string name="group_sync_new_message_message">%1$s에 새 메시지가 있습니다</string>
+</resources>

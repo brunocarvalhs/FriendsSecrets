@@ -15,7 +15,6 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.IsGroupReminderEnabledUseCase
-import br.com.brunocarvalhs.group.details.app.domain.useCases.RegisterGroupPushTokenUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.RemoveMemberUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareGroupInviteCardUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareGroupQrCodeUseCase
@@ -41,7 +40,6 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
-    private val registerPushTokenUseCase: RegisterGroupPushTokenUseCase,
     private val shareInviteCardUseCase: ShareGroupInviteCardUseCase,
     private val shareQrCodeUseCase: ShareGroupQrCodeUseCase,
     private val toggleReminderUseCase: ToggleGroupReminderUseCase,
@@ -57,17 +55,8 @@ internal class GroupDetailsViewModel @Inject constructor(
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
 
     init {
-        registerPushToken()
         loadReminderState()
         loadCurrentDeviceId()
-    }
-
-    @AddTrace(name = "GroupDetailsViewModel.registerPushToken", enabled = true)
-    private fun registerPushToken() {
-        viewModelScope.launch {
-            registerPushTokenUseCase(_uiState.value.group.id)
-                .onFailure { error -> Timber.w(error, "Could not register push token for group") }
-        }
     }
 
     @AddTrace(name = "GroupDetailsViewModel.handleIntent", enabled = true)
