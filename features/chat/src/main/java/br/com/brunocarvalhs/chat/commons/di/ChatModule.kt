@@ -39,9 +39,7 @@ abstract class ChatModule {
         @Provides
         @Singleton
         fun provideFirebaseDatabase(): FirebaseDatabase {
-            return FirebaseDatabase.getInstance().apply {
-                setPersistenceEnabled(true)
-            }
+            return FirebaseDatabase.getInstance()
         }
     }
 }
