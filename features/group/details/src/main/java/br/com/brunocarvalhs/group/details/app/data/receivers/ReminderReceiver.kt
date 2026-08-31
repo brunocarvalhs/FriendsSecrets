@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import br.com.brunocarvalhs.group.details.R
+import timber.log.Timber
 
 internal class ReminderReceiver : BroadcastReceiver() {
 
@@ -28,8 +29,10 @@ internal class ReminderReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
-        runCatching {
+        try {
             NotificationManagerCompat.from(context).notify(groupId.hashCode(), notification)
+        } catch (e: SecurityException) {
+            Timber.w(e, "Missing POST_NOTIFICATIONS permission; skipping reminder notification")
         }
     }
 

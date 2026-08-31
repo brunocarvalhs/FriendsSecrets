@@ -19,17 +19,16 @@ internal class AlarmManagerGroupReminderService @Inject constructor(
 ) : GroupReminderService {
 
     override fun schedule(group: GroupModel): Boolean {
-        val triggerAtMillis = triggerTimeFor(group.date) ?: return false
-        val alarmManager = context.getSystemService(AlarmManager::class.java) ?: return false
+        val triggerAtMillis = triggerTimeFor(group.date)
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
 
-        runCatching {
+        if (triggerAtMillis == null || alarmManager == null) return false
+
+        return runCatching {
             alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent(group))
         }.onFailure {
             Timber.e(it, "Failed to schedule reminder for group ${group.id}")
-            return false
-        }
-
-        return true
+        }.isSuccess
     }
 
     override fun cancel(group: GroupModel) {
@@ -55,17 +54,19 @@ internal class AlarmManagerGroupReminderService @Inject constructor(
 
         val parsedDate = runCatching {
             SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).parse(date)
-        }.getOrNull() ?: return null
+        }.getOrNull()
 
-        val calendar = Calendar.getInstance().apply {
-            time = parsedDate
-            set(Calendar.HOUR_OF_DAY, REMINDER_HOUR)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        val calendar = parsedDate?.let {
+            Calendar.getInstance().apply {
+                time = it
+                set(Calendar.HOUR_OF_DAY, REMINDER_HOUR)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
         }
 
-        return calendar.timeInMillis.takeIf { it > System.currentTimeMillis() }
+        return calendar?.timeInMillis?.takeIf { it > System.currentTimeMillis() }
     }
 
     private companion object {
