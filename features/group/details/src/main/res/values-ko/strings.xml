@@ -30,4 +30,26 @@
     <string name="leave_group">그룹 나가기</string>
     <string name="share_group_message">🎁 당신은 시크릿 산타 그룹에 초대되었습니다: %1$s!\n\n📝 설명: %2$s\n🔑 그룹 코드: %3$s\n\n앱을 다운로드하고 지금 참여하세요!</string>
     <string name="share_group_title">코드 공유</string>
+    <string name="invite_card">카드</string>
+    <string name="qr_code">QR 코드</string>
+    <string name="reminder_enable_action">추첨일에 알림 받기</string>
+    <string name="reminder_disable_action">알림 끄기</string>
+    <string name="reminder_notification_channel_name">시크릿 산타 알림</string>
+    <string name="reminder_notification_title">오늘은 시크릿 산타의 날이에요! 🎁</string>
+    <string name="reminder_notification_message">오늘은 %1$s의 특별한 날입니다. 선물을 잊지 마세요!</string>
+    <string name="remove_participant_confirmation_title">참가자 삭제</string>
+    <string name="remove_participant_confirmation_message">%1$s님을 이 그룹에서 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</string>
+    <string name="remove_participant_confirmation_confirm">삭제</string>
+    <string name="remove_participant_confirmation_cancel">취소</string>
+    <string name="share_wishlist_action">내 위시리스트 공유</string>
+    <string name="share_wishlist_title">위시리스트 공유</string>
+    <string name="share_wishlist_message">🎁 시크릿 산타 그룹 %1$s를 위한 제 위시리스트입니다:\n\n%2$s</string>
+    <string name="edit_likes_title">나의 관심사</string>
+    <string name="edit_likes_description">시크릿 산타가 완벽한 선물을 고를 수 있도록 좋아하는 것을 추가하세요.</string>
+    <string name="edit_likes_add_hint">예: 책, 게임…</string>
+    <string name="edit_likes_add_action">추가</string>
+    <string name="edit_likes_save_action">저장</string>
+    <string name="edit_likes_cancel_action">취소</string>
+    <string name="edit_likes_remove_action">%1$s 삭제</string>
+    <string name="edit_likes_empty_state">아직 추가된 관심사가 없습니다</string>
 </resources>

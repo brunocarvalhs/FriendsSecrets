@@ -1,9 +1,13 @@
 package br.com.brunocarvalhs.group.details.app.data.model
 
+import br.com.brunocarvalhs.core.domain.extensions.toVanillaMap
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.app.data.constants.EMPTY_STRING
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 internal data class GroupDetailsDTO(
@@ -38,4 +42,28 @@ internal data class GroupDetailsDTO(
         photo = photoBase64,
         createdAt = createdAt
     )
+
+    fun toMap(): Map<String, Any?> {
+        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        return json.encodeToJsonElement(this).jsonObject.toVanillaMap()
+    }
+
+    companion object {
+        fun fromDomain(model: GroupModel) = GroupDetailsDTO(
+            id = model.id,
+            name = model.name,
+            description = model.description,
+            token = model.token,
+            date = model.date,
+            minPrice = model.minPrice,
+            maxPrice = model.maxPrice,
+            type = model.type,
+            photoBase64 = model.photo,
+            members = model.members.map { UserDetailsDTO.fromDomain(it) },
+            draws = model.draws,
+            ownerId = model.ownerId,
+            isOwner = model.isOwner,
+            createdAt = model.createdAt
+        )
+    }
 }

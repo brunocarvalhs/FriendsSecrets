@@ -30,4 +30,26 @@
     <string name="leave_group">Sair do grupo</string>
     <string name="share_group_message">🎁 Você foi convidado para o Amigo Secreto: %1$s!\n\n📝 Descrição: %2$s\n🔑 Código do grupo: %3$s\n\nBaixe o app e entre agora!</string>
     <string name="share_group_title">Compartilhar Código</string>
+    <string name="invite_card">Cartão</string>
+    <string name="qr_code">QR Code</string>
+    <string name="reminder_enable_action">Lembrar na data do sorteio</string>
+    <string name="reminder_disable_action">Desativar lembrete</string>
+    <string name="reminder_notification_channel_name">Lembretes de Amigo Secreto</string>
+    <string name="reminder_notification_title">Hoje é o dia do Amigo Secreto! 🎁</string>
+    <string name="reminder_notification_message">Hoje é o grande dia do %1$s. Não esqueça o seu presente!</string>
+    <string name="remove_participant_confirmation_title">Remover participante</string>
+    <string name="remove_participant_confirmation_message">Remover %1$s deste grupo? Essa ação não pode ser desfeita.</string>
+    <string name="remove_participant_confirmation_confirm">Remover</string>
+    <string name="remove_participant_confirmation_cancel">Cancelar</string>
+    <string name="share_wishlist_action">Compartilhar minha lista de desejos</string>
+    <string name="share_wishlist_title">Compartilhar Lista de Desejos</string>
+    <string name="share_wishlist_message">🎁 Aqui está minha lista de desejos para o Amigo Secreto %1$s:\n\n%2$s</string>
+    <string name="edit_likes_title">Seus interesses</string>
+    <string name="edit_likes_description">Adicione coisas que você gosta para ajudar seu amigo secreto a escolher o presente perfeito.</string>
+    <string name="edit_likes_add_hint">Ex: Livros, Jogos…</string>
+    <string name="edit_likes_add_action">Adicionar</string>
+    <string name="edit_likes_save_action">Salvar</string>
+    <string name="edit_likes_cancel_action">Cancelar</string>
+    <string name="edit_likes_remove_action">Remover %1$s</string>
+    <string name="edit_likes_empty_state">Nenhum interesse adicionado ainda</string>
 </resources>

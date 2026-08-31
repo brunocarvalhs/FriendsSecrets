@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.gson)
     implementation(libs.accompanist.permissions)
+    implementation(libs.zxing.core)
 
     // Testes
     testImplementation(libs.junit)
