@@ -30,6 +30,7 @@
     <string name="leave_group">Leave group</string>
     <string name="share_group_message">🎁 You’ve been invited to a Secret Santa group: %1$s!\n\n📝 Description: %2$s\n🔑 Group code: %3$s\n\nDownload the app and join now!</string>
     <string name="share_group_title">Share Code</string>
+    <string name="qr_code">QR Code</string>
     <string name="reminder_enable_action">Remind me on the draw date</string>
     <string name="reminder_disable_action">Turn off reminder</string>
     <string name="reminder_notification_channel_name">Secret Santa reminders</string>

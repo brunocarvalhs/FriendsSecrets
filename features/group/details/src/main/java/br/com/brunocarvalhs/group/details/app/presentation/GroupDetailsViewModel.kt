@@ -16,6 +16,7 @@ import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupShareUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.IsGroupReminderEnabledUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.RemoveMemberUseCase
+import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareGroupQrCodeUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.ShareWishlistUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.ToggleGroupReminderUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.UpdateMemberLikesUseCase
@@ -31,12 +32,14 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
+@Suppress("TooManyFunctions")
 internal class GroupDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val readUseCase: GroupReadUseCase,
     private val deleteUseCase: GroupDeleteUseCase,
     private val exitUseCase: GroupExitUseCase,
     private val shareUseCase: GroupShareUseCase,
+    private val shareQrCodeUseCase: ShareGroupQrCodeUseCase,
     private val toggleReminderUseCase: ToggleGroupReminderUseCase,
     private val isReminderEnabledUseCase: IsGroupReminderEnabledUseCase,
     private val removeMemberUseCase: RemoveMemberUseCase,
@@ -60,6 +63,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.Delete -> deleteGroup(intent.callback)
         is GroupDetailsIntent.Exit -> exitGroup(intent.callback)
         GroupDetailsIntent.Share -> shareGroup()
+        GroupDetailsIntent.ShareQr -> shareQrCode()
         is GroupDetailsIntent.ToggleReminder -> toggleReminder(intent.enabled)
         is GroupDetailsIntent.RemoveMember -> removeMember(intent.memberId)
         GroupDetailsIntent.ShareWishlist -> shareWishlist()
@@ -174,6 +178,23 @@ internal class GroupDetailsViewModel @Inject constructor(
         )
         viewModelScope.launch {
             shareUseCase(group = _uiState.value.group)
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.shareQrCode", enabled = true)
+    private fun shareQrCode() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "share_group_qr_code"
+            )
+        )
+        viewModelScope.launch {
+            shareQrCodeUseCase(_uiState.value.group)
+                .onFailure { error ->
+                    Timber.e(error, "Error sharing group QR code")
+                    _uiState.update { it.copy(error = "Erro ao gerar QR Code") }
+                }
         }
     }
 
