@@ -27,10 +27,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -73,8 +69,6 @@ internal class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             deviceId = deviceService.getDeviceId()
 
-            checkAndClearExpiredChat()
-
             val cachedName = identifyUserUseCase.getNickname()
             val member =
                 _uiState.value.groupModel.members.find { it.phoneNumber == deviceId || it.id == deviceId }
@@ -90,27 +84,6 @@ internal class ChatViewModel @Inject constructor(
         }
     }
 
-    @AddTrace(name = "ChatViewModel.checkAndClearExpiredChat", enabled = true)
-    private suspend fun checkAndClearExpiredChat() {
-        analyticsService.logEvent(
-            name = AnalyticsEvent.VIEW,
-            params = mapOf(
-                AnalyticsParam.ACTION to "check_and_clear_expired_chat"
-            )
-        )
-        val groupDateString = _uiState.value.groupModel.date ?: return
-        runCatching {
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val groupDate = sdf.parse(groupDateString) ?: return
-            val currentDate = Date()
-
-            if (currentDate.after(groupDate)) {
-                Timber.d("Chat expirado para o grupo ${_uiState.value.groupModel.id}. Limpando...")
-                clearMessagesUseCase(_uiState.value.groupModel.id)
-            }
-        }.onFailure { Timber.e(it) }
-    }
-
     @AddTrace(name = "ChatViewModel.handleIntent", enabled = true)
     fun handleIntent(intent: ChatIntent) {
         when (intent) {
@@ -119,8 +92,21 @@ internal class ChatViewModel @Inject constructor(
             is ChatIntent.LoadMessages -> observeMessages()
             is ChatIntent.IdentifyUser -> identifyUser(intent.name)
             is ChatIntent.DismissIdentification -> _uiState.update { it.copy(showIdentificationModal = false) }
-            is ChatIntent.ClearChat -> {}
+            is ChatIntent.ClearChat -> clearChat()
             is ChatIntent.ToggleReaction -> toggleReaction(intent.messageId, intent.emoji)
+        }
+    }
+
+    @AddTrace(name = "ChatViewModel.clearChat", enabled = true)
+    private fun clearChat() {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "clear_chat"
+            )
+        )
+        viewModelScope.launch {
+            clearMessagesUseCase(_uiState.value.groupModel.id)
         }
     }
 
