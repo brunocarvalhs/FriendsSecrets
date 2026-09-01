@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.8.0] - 2026-09-01
+
+* Merge pull request #81 from brunocarvalhs/feat/openrouter-ai-gift-chat
+* fix(secrets): quote the OPEN_ROUTER_API_KEY placeholder in .env.example
+* chore(secrets): switch OPEN_ROUTER_API_KEY to .env/.env.example
+* feat(chat): swap Firebase AI Logic for OpenRouter (free Llama 3.3 70B)
+* chore: bump version to 3.7.0 [skip ci]
+
+
 ## [3.7.0] - 2026-09-01
 
 * Merge pull request #80 from brunocarvalhs/feat/collaborative-likes-and-bottom-sheets
