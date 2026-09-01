@@ -10,10 +10,11 @@ O Friends Secrets utiliza uma **Arquitetura Multi-Módulo Baseada em Features**,
 graph TD
     App[":app"] --> Features
     App --> Core
+    App --> BaselineProfile[":baselineprofile"]
     
     subgraph Features ["Feature Modules (:features:*)"]
         Chat[":chat"]
-        Group[":group:list, :group:details, :group:create"]
+        Group[":group:list, :group:details, :group:create, :group:draw"]
         Biometric[":biometric"]
         Settings[":settings"]
     end
@@ -21,9 +22,15 @@ graph TD
     subgraph Core ["Core Modules (:core:*)"]
         Nav[":navigation"]
         Network[":network"]
+        Remote[":remote (Remote Config)"]
         Domain[":domain (Global)"]
         UI[":ui (Design System)"]
         Analytics[":analytics"]
+        Security[":security"]
+        Storage[":storage"]
+        DeviceId[":deviceid"]
+        Notifications[":notifications"]
+        Logger[":logger"]
     end
     
     Features --> Nav

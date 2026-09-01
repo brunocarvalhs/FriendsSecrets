@@ -8,7 +8,7 @@ Este documento fornece instruções detalhadas para configurar o ambiente de des
 
 - **Android Studio**: Ladybug (2024.2.1) ou superior recomendado.
 - **JDK (Java Development Kit)**: Versão 17 (obrigatória para as versões atuais do Gradle e AGP).
-- **Gradle**: Versão 8.x ou superior (gerenciado pelo wrapper).
+- **Gradle**: gerenciado pelo wrapper (AGP 9.x).
 - **Git**: Para controle de versão.
 
 ### Hardware Recomendado
@@ -17,8 +17,8 @@ Este documento fornece instruções detalhadas para configurar o ambiente de des
 - **Memória RAM**: 8GB mínimo, 16GB recomendado
 - **Espaço em Disco**: Pelo menos 10GB de espaço livre
 - **Dispositivo Android ou Emulador**: 
-  - Dispositivo físico com Android 7.0 (API 24) ou superior
-  - Emulador configurado com Android 7.0 ou superior
+  - Dispositivo físico com Android 8.0 (API 26) ou superior
+  - Emulador configurado com Android 8.0 ou superior
 
 ## Configuração do Ambiente
 
@@ -33,7 +33,7 @@ Este documento fornece instruções detalhadas para configurar o ambiente de des
 
 ### 2. Configuração do JDK
 
-1. Verifique se você tem o JDK 11 ou superior instalado:
+1. Verifique se você tem o JDK 17 instalado:
    ```bash
    java -version
    ```
@@ -48,7 +48,7 @@ Se você planeja usar um emulador em vez de um dispositivo físico:
 2. Vá para Tools > AVD Manager
 3. Clique em "Create Virtual Device"
 4. Selecione um dispositivo (ex: Pixel 4)
-5. Selecione uma imagem do sistema com API 24 ou superior
+5. Selecione uma imagem do sistema com API 26 ou superior
 6. Configure as opções adicionais conforme necessário
 7. Clique em "Finish"
 

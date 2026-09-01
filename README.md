@@ -25,9 +25,13 @@ Sabe aquele mistério de quem tirou quem? Ou aquela vontade de enviar um elogio 
 ## ✨ Funcionalidades Principais
 
 - **🎭 Mistério Garantido**: Envio de mensagens anônimas e sistema de dicas para apimentar o Amigo Secreto.
-- **🎲 Sorteio Inteligente**: Algoritmo de sorteio automático com notificações instantâneas para todos os membros.
-- **🤖 IA Amiga**: Chat generativo para sugestões de presentes e ideias de surpresas.
+- **🎲 Sorteio Inteligente**: Algoritmo de sorteio automático com celebração animada e notificações instantâneas para todos os membros.
+- **🤖 IA Amiga**: Chat generativo com reações a mensagens para sugestões de presentes e ideias de surpresas.
+- **🔗 Convites Flexíveis**: Convide por link, deep link (`friendssecrets://join?code=`), QR Code ou cartão de convite ilustrado para compartilhar.
+- **🎁 Lista de Desejos**: Cada membro monta sua wishlist, com preview rico para itens que são links de produtos.
+- **⏰ Lembretes**: Notificação local com a data do sorteio/troca de presentes.
 - **🔐 Blindagem Digital**: Login via telefone, biometria e exclusão total de dados sob demanda.
+- **🌎 Multilíngue**: Interface disponível em Português (BR), Inglês, Espanhol, Francês, Alemão, Holandês, Polonês e Coreano.
 - **🎨 Experiência Premium**: Interface moderna com suporte a Material You (Tema Dinâmico) e animações fluidas.
 
 - **Autenticação Segura**: 
@@ -37,19 +41,32 @@ Sabe aquele mistério de quem tirou quem? Ou aquela vontade de enviar um elogio 
 
 - **Gerenciamento de Grupos**: 
   - Criação e edição de grupos para amigos secretos
-  - Visualização detalhada de membros do grupo
-  - Sorteio automático de amigos secretos
+  - Visualização detalhada de membros do grupo, com opção de remover participantes
+  - Convite via link, deep link, QR Code ou cartão de convite compartilhável
+  - Sorteio automático de amigos secretos, com celebração animada
+  - Lembrete local para a data da troca de presentes
 
 - **Compartilhamento Anônimo**: 
   - Envio de mensagens anônimas
   - Visualização de segredos compartilhados
 
+- **Lista de Desejos**:
+  - Cada membro cria e edita sua própria wishlist
+  - Preview automático para itens que são links de produtos
+  - Compartilhamento da wishlist com o grupo
+
 - **Chat com IA**: 
   - Interação com inteligência artificial
+  - Reações a mensagens
   - Sugestões de presentes e ideias
+
+- **Notificações Push**:
+  - Aviso quando o sorteio é concluído
+  - Aviso de novas mensagens no chat
 
 - **Personalização**:
   - Temas claro e escuro
+  - Suporte a 8 idiomas
   - Configurações de aparência personalizáveis
 
 - **Segurança**:
@@ -74,6 +91,8 @@ Sabe aquele mistério de quem tirou quem? Ou aquela vontade de enviar um elogio 
   - [Coil](https://coil-kt.github.io/coil/) (Carregamento de imagens)
   - [Biometric](https://developer.android.com/jetpack/androidx/releases/biometric) (Autenticação biométrica)
   - [uCrop](https://github.com/Yalantis/uCrop) (Recorte de imagens)
+  - [ZXing](https://github.com/zxing/zxing) (Geração e leitura de QR Code para convites)
+  - [WorkManager](https://developer.android.com/jetpack/androidx/releases/work) (Sincronização de notificações push em segundo plano)
 - **Testes**:
   - [JUnit](https://junit.org/junit4/)
   - [Mockito](https://site.mockito.org/)
@@ -89,10 +108,10 @@ Sabe aquele mistério de quem tirou quem? Ou aquela vontade de enviar um elogio 
 
 ### Requisitos
 
-- **Android Studio**: Arctic Fox (2020.3.1) ou superior
-- **SDK Android**: API 24 (Android 7.0 Nougat) ou superior
-- **Java Development Kit (JDK)**: JDK 11 ou superior
-- **Gradle**: 7.0 ou superior
+- **Android Studio**: Ladybug (2024.2.1) ou superior
+- **SDK Android**: mínimo API 26 (Android 8.0 Oreo), compilado com API 37
+- **Java Development Kit (JDK)**: JDK 17 (obrigatório)
+- **Gradle**: gerenciado pelo wrapper (via AGP 9.x)
 
 ### Configuração do Ambiente de Desenvolvimento
 
@@ -182,23 +201,30 @@ O projeto utiliza uma estrutura modular para garantir escalabilidade e separaç�
 
 ```
 ├── app/                   # Módulo principal que orquestra a aplicação
+├── baselineprofile/       # Perfil de baseline para otimização de startup
 ├── core/                  # Módulos compartilhados entre as features
 │   ├── analytics/         # Rastreamento de eventos
 │   ├── biometric/         # Abstração de biometria
+│   ├── deviceid/          # Identificação de dispositivo
 │   ├── domain/            # Entidades e utilitários globais
+│   ├── logger/            # Abstração de logging
 │   ├── navigation/        # Hub de navegação centralizado
 │   ├── network/           # Configuração de rede e Firebase
+│   ├── notifications/     # Notificações push
+│   ├── remote/            # Remote Config e feature flags
 │   ├── security/          # Segurança e criptografia
+│   ├── storage/           # Persistência local
 │   ├── ui/                # Design System e componentes comuns
 │   └── ...
 └── features/              # Módulos de funcionalidades específicas
-    ├── auth/              # Fluxo de autenticação
-    ├── chat/              # Chat com IA
-    ├── group/             # Sub-módulos de gerenciamento de grupos
+    ├── biometric/          # Fluxo de autenticação biométrica
+    ├── chat/               # Chat com IA
+    ├── group/              # Sub-módulos de gerenciamento de grupos
     │   ├── list/
     │   ├── details/
-    │   └── create/
-    └── settings/          # Configurações do app
+    │   ├── create/
+    │   └── draw/           # Sorteio de amigo secreto
+    └── settings/           # Configurações do app
 ```
 
 ## 🧪 Testes
@@ -221,8 +247,13 @@ Localizados em `app/src/androidTest/`, testam a interface do usuário e integra�
 
 ## 📝 Documentação Adicional
 
+- [Visão Geral do Projeto](./docs/PROJECT_OVERVIEW.md)
+- [Arquitetura](./docs/ARCHITECTURE.md)
+- [Guia de Instalação e Configuração](./docs/SETUP.md)
+- [Melhores Práticas de Desenvolvimento](./docs/BEST_PRACTICES.md)
 - [Requisitos Funcionais](./docs/functional-requirements.md)
 - [Requisitos Não Funcionais](./docs/non-functional-requirements.md)
+- [Casos de Uso](./docs/use-cases.md)
 - [Política de Privacidade](./docs/PrivacyPolicy.md)
 - [Termos e Condições](./docs/TermsEndConditions.md)
 - [Changelog](./CHANGELOG.md)

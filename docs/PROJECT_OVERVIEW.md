@@ -47,9 +47,10 @@ O Friends Secrets se diferencia por:
 ### 2. Gerenciamento de Grupos
 
 - Criação e edição de grupos para amigos secretos
-- Convite de participantes via link ou contatos
-- Sorteio automático de amigos secretos
-- Definição de datas e valores para troca de presentes
+- Convite de participantes via link, deep link, QR Code ou cartão de convite compartilhável
+- Sorteio automático de amigos secretos, com celebração animada
+- Definição de datas e valores para troca de presentes, com lembrete local
+- Remoção de membros pelo dono do grupo
 
 ### 3. Compartilhamento Anônimo
 
@@ -57,15 +58,28 @@ O Friends Secrets se diferencia por:
 - Sistema de dicas para amigos secretos
 - Revelação programada de identidades
 
-### 4. Chat com IA
+### 4. Lista de Desejos
+
+- Cada membro cria e edita sua própria wishlist
+- Preview automático para itens que são links de produtos
+- Compartilhamento da wishlist com o grupo
+
+### 5. Chat com IA
 
 - Interação com inteligência artificial para sugestões
+- Reações a mensagens
 - Recomendações personalizadas de presentes
 - Ideias criativas para surpresas
 
-### 5. Personalização
+### 6. Notificações Push
+
+- Aviso quando o sorteio é concluído
+- Aviso de novas mensagens no chat
+
+### 7. Personalização
 
 - Temas claro e escuro
+- Suporte a 8 idiomas
 - Opções de notificação personalizáveis
 - Configurações de privacidade ajustáveis
 
@@ -84,11 +98,15 @@ O projeto utiliza um conjunto moderno de tecnologias:
 
 ## Estado Atual do Projeto
 
-Atualmente, o Friends Secrets está na versão 1.2.3, com as seguintes funcionalidades implementadas:
+Atualmente, o Friends Secrets está na versão 3.2.2, com as seguintes funcionalidades implementadas:
 
 - Sistema completo de autenticação com telefone e biometria
-- Gerenciamento básico de grupos e amigos secretos
-- Chat com IA para sugestões de presentes
+- Gerenciamento de grupos e amigos secretos, com convite por link, deep link, QR Code e cartão de convite compartilhável
+- Sorteio automático com celebração animada e lembrete local para a data da troca
+- Lista de desejos por membro, com preview de itens que são links de produtos
+- Chat com IA para sugestões de presentes, com reações a mensagens
+- Notificações push para conclusão do sorteio e novas mensagens
+- Suporte a 8 idiomas (Português-BR, Inglês, Espanhol, Francês, Alemão, Holandês, Polonês e Coreano)
 - Personalização de temas e configurações
 - Edição de perfil com foto
 
@@ -98,21 +116,18 @@ Atualmente, o Friends Secrets está na versão 1.2.3, com as seguintes funcional
 
 - **Melhorias na UI/UX**: Refinar a experiência do usuário com animações e transições mais fluidas
 - **Expansão do Chat com IA**: Adicionar mais recursos e personalização às sugestões
-- **Notificações Avançadas**: Implementar sistema de notificações programáveis e personalizáveis
 - **Compartilhamento de Mídia**: Permitir o envio de imagens e vídeos em mensagens anônimas
+- **Eventos Programados**: Expandir o sistema de lembretes com calendário completo
 
 ### Médio Prazo (6-12 meses)
 
 - **Recursos Sociais**: Adicionar funcionalidades para conectar amigos e expandir grupos
-- **Listas de Desejos**: Implementar sistema onde usuários podem criar e compartilhar listas de desejos
-- **Eventos Programados**: Adicionar calendário e lembretes para eventos e trocas de presentes
 - **Versão iOS**: Desenvolver versão para dispositivos Apple
 
 ### Longo Prazo (12+ meses)
 
 - **Marketplace**: Integração com lojas online para compra direta de presentes sugeridos
 - **Recursos Premium**: Implementar modelo freemium com recursos avançados
-- **Expansão Internacional**: Tradução e adaptação para mercados globais
 - **Integração com Redes Sociais**: Conectar com outras plataformas para expandir alcance
 
 ## Métricas de Sucesso
