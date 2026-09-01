@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.2] - 2026-09-01
+
+* Merge pull request #79 from brunocarvalhs/fix/wishlist-share-errors-and-ai-context
+* fix(group-details,chat): surface action errors and use member likes for AI suggestions
+* chore: bump version to 3.6.1 [skip ci]
+
+
 ## [3.6.1] - 2026-09-01
 
 * Merge pull request #78 from brunocarvalhs/fix/app-check-for-ai-logic
