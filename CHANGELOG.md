@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.3.0] - 2026-09-01
+
+* ### Summary This update synchronizes the project documentation with version 3.2.2, reflecting a significant architectural expansion and updated development requirements. Key changes include the addition of several core and feature modules, updated system prerequisites (JDK 17, API 26+), and a finalized feature set including wishlists, AI-driven interactions, and multi-language support.
+* Merge remote-tracking branch 'origin/develop' into develop
+* chore: bump version to 3.2.2 [skip ci]
+* feat(analytics): add chat engagement funnel and creator/joiner retention cohorts
+* feat(analytics): add named funnel events for GA4 funnel exploration
+* feat(deeplink): add friendssecrets://join?code= deep link and refresh Maestro regression suite
+* fix(chat): avoid double setPersistenceEnabled crash and add Android 17 predictive back support
+
+
 ## [3.2.2] - 2026-09-01
 
 * Rename README.md to CONFIG.md
