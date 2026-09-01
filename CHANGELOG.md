@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.8.1] - 2026-09-01
+
+* fix(chat): use OpenRouter's Free Models Router instead of a pinned model (#82)
+* chore: bump version to 3.8.0 [skip ci]
+
+
 ## [3.8.0] - 2026-09-01
 
 * Merge pull request #81 from brunocarvalhs/feat/openrouter-ai-gift-chat
