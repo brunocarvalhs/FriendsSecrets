@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.1] - 2026-09-01
+
+* Merge pull request #78 from brunocarvalhs/fix/app-check-for-ai-logic
+* fix(app): initialize Firebase App Check so AI Logic requests aren't blocked
+* chore: bump version to 3.6.0 [skip ci]
+
+
 ## [3.6.0] - 2026-09-01
 
 * Merge pull request #77 from brunocarvalhs/feat/ai-gift-chat
