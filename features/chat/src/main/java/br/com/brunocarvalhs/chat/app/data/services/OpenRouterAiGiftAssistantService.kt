@@ -89,7 +89,7 @@ private class OpenRouterChatSession(
 
     private companion object {
         const val CHAT_COMPLETIONS_URL = "https://openrouter.ai/api/v1/chat/completions"
-        const val MODEL_NAME = "meta-llama/llama-3.3-70b-instruct:free"
+        const val MODEL_NAME = "openrouter/free"
         const val ROLE_SYSTEM = "system"
         const val ROLE_USER = "user"
         const val ROLE_ASSISTANT = "assistant"
