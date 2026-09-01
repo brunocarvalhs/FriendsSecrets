@@ -52,4 +52,10 @@
     <string name="edit_likes_cancel_action">Abbrechen</string>
     <string name="edit_likes_remove_action">%1$s entfernen</string>
     <string name="edit_likes_empty_state">Noch keine Interessen hinzugefügt</string>
+    <string name="add_adjective_action">Ein Adjektiv für %1$s hinzufügen</string>
+    <string name="add_adjective_title">Beschreibe %1$s mit einem Wort</string>
+    <string name="add_adjective_hint">z. B. Lustig, Nett…</string>
+    <string name="add_adjective_description">Jeder in der Gruppe kann Adjektive hinzufügen – sie erscheinen auf der Karte dieses Mitglieds.</string>
+    <string name="add_adjective_save_action">Hinzufügen</string>
+    <string name="add_adjective_cancel_action">Abbrechen</string>
 </resources>

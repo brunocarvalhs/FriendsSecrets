@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,6 +49,7 @@ internal fun ContactItem(
     subtitle: String? = null,
     photoUrl: String? = null,
     likes: List<String> = emptyList(),
+    adjectives: List<String> = emptyList(),
     isSelected: Boolean = false,
     isLikedExpanded: Boolean = false,
     paddingValues: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
@@ -157,6 +159,26 @@ internal fun ContactItem(
                         hashMapOf(GroupModel.NAME to name, GroupModel.PHOTO to photoUrl),
                         isLiked
                     )
+                }
+            }
+
+            if (adjectives.isNotEmpty()) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(adjectives) { adjective ->
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(adjective) },
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        )
+                    }
                 }
             }
 

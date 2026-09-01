@@ -11,14 +11,16 @@ internal data class UserDetailsDTO(
     @SerialName("name") val name: String = EMPTY_STRING,
     @SerialName("phoneNumber") val phoneNumber: String = EMPTY_STRING,
     @SerialName("photoUrl") val photoUrl: String? = null,
-    @SerialName("likes") val likes: List<String> = emptyList()
+    @SerialName("likes") val likes: List<String> = emptyList(),
+    @SerialName("adjectives") val adjectives: Map<String, List<String>> = emptyMap()
 ) {
     fun toDomain() = UserModel(
         id = id,
         name = name,
         phoneNumber = phoneNumber,
         photoUrl = photoUrl,
-        likes = likes
+        likes = likes,
+        adjectives = adjectives
     )
 
     companion object {
@@ -27,7 +29,8 @@ internal data class UserDetailsDTO(
             name = model.name,
             phoneNumber = model.phoneNumber,
             photoUrl = model.photoUrl,
-            likes = model.likes
+            likes = model.likes,
+            adjectives = model.adjectives
         )
     }
 }
