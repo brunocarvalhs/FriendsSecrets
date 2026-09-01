@@ -32,6 +32,9 @@
     <string name="share_group_title">Code delen</string>
     <string name="invite_card">Kaart</string>
     <string name="qr_code">QR-code</string>
+    <string name="invite_share_link_title">Link delen</string>
+    <string name="invite_share_link_description">Stuur een uitnodigingslink of tekst via een willekeurige app</string>
+    <string name="invite_share_qr_description">Deel een QR-code die anderen kunnen scannen om lid te worden</string>
     <string name="reminder_enable_action">Herinner me op de datum van de loting</string>
     <string name="reminder_disable_action">Herinnering uitzetten</string>
     <string name="reminder_notification_channel_name">Geheime Lootjes-herinneringen</string>
