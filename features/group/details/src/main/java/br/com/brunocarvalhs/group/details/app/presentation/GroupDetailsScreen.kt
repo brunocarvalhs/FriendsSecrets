@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Casino
@@ -83,6 +84,7 @@ internal fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
     onChat: (GroupModel) -> Unit = {},
+    onAiGiftChat: (GroupModel) -> Unit = {},
     onDraw: (GroupModel) -> Unit = {},
     onEdit: (GroupModel) -> Unit = {},
     onAddMembers: (GroupModel) -> Unit = {},
@@ -132,6 +134,7 @@ internal fun GroupDetailsScreen(
         onBack = onBack,
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
+        onAiGiftChat = { onAiGiftChat.invoke(group) },
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onInviteClick = { showInviteSheet = true },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
@@ -227,6 +230,7 @@ private fun GroupDetailsContent(
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onChat: () -> Unit,
+    onAiGiftChat: () -> Unit,
     onDelete: () -> Unit,
     onExit: () -> Unit,
     onInviteClick: () -> Unit,
@@ -264,6 +268,7 @@ private fun GroupDetailsContent(
                     isDrawn = isDrawn,
                     onInviteClick = onInviteClick,
                     onChat = onChat,
+                    onAiGiftChat = onAiGiftChat,
                     onDraw = onDraw
                 )
             }
@@ -395,6 +400,7 @@ private fun GroupDetailsActions(
     isDrawn: Boolean,
     onInviteClick: () -> Unit,
     onChat: () -> Unit,
+    onAiGiftChat: () -> Unit,
     onDraw: () -> Unit
 ) {
     Column {
@@ -412,6 +418,10 @@ private fun GroupDetailsActions(
             ActionIconCard(
                 Icons.AutoMirrored.Filled.Chat,
                 stringResource(R.string.chat), onChat
+            )
+            ActionIconCard(
+                Icons.Default.AutoAwesome,
+                stringResource(R.string.ai_gift_suggestions), onAiGiftChat
             )
             ActionIconCard(
                 icon = Icons.Default.Casino,
@@ -605,6 +615,7 @@ private fun GroupDetailsPreview() {
         onDelete = {},
         onExit = {},
         onInviteClick = {},
+        onAiGiftChat = {},
         onEdit = {},
         onAddMembers = {}
     )

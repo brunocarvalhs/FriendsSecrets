@@ -11,4 +11,8 @@
     <string name="react_to_message">Zareaguj na wiadomość</string>
     <string name="chat_date_today">Dzisiaj</string>
     <string name="chat_date_yesterday">Wczoraj</string>
+    <string name="ai_gift_chat_title">Pomysły na prezent</string>
+    <string name="ai_gift_chat_assistant_name">Asystent Prezentów</string>
+    <string name="ai_gift_chat_typing">Myślę…</string>
+    <string name="ai_gift_chat_input">Zapytaj o pomysły na prezent…</string>
 </resources>

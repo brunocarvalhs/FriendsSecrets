@@ -20,6 +20,9 @@ class GroupDetailsInitializerImpl @Inject constructor(
             .onChat { group ->
                 navigator.navigateToChat(navController, group)
             }
+            .onAiGiftChat { group ->
+                navigator.navigateToAiGiftChat(navController, group)
+            }
             .onEdit { group ->
                 navigator.navigateToEditGroup(navController, group)
             }

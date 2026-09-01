@@ -11,4 +11,8 @@
     <string name="react_to_message">Reageren op bericht</string>
     <string name="chat_date_today">Vandaag</string>
     <string name="chat_date_yesterday">Gisteren</string>
+    <string name="ai_gift_chat_title">Cadeau-ideeën</string>
+    <string name="ai_gift_chat_assistant_name">Cadeau-assistent</string>
+    <string name="ai_gift_chat_typing">Aan het nadenken…</string>
+    <string name="ai_gift_chat_input">Vraag om cadeau-ideeën…</string>
 </resources>

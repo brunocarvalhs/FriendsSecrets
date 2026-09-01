@@ -30,6 +30,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
                     onBack = builder.onBack,
                     onDraw = { builder.onDraw(viewModel.uiState.value.group) },
                     onChat = { builder.onChat(viewModel.uiState.value.group) },
+                    onAiGiftChat = { builder.onAiGiftChat(viewModel.uiState.value.group) },
                     onEdit = { builder.onEdit(viewModel.uiState.value.group) },
                     onAddMembers = { builder.onAddMembers(viewModel.uiState.value.group) }
                 )
@@ -42,6 +43,7 @@ class GroupDetailsInitializer(private val builder: Builder) {
         internal var onBack: () -> Unit = {}
         internal var onDraw: (GroupModel) -> Unit = {}
         internal var onChat: (GroupModel) -> Unit = {}
+        internal var onAiGiftChat: (GroupModel) -> Unit = {}
         internal var onEdit: (GroupModel) -> Unit = {}
         internal var onAddMembers: (GroupModel) -> Unit = {}
 
@@ -63,6 +65,11 @@ class GroupDetailsInitializer(private val builder: Builder) {
         @AddTrace(name = "GroupListInitializer.Builder.onChat", enabled = true)
         fun onChat(onChat: (GroupModel) -> Unit) = apply {
             this.onChat = onChat
+        }
+
+        @AddTrace(name = "GroupListInitializer.Builder.onAiGiftChat", enabled = true)
+        fun onAiGiftChat(onAiGiftChat: (GroupModel) -> Unit) = apply {
+            this.onAiGiftChat = onAiGiftChat
         }
 
         @AddTrace(name = "GroupListInitializer.Builder.onEdit", enabled = true)

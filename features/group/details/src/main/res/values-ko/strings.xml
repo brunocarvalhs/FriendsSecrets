@@ -12,6 +12,7 @@
     <string name="group_participants">그룹 · %1$d명의 참가자</string>
     <string name="invite">초대</string>
     <string name="chat">채팅</string>
+    <string name="ai_gift_suggestions">선물 아이디어</string>
     <string name="reveal">공개</string>
     <string name="draw">추첨</string>
     <string name="add_group_description">그룹 설명 추가</string>
