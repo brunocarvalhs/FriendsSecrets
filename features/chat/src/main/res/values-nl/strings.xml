@@ -9,4 +9,6 @@
     <string name="chat_input">Typ een bericht...</string>
     <string name="chat_button_send">Versturen</string>
     <string name="react_to_message">Reageren op bericht</string>
+    <string name="chat_date_today">Vandaag</string>
+    <string name="chat_date_yesterday">Gisteren</string>
 </resources>
