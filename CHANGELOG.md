@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.4.0] - 2026-09-01
+
+* Merge pull request #75 from brunocarvalhs/feat/group-invite-bottom-sheet
+* Merge pull request #74 from brunocarvalhs/fix/chat-whatsapp-style-ui
+* fix(group-details): translate invite bottom sheet strings to all locales
+* fix(chat): translate date divider strings to all supported locales
+* feat(group-details): consolidate invite actions into a bottom sheet
+* fix(chat): keep input above the navigation bar and add WhatsApp-style date dividers
+* chore: bump version to 3.3.1 [skip ci]
+
+
 ## [3.3.1] - 2026-09-01
 
 * Merge pull request #73 from brunocarvalhs/fix/chat-local-history-cache
