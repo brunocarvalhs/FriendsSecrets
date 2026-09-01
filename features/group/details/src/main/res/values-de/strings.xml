@@ -32,6 +32,9 @@
     <string name="share_group_title">Code teilen</string>
     <string name="invite_card">Karte</string>
     <string name="qr_code">QR-Code</string>
+    <string name="invite_share_link_title">Link teilen</string>
+    <string name="invite_share_link_description">Sende einen Einladungslink oder Text über eine beliebige App</string>
+    <string name="invite_share_qr_description">Teile einen QR-Code, den andere scannen können, um beizutreten</string>
     <string name="reminder_enable_action">An den Auslosungstermin erinnern</string>
     <string name="reminder_disable_action">Erinnerung ausschalten</string>
     <string name="reminder_notification_channel_name">Wichtel-Erinnerungen</string>

@@ -32,6 +32,9 @@
     <string name="share_group_title">Compartir código</string>
     <string name="invite_card">Tarjeta</string>
     <string name="qr_code">Código QR</string>
+    <string name="invite_share_link_title">Compartir enlace</string>
+    <string name="invite_share_link_description">Envía un enlace de invitación o texto a través de cualquier app</string>
+    <string name="invite_share_qr_description">Comparte un código QR que otros puedan escanear para unirse</string>
     <string name="reminder_enable_action">Recordarme en la fecha del sorteo</string>
     <string name="reminder_disable_action">Desactivar recordatorio</string>
     <string name="reminder_notification_channel_name">Recordatorios de Amigo Invisible</string>

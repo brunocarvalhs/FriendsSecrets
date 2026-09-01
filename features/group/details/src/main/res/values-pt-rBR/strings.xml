@@ -32,6 +32,9 @@
     <string name="share_group_title">Compartilhar Código</string>
     <string name="invite_card">Cartão</string>
     <string name="qr_code">QR Code</string>
+    <string name="invite_share_link_title">Compartilhar link</string>
+    <string name="invite_share_link_description">Envie um link ou texto de convite por qualquer app</string>
+    <string name="invite_share_qr_description">Compartilhe um QR Code para outros escanearem e entrarem</string>
     <string name="reminder_enable_action">Lembrar na data do sorteio</string>
     <string name="reminder_disable_action">Desativar lembrete</string>
     <string name="reminder_notification_channel_name">Lembretes de Amigo Secreto</string>

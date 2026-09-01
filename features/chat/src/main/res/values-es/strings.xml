@@ -9,4 +9,6 @@
     <string name="chat_input">Escribe un mensaje...</string>
     <string name="chat_button_send">Enviar</string>
     <string name="react_to_message">Reaccionar al mensaje</string>
+    <string name="chat_date_today">Hoy</string>
+    <string name="chat_date_yesterday">Ayer</string>
 </resources>
