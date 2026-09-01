@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.6.0] - 2026-09-01
+
+* Merge pull request #77 from brunocarvalhs/feat/ai-gift-chat
+* fix(chat): wrap analytics call in AiGiftChatViewModel to satisfy MaxLineLength
+* fix(chat): accept a Modifier in AI chat composables
+* feat(chat): add AI gift-suggestion chat using Firebase AI Logic
+* chore: bump version to 3.5.0 [skip ci]
+
+
 ## [3.5.0] - 2026-09-01
 
 * Merge pull request #76 from brunocarvalhs/feat/member-adjectives
