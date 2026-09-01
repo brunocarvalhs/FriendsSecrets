@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1] - 2026-09-01
+
+* Merge pull request #73 from brunocarvalhs/fix/chat-local-history-cache
+* fix(chat): persist chat history locally and stop auto-deleting it
+* chore: bump version to 3.3.0 [skip ci]
+
+
 ## [3.3.0] - 2026-09-01
 
 * ### Summary This update synchronizes the project documentation with version 3.2.2, reflecting a significant architectural expansion and updated development requirements. Key changes include the addition of several core and feature modules, updated system prerequisites (JDK 17, API 26+), and a finalized feature set including wishlists, AI-driven interactions, and multi-language support.
