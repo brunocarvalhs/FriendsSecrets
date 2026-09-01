@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.0] - 2026-09-01
+
+* Merge pull request #76 from brunocarvalhs/feat/member-adjectives
+* Merge remote-tracking branch 'origin/develop' into feat/member-adjectives
+* chore: bump version to 3.4.0 [skip ci]
+* feat(group-details): let group members add adjectives to each other
+
+
 ## [3.4.0] - 2026-09-01
 
 * Merge pull request #75 from brunocarvalhs/feat/group-invite-bottom-sheet
