@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0] - 2026-09-01
+
+* Merge pull request #80 from brunocarvalhs/feat/collaborative-likes-and-bottom-sheets
+* feat(group-details): replace adjectives with collaborative likes, move to bottom sheets
+* chore: bump version to 3.6.2 [skip ci]
+
+
 ## [3.6.2] - 2026-09-01
 
 * Merge pull request #79 from brunocarvalhs/fix/wishlist-share-errors-and-ai-context
