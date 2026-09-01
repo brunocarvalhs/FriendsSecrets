@@ -112,7 +112,7 @@ internal fun AiGiftChatScreen(
 }
 
 @Composable
-private fun AiChatMessageItem(message: AiChatMessage) {
+private fun AiChatMessageItem(message: AiChatMessage, modifier: Modifier = Modifier) {
     val alignment = if (message.isFromUser) Alignment.CenterEnd else Alignment.CenterStart
     val containerColor = if (message.isFromUser) {
         MaterialTheme.colorScheme.primaryContainer
@@ -126,7 +126,7 @@ private fun AiChatMessageItem(message: AiChatMessage) {
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         contentAlignment = alignment
@@ -161,8 +161,8 @@ private fun AiChatMessageItem(message: AiChatMessage) {
 }
 
 @Composable
-private fun AiTypingIndicator() {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
+private fun AiTypingIndicator(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer
