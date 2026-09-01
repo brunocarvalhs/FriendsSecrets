@@ -43,7 +43,10 @@ internal class AiGiftChatViewModel @Inject constructor(
     val uiState: StateFlow<AiGiftChatUiState> = _uiState.asStateFlow()
 
     init {
-        analyticsService.logEvent(name = AnalyticsEvent.VIEW, params = mapOf(AnalyticsParam.ACTION to "ai_gift_chat_opened"))
+        analyticsService.logEvent(
+            name = AnalyticsEvent.VIEW,
+            params = mapOf(AnalyticsParam.ACTION to "ai_gift_chat_opened")
+        )
     }
 
     fun handleIntent(intent: AiGiftChatIntent) {
