@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:biometric"))
     implementation(project(":core:remote"))
+    implementation(project(":core:review"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -70,8 +71,6 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.review)
-    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.biometric)
 
     testImplementation(libs.junit)

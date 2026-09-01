@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.group.draw.app.presentation
 
+import android.app.Activity
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.brunocarvalhs.core.domain.model.UserModel
@@ -33,6 +35,14 @@ internal fun DrawScreen(
     onBack: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val activity = LocalContext.current as? Activity
+
+    LaunchedEffect(uiState.shouldRequestReview) {
+        if (uiState.shouldRequestReview && activity != null) {
+            delay(REVIEW_PROMPT_DELAY_MS)
+            viewModel.handleIntent(DrawIntent.RequestReview(activity))
+        }
+    }
 
     DrawContent(
         uiState = uiState,
@@ -41,6 +51,8 @@ internal fun DrawScreen(
         onBack = onBack
     )
 }
+
+private const val REVIEW_PROMPT_DELAY_MS = 2500L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

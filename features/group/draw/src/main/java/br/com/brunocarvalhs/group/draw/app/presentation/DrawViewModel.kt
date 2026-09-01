@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.draw.app.presentation
 
 import AnalyticsParam
+import android.app.Activity
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,8 @@ import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.navigation.routers.DrawGraph
+import br.com.brunocarvalhs.core.review.data.InAppReviewLauncher
+import br.com.brunocarvalhs.core.review.domain.ReviewPromptService
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.DrawUseCase
 import br.com.brunocarvalhs.group.draw.app.domain.useCases.ShareSecretFriendsUseCase
 import com.google.firebase.perf.metrics.AddTrace
@@ -16,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,7 +30,9 @@ internal class DrawViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val shareSecretFriendsUseCase: ShareSecretFriendsUseCase,
     private val drawUseCase: DrawUseCase,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    private val reviewPromptService: ReviewPromptService,
+    private val inAppReviewLauncher: InAppReviewLauncher
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<DrawGraph>(DrawGraph.typeMap)
@@ -48,6 +54,7 @@ internal class DrawViewModel @Inject constructor(
     fun handleIntent(intent: DrawIntent) = when (intent) {
         is DrawIntent.Share -> share(intent.secret)
         DrawIntent.Draw -> draw()
+        is DrawIntent.RequestReview -> requestReview(intent.activity)
     }
 
     @AddTrace(name = "DrawViewModel.share", enabled = true)
@@ -76,9 +83,20 @@ internal class DrawViewModel @Inject constructor(
                 analyticsService.logEvent(name = AnalyticsEvent.DRAW_COMPLETED)
                 _uiState.value = _uiState.value.copy(
                     results = results,
-                    isDrawn = true
+                    isDrawn = true,
+                    shouldRequestReview = reviewPromptService.shouldPrompt()
                 )
             }.onFailure(::error)
+        }
+    }
+
+    @AddTrace(name = "DrawViewModel.requestReview", enabled = true)
+    private fun requestReview(activity: Activity) {
+        if (!_uiState.value.shouldRequestReview) return
+        _uiState.update { it.copy(shouldRequestReview = false) }
+        viewModelScope.launch {
+            reviewPromptService.recordPrompted()
+            inAppReviewLauncher.launch(activity)
         }
     }
 
