@@ -8,4 +8,5 @@ internal data class DrawUiState(
     val error: String? = null,
     val results: Map<String, String> = emptyMap(),
     val isDrawn: Boolean = false,
+    val shouldRequestReview: Boolean = false,
 )
