@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.9.0] - 2026-09-01
+
+* feat(flags): wire existing Remote Config toggles for home and settings entry points (#84)
+* chore: bump version to 3.8.1 [skip ci]
+
+
 ## [3.8.1] - 2026-09-01
 
 * fix(chat): use OpenRouter's Free Models Router instead of a pinned model (#82)
