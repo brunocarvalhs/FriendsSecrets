@@ -74,6 +74,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         GroupDetailsIntent.ShareWishlist -> shareWishlist()
         is GroupDetailsIntent.UpdateLikes -> updateLikes(intent.likes)
         is GroupDetailsIntent.AddAdjective -> addAdjective(intent.memberId, intent.adjective)
+        is GroupDetailsIntent.DismissError -> _uiState.update { it.copy(error = null) }
     }
 
     private fun loadReminderState() {

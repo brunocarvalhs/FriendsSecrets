@@ -19,14 +19,15 @@ class StartAiGiftChatUseCaseTest {
     }
 
     @Test
-    fun `invoke should start a chat session from the service using the group name`() {
+    fun `invoke should start a chat session from the service using the group name and context`() {
         // Given
         val groupName = "Amigo Secreto da Família"
+        val membersContext = "- Bruno: Livros, Jogos"
         val expectedSession = mockk<AiChatSession>()
-        every { service.startChat(groupName) } returns expectedSession
+        every { service.startChat(groupName, membersContext) } returns expectedSession
 
         // When
-        val result = useCase(groupName)
+        val result = useCase(groupName, membersContext)
 
         // Then
         assertEquals(expectedSession, result)
