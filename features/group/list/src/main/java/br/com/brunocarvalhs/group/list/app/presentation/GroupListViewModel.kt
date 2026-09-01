@@ -11,6 +11,7 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.navigation.DeepLinkHandler
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupListUseCase
+import br.com.brunocarvalhs.group.list.commons.flags.GroupListFeatureFlags
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,9 +29,15 @@ internal class GroupListViewModel @Inject constructor(
     private val groupByTokenUseCase: GroupByTokenUseCase,
     private val analyticsService: AnalyticsService,
     private val deepLinkHandler: DeepLinkHandler,
+    private val featureFlags: GroupListFeatureFlags,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GroupListUiState())
+    private val _uiState = MutableStateFlow(
+        GroupListUiState(
+            isCreateGroupEnabled = featureFlags.isCreateGroupEnabled(),
+            isJoinGroupEnabled = featureFlags.isJoinGroupEnabled()
+        )
+    )
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
 
     init {

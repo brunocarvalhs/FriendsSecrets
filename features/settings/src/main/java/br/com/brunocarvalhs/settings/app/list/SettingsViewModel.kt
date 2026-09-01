@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.biometric.BiometricService
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.settings.commons.flags.SettingsFeatureFlags
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,10 +23,16 @@ import javax.inject.Inject
 internal class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val biometricService: BiometricService,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    private val featureFlags: SettingsFeatureFlags
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SettingsState())
+    private val _state = MutableStateFlow(
+        SettingsState(
+            isAppearanceEnabled = featureFlags.isAppearanceEnabled(),
+            isFingerprintFeatureEnabled = featureFlags.isFingerprintEnabled()
+        )
+    )
     val state = _state.asStateFlow()
 
     init {

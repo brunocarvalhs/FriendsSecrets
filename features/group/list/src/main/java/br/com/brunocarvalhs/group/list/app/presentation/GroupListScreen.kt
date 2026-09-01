@@ -94,6 +94,7 @@ private fun ListContent(
                     GroupListAppBar(
                         scrollBehavior = scrollBehavior,
                         onJoinGroupClick = { showBottomSheet = true; onJoinGroupOpen() },
+                        isJoinGroupEnabled = uiState.isJoinGroupEnabled,
                         moreOptions = moreOptions,
                         expanded = expanded,
                         onExpandedChange = { expanded = it }
@@ -113,7 +114,9 @@ private fun ListContent(
             }
         },
         floatingActionButton = {
-            GroupListFab(onGroupToCreate = onGroupToCreate)
+            if (uiState.isCreateGroupEnabled) {
+                GroupListFab(onGroupToCreate = onGroupToCreate)
+            }
         }
     ) { paddingValues ->
         GroupListContent(
@@ -165,7 +168,9 @@ private fun GroupListContent(
                 if (uiState.filteredList.isEmpty() && !uiState.isLoading) {
                     EmptyGroupComponent(
                         onGroupToEnter = onJoinGroupClick,
-                        onCreateGroup = onGroupToCreate
+                        onCreateGroup = onGroupToCreate,
+                        isJoinGroupEnabled = uiState.isJoinGroupEnabled,
+                        isCreateGroupEnabled = uiState.isCreateGroupEnabled
                     )
                 } else {
                     GroupListItems(
