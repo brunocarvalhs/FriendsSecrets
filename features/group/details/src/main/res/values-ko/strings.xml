@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">취소</string>
     <string name="edit_likes_remove_action">%1$s 삭제</string>
     <string name="edit_likes_empty_state">아직 추가된 관심사가 없습니다</string>
-    <string name="add_adjective_action">%1$s에 대한 형용사 추가</string>
-    <string name="add_adjective_title">%1$s를 한 단어로 표현해보세요</string>
-    <string name="add_adjective_hint">예: 재미있는, 친절한…</string>
-    <string name="add_adjective_description">그룹의 누구나 형용사를 추가할 수 있어요 — 이 멤버의 카드에 표시됩니다.</string>
-    <string name="add_adjective_save_action">추가</string>
-    <string name="add_adjective_cancel_action">취소</string>
+    <string name="add_like_action">%1$s가 좋아할 만한 것 추가</string>
+    <string name="add_like_title">%1$s는 무엇을 받고 싶어할까요?</string>
+    <string name="add_like_description">그룹의 누구나 이 목록에 추가할 수 있어요 — AI가 더 나은 선물을 추천하는 데도 도움이 됩니다.</string>
+    <string name="add_like_hint">예: 책, 향수…</string>
+    <string name="add_like_save_action">추가</string>
+    <string name="suggested_like_tiktok">틱톡</string>
+    <string name="suggested_like_books">책</string>
+    <string name="suggested_like_games">게임</string>
+    <string name="suggested_like_music">음악</string>
+    <string name="suggested_like_movies">영화 및 시리즈</string>
+    <string name="suggested_like_cooking">요리</string>
+    <string name="suggested_like_travel">여행</string>
+    <string name="suggested_like_tech">기술</string>
 </resources>

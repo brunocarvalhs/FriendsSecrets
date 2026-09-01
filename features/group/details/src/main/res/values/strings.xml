@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">Cancel</string>
     <string name="edit_likes_remove_action">Remove %1$s</string>
     <string name="edit_likes_empty_state">No interests added yet</string>
-    <string name="add_adjective_action">Add an adjective for %1$s</string>
-    <string name="add_adjective_title">Describe %1$s in one word</string>
-    <string name="add_adjective_hint">E.g. Funny, Kind…</string>
-    <string name="add_adjective_description">Anyone in the group can add adjectives — they\'ll show up on this member\'s card.</string>
-    <string name="add_adjective_save_action">Add</string>
-    <string name="add_adjective_cancel_action">Cancel</string>
+    <string name="add_like_action">Add something %1$s might like</string>
+    <string name="add_like_title">What would %1$s like to get?</string>
+    <string name="add_like_description">Anyone in the group can add to this list — it also helps the AI suggest better gifts.</string>
+    <string name="add_like_hint">E.g. Books, Perfume…</string>
+    <string name="add_like_save_action">Add</string>
+    <string name="suggested_like_tiktok">TikTok</string>
+    <string name="suggested_like_books">Books</string>
+    <string name="suggested_like_games">Games</string>
+    <string name="suggested_like_music">Music</string>
+    <string name="suggested_like_movies">Movies &amp; Series</string>
+    <string name="suggested_like_cooking">Cooking</string>
+    <string name="suggested_like_travel">Travel</string>
+    <string name="suggested_like_tech">Tech</string>
 </resources>

@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">Annuleren</string>
     <string name="edit_likes_remove_action">%1$s verwijderen</string>
     <string name="edit_likes_empty_state">Nog geen interesses toegevoegd</string>
-    <string name="add_adjective_action">Een bijvoeglijk naamwoord toevoegen voor %1$s</string>
-    <string name="add_adjective_title">Beschrijf %1$s in één woord</string>
-    <string name="add_adjective_hint">Bijv. Grappig, Aardig…</string>
-    <string name="add_adjective_description">Iedereen in de groep kan bijvoeglijke naamwoorden toevoegen — ze verschijnen op de kaart van dit lid.</string>
-    <string name="add_adjective_save_action">Toevoegen</string>
-    <string name="add_adjective_cancel_action">Annuleren</string>
+    <string name="add_like_action">Iets toevoegen dat %1$s leuk zou vinden</string>
+    <string name="add_like_title">Wat zou %1$s graag willen krijgen?</string>
+    <string name="add_like_description">Iedereen in de groep kan aan deze lijst toevoegen — dit helpt de AI ook betere cadeaus voor te stellen.</string>
+    <string name="add_like_hint">Bijv. Boeken, Parfum…</string>
+    <string name="add_like_save_action">Toevoegen</string>
+    <string name="suggested_like_tiktok">TikTok</string>
+    <string name="suggested_like_books">Boeken</string>
+    <string name="suggested_like_games">Games</string>
+    <string name="suggested_like_music">Muziek</string>
+    <string name="suggested_like_movies">Films &amp; Series</string>
+    <string name="suggested_like_cooking">Koken</string>
+    <string name="suggested_like_travel">Reizen</string>
+    <string name="suggested_like_tech">Technologie</string>
 </resources>
