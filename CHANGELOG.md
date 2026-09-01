@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.2] - 2026-09-01
+
+* Rename README.md to CONFIG.md
+* chore: bump version to 3.2.1 [skip ci]
+
+
 ## [3.2.1] - 2026-08-31
 
 * Merge pull request #72 from brunocarvalhs/fix/group-details-scroll-and-qr-join
