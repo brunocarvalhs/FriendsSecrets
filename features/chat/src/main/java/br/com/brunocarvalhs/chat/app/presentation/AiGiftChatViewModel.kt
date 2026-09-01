@@ -10,6 +10,7 @@ import br.com.brunocarvalhs.chat.app.domain.services.AiChatSession
 import br.com.brunocarvalhs.chat.app.domain.usecase.StartAiGiftChatUseCase
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.core.navigation.routers.AiGiftChatGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,10 @@ internal class AiGiftChatViewModel @Inject constructor(
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<AiGiftChatGraph>(AiGiftChatGraph.typeMap)
-    private val session: AiChatSession = startAiGiftChatUseCase(args.group.name)
+    private val session: AiChatSession = startAiGiftChatUseCase(
+        args.group.name,
+        buildMembersContext(args.group.members)
+    )
 
     private val _uiState = MutableStateFlow(
         AiGiftChatUiState(
@@ -53,6 +57,7 @@ internal class AiGiftChatViewModel @Inject constructor(
         when (intent) {
             is AiGiftChatIntent.UpdateInput -> _uiState.update { it.copy(inputText = intent.text) }
             is AiGiftChatIntent.SendMessage -> sendMessage()
+            is AiGiftChatIntent.DismissError -> _uiState.update { it.copy(error = null) }
         }
     }
 
@@ -93,9 +98,31 @@ internal class AiGiftChatViewModel @Inject constructor(
         }
     }
 
+    private fun buildMembersContext(members: List<UserModel>): String {
+        if (members.isEmpty()) return NO_MEMBERS_CONTEXT
+
+        return members.joinToString(separator = "\n") { member ->
+            val likes = member.likes.filter { it.isNotBlank() }
+            val adjectives = member.adjectives.values.flatten().distinct()
+
+            val likesText = likes.ifEmpty { null }?.joinToString(", ")
+            val adjectivesText = adjectives.ifEmpty { null }?.joinToString(", ")
+
+            when {
+                likesText != null && adjectivesText != null ->
+                    "- ${member.name}: gosta de $likesText (descrito como $adjectivesText)"
+
+                likesText != null -> "- ${member.name}: gosta de $likesText"
+                adjectivesText != null -> "- ${member.name}: descrito como $adjectivesText"
+                else -> "- ${member.name}: sem gostos ou adjetivos registrados ainda"
+            }
+        }
+    }
+
     private companion object {
         const val INITIAL_GREETING =
             "Oi! 👋 Me conta um pouco sobre a pessoa que você quer presentear: " +
                 "hobbies, gostos, uma faixa de preço... e eu te ajudo com ideias de presente!"
+        const val NO_MEMBERS_CONTEXT = "Nenhum membro com gostos ou adjetivos registrados ainda."
     }
 }

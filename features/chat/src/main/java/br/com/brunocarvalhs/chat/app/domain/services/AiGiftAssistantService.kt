@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.chat.app.domain.services
 
 interface AiGiftAssistantService {
-    fun startChat(groupName: String): AiChatSession
+    fun startChat(groupName: String, membersContext: String): AiChatSession
 }
 
 interface AiChatSession {

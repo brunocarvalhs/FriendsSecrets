@@ -7,5 +7,6 @@ import javax.inject.Inject
 class StartAiGiftChatUseCase @Inject constructor(
     private val service: AiGiftAssistantService
 ) {
-    operator fun invoke(groupName: String): AiChatSession = service.startChat(groupName)
+    operator fun invoke(groupName: String, membersContext: String): AiChatSession =
+        service.startChat(groupName, membersContext)
 }

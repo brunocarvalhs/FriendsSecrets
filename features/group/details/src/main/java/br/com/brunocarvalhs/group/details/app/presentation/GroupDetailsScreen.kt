@@ -38,12 +38,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -96,6 +99,14 @@ internal fun GroupDetailsScreen(
     var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
     var addingAdjectiveMember by remember { mutableStateOf<UserModel?>(null) }
     var showInviteSheet by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.handleIntent(GroupDetailsIntent.DismissError)
+        }
+    }
 
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
@@ -153,7 +164,8 @@ internal fun GroupDetailsScreen(
         onRemoveMember = { member -> memberPendingRemoval = member },
         onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
         onEditLikes = { member -> editingLikesMember = member },
-        onAddAdjective = { member -> addingAdjectiveMember = member }
+        onAddAdjective = { member -> addingAdjectiveMember = member },
+        snackbarHostState = snackbarHostState
     )
 
     memberPendingRemoval?.let { member ->
@@ -243,11 +255,13 @@ private fun GroupDetailsContent(
     currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
     onAddAdjective: (UserModel) -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
             GroupDetailsTopBar(onBack = onBack)
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValue ->
         LazyColumn(
             modifier = Modifier
