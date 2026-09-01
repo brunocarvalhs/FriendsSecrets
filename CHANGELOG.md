@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.10.0] - 2026-09-01
+
+* feat(review): prompt for a store rating after a successful draw (#85)
+* chore: bump version to 3.9.0 [skip ci]
+
+
 ## [3.9.0] - 2026-09-01
 
 * feat(flags): wire existing Remote Config toggles for home and settings entry points (#84)
