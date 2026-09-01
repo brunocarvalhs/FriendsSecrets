@@ -7,8 +7,8 @@ import br.com.brunocarvalhs.chat.ChatInitializerImpl
 import br.com.brunocarvalhs.chat.app.data.local.ChatDatabase
 import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
 import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
-import br.com.brunocarvalhs.chat.app.data.services.FirebaseAiGiftAssistantService
 import br.com.brunocarvalhs.chat.app.data.services.FirebaseRealtimeManager
+import br.com.brunocarvalhs.chat.app.data.services.OpenRouterAiGiftAssistantService
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
 import br.com.brunocarvalhs.chat.app.domain.services.AiGiftAssistantService
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
@@ -21,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -51,7 +52,7 @@ abstract class ChatModule {
 
     @Binds
     abstract fun bindAiGiftAssistantService(
-        impl: FirebaseAiGiftAssistantService
+        impl: OpenRouterAiGiftAssistantService
     ): AiGiftAssistantService
 
     companion object {
@@ -60,6 +61,10 @@ abstract class ChatModule {
         fun provideFirebaseDatabase(): FirebaseDatabase {
             return FirebaseDatabase.getInstance()
         }
+
+        @Provides
+        @Singleton
+        fun provideOkHttpClient(): OkHttpClient = OkHttpClient()
 
         @Provides
         @Singleton

@@ -91,6 +91,11 @@ android {
     }
 }
 
+secrets {
+    propertiesFileName = ".env"
+    defaultPropertiesFileName = ".env.example"
+}
+
 androidComponents {
     onVariants { variant ->
         variant.instrumentation.setAsmFramesComputationMode(

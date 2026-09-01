@@ -123,6 +123,6 @@ dependencies {
     // Firebase Realtime Database
     implementation(libs.firebase.database)
 
-    // Firebase AI Logic (Gemini)
-    implementation(libs.firebase.ai)
+    // OpenRouter (AI gift chat)
+    implementation(libs.okhttp)
 }
