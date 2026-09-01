@@ -32,6 +32,9 @@
     <string name="share_group_title">Share Code</string>
     <string name="invite_card">Card</string>
     <string name="qr_code">QR Code</string>
+    <string name="invite_share_link_title">Share link</string>
+    <string name="invite_share_link_description">Send an invite link or text through any app</string>
+    <string name="invite_share_qr_description">Share a QR code others can scan to join</string>
     <string name="reminder_enable_action">Remind me on the draw date</string>
     <string name="reminder_disable_action">Turn off reminder</string>
     <string name="reminder_notification_channel_name">Secret Santa reminders</string>

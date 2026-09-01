@@ -32,6 +32,9 @@
     <string name="share_group_title">Udostępnij kod</string>
     <string name="invite_card">Karta</string>
     <string name="qr_code">Kod QR</string>
+    <string name="invite_share_link_title">Udostępnij link</string>
+    <string name="invite_share_link_description">Wyślij link zaproszenia lub tekst przez dowolną aplikację</string>
+    <string name="invite_share_qr_description">Udostępnij kod QR, który inni mogą zeskanować, aby dołączyć</string>
     <string name="reminder_enable_action">Przypomnij mi w dniu losowania</string>
     <string name="reminder_disable_action">Wyłącz przypomnienie</string>
     <string name="reminder_notification_channel_name">Przypomnienia Sekretnego Mikołaja</string>

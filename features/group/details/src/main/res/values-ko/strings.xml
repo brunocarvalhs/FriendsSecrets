@@ -32,6 +32,9 @@
     <string name="share_group_title">코드 공유</string>
     <string name="invite_card">카드</string>
     <string name="qr_code">QR 코드</string>
+    <string name="invite_share_link_title">링크 공유</string>
+    <string name="invite_share_link_description">원하는 앱으로 초대 링크나 텍스트를 보내세요</string>
+    <string name="invite_share_qr_description">다른 사람이 스캔해서 참여할 수 있는 QR 코드를 공유하세요</string>
     <string name="reminder_enable_action">추첨일에 알림 받기</string>
     <string name="reminder_disable_action">알림 끄기</string>
     <string name="reminder_notification_channel_name">시크릿 산타 알림</string>

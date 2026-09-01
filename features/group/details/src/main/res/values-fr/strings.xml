@@ -32,6 +32,9 @@
     <string name="share_group_title">Partager le code</string>
     <string name="invite_card">Carte</string>
     <string name="qr_code">Code QR</string>
+    <string name="invite_share_link_title">Partager le lien</string>
+    <string name="invite_share_link_description">Envoyez un lien d\'invitation ou un texte via n\'importe quelle application</string>
+    <string name="invite_share_qr_description">Partagez un code QR que d\'autres peuvent scanner pour rejoindre</string>
     <string name="reminder_enable_action">Me rappeler à la date du tirage</string>
     <string name="reminder_disable_action">Désactiver le rappel</string>
     <string name="reminder_notification_channel_name">Rappels du Père Noël secret</string>
