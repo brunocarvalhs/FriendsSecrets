@@ -27,6 +27,7 @@ internal fun GroupListAppBar(
     moreOptions: List<OptionsMore>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
+    isJoinGroupEnabled: Boolean = true,
 ) {
     TopAppBar(
         title = { Text("Friends Secrets", style = MaterialTheme.typography.titleLarge) },
@@ -34,11 +35,13 @@ internal fun GroupListAppBar(
             containerColor = Color.Companion.Transparent
         ),
         actions = {
-            IconButton(onClick = onJoinGroupClick) {
-                Icon(
-                    Icons.Default.GroupAdd,
-                    contentDescription = stringResource(R.string.join_group)
-                )
+            if (isJoinGroupEnabled) {
+                IconButton(onClick = onJoinGroupClick) {
+                    Icon(
+                        Icons.Default.GroupAdd,
+                        contentDescription = stringResource(R.string.join_group)
+                    )
+                }
             }
 
             if (moreOptions.isNotEmpty()) {

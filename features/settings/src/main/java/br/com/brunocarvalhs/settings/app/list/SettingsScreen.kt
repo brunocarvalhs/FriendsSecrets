@@ -55,7 +55,8 @@ internal fun SettingsScreen(
 
     SettingsContent(
         isBiometricPromptEnabled = state.isBiometricPromptEnabled,
-        isBiometricSupported = state.isBiometricSupported,
+        isBiometricSupported = state.isBiometricSupported && state.isFingerprintFeatureEnabled,
+        isAppearanceEnabled = state.isAppearanceEnabled,
         versionName = state.versionName,
         versionCode = state.versionCode,
         onBack = onBack,
@@ -73,6 +74,7 @@ internal fun SettingsScreen(
 private fun SettingsContent(
     isBiometricPromptEnabled: Boolean = false,
     isBiometricSupported: Boolean = false,
+    isAppearanceEnabled: Boolean = true,
     versionName: String = "",
     versionCode: String = "",
     onBack: () -> Unit = {},
@@ -114,6 +116,7 @@ private fun SettingsContent(
             GeneralSection(
                 isBiometricSupported = isBiometricSupported,
                 isBiometricPromptEnabled = isBiometricPromptEnabled,
+                isAppearanceEnabled = isAppearanceEnabled,
                 onBiometricPrompt = onBiometricPrompt,
                 onAppearance = onAppearance
             )
@@ -150,6 +153,7 @@ private fun SettingsContent(
 private fun GeneralSection(
     isBiometricSupported: Boolean,
     isBiometricPromptEnabled: Boolean,
+    isAppearanceEnabled: Boolean,
     onBiometricPrompt: (Boolean) -> Unit,
     onAppearance: () -> Unit
 ) {
@@ -166,11 +170,13 @@ private fun GeneralSection(
                 onClick = onBiometricPrompt
             )
         }
-        SettingsListItemNavigation(
-            title = R.string.title_appearance,
-            icon = Icons.Outlined.Palette,
-            onClick = onAppearance
-        )
+        if (isAppearanceEnabled) {
+            SettingsListItemNavigation(
+                title = R.string.title_appearance,
+                icon = Icons.Outlined.Palette,
+                onClick = onAppearance
+            )
+        }
     }
 }
 
