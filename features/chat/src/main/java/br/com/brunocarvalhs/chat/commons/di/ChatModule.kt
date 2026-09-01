@@ -2,12 +2,15 @@ package br.com.brunocarvalhs.chat.commons.di
 
 import android.content.Context
 import androidx.room.Room
+import br.com.brunocarvalhs.chat.AiGiftChatInitializerImpl
 import br.com.brunocarvalhs.chat.ChatInitializerImpl
 import br.com.brunocarvalhs.chat.app.data.local.ChatDatabase
 import br.com.brunocarvalhs.chat.app.data.local.ChatMessageDao
 import br.com.brunocarvalhs.chat.app.data.repository.ChatRepositoryImpl
+import br.com.brunocarvalhs.chat.app.data.services.FirebaseAiGiftAssistantService
 import br.com.brunocarvalhs.chat.app.data.services.FirebaseRealtimeManager
 import br.com.brunocarvalhs.chat.app.domain.repository.ChatRepository
+import br.com.brunocarvalhs.chat.app.domain.services.AiGiftAssistantService
 import br.com.brunocarvalhs.chat.app.domain.services.ChatService
 import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import com.google.firebase.database.FirebaseDatabase
@@ -31,6 +34,12 @@ abstract class ChatModule {
     ): FeatureInitializer
 
     @Binds
+    @IntoSet
+    abstract fun bindAiGiftChatInitializer(
+        impl: AiGiftChatInitializerImpl
+    ): FeatureInitializer
+
+    @Binds
     abstract fun bindChatService(
         impl: FirebaseRealtimeManager
     ): ChatService
@@ -39,6 +48,11 @@ abstract class ChatModule {
     abstract fun bindChatRepository(
         impl: ChatRepositoryImpl
     ): ChatRepository
+
+    @Binds
+    abstract fun bindAiGiftAssistantService(
+        impl: FirebaseAiGiftAssistantService
+    ): AiGiftAssistantService
 
     companion object {
         @Provides

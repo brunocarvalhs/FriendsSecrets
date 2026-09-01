@@ -11,4 +11,8 @@
     <string name="react_to_message">Auf Nachricht reagieren</string>
     <string name="chat_date_today">Heute</string>
     <string name="chat_date_yesterday">Gestern</string>
+    <string name="ai_gift_chat_title">Geschenkideen</string>
+    <string name="ai_gift_chat_assistant_name">Geschenk-Assistent</string>
+    <string name="ai_gift_chat_typing">Denkt nach…</string>
+    <string name="ai_gift_chat_input">Nach Geschenkideen fragen…</string>
 </resources>

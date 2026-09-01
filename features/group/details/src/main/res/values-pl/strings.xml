@@ -12,6 +12,7 @@
     <string name="group_participants">Grupa · %1$d uczestników</string>
     <string name="invite">Zaproś</string>
     <string name="chat">Czat</string>
+    <string name="ai_gift_suggestions">Pomysły</string>
     <string name="reveal">Odkryj</string>
     <string name="draw">Losowanie</string>
     <string name="add_group_description">Dodaj opis grupy</string>
