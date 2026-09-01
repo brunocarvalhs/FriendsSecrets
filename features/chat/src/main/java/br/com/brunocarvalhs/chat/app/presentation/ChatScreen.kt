@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -60,11 +62,34 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.chat.R
+import br.com.brunocarvalhs.chat.app.data.extensions.isSameDayAs
 import br.com.brunocarvalhs.chat.app.data.extensions.toLocalDateTime
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
 import br.com.brunocarvalhs.core.domain.model.MessageModel.MessageStatus
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 
 private val QUICK_REACTIONS = listOf("👍", "❤️", "😂", "🎁", "😮")
+private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000L
+
+private sealed class ChatListItem {
+    data class DateHeader(val timestamp: Long) : ChatListItem()
+    data class Message(val chatMessage: ChatMessage) : ChatListItem()
+}
+
+private fun List<ChatMessage>.withDateHeaders(): List<ChatListItem> {
+    val result = mutableListOf<ChatListItem>()
+    var lastTimestamp: Long? = null
+    for (message in this) {
+        if (lastTimestamp == null || !message.timestamp.isSameDayAs(lastTimestamp)) {
+            result.add(ChatListItem.DateHeader(message.timestamp))
+            lastTimestamp = message.timestamp
+        }
+        result.add(ChatListItem.Message(message))
+    }
+    return result
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,6 +143,8 @@ internal fun ChatScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            val itemsWithHeaders = remember(state.messages) { state.messages.withDateHeaders() }
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -125,13 +152,26 @@ internal fun ChatScreen(
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(state.messages, key = { it.id }) { message ->
-                    ChatMessageItem(
-                        message = message,
-                        onToggleReaction = { emoji ->
-                            viewModel.handleIntent(ChatIntent.ToggleReaction(message.id, emoji))
+                items(
+                    itemsWithHeaders,
+                    key = {
+                        when (it) {
+                            is ChatListItem.DateHeader -> "header_${it.timestamp}"
+                            is ChatListItem.Message -> it.chatMessage.id
                         }
-                    )
+                    }
+                ) { item ->
+                    when (item) {
+                        is ChatListItem.DateHeader -> ChatDateDivider(timestamp = item.timestamp)
+                        is ChatListItem.Message -> ChatMessageItem(
+                            message = item.chatMessage,
+                            onToggleReaction = { emoji ->
+                                viewModel.handleIntent(
+                                    ChatIntent.ToggleReaction(item.chatMessage.id, emoji)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -179,6 +219,41 @@ fun IdentificationDialog(
             }
         }
     )
+}
+
+@Composable
+private fun ChatDateDivider(
+    timestamp: Long,
+    modifier: Modifier = Modifier
+) {
+    val now = remember { System.currentTimeMillis() }
+    val label = when {
+        timestamp.isSameDayAs(now) -> stringResource(R.string.chat_date_today)
+        timestamp.isSameDayAs(now - DAY_IN_MILLIS) -> stringResource(R.string.chat_date_yesterday)
+        else -> remember(timestamp) {
+            DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+                .format(Date(timestamp))
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -349,7 +424,9 @@ fun ChatInputBar(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier
+            .navigationBarsPadding()
+            .imePadding(),
         tonalElevation = 2.dp
     ) {
         Row(
