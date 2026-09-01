@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.featureflags.domain.VersionedFeatureFlagService
 import br.com.brunocarvalhs.core.navigation.routers.GroupDetailsGraph
 import br.com.brunocarvalhs.deviceid.DeviceService
 import br.com.brunocarvalhs.group.details.app.domain.useCases.AddMemberLikeUseCase
@@ -50,10 +51,16 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val updateMemberLikesUseCase: UpdateMemberLikesUseCase,
     private val addMemberLikeUseCase: AddMemberLikeUseCase,
     private val deviceService: DeviceService,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    private val featureFlagService: VersionedFeatureFlagService
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<GroupDetailsGraph>(GroupDetailsGraph.typeMap)
-    private val _uiState = MutableStateFlow(GroupDetailsUiState(group = args.group))
+    private val _uiState = MutableStateFlow(
+        GroupDetailsUiState(
+            group = args.group,
+            isAiGiftChatEnabled = featureFlagService.isEnabled(FEATURE_AI_GIFT_CHAT)
+        )
+    )
     val uiState: StateFlow<GroupDetailsUiState> = _uiState.asStateFlow()
 
     init {
@@ -302,5 +309,9 @@ internal class GroupDetailsViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private companion object {
+        const val FEATURE_AI_GIFT_CHAT = "feature_ai_gift_chat"
     }
 }

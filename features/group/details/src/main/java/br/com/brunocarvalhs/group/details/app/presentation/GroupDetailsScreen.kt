@@ -146,6 +146,7 @@ internal fun GroupDetailsScreen(
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
         onAiGiftChat = { onAiGiftChat.invoke(group) },
+        isAiGiftChatEnabled = uiState.isAiGiftChatEnabled,
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
         onInviteClick = { showInviteSheet = true },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
@@ -255,6 +256,7 @@ private fun GroupDetailsContent(
     currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
     onAddLike: (UserModel) -> Unit = {},
+    isAiGiftChatEnabled: Boolean = true,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
@@ -283,6 +285,7 @@ private fun GroupDetailsContent(
                     onInviteClick = onInviteClick,
                     onChat = onChat,
                     onAiGiftChat = onAiGiftChat,
+                    isAiGiftChatEnabled = isAiGiftChatEnabled,
                     onDraw = onDraw
                 )
             }
@@ -414,7 +417,8 @@ private fun GroupDetailsActions(
     onInviteClick: () -> Unit,
     onChat: () -> Unit,
     onAiGiftChat: () -> Unit,
-    onDraw: () -> Unit
+    onDraw: () -> Unit,
+    isAiGiftChatEnabled: Boolean = true,
 ) {
     Column {
         Row(
@@ -432,10 +436,12 @@ private fun GroupDetailsActions(
                 Icons.AutoMirrored.Filled.Chat,
                 stringResource(R.string.chat), onChat
             )
-            ActionIconCard(
-                Icons.Default.AutoAwesome,
-                stringResource(R.string.ai_gift_suggestions), onAiGiftChat
-            )
+            if (isAiGiftChatEnabled) {
+                ActionIconCard(
+                    Icons.Default.AutoAwesome,
+                    stringResource(R.string.ai_gift_suggestions), onAiGiftChat
+                )
+            }
             ActionIconCard(
                 icon = Icons.Default.Casino,
                 label = if (isDrawn) {

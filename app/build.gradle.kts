@@ -117,6 +117,7 @@ dependencies {
     implementation(project(":core:biometric"))
     implementation(project(":core:storage"))
     implementation(project(":core:notifications"))
+    implementation(project(":core:featureflags"))
 
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))

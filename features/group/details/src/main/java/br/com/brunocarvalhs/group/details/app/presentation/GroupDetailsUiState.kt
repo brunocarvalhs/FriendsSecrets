@@ -8,4 +8,5 @@ internal data class GroupDetailsUiState(
     val currentDeviceId: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,
+    val isAiGiftChatEnabled: Boolean = true,
 )
