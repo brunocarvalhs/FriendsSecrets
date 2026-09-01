@@ -9,4 +9,6 @@
     <string name="chat_input">메시지 입력...</string>
     <string name="chat_button_send">전송</string>
     <string name="react_to_message">메시지에 반응하기</string>
+    <string name="chat_date_today">오늘</string>
+    <string name="chat_date_yesterday">어제</string>
 </resources>
