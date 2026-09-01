@@ -30,9 +30,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.QrCode
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -70,6 +67,7 @@ import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
 import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesDialog
+import br.com.brunocarvalhs.group.details.app.presentation.components.InviteBottomSheet
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
@@ -93,6 +91,7 @@ internal fun GroupDetailsScreen(
     val group = uiState.group
     var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
     var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
+    var showInviteSheet by remember { mutableStateOf(false) }
 
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
@@ -132,9 +131,7 @@ internal fun GroupDetailsScreen(
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
-        onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
-        onShareInviteCard = { viewModel.handleIntent(GroupDetailsIntent.ShareInviteCard) },
-        onShareQrCode = { viewModel.handleIntent(GroupDetailsIntent.ShareQr) },
+        onInviteClick = { showInviteSheet = true },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
         onAddMembers = { onAddMembers.invoke(group) },
@@ -188,6 +185,14 @@ internal fun GroupDetailsScreen(
             }
         )
     }
+
+    if (showInviteSheet) {
+        InviteBottomSheet(
+            onDismiss = { showInviteSheet = false },
+            onShareLink = { viewModel.handleIntent(GroupDetailsIntent.Share) },
+            onShareQrCode = { viewModel.handleIntent(GroupDetailsIntent.ShareQr) }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -210,9 +215,7 @@ private fun GroupDetailsContent(
     onChat: () -> Unit,
     onDelete: () -> Unit,
     onExit: () -> Unit,
-    onShareGroup: () -> Unit,
-    onShareInviteCard: () -> Unit,
-    onShareQrCode: () -> Unit,
+    onInviteClick: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
     isReminderEnabled: Boolean = false,
@@ -244,9 +247,7 @@ private fun GroupDetailsContent(
             item {
                 GroupDetailsActions(
                     isDrawn = isDrawn,
-                    onShareGroup = onShareGroup,
-                    onShareInviteCard = onShareInviteCard,
-                    onShareQrCode = onShareQrCode,
+                    onInviteClick = onInviteClick,
                     onChat = onChat,
                     onDraw = onDraw
                 )
@@ -371,9 +372,7 @@ private fun GroupDetailsHeader(
 @Composable
 private fun GroupDetailsActions(
     isDrawn: Boolean,
-    onShareGroup: () -> Unit,
-    onShareInviteCard: () -> Unit,
-    onShareQrCode: () -> Unit,
+    onInviteClick: () -> Unit,
     onChat: () -> Unit,
     onDraw: () -> Unit
 ) {
@@ -386,16 +385,8 @@ private fun GroupDetailsActions(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ActionIconCard(
-                Icons.Default.Share,
-                stringResource(R.string.invite), onShareGroup
-            )
-            ActionIconCard(
-                Icons.Default.Wallpaper,
-                stringResource(R.string.invite_card), onShareInviteCard
-            )
-            ActionIconCard(
-                Icons.Default.QrCode,
-                stringResource(R.string.qr_code), onShareQrCode
+                Icons.Default.PersonAdd,
+                stringResource(R.string.invite), onInviteClick
             )
             ActionIconCard(
                 Icons.AutoMirrored.Filled.Chat,
@@ -592,9 +583,7 @@ private fun GroupDetailsPreview() {
         onChat = {},
         onDelete = {},
         onExit = {},
-        onShareGroup = {},
-        onShareInviteCard = {},
-        onShareQrCode = {},
+        onInviteClick = {},
         onEdit = {},
         onAddMembers = {}
     )
