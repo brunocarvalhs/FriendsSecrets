@@ -55,4 +55,10 @@
     <string name="edit_likes_cancel_action">Cancel</string>
     <string name="edit_likes_remove_action">Remove %1$s</string>
     <string name="edit_likes_empty_state">No interests added yet</string>
+    <string name="add_adjective_action">Add an adjective for %1$s</string>
+    <string name="add_adjective_title">Describe %1$s in one word</string>
+    <string name="add_adjective_hint">E.g. Funny, Kind…</string>
+    <string name="add_adjective_description">Anyone in the group can add adjectives — they\'ll show up on this member\'s card.</string>
+    <string name="add_adjective_save_action">Add</string>
+    <string name="add_adjective_cancel_action">Cancel</string>
 </resources>

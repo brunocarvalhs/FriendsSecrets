@@ -55,4 +55,10 @@
     <string name="edit_likes_cancel_action">Annuler</string>
     <string name="edit_likes_remove_action">Supprimer %1$s</string>
     <string name="edit_likes_empty_state">Aucun centre d\'intérêt ajouté pour le moment</string>
+    <string name="add_adjective_action">Ajouter un adjectif pour %1$s</string>
+    <string name="add_adjective_title">Décrivez %1$s en un mot</string>
+    <string name="add_adjective_hint">Ex : Drôle, Gentil…</string>
+    <string name="add_adjective_description">Tout le monde dans le groupe peut ajouter des adjectifs — ils apparaîtront sur la fiche de ce membre.</string>
+    <string name="add_adjective_save_action">Ajouter</string>
+    <string name="add_adjective_cancel_action">Annuler</string>
 </resources>

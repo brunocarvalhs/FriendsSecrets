@@ -10,6 +10,7 @@ import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.navigation.routers.GroupDetailsGraph
 import br.com.brunocarvalhs.deviceid.DeviceService
+import br.com.brunocarvalhs.group.details.app.domain.useCases.AddMemberAdjectiveUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupDeleteUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupExitUseCase
 import br.com.brunocarvalhs.group.details.app.domain.useCases.GroupReadUseCase
@@ -47,6 +48,7 @@ internal class GroupDetailsViewModel @Inject constructor(
     private val removeMemberUseCase: RemoveMemberUseCase,
     private val shareWishlistUseCase: ShareWishlistUseCase,
     private val updateMemberLikesUseCase: UpdateMemberLikesUseCase,
+    private val addMemberAdjectiveUseCase: AddMemberAdjectiveUseCase,
     private val deviceService: DeviceService,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
@@ -71,6 +73,7 @@ internal class GroupDetailsViewModel @Inject constructor(
         is GroupDetailsIntent.RemoveMember -> removeMember(intent.memberId)
         GroupDetailsIntent.ShareWishlist -> shareWishlist()
         is GroupDetailsIntent.UpdateLikes -> updateLikes(intent.likes)
+        is GroupDetailsIntent.AddAdjective -> addAdjective(intent.memberId, intent.adjective)
     }
 
     private fun loadReminderState() {
@@ -123,6 +126,26 @@ internal class GroupDetailsViewModel @Inject constructor(
                 .onFailure { error ->
                     Timber.e(error, "Error updating member likes")
                     _uiState.update { it.copy(isLoading = false, error = "Erro ao salvar interesses") }
+                }
+        }
+    }
+
+    @AddTrace(name = "GroupDetailsViewModel.addAdjective", enabled = true)
+    private fun addAdjective(memberId: String, adjective: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.SUBMIT,
+            params = mapOf(
+                AnalyticsParam.ACTION to "add_member_adjective"
+            )
+        )
+        viewModelScope.launch {
+            addMemberAdjectiveUseCase(_uiState.value.group, memberId, adjective)
+                .onSuccess { group ->
+                    _uiState.update { it.copy(group = group) }
+                }
+                .onFailure { error ->
+                    Timber.e(error, "Error adding member adjective")
+                    _uiState.update { it.copy(error = "Erro ao adicionar adjetivo") }
                 }
         }
     }

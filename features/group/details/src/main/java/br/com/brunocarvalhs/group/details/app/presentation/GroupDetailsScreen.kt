@@ -66,6 +66,7 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
+import br.com.brunocarvalhs.group.details.app.presentation.components.AddAdjectiveDialog
 import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesDialog
 import br.com.brunocarvalhs.group.details.app.presentation.components.InviteBottomSheet
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
@@ -91,6 +92,7 @@ internal fun GroupDetailsScreen(
     val group = uiState.group
     var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
     var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
+    var addingAdjectiveMember by remember { mutableStateOf<UserModel?>(null) }
     var showInviteSheet by remember { mutableStateOf(false) }
 
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -147,7 +149,8 @@ internal fun GroupDetailsScreen(
         },
         onRemoveMember = { member -> memberPendingRemoval = member },
         onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
-        onEditLikes = { member -> editingLikesMember = member }
+        onEditLikes = { member -> editingLikesMember = member },
+        onAddAdjective = { member -> addingAdjectiveMember = member }
     )
 
     memberPendingRemoval?.let { member ->
@@ -182,6 +185,17 @@ internal fun GroupDetailsScreen(
             onSave = { likes ->
                 viewModel.handleIntent(GroupDetailsIntent.UpdateLikes(likes))
                 editingLikesMember = null
+            }
+        )
+    }
+
+    addingAdjectiveMember?.let { member ->
+        AddAdjectiveDialog(
+            participant = member.name,
+            onDismiss = { addingAdjectiveMember = null },
+            onSave = { adjective ->
+                viewModel.handleIntent(GroupDetailsIntent.AddAdjective(member.id, adjective))
+                addingAdjectiveMember = null
             }
         )
     }
@@ -224,6 +238,7 @@ private fun GroupDetailsContent(
     onShareWishlist: () -> Unit = {},
     currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
+    onAddAdjective: (UserModel) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -293,6 +308,7 @@ private fun GroupDetailsContent(
                 MemberItem(
                     participant = member.name,
                     likes = member.likes,
+                    adjectives = member.adjectives.values.flatten().distinct(),
                     isAdministrator = isOwner,
                     onRemove = if (isOwner && !isDrawn) {
                         { onRemoveMember(member) }
@@ -303,6 +319,11 @@ private fun GroupDetailsContent(
                         { onEditLikes(member) }
                     } else {
                         null
+                    },
+                    onAddAdjective = if (isCurrentUser) {
+                        null
+                    } else {
+                        { onAddAdjective(member) }
                     },
                 )
             }

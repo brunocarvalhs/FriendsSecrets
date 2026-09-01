@@ -55,4 +55,10 @@
     <string name="edit_likes_cancel_action">Annuleren</string>
     <string name="edit_likes_remove_action">%1$s verwijderen</string>
     <string name="edit_likes_empty_state">Nog geen interesses toegevoegd</string>
+    <string name="add_adjective_action">Een bijvoeglijk naamwoord toevoegen voor %1$s</string>
+    <string name="add_adjective_title">Beschrijf %1$s in één woord</string>
+    <string name="add_adjective_hint">Bijv. Grappig, Aardig…</string>
+    <string name="add_adjective_description">Iedereen in de groep kan bijvoeglijke naamwoorden toevoegen — ze verschijnen op de kaart van dit lid.</string>
+    <string name="add_adjective_save_action">Toevoegen</string>
+    <string name="add_adjective_cancel_action">Annuleren</string>
 </resources>

@@ -55,4 +55,10 @@
     <string name="edit_likes_cancel_action">Anuluj</string>
     <string name="edit_likes_remove_action">Usuń %1$s</string>
     <string name="edit_likes_empty_state">Nie dodano jeszcze żadnych zainteresowań</string>
+    <string name="add_adjective_action">Dodaj przymiotnik dla %1$s</string>
+    <string name="add_adjective_title">Opisz %1$s jednym słowem</string>
+    <string name="add_adjective_hint">Np. Zabawny, Miły…</string>
+    <string name="add_adjective_description">Każdy w grupie może dodawać przymiotniki — pojawią się na karcie tego uczestnika.</string>
+    <string name="add_adjective_save_action">Dodaj</string>
+    <string name="add_adjective_cancel_action">Anuluj</string>
 </resources>

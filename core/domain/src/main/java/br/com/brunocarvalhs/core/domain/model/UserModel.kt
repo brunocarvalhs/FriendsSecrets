@@ -9,7 +9,8 @@ data class UserModel(
     val name: String = "",
     val phoneNumber: String = "",
     val photoUrl: String? = null,
-    val likes: List<String> = emptyList()
+    val likes: List<String> = emptyList(),
+    val adjectives: Map<String, List<String>> = emptyMap()
 ) {
     companion object {
         const val ID = "id"
@@ -17,5 +18,6 @@ data class UserModel(
         const val PHONE_NUMBER = "phoneNumber"
         const val PHOTO_URL = "photoUrl"
         const val LIKES = "likes"
+        const val ADJECTIVES = "adjectives"
     }
 }
