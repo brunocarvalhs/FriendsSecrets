@@ -103,18 +103,10 @@ internal class AiGiftChatViewModel @Inject constructor(
 
         return members.joinToString(separator = "\n") { member ->
             val likes = member.likes.filter { it.isNotBlank() }
-            val adjectives = member.adjectives.values.flatten().distinct()
-
-            val likesText = likes.ifEmpty { null }?.joinToString(", ")
-            val adjectivesText = adjectives.ifEmpty { null }?.joinToString(", ")
-
-            when {
-                likesText != null && adjectivesText != null ->
-                    "- ${member.name}: gosta de $likesText (descrito como $adjectivesText)"
-
-                likesText != null -> "- ${member.name}: gosta de $likesText"
-                adjectivesText != null -> "- ${member.name}: descrito como $adjectivesText"
-                else -> "- ${member.name}: sem gostos ou adjetivos registrados ainda"
+            if (likes.isEmpty()) {
+                "- ${member.name}: sem gostos registrados ainda"
+            } else {
+                "- ${member.name}: gosta de ${likes.joinToString(", ")}"
             }
         }
     }
@@ -123,6 +115,6 @@ internal class AiGiftChatViewModel @Inject constructor(
         const val INITIAL_GREETING =
             "Oi! 👋 Me conta um pouco sobre a pessoa que você quer presentear: " +
                 "hobbies, gostos, uma faixa de preço... e eu te ajudo com ideias de presente!"
-        const val NO_MEMBERS_CONTEXT = "Nenhum membro com gostos ou adjetivos registrados ainda."
+        const val NO_MEMBERS_CONTEXT = "Nenhum membro com gostos registrados ainda."
     }
 }

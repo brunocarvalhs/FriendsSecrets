@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">Abbrechen</string>
     <string name="edit_likes_remove_action">%1$s entfernen</string>
     <string name="edit_likes_empty_state">Noch keine Interessen hinzugefügt</string>
-    <string name="add_adjective_action">Ein Adjektiv für %1$s hinzufügen</string>
-    <string name="add_adjective_title">Beschreibe %1$s mit einem Wort</string>
-    <string name="add_adjective_hint">z. B. Lustig, Nett…</string>
-    <string name="add_adjective_description">Jeder in der Gruppe kann Adjektive hinzufügen – sie erscheinen auf der Karte dieses Mitglieds.</string>
-    <string name="add_adjective_save_action">Hinzufügen</string>
-    <string name="add_adjective_cancel_action">Abbrechen</string>
+    <string name="add_like_action">Etwas hinzufügen, das %1$s gefallen könnte</string>
+    <string name="add_like_title">Was würde sich %1$s wünschen?</string>
+    <string name="add_like_description">Jeder in der Gruppe kann dieser Liste etwas hinzufügen – das hilft auch der KI, bessere Geschenke vorzuschlagen.</string>
+    <string name="add_like_hint">z. B. Bücher, Parfüm…</string>
+    <string name="add_like_save_action">Hinzufügen</string>
+    <string name="suggested_like_tiktok">TikTok</string>
+    <string name="suggested_like_books">Bücher</string>
+    <string name="suggested_like_games">Spiele</string>
+    <string name="suggested_like_music">Musik</string>
+    <string name="suggested_like_movies">Filme &amp; Serien</string>
+    <string name="suggested_like_cooking">Kochen</string>
+    <string name="suggested_like_travel">Reisen</string>
+    <string name="suggested_like_tech">Technik</string>
 </resources>

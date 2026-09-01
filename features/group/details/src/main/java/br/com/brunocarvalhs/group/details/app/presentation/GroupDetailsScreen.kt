@@ -70,8 +70,8 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
-import br.com.brunocarvalhs.group.details.app.presentation.components.AddAdjectiveDialog
-import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesDialog
+import br.com.brunocarvalhs.group.details.app.presentation.components.AddLikeBottomSheet
+import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesBottomSheet
 import br.com.brunocarvalhs.group.details.app.presentation.components.InviteBottomSheet
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
@@ -97,7 +97,7 @@ internal fun GroupDetailsScreen(
     val group = uiState.group
     var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
     var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
-    var addingAdjectiveMember by remember { mutableStateOf<UserModel?>(null) }
+    var addingLikeMember by remember { mutableStateOf<UserModel?>(null) }
     var showInviteSheet by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -164,7 +164,7 @@ internal fun GroupDetailsScreen(
         onRemoveMember = { member -> memberPendingRemoval = member },
         onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
         onEditLikes = { member -> editingLikesMember = member },
-        onAddAdjective = { member -> addingAdjectiveMember = member },
+        onAddLike = { member -> addingLikeMember = member },
         snackbarHostState = snackbarHostState
     )
 
@@ -194,7 +194,7 @@ internal fun GroupDetailsScreen(
     }
 
     editingLikesMember?.let { member ->
-        EditLikesDialog(
+        EditLikesBottomSheet(
             initialLikes = member.likes,
             onDismiss = { editingLikesMember = null },
             onSave = { likes ->
@@ -204,13 +204,13 @@ internal fun GroupDetailsScreen(
         )
     }
 
-    addingAdjectiveMember?.let { member ->
-        AddAdjectiveDialog(
+    addingLikeMember?.let { member ->
+        AddLikeBottomSheet(
             participant = member.name,
-            onDismiss = { addingAdjectiveMember = null },
-            onSave = { adjective ->
-                viewModel.handleIntent(GroupDetailsIntent.AddAdjective(member.id, adjective))
-                addingAdjectiveMember = null
+            onDismiss = { addingLikeMember = null },
+            onSave = { like ->
+                viewModel.handleIntent(GroupDetailsIntent.AddLike(member.id, like))
+                addingLikeMember = null
             }
         )
     }
@@ -254,7 +254,7 @@ private fun GroupDetailsContent(
     onShareWishlist: () -> Unit = {},
     currentDeviceId: String = "",
     onEditLikes: (UserModel) -> Unit = {},
-    onAddAdjective: (UserModel) -> Unit = {},
+    onAddLike: (UserModel) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
@@ -327,7 +327,6 @@ private fun GroupDetailsContent(
                 MemberItem(
                     participant = member.name,
                     likes = member.likes,
-                    adjectives = member.adjectives.values.flatten().distinct(),
                     isAdministrator = isOwner,
                     onRemove = if (isOwner && !isDrawn) {
                         { onRemoveMember(member) }
@@ -339,10 +338,10 @@ private fun GroupDetailsContent(
                     } else {
                         null
                     },
-                    onAddAdjective = if (isCurrentUser) {
+                    onAddLike = if (isCurrentUser) {
                         null
                     } else {
-                        { onAddAdjective(member) }
+                        { onAddLike(member) }
                     },
                 )
             }
@@ -631,6 +630,7 @@ private fun GroupDetailsPreview() {
         onInviteClick = {},
         onAiGiftChat = {},
         onEdit = {},
+        onAddLike = {},
         onAddMembers = {}
     )
 }

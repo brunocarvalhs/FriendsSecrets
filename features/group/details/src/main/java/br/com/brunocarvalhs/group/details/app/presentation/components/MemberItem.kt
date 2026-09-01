@@ -1,7 +1,7 @@
 package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddReaction
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
@@ -17,18 +17,16 @@ import br.com.brunocarvalhs.group.details.R
 internal fun MemberItem(
     participant: String = "",
     likes: List<String> = emptyList(),
-    adjectives: List<String> = emptyList(),
     isAdministrator: Boolean = false,
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
-    onAddAdjective: (() -> Unit)? = null,
+    onAddLike: (() -> Unit)? = null,
 ) {
     val hasLikes = likes.any { it.isNotBlank() }
 
     ContactItem(
         name = participant,
         likes = likes,
-        adjectives = adjectives,
         action = { _, isLiked ->
 
             if (hasLikes) {
@@ -40,12 +38,12 @@ internal fun MemberItem(
                 )
             }
 
-            onAddAdjective?.let {
+            onAddLike?.let {
                 IconButton(onClick = it) {
                     Icon(
-                        imageVector = Icons.Filled.AddReaction,
+                        imageVector = Icons.Filled.AddCircleOutline,
                         contentDescription = stringResource(
-                            R.string.add_adjective_action,
+                            R.string.add_like_action,
                             participant
                         )
                     )

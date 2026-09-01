@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">Anuluj</string>
     <string name="edit_likes_remove_action">Usuń %1$s</string>
     <string name="edit_likes_empty_state">Nie dodano jeszcze żadnych zainteresowań</string>
-    <string name="add_adjective_action">Dodaj przymiotnik dla %1$s</string>
-    <string name="add_adjective_title">Opisz %1$s jednym słowem</string>
-    <string name="add_adjective_hint">Np. Zabawny, Miły…</string>
-    <string name="add_adjective_description">Każdy w grupie może dodawać przymiotniki — pojawią się na karcie tego uczestnika.</string>
-    <string name="add_adjective_save_action">Dodaj</string>
-    <string name="add_adjective_cancel_action">Anuluj</string>
+    <string name="add_like_action">Dodaj coś, co mogłoby się spodobać %1$s</string>
+    <string name="add_like_title">Co %1$s chciał(a)by dostać?</string>
+    <string name="add_like_description">Każdy w grupie może dodać do tej listy — to też pomaga AI sugerować lepsze prezenty.</string>
+    <string name="add_like_hint">Np. Książki, Perfumy…</string>
+    <string name="add_like_save_action">Dodaj</string>
+    <string name="suggested_like_tiktok">TikTok</string>
+    <string name="suggested_like_books">Książki</string>
+    <string name="suggested_like_games">Gry</string>
+    <string name="suggested_like_music">Muzyka</string>
+    <string name="suggested_like_movies">Filmy i seriale</string>
+    <string name="suggested_like_cooking">Gotowanie</string>
+    <string name="suggested_like_travel">Podróże</string>
+    <string name="suggested_like_tech">Technologia</string>
 </resources>

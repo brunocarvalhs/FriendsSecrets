@@ -56,10 +56,17 @@
     <string name="edit_likes_cancel_action">Cancelar</string>
     <string name="edit_likes_remove_action">Eliminar %1$s</string>
     <string name="edit_likes_empty_state">Aún no se agregaron intereses</string>
-    <string name="add_adjective_action">Añadir un adjetivo para %1$s</string>
-    <string name="add_adjective_title">Describe a %1$s en una palabra</string>
-    <string name="add_adjective_hint">Ej: Divertido, Amable…</string>
-    <string name="add_adjective_description">Cualquiera en el grupo puede añadir adjetivos: aparecerán en la tarjeta de este miembro.</string>
-    <string name="add_adjective_save_action">Añadir</string>
-    <string name="add_adjective_cancel_action">Cancelar</string>
+    <string name="add_like_action">Añadir algo que a %1$s le gustaría</string>
+    <string name="add_like_title">¿Qué le gustaría recibir a %1$s?</string>
+    <string name="add_like_description">Cualquiera en el grupo puede añadir a esta lista — también ayuda a la IA a sugerir mejores regalos.</string>
+    <string name="add_like_hint">Ej: Libros, Perfume…</string>
+    <string name="add_like_save_action">Añadir</string>
+    <string name="suggested_like_tiktok">TikTok</string>
+    <string name="suggested_like_books">Libros</string>
+    <string name="suggested_like_games">Juegos</string>
+    <string name="suggested_like_music">Música</string>
+    <string name="suggested_like_movies">Películas y Series</string>
+    <string name="suggested_like_cooking">Cocina</string>
+    <string name="suggested_like_travel">Viajes</string>
+    <string name="suggested_like_tech">Tecnología</string>
 </resources>
