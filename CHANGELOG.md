@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.10.3] - 2026-09-04
+
+* chore: trigger release deploy for 3.10.2
+
+
 ## [3.10.2] - 2026-09-04
 
 * Merge pull request #86 from brunocarvalhs/develop
