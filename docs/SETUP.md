@@ -1,95 +1,212 @@
-# Setup & Installation Guide
+# Guia de Instalação e Configuração
 
-This document provides detailed instructions for setting up the development environment and running the Friends Secrets application locally.
+Este documento fornece instruções detalhadas para configurar o ambiente de desenvolvimento e executar o aplicativo Friends Secrets localmente.
 
-## 1. System Requirements
+## Requisitos de Sistema
 
-### Software
-- **Android Studio:** Ladybug (2024.2.1) or newer (Recommended: Latest stable version as of 2026).
-- **JDK:** Java 21 or higher.
-- **Gradle:** Version 8.10 or higher (managed via Gradle Wrapper).
-- **Git:** Latest stable version.
+### Software Necessário
 
-### Hardware (Recommended)
-- **Processor:** Apple M-series or Intel Core i7/i9 (or equivalent).
-- **RAM:** 16GB minimum (32GB recommended for large-scale builds).
-- **Storage:** 20GB+ of free SSD space.
-- **Android Device/Emulator:** 
-    - Physical device running Android 10 (API 29) or newer.
-    - Emulator configured with an x86_64 or arm64 system image.
+- **Android Studio**: Ladybug (2024.2.1) ou superior recomendado.
+- **JDK (Java Development Kit)**: Versão 17 (obrigatória para as versões atuais do Gradle e AGP).
+- **Gradle**: gerenciado pelo wrapper (AGP 9.x).
+- **Git**: Para controle de versão.
 
-## 2. Environment Configuration
+### Hardware Recomendado
 
-### Android Studio & SDK
-1. Download and install the latest **Android Studio**.
-2. Through the SDK Manager, ensure you have:
-    - Android SDK Platform (latest stable API).
-    - Android SDK Build-Tools.
-    - Android Emulator & SDK Platform-Tools.
+- **Processador**: Intel Core i5 ou equivalente (ou superior)
+- **Memória RAM**: 8GB mínimo, 16GB recomendado
+- **Espaço em Disco**: Pelo menos 10GB de espaço livre
+- **Dispositivo Android ou Emulador**: 
+  - Dispositivo físico com Android 8.0 (API 26) ou superior
+  - Emulador configurado com Android 8.0 ou superior
 
-### Java Development Kit (JDK)
-1. Verify your JDK version:
+## Configuração do Ambiente
+
+### 1. Instalação do Android Studio
+
+1. Baixe o Android Studio do [site oficial](https://developer.android.com/studio)
+2. Siga as instruções de instalação para seu sistema operacional
+3. Durante a instalação, certifique-se de incluir:
+   - Android SDK
+   - Android SDK Platform
+   - Android Virtual Device (AVD)
+
+### 2. Configuração do JDK
+
+1. Verifique se você tem o JDK 17 instalado:
    ```bash
    java -version
    ```
-2. We recommend using the **JetBrains Runtime** bundled with Android Studio or **OpenJDK 21+**.
+2. Se não estiver instalado, baixe e instale o JDK da [Oracle](https://www.oracle.com/java/technologies/javase-downloads.html) ou use o OpenJDK
+3. Configure a variável de ambiente `JAVA_HOME` para apontar para o diretório de instalação do JDK
 
-## 3. Project Initialization
+### 3. Configuração do Emulador (opcional)
 
-### Clone the Repository
+Se você planeja usar um emulador em vez de um dispositivo físico:
+
+1. Abra o Android Studio
+2. Vá para Tools > AVD Manager
+3. Clique em "Create Virtual Device"
+4. Selecione um dispositivo (ex: Pixel 4)
+5. Selecione uma imagem do sistema com API 26 ou superior
+6. Configure as opções adicionais conforme necessário
+7. Clique em "Finish"
+
+## Clonando e Configurando o Projeto
+
+### 1. Clone o Repositório
+
 ```bash
 git clone https://github.com/brunocarvalhs/FriendsSecrets.git
 cd FriendsSecrets
 ```
 
-### Firebase Configuration
-Friends Secrets relies on Firebase for authentication, database, and analytics.
-1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
-2. Add an Android App with package name: `br.com.brunocarvalhs.friendssecrets`.
-3. Download `google-services.json` and place it in the `app/` directory.
-4. Enable the following services in the console:
-    - **Authentication:** Enable Phone provider.
-    - **Cloud Firestore:** Use production mode with appropriate rules.
-    - **Cloud Storage.**
-    - **Crashlytics & Analytics.**
-    - **Remote Config.**
+### 2. Configuração do Firebase
 
-### Generative AI Setup (Gemini)
-1. Obtain an API Key from the [Google AI Studio](https://aistudio.google.com/).
-2. Enable the **Generative AI API** in your Google Cloud Console.
+O projeto utiliza vários serviços do Firebase. Para configurá-los:
 
-### Secrets Management
-Create a `local.properties` file in the root directory and add your keys:
+1. Acesse o [Console do Firebase](https://console.firebase.google.com/)
+2. Crie um novo projeto (ou use um existente)
+3. Adicione um aplicativo Android:
+   - Use o pacote `br.com.brunocarvalhs.friendssecrets`
+   - Baixe o arquivo `google-services.json`
+   - Coloque o arquivo na pasta `app/` do projeto
+
+4. Ative os seguintes serviços no console do Firebase:
+   - Authentication (habilite o provedor de telefone)
+   - Firestore Database
+   - Storage
+   - Crashlytics
+   - Analytics
+   - Remote Config
+
+5. Configure as regras de segurança do Firestore:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /{document=**} {
+         allow read, write: if request.auth != null;
+       }
+     }
+   }
+   ```
+
+### 3. Configuração da API do Google Generative AI
+
+1. Acesse o [Console de APIs do Google](https://console.cloud.google.com/apis/dashboard)
+2. Crie um novo projeto ou selecione o mesmo projeto do Firebase
+3. Ative a API Generative AI
+4. Crie uma chave de API
+
+### 4. Configuração das Variáveis de Ambiente
+
+Crie um arquivo `local.properties` na raiz do projeto (se não existir) e adicione:
+
 ```properties
-GEMINI_API_KEY=your_api_key_here
+# API Key para Google Generative AI
+API_KEY=sua_chave_api_aqui
+
+# Para builds de release (opcional)
+KEYSTORE_PASSWORD=sua_senha_keystore
+KEYSTORE_ALIAS=seu_alias_keystore
+KEY_PASSWORD=sua_senha_key
 ```
 
-## 4. Building and Running
+### 5. Sincronização do Projeto
 
-1. **Sync Gradle:** Open the project in Android Studio and click "Sync Project with Gradle Files".
-2. **Select Target:** Choose your connected device or emulator from the device manager.
-3. **Run:** Click the "Run" icon or press `Shift + F10`.
+1. Abra o projeto no Android Studio
+2. Aguarde a sincronização automática do Gradle
+3. Se a sincronização não iniciar automaticamente, clique em "Sync Project with Gradle Files"
 
-## 5. Development Workflow
+## Executando o Aplicativo
 
-### Branching Model
-We follow a structured branching strategy:
-- `main`: Production-ready code.
-- `develop`: Integration branch for features.
-- `feature/*`: New functionality.
-- `fix/*`: Bug fixes.
+### Em um Emulador
 
-### Quality Standards
-Before submitting a PR, ensure:
-1. All unit tests pass: `./gradlew test`.
-2. Static analysis is clean: `./gradlew detekt`.
-3. Code is formatted: `./gradlew spotlessApply`.
+1. No Android Studio, selecione o emulador configurado no menu suspenso de dispositivos
+2. Clique no botão "Run" (ícone de play verde) ou pressione Shift+F10
+3. Aguarde o aplicativo ser compilado e instalado no emulador
 
-## 6. Troubleshooting
+### Em um Dispositivo Físico
 
-- **Gradle Sync Issues:** Try `File > Invalidate Caches...` and restart.
-- **Firebase Errors:** Ensure your `google-services.json` is up to date and SHA-1 fingerprints are registered in the Firebase Console.
-- **Gemini API Errors:** Verify your quota and regional availability for the Generative AI SDK.
+1. Ative o "Modo de desenvolvedor" no seu dispositivo Android:
+   - Vá para Configurações > Sobre o telefone
+   - Toque 7 vezes em "Número da versão"
+   - Volte para Configurações > Opções do desenvolvedor
+   - Ative "Depuração USB"
 
----
-© 2026 Brunocarvalhs. All rights reserved.
+2. Conecte o dispositivo ao computador via USB
+3. No Android Studio, selecione seu dispositivo no menu suspenso de dispositivos
+4. Clique no botão "Run" (ícone de play verde) ou pressione Shift+F10
+5. Aguarde o aplicativo ser compilado e instalado no dispositivo
+
+## Solução de Problemas Comuns
+
+### Erro de Sincronização do Gradle
+
+Se você encontrar erros durante a sincronização do Gradle:
+
+1. Verifique sua conexão com a internet
+2. Vá para File > Settings > Build, Execution, Deployment > Gradle
+3. Certifique-se de que o "Gradle JDK" está configurado corretamente
+4. Tente "File > Invalidate Caches / Restart"
+
+### Erro de Compilação
+
+Se o projeto não compilar:
+
+1. Verifique se todas as dependências estão disponíveis
+2. Certifique-se de que o arquivo `google-services.json` está no lugar correto
+3. Verifique se as variáveis de ambiente estão configuradas corretamente
+4. Execute "Build > Clean Project" e tente novamente
+
+### Erro de Execução
+
+Se o aplicativo não executar ou travar:
+
+1. Verifique os logs no Android Studio (janela Logcat)
+2. Certifique-se de que o Firebase está configurado corretamente
+3. Verifique se o dispositivo/emulador atende aos requisitos mínimos
+
+## Configuração para Desenvolvimento
+
+### Configuração do Git
+
+Configure seu nome de usuário e email para commits:
+
+```bash
+git config user.name "Seu Nome"
+git config user.email "seu.email@exemplo.com"
+```
+
+### Fluxo de Trabalho com Branches
+
+O projeto segue o modelo de branches:
+
+- `master`: Código de produção
+- `develop`: Branch de desenvolvimento principal
+- `feature/*`: Branches para novas funcionalidades
+- `bugfix/*`: Branches para correções de bugs
+
+Para criar uma nova branch de feature:
+
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/nome-da-feature
+```
+
+## Recursos Adicionais
+
+- [Documentação do Android](https://developer.android.com/docs)
+- [Documentação do Kotlin](https://kotlinlang.org/docs/home.html)
+- [Documentação do Jetpack Compose](https://developer.android.com/jetpack/compose/documentation)
+- [Documentação do Firebase](https://firebase.google.com/docs)
+- [Documentação da API Generative AI](https://ai.google.dev/docs)
+
+## Suporte
+
+Se você encontrar problemas durante a configuração, entre em contato:
+
+- Abra uma issue no [GitHub](https://github.com/brunocarvalhs/FriendsSecrets/issues)
+- Envie um email para [brunocarvalhs@gmail.com](mailto:brunocarvalhs@gmail.com)

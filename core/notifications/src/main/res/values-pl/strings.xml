@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">Aktualizacje grupy</string>
+    <string name="group_sync_draw_completed_title">🎉 Losowanie zakończone!</string>
+    <string name="group_sync_draw_completed_message">Losowanie dla %1$s zostało zakończone. Otwórz aplikację, aby zobaczyć swojego Sekretnego Mikołaja!</string>
+    <string name="group_sync_new_message_title">💬 Nowa wiadomość</string>
+    <string name="group_sync_new_message_message">Masz nową wiadomość w %1$s</string>
+</resources>

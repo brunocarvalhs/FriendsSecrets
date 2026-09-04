@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Retour</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Paramètres</string>
+    <string name="settings_screen_general">Général</string>
+    <string name="settings_screen_security">Empreinte digitale</string>
+    <string name="settings_screen_support">Assistance</string>
+    <string name="title_report_an_issue">Signaler un problème</string>
+    <string name="title_review">Évaluer l\'application</string>
+    <string name="localized_description">Description localisée</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Apparence</string>
+    <string name="appearance_screen_title">Sélectionner une option spécifique modifiera l\'apparence (couleur) de l\'application selon vos préférences.</string>
+    <string name="appearance_screen_title_description">Activer le thème dynamique permettra à l\'application d\'ajuster automatiquement ses couleurs en fonction du fond d\'écran de votre appareil.</string>
+    <string name="appearance_screen_dynamic_title">Thème dynamique</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="system_theme">Thème du système</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">FAQ</string>
+
+    <!-- Legal -->
+    <string name="settings_screen_legal">Mentions légales</string>
+    <string name="title_terms_and_conditions">Conditions générales</string>
+    <string name="title_privacy_policy">Politique de confidentialité</string>
+
+    <string name="settings_version_name">Version %1$s</string>
+    <string name="settings_version_code">Build %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Recharger</string>
+    <string name="webview_open_in_browser">Ouvrir dans le navigateur</string>
+    <string name="webview_error_title">Oups ! Une erreur s\'est produite lors du chargement de la page.</string>
+    <string name="webview_error_description">Vérifiez votre connexion internet et réessayez.</string>
+    <string name="webview_error_retry">Réessayer</string>
+</resources>

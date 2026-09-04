@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="success">Sukces!</string>
+    <string name="ops">Ups!</string>
+    <string name="error_component_button_try_again">Spróbuj ponownie</string>
+    <string name="error_component_button_to_home">Przejdź do strony głównej</string>
+    <string name="add_member_manual_title">Dodaj ręcznie</string>
+    <string name="add_member_manual_description">Wygląda na to, że nie mamy dostępu do Twoich kontaktów lub lista jest pusta. Możesz dodać osoby, wpisując ich imiona poniżej.</string>
+    <string name="add_member_manual_input_name">Imię uczestnika</string>
+    <string name="add_member_manual_input_name_place">Np. Jan Kowalski</string>
+    <string name="add_member_manual_input_phone">Telefon (opcjonalnie)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_button">Dodaj do grupy</string>
+    <string name="search_field_place">Szukaj imienia lub numeru</string>
+    <string name="content_description_remove">Usuń</string>
+    <string name="contacts_adicional_members">Dodaj członków</string>
+    <string name="contacts_adicional_members_subtitle_select">Wybrano: %1$d</string>
+    <string name="content_description_back">Wstecz</string>
+    <string name="content_description_next">Dalej</string>
+    <string name="view_contact_list">Zobacz listę kontaktów</string>
+    <string name="add_manually">Dodaj ręcznie</string>
+    <string name="enable_contact_access">Włącz dostęp do kontaktów</string>
+    <string name="allow_contacts_in_settings">Zezwól na kontakty w Ustawieniach</string>
+    <string name="next">Dalej</string>
+    <string name="cancel">Anuluj</string>
+    <string name="select_the_best_time">Wybierz godzinę</string>
+    <string name="ok">OK</string>
+    <string name="edit_group">Edytuj grupę</string>
+    <string name="new_group">Nowa grupa</string>
+    <string name="save">Zapisz</string>
+    <string name="create">Utwórz</string>
+    <string name="group_name">Nazwa grupy</string>
+    <string name="description">Opis</string>
+    <string name="event_date">Data wydarzenia</string>
+    <string name="minimum_price">Cena min.</string>
+    <string name="maximum_price">Cena maks.</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">Minimalna cena nie może być wyższa niż maksymalna</string>
+    <string name="members">Członkowie</string>
+</resources>

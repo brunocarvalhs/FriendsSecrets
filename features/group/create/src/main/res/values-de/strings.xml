@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="success">Erfolg!</string>
+    <string name="ops">Hoppla!</string>
+    <string name="error_component_button_try_again">Erneut versuchen</string>
+    <string name="error_component_button_to_home">Zur Startseite</string>
+    <string name="add_member_manual_title">Manuell hinzufügen</string>
+    <string name="add_member_manual_description">Es sieht so aus, als hätten wir keinen Zugriff auf deine Kontakte oder die Liste ist leer. Du kannst Personen hinzufügen, indem du ihre Namen unten eingibst.</string>
+    <string name="add_member_manual_input_name">Name des Teilnehmers</string>
+    <string name="add_member_manual_input_name_place">z. B. Max Mustermann</string>
+    <string name="add_member_manual_input_phone">Telefon (optional)</string>
+    <string name="add_member_manual_input_phone_place">(00) 00000-0000</string>
+    <string name="add_member_manual_button">Zur Gruppe hinzufügen</string>
+    <string name="search_field_place">Name oder Nummer suchen</string>
+    <string name="content_description_remove">Entfernen</string>
+    <string name="contacts_adicional_members">Mitglieder hinzufügen</string>
+    <string name="contacts_adicional_members_subtitle_select">%1$d ausgewählt</string>
+    <string name="content_description_back">Zurück</string>
+    <string name="content_description_next">Weiter</string>
+    <string name="view_contact_list">Kontaktliste anzeigen</string>
+    <string name="add_manually">Manuell hinzufügen</string>
+    <string name="enable_contact_access">Kontaktzugriff aktivieren</string>
+    <string name="allow_contacts_in_settings">Kontakte in den Einstellungen erlauben</string>
+    <string name="next">Weiter</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_the_best_time">Uhrzeit auswählen</string>
+    <string name="ok">OK</string>
+    <string name="edit_group">Gruppe bearbeiten</string>
+    <string name="new_group">Neue Gruppe</string>
+    <string name="save">Speichern</string>
+    <string name="create">Erstellen</string>
+    <string name="group_name">Gruppenname</string>
+    <string name="description">Beschreibung</string>
+    <string name="event_date">Datum der Veranstaltung</string>
+    <string name="minimum_price">Min. Preis</string>
+    <string name="maximum_price">Max. Preis</string>
+    <string name="minimum_price_cannot_be_greater_than_maximum">Der Mindestpreis darf nicht höher als der Höchstpreis sein</string>
+    <string name="members">Mitglieder</string>
+</resources>

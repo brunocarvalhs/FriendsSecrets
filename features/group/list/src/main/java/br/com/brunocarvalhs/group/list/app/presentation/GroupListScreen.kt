@@ -60,6 +60,7 @@ internal fun GroupListScreen(
         onJoinGroup = { token ->
             viewModel.handleEvent(GroupListIntent.GroupToEnter(token))
         },
+        onJoinGroupOpen = { viewModel.handleEvent(GroupListIntent.JoinGroupStarted) },
         moreOptions = moreOptions
     )
 }
@@ -74,6 +75,7 @@ private fun ListContent(
     onGroupToEnter: (GroupModel) -> Unit,
     onGroupToCreate: () -> Unit,
     onJoinGroup: (String) -> Unit,
+    onJoinGroupOpen: () -> Unit,
     moreOptions: List<OptionsMore>,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -91,7 +93,8 @@ private fun ListContent(
                 Column {
                     GroupListAppBar(
                         scrollBehavior = scrollBehavior,
-                        onJoinGroupClick = { showBottomSheet = true },
+                        onJoinGroupClick = { showBottomSheet = true; onJoinGroupOpen() },
+                        isJoinGroupEnabled = uiState.isJoinGroupEnabled,
                         moreOptions = moreOptions,
                         expanded = expanded,
                         onExpandedChange = { expanded = it }
@@ -111,14 +114,16 @@ private fun ListContent(
             }
         },
         floatingActionButton = {
-            GroupListFab(onGroupToCreate = onGroupToCreate)
+            if (uiState.isCreateGroupEnabled) {
+                GroupListFab(onGroupToCreate = onGroupToCreate)
+            }
         }
     ) { paddingValues ->
         GroupListContent(
             uiState = uiState,
             onFetchGroups = onFetchGroups,
             onGroupToEnter = onGroupToEnter,
-            onJoinGroupClick = { showBottomSheet = true },
+            onJoinGroupClick = { showBottomSheet = true; onJoinGroupOpen() },
             onGroupToCreate = onGroupToCreate,
             modifier = Modifier.padding(paddingValues)
         )
@@ -163,7 +168,9 @@ private fun GroupListContent(
                 if (uiState.filteredList.isEmpty() && !uiState.isLoading) {
                     EmptyGroupComponent(
                         onGroupToEnter = onJoinGroupClick,
-                        onCreateGroup = onGroupToCreate
+                        onCreateGroup = onGroupToCreate,
+                        isJoinGroupEnabled = uiState.isJoinGroupEnabled,
+                        isCreateGroupEnabled = uiState.isCreateGroupEnabled
                     )
                 } else {
                     GroupListItems(
@@ -220,6 +227,7 @@ private fun ListContentPreview(
         onGroupToEnter = {},
         onGroupToCreate = {},
         onJoinGroup = {},
+        onJoinGroupOpen = {},
         moreOptions = emptyList()
     )
 }

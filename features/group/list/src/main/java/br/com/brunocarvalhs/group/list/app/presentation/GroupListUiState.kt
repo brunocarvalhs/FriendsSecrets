@@ -24,7 +24,9 @@ internal data class GroupListUiState(
     val list: List<GroupModel> = emptyList(),
     val errorMessage: String? = null,
     val searchQuery: String = EMPTY_STRING,
-    val selectedTag: GroupFilterTag = GroupFilterTag.ACTIVE
+    val selectedTag: GroupFilterTag = GroupFilterTag.ACTIVE,
+    val isCreateGroupEnabled: Boolean = true,
+    val isJoinGroupEnabled: Boolean = true
 ) {
     val tags: List<GroupFilterTag> = GroupFilterTag.entries
 

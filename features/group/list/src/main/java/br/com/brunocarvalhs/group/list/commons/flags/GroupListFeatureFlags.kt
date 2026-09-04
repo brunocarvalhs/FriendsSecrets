@@ -8,9 +8,9 @@ import javax.inject.Singleton
 internal class GroupListFeatureFlags @Inject constructor(
     private val service: FeatureFlagService
 ) {
-    fun isListEnabled(): Boolean = service.validate(FEATURE_GROUP_LIST, true)
-    fun isBannerEnabled(): Boolean = service.validate(FEATURE_GROUP_LIST_BANNER, true)
+    fun isCreateGroupEnabled(): Boolean = service.validate(FEATURE_CREATE_GROUP, true)
+    fun isJoinGroupEnabled(): Boolean = service.validate(FEATURE_JOIN_GROUP, true)
 }
 
-private const val FEATURE_GROUP_LIST = "feature_group_list_enabled"
-private const val FEATURE_GROUP_LIST_BANNER = "feature_group_list_banner_enabled"
+private const val FEATURE_CREATE_GROUP = "home_is_create_group_enabled"
+private const val FEATURE_JOIN_GROUP = "home_is_join_group_enabled"

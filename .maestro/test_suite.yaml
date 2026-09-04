@@ -9,3 +9,4 @@ appId: br.com.brunocarvalhs.friendssecrets
 - runFlow: flows/search_filter_flow.yaml
 - runFlow: flows/enter_group.yaml
 - runFlow: flows/settings_flow.yaml
+- runFlow: flows/deeplink_flow.yaml

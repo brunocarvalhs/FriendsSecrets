@@ -18,45 +18,48 @@ class FirebaseRealtimeManager @Inject constructor(
     private val database: FirebaseDatabase
 ) : ChatService {
 
-    override fun getMessages(groupId: String): Flow<List<MessageModel>> = callbackFlow {
-        val query = database.getReference(PATH).child(groupId)
-            .limitToLast(LIMIT_TO_LAST)
-
-        val messages = mutableMapOf<String, MessageModel>()
-
-        val listener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val map = snapshot.value as? Map<String, Any> ?: return
-                val message = map.toMessageModel(snapshot.key ?: EMPTY_STRING, groupId)
-                messages[snapshot.key ?: EMPTY_STRING] = message
-                trySend(messages.values.toList().sortedBy { it.timestamp })
+    override fun getMessages(groupId: String, sinceTimestamp: Long): Flow<List<MessageModel>> =
+        callbackFlow {
+            val reference = database.getReference(PATH).child(groupId)
+            val query = if (sinceTimestamp > 0) {
+                // Only pull messages newer than what is already cached locally,
+                // instead of re-downloading the whole history on every open.
+                reference.orderByChild(KEY_TIMESTAMP).startAt((sinceTimestamp + 1).toDouble())
+            } else {
+                reference.limitToLast(LIMIT_TO_LAST)
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val map = snapshot.value as? Map<String, Any> ?: return
-                val message = map.toMessageModel(snapshot.key ?: EMPTY_STRING, groupId)
-                messages[snapshot.key ?: EMPTY_STRING] = message
-                trySend(messages.values.toList().sortedBy { it.timestamp })
+            val listener = object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    emitMessage(snapshot)
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    emitMessage(snapshot)
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    // No-op: chat clearing is a local, per-device action (see ClearMessagesUseCase).
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    // No-op: Child moved is not relevant for this message list
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.e(error.toException())
+                    close(error.toException())
+                }
+
+                private fun emitMessage(snapshot: DataSnapshot) {
+                    val map = snapshot.value as? Map<String, Any> ?: return
+                    trySend(listOf(map.toMessageModel(snapshot.key ?: EMPTY_STRING, groupId)))
+                }
             }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                messages.remove(snapshot.key)
-                trySend(messages.values.toList().sortedBy { it.timestamp })
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                // No-op: Child moved is not relevant for this message list
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Timber.e(error.toException())
-                close(error.toException())
-            }
+            query.addChildEventListener(listener)
+            awaitClose { query.removeEventListener(listener) }
         }
-
-        query.addChildEventListener(listener)
-        awaitClose { query.removeEventListener(listener) }
-    }
 
     override suspend fun sendMessage(groupId: String, message: MessageModel): Result<Unit> =
         runCatching {
@@ -82,9 +85,28 @@ class FirebaseRealtimeManager @Inject constructor(
         database.getReference(PATH).child(groupId).removeValue().await()
     }
 
+    override suspend fun setReaction(
+        groupId: String,
+        messageId: String,
+        deviceId: String,
+        emoji: String?
+    ): Result<Unit> = runCatching {
+        val reference = database.getReference(PATH).child(groupId).child(messageId)
+            .child(KEY_REACTIONS).child(deviceId)
+
+        if (emoji.isNullOrBlank()) {
+            reference.removeValue().await()
+        } else {
+            reference.setValue(emoji).await()
+        }
+    }
+
     private fun Map<String, Any>.toMessageModel(key: String, groupId: String): MessageModel {
         val statusOrdinal = (this[KEY_STATUS] as? Long)?.toInt() ?: MessageStatus.SENT.ordinal
         val status = MessageStatus.entries.getOrElse(statusOrdinal) { MessageStatus.SENT }
+
+        @Suppress("UNCHECKED_CAST")
+        val reactions = (this[KEY_REACTIONS] as? Map<String, String>) ?: emptyMap()
 
         return MessageModel(
             id = key,
@@ -93,7 +115,8 @@ class FirebaseRealtimeManager @Inject constructor(
             senderId = this[KEY_SENDER_ID] as? String ?: EMPTY_STRING,
             senderName = this[KEY_SENDER_NAME] as? String ?: EMPTY_STRING,
             timestamp = (this[KEY_TIMESTAMP] as? Long) ?: System.currentTimeMillis(),
-            status = status
+            status = status,
+            reactions = reactions
         )
     }
 
@@ -104,7 +127,8 @@ class FirebaseRealtimeManager @Inject constructor(
         const val KEY_SENDER_NAME = "sn"
         const val KEY_TIMESTAMP = "ts"
         const val KEY_STATUS = "s"
-        const val LIMIT_TO_LAST = 20
+        const val KEY_REACTIONS = "r"
+        const val LIMIT_TO_LAST = 200
         const val EMPTY_STRING = ""
     }
 }

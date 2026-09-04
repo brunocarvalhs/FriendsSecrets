@@ -122,4 +122,7 @@ dependencies {
 
     // Firebase Realtime Database
     implementation(libs.firebase.database)
+
+    // OpenRouter (AI gift chat)
+    implementation(libs.okhttp)
 }

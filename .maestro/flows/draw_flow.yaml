@@ -1,5 +1,5 @@
 appId: br.com.brunocarvalhs.friendssecrets
-name: Chat Flow
+name: Draw Flow
 ---
 - launchApp
 - tapOn: "Archived"

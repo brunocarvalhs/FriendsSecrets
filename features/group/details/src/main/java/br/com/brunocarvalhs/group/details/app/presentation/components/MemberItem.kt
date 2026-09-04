@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.group.details.app.presentation.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
@@ -19,11 +20,13 @@ internal fun MemberItem(
     isAdministrator: Boolean = false,
     onEdit: (() -> Unit)? = null,
     onRemove: (() -> Unit)? = null,
+    onAddLike: (() -> Unit)? = null,
 ) {
     val hasLikes = likes.any { it.isNotBlank() }
 
     ContactItem(
         name = participant,
+        likes = likes,
         action = { _, isLiked ->
 
             if (hasLikes) {
@@ -33,6 +36,18 @@ internal fun MemberItem(
                         if (isLiked) R.string.collapse_likes_action else R.string.expand_likes_action
                     )
                 )
+            }
+
+            onAddLike?.let {
+                IconButton(onClick = it) {
+                    Icon(
+                        imageVector = Icons.Filled.AddCircleOutline,
+                        contentDescription = stringResource(
+                            R.string.add_like_action,
+                            participant
+                        )
+                    )
+                }
             }
 
             onEdit?.let {

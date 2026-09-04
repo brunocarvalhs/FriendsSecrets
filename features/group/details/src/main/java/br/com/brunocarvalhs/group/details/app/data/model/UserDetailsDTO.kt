@@ -20,4 +20,14 @@ internal data class UserDetailsDTO(
         photoUrl = photoUrl,
         likes = likes
     )
+
+    companion object {
+        fun fromDomain(model: UserModel) = UserDetailsDTO(
+            id = model.id,
+            name = model.name,
+            phoneNumber = model.phoneNumber,
+            photoUrl = model.photoUrl,
+            likes = model.likes
+        )
+    }
 }

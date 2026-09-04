@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.details.R
+import br.com.brunocarvalhs.group.details.app.data.services.isLikelyUrl
 import coil.compose.AsyncImage
 
 @Composable
@@ -168,7 +169,9 @@ internal fun ContactItem(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(filteredLikes) { like ->
-                            if (like.isNotBlank()) {
+                            if (isLikelyUrl(like)) {
+                                LinkPreviewChip(url = like.trim())
+                            } else if (like.isNotBlank()) {
                                 AssistChip(onClick = {}, label = { Text(like) })
                             }
                         }

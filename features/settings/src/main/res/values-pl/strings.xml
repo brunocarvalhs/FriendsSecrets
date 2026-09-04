@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Wstecz</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Ustawienia</string>
+    <string name="settings_screen_general">Ogólne</string>
+    <string name="settings_screen_security">Odcisk palca</string>
+    <string name="settings_screen_support">Wsparcie</string>
+    <string name="title_report_an_issue">Zgłoś problem</string>
+    <string name="title_review">Oceń aplikację</string>
+    <string name="localized_description">Zlokalizowany opis</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Wygląd</string>
+    <string name="appearance_screen_title">Wybranie określonej opcji zmieni wygląd (kolor) aplikacji zgodnie z Twoimi preferencjami.</string>
+    <string name="appearance_screen_title_description">Włączenie motywu dynamicznego pozwoli aplikacji automatycznie dostosować kolory na podstawie tapety Twojego urządzenia.</string>
+    <string name="appearance_screen_dynamic_title">Motyw dynamiczny</string>
+    <string name="light_theme">Jasny motyw</string>
+    <string name="dark_theme">Ciemny motyw</string>
+    <string name="system_theme">Motyw systemowy</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">FAQ</string>
+
+    <!-- Legal -->
+    <string name="settings_screen_legal">Informacje prawne</string>
+    <string name="title_terms_and_conditions">Regulamin</string>
+    <string name="title_privacy_policy">Polityka prywatności</string>
+
+    <string name="settings_version_name">Wersja %1$s</string>
+    <string name="settings_version_code">Kompilacja %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Odśwież</string>
+    <string name="webview_open_in_browser">Otwórz w przeglądarce</string>
+    <string name="webview_error_title">Ups! Wystąpił błąd podczas ładowania strony.</string>
+    <string name="webview_error_description">Sprawdź połączenie internetowe i spróbuj ponownie.</string>
+    <string name="webview_error_retry">Spróbuj ponownie</string>
+</resources>

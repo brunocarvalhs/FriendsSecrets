@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsUserProperty
 import br.com.brunocarvalhs.core.domain.model.GroupModel
+import br.com.brunocarvalhs.core.navigation.DeepLinkHandler
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupByTokenUseCase
 import br.com.brunocarvalhs.group.list.app.domain.useCases.GroupListUseCase
+import br.com.brunocarvalhs.group.list.commons.flags.GroupListFeatureFlags
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,20 +27,37 @@ import javax.inject.Inject
 internal class GroupListViewModel @Inject constructor(
     private val groupListUseCase: GroupListUseCase,
     private val groupByTokenUseCase: GroupByTokenUseCase,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    private val deepLinkHandler: DeepLinkHandler,
+    private val featureFlags: GroupListFeatureFlags,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GroupListUiState())
+    private val _uiState = MutableStateFlow(
+        GroupListUiState(
+            isCreateGroupEnabled = featureFlags.isCreateGroupEnabled(),
+            isJoinGroupEnabled = featureFlags.isJoinGroupEnabled()
+        )
+    )
     val uiState: StateFlow<GroupListUiState> = _uiState.asStateFlow()
+
+    init {
+        deepLinkHandler.consumePendingJoinCode()?.let { code -> groupToEnter(code) }
+    }
 
     @AddTrace(name = "GroupListViewModel.handleEvent", enabled = true)
     fun handleEvent(intent: GroupListIntent) {
         when (intent) {
             GroupListIntent.FetchGroups -> fetchGroups()
+            GroupListIntent.JoinGroupStarted -> joinGroupStarted()
             is GroupListIntent.GroupToEnter -> groupToEnter(intent.token)
             is GroupListIntent.OnSearchQueryChange -> searchGroups(intent.query)
             is GroupListIntent.OnTagSelected -> filterGroups(intent.tag)
         }
+    }
+
+    @AddTrace(name = "GroupListViewModel.joinGroupStarted", enabled = true)
+    private fun joinGroupStarted() {
+        analyticsService.logEvent(name = AnalyticsEvent.GROUP_JOIN_STARTED)
     }
 
     @AddTrace(name = "GroupListViewModel.searchGroups", enabled = true)
@@ -73,11 +93,31 @@ internal class GroupListViewModel @Inject constructor(
                 AnalyticsParam.PARAM to token
             )
         )
+        analyticsService.logEvent(
+            name = AnalyticsEvent.GROUP_JOIN_SUBMITTED,
+            params = mapOf(AnalyticsParam.PARAM to token)
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             groupByTokenUseCase.invoke(token)
-                .onSuccess { fetchGroups() }
-                .onFailure(::error)
+                .onSuccess {
+                    analyticsService.logEvent(
+                        name = AnalyticsEvent.GROUP_JOIN_COMPLETED,
+                        params = mapOf(AnalyticsParam.PARAM to token)
+                    )
+                    analyticsService.setUserProperty(
+                        AnalyticsUserProperty.HAS_JOINED_GROUP.value,
+                        "true"
+                    )
+                    fetchGroups()
+                }
+                .onFailure {
+                    analyticsService.logEvent(
+                        name = AnalyticsEvent.GROUP_JOIN_FAILED,
+                        params = mapOf(AnalyticsParam.PARAM to token)
+                    )
+                    error(it)
+                }
         }
     }
 

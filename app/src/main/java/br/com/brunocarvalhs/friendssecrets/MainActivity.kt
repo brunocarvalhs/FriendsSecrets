@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.brunocarvalhs.biometric.BiometricService
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.navigation.DeepLinkHandler
 import br.com.brunocarvalhs.core.navigation.FeatureInitializer
 import br.com.brunocarvalhs.core.remote.domain.ThemeRemote
 import br.com.brunocarvalhs.core.remote.domain.ThemeService
@@ -39,6 +40,8 @@ class MainActivity : FragmentActivity() {
     lateinit var analyticsService: AnalyticsService
     @Inject
     lateinit var featureInitializers: Set<@JvmSuppressWildcards FeatureInitializer>
+    @Inject
+    lateinit var deepLinkHandler: DeepLinkHandler
     @Volatile
     private var isThemeReady = false
 
@@ -51,6 +54,8 @@ class MainActivity : FragmentActivity() {
         }
 
         super.onCreate(savedInstanceState)
+
+        deepLinkHandler.handle(intent?.data)
 
         lifecycleScope.launch {
             themeService.initialize()

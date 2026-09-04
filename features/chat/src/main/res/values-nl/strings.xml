@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Terug</string>
+    <string name="identify">Identificeer jezelf</string>
+    <string name="identify_message">Je staat niet in de ledenlijst van deze groep. Hoe wil je in de chat genoemd worden?</string>
+    <string name="identify_name">Je naam of bijnaam</string>
+    <string name="identify_save">Opslaan</string>
+    <string name="identify_cancela">Annuleren</string>
+    <string name="chat_input">Typ een bericht...</string>
+    <string name="chat_button_send">Versturen</string>
+    <string name="react_to_message">Reageren op bericht</string>
+    <string name="chat_date_today">Vandaag</string>
+    <string name="chat_date_yesterday">Gisteren</string>
+    <string name="ai_gift_chat_title">Cadeau-ideeën</string>
+    <string name="ai_gift_chat_assistant_name">Cadeau-assistent</string>
+    <string name="ai_gift_chat_typing">Aan het nadenken…</string>
+    <string name="ai_gift_chat_input">Vraag om cadeau-ideeën…</string>
+</resources>

@@ -1,74 +1,168 @@
-# Project Overview: Friends Secrets
+# Visão Geral do Projeto Friends Secrets
 
-## 1. Executive Summary
-Friends Secrets is a premier global platform designed to modernize and secure social interactions through anonymous messaging and group organization. Since its inception, the platform has evolved into a comprehensive ecosystem that combines social connectivity with advanced privacy-preserving technologies.
+## Introdução
 
-## 2. Vision & Mission
+Friends Secrets é um aplicativo Android desenvolvido para facilitar a troca de segredos e mensagens de forma anônima entre amigos. O projeto combina tecnologias modernas de desenvolvimento Android com uma arquitetura robusta para criar uma experiência de usuário fluida e agradável.
 
-### Vision
-To be the world's most trusted and engaging platform for anonymous social interaction and gift-giving traditions, bridging the gap between digital privacy and human connection.
+Este documento fornece uma visão geral do projeto, incluindo seus objetivos, público-alvo, funcionalidades principais e roadmap futuro.
 
-### Mission
-To provide a secure, intuitive, and AI-enhanced environment where users can share secrets, organize "Secret Santa" events, and interact without compromising their personal data or identity.
+## Visão e Missão
 
-## 3. Core Value Proposition
-Friends Secrets distinguishes itself through three main pillars:
-1.  **Privacy-First Engineering:** Local processing of sensitive data (contacts/biometrics) and strict adherence to global data protection laws (GDPR, LGPD, CCPA).
-2.  **AI-Driven Personalization:** Leveraging Generative AI to provide meaningful gift recommendations and conversation starters.
-3.  **Cross-Platform Seamlessness:** A unified experience across the Android ecosystem, optimized for 2026 hardware and software standards.
+### Visão
 
-## 4. Key Functional Areas
+Ser o aplicativo preferido para compartilhamento de segredos e organização de amigos secretos, proporcionando uma experiência divertida, segura e intuitiva.
 
-### 4.1 Group Dynamics & Secret Santa
-- High-performance automated drawing engine with constraint support.
-- Real-time group management with secure token-based invitations.
-- Event scheduling and deadline management.
+### Missão
 
-### 4.2 Anonymous Interaction
-- End-to-end encrypted anonymous hints.
-- AI-moderated chat to ensure a safe and respectful environment.
-- Scheduled identity reveals with interactive animations.
+Facilitar a interação social entre amigos através de uma plataforma que permite o compartilhamento anônimo de mensagens e a organização de grupos de amigos secretos, sempre priorizando a privacidade e a segurança dos usuários.
 
-### 4.3 Intelligent Assistance
-- Integration with Google Gemini (or latest GenAI) for hyper-personalized gift suggestions.
-- Preference analysis based on user-inputted "Wish Lists".
+## Público-Alvo
 
-### 4.4 Advanced Security
-- Native Biometric integration (Face/Fingerprint).
-- Zero-knowledge principles for contact processing.
+O Friends Secrets é destinado principalmente a:
 
-## 5. Technical Stack (2026 Standard)
-- **Language:** Kotlin 2.x (Multiplatform-ready)
-- **UI:** Jetpack Compose (Material 3 Adaptive)
-- **Architecture:** Clean Architecture + Modular MVVM
-- **Backend:** Firebase Suite (Auth, Firestore, Remote Config)
-- **AI:** Google Generative AI SDK (Gemini Pro)
-- **Dependency Injection:** Manual/Hilt (Modular)
-- **Observability:** Firebase Crashlytics & Advanced Analytics
+- **Jovens adultos (18-35 anos)** que desejam uma forma divertida de interagir com amigos
+- **Grupos de amigos e familiares** que organizam amigos secretos
+- **Usuários que valorizam privacidade** em suas comunicações
+- **Pessoas que buscam sugestões criativas** para presentes e surpresas
 
-## 6. Project Maturity (v2.5.0)
-As of May 2026, the project has reached a high level of maturity:
-- **Global Distribution:** Full support for 20+ languages.
-- **Accessibility:** 100% compliance with WCAG 2.2 standards.
-- **Performance:** Sub-100ms startup time and optimized battery usage.
+## Proposta de Valor
 
-## 7. Strategic Roadmap
+O Friends Secrets se diferencia por:
 
-### Q3-Q4 2026: The "Ecosystem" Era
-- **Marketplace Integration:** Direct API connections with global retailers for seamless gift purchasing.
-- **Enhanced AI Agents:** Introduction of "Group AI Hosts" to facilitate games and interactions.
-- **WearOS Support:** Bringing group notifications and drawing results to the wrist.
+1. **Anonimato com Confiança**: Permite compartilhar segredos mantendo o anonimato, mas dentro de círculos de confiança
+2. **Experiência Integrada**: Combina gerenciamento de amigos secretos, chat e sugestões de presentes em uma única plataforma
+3. **Inteligência Artificial**: Utiliza IA para fornecer sugestões personalizadas de presentes
+4. **Design Intuitivo**: Interface amigável e fácil de usar, com foco na experiência do usuário
+5. **Privacidade e Segurança**: Prioriza a proteção dos dados dos usuários
 
-### 2027: Hyper-Personalization
-- **Predictive Analytics:** AI that suggests the best time for a group event based on past interactions.
-- **AR Gift Reveals:** Using Augmented Reality to unbox "digital secrets" in physical spaces.
+## Funcionalidades Principais
 
-## 8. Compliance & Ethics
-Friends Secrets is designed to be compliant with:
-- **GDPR / UK GDPR** (Europe)
-- **LGPD** (Brazil)
-- **CCPA / CPRA** (USA)
-- **COPPA** (Children's Online Privacy Protection)
+### 1. Autenticação e Perfil
 
----
-© 2026 Brunocarvalhs. All rights reserved.
+- Login com número de telefone
+- Autenticação biométrica
+- Perfil personalizável com foto
+- Opções de privacidade e segurança
+
+### 2. Gerenciamento de Grupos
+
+- Criação e edição de grupos para amigos secretos
+- Convite de participantes via link, deep link, QR Code ou cartão de convite compartilhável
+- Sorteio automático de amigos secretos, com celebração animada
+- Definição de datas e valores para troca de presentes, com lembrete local
+- Remoção de membros pelo dono do grupo
+
+### 3. Compartilhamento Anônimo
+
+- Envio de mensagens anônimas dentro de grupos
+- Sistema de dicas para amigos secretos
+- Revelação programada de identidades
+
+### 4. Lista de Desejos
+
+- Cada membro cria e edita sua própria wishlist
+- Preview automático para itens que são links de produtos
+- Compartilhamento da wishlist com o grupo
+
+### 5. Chat com IA
+
+- Interação com inteligência artificial para sugestões
+- Reações a mensagens
+- Recomendações personalizadas de presentes
+- Ideias criativas para surpresas
+
+### 6. Notificações Push
+
+- Aviso quando o sorteio é concluído
+- Aviso de novas mensagens no chat
+
+### 7. Personalização
+
+- Temas claro e escuro
+- Suporte a 8 idiomas
+- Opções de notificação personalizáveis
+- Configurações de privacidade ajustáveis
+
+## Tecnologias Utilizadas
+
+O projeto utiliza um conjunto moderno de tecnologias:
+
+- **Linguagem**: Kotlin
+- **UI Framework**: Jetpack Compose
+- **Arquitetura**: Clean Architecture + MVVM
+- **Backend**: Firebase (Firestore, Authentication, Remote Config, Crashlytics)
+- **IA**: Google Generative AI
+- **Animações**: Lottie
+- **Imagens**: Coil
+- **Segurança**: Biometric Authentication
+
+## Estado Atual do Projeto
+
+Atualmente, o Friends Secrets está na versão 3.2.2, com as seguintes funcionalidades implementadas:
+
+- Sistema completo de autenticação com telefone e biometria
+- Gerenciamento de grupos e amigos secretos, com convite por link, deep link, QR Code e cartão de convite compartilhável
+- Sorteio automático com celebração animada e lembrete local para a data da troca
+- Lista de desejos por membro, com preview de itens que são links de produtos
+- Chat com IA para sugestões de presentes, com reações a mensagens
+- Notificações push para conclusão do sorteio e novas mensagens
+- Suporte a 8 idiomas (Português-BR, Inglês, Espanhol, Francês, Alemão, Holandês, Polonês e Coreano)
+- Personalização de temas e configurações
+- Edição de perfil com foto
+
+## Roadmap
+
+### Curto Prazo (3-6 meses)
+
+- **Melhorias na UI/UX**: Refinar a experiência do usuário com animações e transições mais fluidas
+- **Expansão do Chat com IA**: Adicionar mais recursos e personalização às sugestões
+- **Compartilhamento de Mídia**: Permitir o envio de imagens e vídeos em mensagens anônimas
+- **Eventos Programados**: Expandir o sistema de lembretes com calendário completo
+
+### Médio Prazo (6-12 meses)
+
+- **Recursos Sociais**: Adicionar funcionalidades para conectar amigos e expandir grupos
+- **Versão iOS**: Desenvolver versão para dispositivos Apple
+
+### Longo Prazo (12+ meses)
+
+- **Marketplace**: Integração com lojas online para compra direta de presentes sugeridos
+- **Recursos Premium**: Implementar modelo freemium com recursos avançados
+- **Integração com Redes Sociais**: Conectar com outras plataformas para expandir alcance
+
+## Métricas de Sucesso
+
+O sucesso do Friends Secrets será medido através das seguintes métricas:
+
+- **Usuários Ativos**: Número de usuários ativos diários e mensais
+- **Retenção**: Taxa de retenção de usuários após 1, 7 e 30 dias
+- **Engajamento**: Tempo médio de sessão e frequência de uso
+- **Grupos Criados**: Número de grupos de amigos secretos criados
+- **Mensagens Enviadas**: Volume de mensagens anônimas trocadas
+- **Satisfação**: Avaliações na Google Play Store e feedback dos usuários
+
+## Desafios e Riscos
+
+### Desafios Técnicos
+
+- Garantir a escalabilidade do sistema para suportar picos de uso sazonal
+- Manter a performance em dispositivos de baixo desempenho
+- Garantir a privacidade e segurança dos dados dos usuários
+
+### Riscos de Mercado
+
+- Concorrência de aplicativos similares
+- Mudanças nas políticas de privacidade das lojas de aplicativos
+- Adaptação às diferentes expectativas culturais em diferentes regiões
+
+## Equipe
+
+O projeto é atualmente mantido por:
+
+- **Bruno Carvalho** - Desenvolvedor Principal e Idealizador
+
+## Conclusão
+
+O Friends Secrets tem o potencial de se tornar uma plataforma essencial para grupos de amigos organizarem amigos secretos e compartilharem mensagens de forma divertida e segura. Com um foco contínuo na experiência do usuário, privacidade e inovação, o aplicativo busca criar conexões significativas entre pessoas, mesmo quando a comunicação é anônima.
+
+O projeto está em constante evolução, com novas funcionalidades sendo planejadas e implementadas regularmente para atender às necessidades dos usuários e se adaptar às tendências tecnológicas emergentes.

@@ -12,6 +12,9 @@ interface ChatMessageDao {
     @Query("SELECT * FROM chat_messages WHERE groupId = :groupId ORDER BY timestamp ASC")
     fun getMessages(groupId: String): Flow<List<ChatMessage>>
 
+    @Query("SELECT MAX(timestamp) FROM chat_messages WHERE groupId = :groupId")
+    suspend fun getLastTimestamp(groupId: String): Long?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages: List<ChatMessage>)
 

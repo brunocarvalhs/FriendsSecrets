@@ -53,6 +53,17 @@ data class ChatGraph(
 }
 
 @Serializable
+data class AiGiftChatGraph(
+    val group: GroupModel,
+) {
+    companion object {
+        val typeMap = mapOf(
+            typeOf<GroupModel>() to navTypeSerializer<GroupModel>()
+        )
+    }
+}
+
+@Serializable
 data class DrawGraph(val group: GroupModel) {
     companion object {
         val typeMap = mapOf(

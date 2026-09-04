@@ -1,0 +1,19 @@
+appId: br.com.brunocarvalhs.friendssecrets
+name: Deeplink Flow
+---
+- stopApp
+- openLink: "friendssecrets://"
+- assertVisible: "Friends Secrets"
+
+# Testa o deep link de entrar em um grupo por código (friendssecrets://join?code=...)
+- stopApp
+- openLink: "friendssecrets://join?code=YFZ6H5ZH"
+- assertVisible: "teste 2"
+- tapOn: "teste 2"
+- assertVisible: "teste 2"
+- scrollUntilVisible:
+    element: "Leave group"
+- tapOn: "Leave group"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible: "teste 2"

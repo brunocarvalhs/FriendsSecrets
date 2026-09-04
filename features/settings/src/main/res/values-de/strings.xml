@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Zurück</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Einstellungen</string>
+    <string name="settings_screen_general">Allgemein</string>
+    <string name="settings_screen_security">Fingerabdruck</string>
+    <string name="settings_screen_support">Support</string>
+    <string name="title_report_an_issue">Problem melden</string>
+    <string name="title_review">App bewerten</string>
+    <string name="localized_description">Lokalisierte Beschreibung</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Erscheinungsbild</string>
+    <string name="appearance_screen_title">Die Auswahl einer bestimmten Option ändert das Erscheinungsbild (Farbe) der App entsprechend deinen Einstellungen.</string>
+    <string name="appearance_screen_title_description">Wenn du das dynamische Design aktivierst, passt die App ihre Farben automatisch an den Hintergrund deines Geräts an.</string>
+    <string name="appearance_screen_dynamic_title">Dynamisches Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="system_theme">Systemdesign</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">FAQ</string>
+
+    <!-- Legal -->
+    <string name="settings_screen_legal">Rechtliches</string>
+    <string name="title_terms_and_conditions">Allgemeine Geschäftsbedingungen</string>
+    <string name="title_privacy_policy">Datenschutzerklärung</string>
+
+    <string name="settings_version_name">Version %1$s</string>
+    <string name="settings_version_code">Build %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Neu laden</string>
+    <string name="webview_open_in_browser">Im Browser öffnen</string>
+    <string name="webview_error_title">Hoppla! Beim Laden der Seite ist ein Fehler aufgetreten.</string>
+    <string name="webview_error_description">Überprüfe deine Internetverbindung und versuche es erneut.</string>
+    <string name="webview_error_retry">Erneut versuchen</string>
+</resources>

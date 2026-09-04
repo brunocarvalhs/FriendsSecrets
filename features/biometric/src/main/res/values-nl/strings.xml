@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_biometric">Veilige authenticatie</string>
+    <string name="subtitle_biometric">Toegang via biometrie of apparaatwachtwoord</string>
+    <string name="biometric_required">Authenticatie vereist</string>
+    <string name="biometric_message">Gebruik je biometrie om veilig toegang te krijgen tot FriendsSecrets.</string>
+    <string name="biometric_button_authentic">Verifiëren</string>
+    <string name="biometric_not_found">Vingerafdruk niet herkend. Probeer het opnieuw.</string>
+</resources>

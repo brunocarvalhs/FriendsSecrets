@@ -8,4 +8,11 @@
     <string name="identify_cancela">취소</string>
     <string name="chat_input">메시지 입력...</string>
     <string name="chat_button_send">전송</string>
+    <string name="react_to_message">메시지에 반응하기</string>
+    <string name="chat_date_today">오늘</string>
+    <string name="chat_date_yesterday">어제</string>
+    <string name="ai_gift_chat_title">선물 아이디어</string>
+    <string name="ai_gift_chat_assistant_name">선물 도우미</string>
+    <string name="ai_gift_chat_typing">생각 중…</string>
+    <string name="ai_gift_chat_input">선물 아이디어를 물어보세요…</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
+import br.com.brunocarvalhs.core.analytics.commons.AnalyticsUserProperty
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.group.create.app.domain.services.GroupImageService
 import br.com.brunocarvalhs.group.create.app.domain.useCases.GroupCreateUseCase
@@ -135,6 +136,14 @@ internal class FormsViewModel @Inject constructor(
             
             groupCreateUseCase(group).onSuccess {
                 success()
+                analyticsService.logEvent(
+                    name = AnalyticsEvent.GROUP_CREATE_COMPLETED,
+                    params = mapOf(AnalyticsParam.PARAM to group.token)
+                )
+                analyticsService.setUserProperty(
+                    AnalyticsUserProperty.HAS_CREATED_GROUP.value,
+                    "true"
+                )
                 onFinish(group.token)
             }.onFailure { error(it.message) }
         }
@@ -162,6 +171,10 @@ internal class FormsViewModel @Inject constructor(
                 AnalyticsParam.ACTION to "error",
                 AnalyticsParam.PARAM to message
             )
+        )
+        analyticsService.logEvent(
+            name = AnalyticsEvent.GROUP_CREATE_FAILED,
+            params = mapOf(AnalyticsParam.PARAM to message)
         )
         _uiState.value = _uiState.value.copy(
             isLoading = false,

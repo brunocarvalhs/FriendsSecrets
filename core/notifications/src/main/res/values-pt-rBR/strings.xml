@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_sync_channel_name">Atualizações do grupo</string>
+    <string name="group_sync_draw_completed_title">🎉 Sorteio concluído!</string>
+    <string name="group_sync_draw_completed_message">O sorteio do grupo %1$s foi concluído. Abra o app para ver seu amigo secreto!</string>
+    <string name="group_sync_new_message_title">💬 Nova mensagem</string>
+    <string name="group_sync_new_message_message">Você tem uma nova mensagem no grupo %1$s</string>
+</resources>

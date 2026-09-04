@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Retour</string>
+    <string name="draw_results_title">Résultats du tirage</string>
+    <string name="secret_santa_draw_title">Tirage du Père Noël secret</string>
+    <string name="draw_complete_message">Le tirage est terminé ! Partagez les résultats avec vos amis.</string>
+    <string name="ready_to_discover_title">Prêt(e) à découvrir votre Père Noël secret ?</string>
+    <string name="start_magic_subtitle">Appuyez sur le bouton ci-dessous pour lancer la magie !</string>
+    <string name="drawing_button">Tirage en cours...</string>
+    <string name="start_draw_button">Lancer le tirage</string>
+    <string name="draw_results">Résultats du tirage</string>
+    <string name="secret_santa_draw">Tirage du Père Noël secret</string>
+    <string name="the_draw_has_been_completed_share_the_results_with_group_members">Le tirage est terminé ! Partagez les résultats avec les membres du groupe.</string>
+    <string name="ready_to_draw">Prêt(e) à tirer au sort ?</string>
+    <string name="tap_the_button_below_to_start_the_draw">Appuyez sur le bouton ci-dessous pour lancer le tirage !</string>
+    <string name="scale">Échelle</string>
+    <string name="drawing">Tirage en cours...</string>
+    <string name="just_drawn">Tout juste tiré</string>
+    <string name="share">Partager</string>
+</resources>

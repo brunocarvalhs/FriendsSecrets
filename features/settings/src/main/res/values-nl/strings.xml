@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Terug</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Instellingen</string>
+    <string name="settings_screen_general">Algemeen</string>
+    <string name="settings_screen_security">Vingerafdruk</string>
+    <string name="settings_screen_support">Ondersteuning</string>
+    <string name="title_report_an_issue">Probleem melden</string>
+    <string name="title_review">App beoordelen</string>
+    <string name="localized_description">Gelokaliseerde beschrijving</string>
+
+    <!-- Appearance -->
+    <string name="title_appearance">Weergave</string>
+    <string name="appearance_screen_title">Als je een specifieke optie selecteert, verandert de weergave (kleur) van de app volgens jouw voorkeuren.</string>
+    <string name="appearance_screen_title_description">Als je het dynamische thema inschakelt, past de app de kleuren automatisch aan op basis van de achtergrond van je apparaat.</string>
+    <string name="appearance_screen_dynamic_title">Dynamisch thema</string>
+    <string name="light_theme">Licht thema</string>
+    <string name="dark_theme">Donker thema</string>
+    <string name="system_theme">Systeemthema</string>
+
+    <!-- FAQ -->
+    <string name="title_faq">Veelgestelde vragen</string>
+
+    <!-- Legal -->
+    <string name="settings_screen_legal">Juridisch</string>
+    <string name="title_terms_and_conditions">Algemene voorwaarden</string>
+    <string name="title_privacy_policy">Privacybeleid</string>
+
+    <string name="settings_version_name">Versie %1$s</string>
+    <string name="settings_version_code">Build %1$s</string>
+    <!-- WebView -->
+    <string name="webview_reload">Vernieuwen</string>
+    <string name="webview_open_in_browser">Openen in browser</string>
+    <string name="webview_error_title">Oeps! Er is een fout opgetreden bij het laden van de pagina.</string>
+    <string name="webview_error_description">Controleer je internetverbinding en probeer het opnieuw.</string>
+    <string name="webview_error_retry">Opnieuw proberen</string>
+</resources>

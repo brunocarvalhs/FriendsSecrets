@@ -1,5 +1,6 @@
 package br.com.brunocarvalhs.chat.app.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,10 +23,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AddReaction
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -56,9 +62,34 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.brunocarvalhs.chat.R
+import br.com.brunocarvalhs.chat.app.data.extensions.isSameDayAs
 import br.com.brunocarvalhs.chat.app.data.extensions.toLocalDateTime
 import br.com.brunocarvalhs.chat.app.data.model.ChatMessage
 import br.com.brunocarvalhs.core.domain.model.MessageModel.MessageStatus
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
+
+private val QUICK_REACTIONS = listOf("👍", "❤️", "😂", "🎁", "😮")
+private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000L
+
+private sealed class ChatListItem {
+    data class DateHeader(val timestamp: Long) : ChatListItem()
+    data class Message(val chatMessage: ChatMessage) : ChatListItem()
+}
+
+private fun List<ChatMessage>.withDateHeaders(): List<ChatListItem> {
+    val result = mutableListOf<ChatListItem>()
+    var lastTimestamp: Long? = null
+    for (message in this) {
+        if (lastTimestamp == null || !message.timestamp.isSameDayAs(lastTimestamp)) {
+            result.add(ChatListItem.DateHeader(message.timestamp))
+            lastTimestamp = message.timestamp
+        }
+        result.add(ChatListItem.Message(message))
+    }
+    return result
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,6 +143,8 @@ internal fun ChatScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            val itemsWithHeaders = remember(state.messages) { state.messages.withDateHeaders() }
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -119,8 +152,26 @@ internal fun ChatScreen(
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(state.messages, key = { it.id }) { message ->
-                    ChatMessageItem(message)
+                items(
+                    itemsWithHeaders,
+                    key = {
+                        when (it) {
+                            is ChatListItem.DateHeader -> "header_${it.timestamp}"
+                            is ChatListItem.Message -> it.chatMessage.id
+                        }
+                    }
+                ) { item ->
+                    when (item) {
+                        is ChatListItem.DateHeader -> ChatDateDivider(timestamp = item.timestamp)
+                        is ChatListItem.Message -> ChatMessageItem(
+                            message = item.chatMessage,
+                            onToggleReaction = { emoji ->
+                                viewModel.handleIntent(
+                                    ChatIntent.ToggleReaction(item.chatMessage.id, emoji)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -171,66 +222,172 @@ fun IdentificationDialog(
 }
 
 @Composable
-fun ChatMessageItem(
-    message: ChatMessage,
+private fun ChatDateDivider(
+    timestamp: Long,
     modifier: Modifier = Modifier
 ) {
+    val now = remember { System.currentTimeMillis() }
+    val label = when {
+        timestamp.isSameDayAs(now) -> stringResource(R.string.chat_date_today)
+        timestamp.isSameDayAs(now - DAY_IN_MILLIS) -> stringResource(R.string.chat_date_yesterday)
+        else -> remember(timestamp) {
+            DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+                .format(Date(timestamp))
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ChatMessageItem(
+    message: ChatMessage,
+    modifier: Modifier = Modifier,
+    onToggleReaction: (String) -> Unit = {},
+) {
+    var showReactionPicker by remember { mutableStateOf(false) }
     val alignment = if (message.isFromMe) Alignment.CenterEnd else Alignment.CenterStart
     val containerColor =
-        if (message.isFromMe) MaterialTheme.colorScheme.primaryContainer 
+        if (message.isFromMe) MaterialTheme.colorScheme.primaryContainer
         else MaterialTheme.colorScheme.secondaryContainer
-    
+
     val shape = if (message.isFromMe) {
         RoundedCornerShape(16.dp, 16.dp, 0.dp, 16.dp)
     } else {
         RoundedCornerShape(16.dp, 16.dp, 16.dp, 0.dp)
     }
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        contentAlignment = alignment
+        horizontalAlignment = if (message.isFromMe) Alignment.End else Alignment.Start
     ) {
-        Card(
-            shape = shape,
-            colors = CardDefaults.cardColors(containerColor = containerColor),
-            modifier = Modifier.widthIn(max = 280.dp)
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = alignment
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
-                if (!message.isFromMe) {
-                    Text(
-                        text = message.senderName,
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                }
+            Card(
+                shape = shape,
+                colors = CardDefaults.cardColors(containerColor = containerColor),
+                modifier = Modifier.widthIn(max = 280.dp)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    if (!message.isFromMe) {
+                        Text(
+                            text = message.senderName,
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            ),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
 
-                Text(
-                    text = message.text, 
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                
-                Row(
-                    modifier = Modifier.align(Alignment.End),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
                     Text(
-                        text = message.timestamp.toLocalDateTime(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.outline
+                        text = message.text,
+                        style = MaterialTheme.typography.bodyLarge
                     )
-                    
-                    if (message.isFromMe) {
+
+                    Row(
+                        modifier = Modifier.align(Alignment.End),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick = { showReactionPicker = !showReactionPicker },
+                            modifier = Modifier.size(20.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AddReaction,
+                                contentDescription = stringResource(R.string.react_to_message),
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.outline
+                            )
+                        }
                         Spacer(modifier = Modifier.width(4.dp))
-                        StatusIcon(status = message.status)
+                        Text(
+                            text = message.timestamp.toLocalDateTime(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+
+                        if (message.isFromMe) {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            StatusIcon(status = message.status)
+                        }
                     }
                 }
             }
+        }
+
+        if (showReactionPicker) {
+            ReactionPickerRow(
+                onPick = { emoji ->
+                    onToggleReaction(emoji)
+                    showReactionPicker = false
+                }
+            )
+        }
+
+        if (message.reactions.isNotEmpty()) {
+            ReactionSummaryRow(
+                reactions = message.reactions,
+                onToggleReaction = onToggleReaction
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReactionPickerRow(onPick: (String) -> Unit) {
+    Row(
+        modifier = Modifier.padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        QUICK_REACTIONS.forEach { emoji ->
+            AssistChip(
+                onClick = { onPick(emoji) },
+                label = { Text(emoji) },
+                colors = AssistChipDefaults.assistChipColors()
+            )
+        }
+    }
+}
+
+@Composable
+private fun ReactionSummaryRow(
+    reactions: Map<String, String>,
+    onToggleReaction: (String) -> Unit
+) {
+    val counts = reactions.values.groupingBy { it }.eachCount()
+    Row(
+        modifier = Modifier.padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        counts.forEach { (emoji, count) ->
+            AssistChip(
+                onClick = { onToggleReaction(emoji) },
+                label = { Text("$emoji $count") },
+                colors = AssistChipDefaults.assistChipColors()
+            )
         }
     }
 }
@@ -267,7 +424,9 @@ fun ChatInputBar(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier
+            .navigationBarsPadding()
+            .imePadding(),
         tonalElevation = 2.dp
     ) {
         Row(

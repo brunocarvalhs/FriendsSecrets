@@ -1,6 +1,7 @@
 package br.com.brunocarvalhs.core.navigation.navigation
 
 import androidx.navigation.NavHostController
+import br.com.brunocarvalhs.core.navigation.routers.AiGiftChatGraph
 import br.com.brunocarvalhs.core.navigation.routers.ChatGraph
 import br.com.brunocarvalhs.core.navigation.CommonNavigator
 import br.com.brunocarvalhs.core.navigation.routers.ContactsRouter
@@ -51,6 +52,12 @@ class AppNavigator @Inject constructor() : CommonNavigator {
 
     override fun navigateToChat(navController: NavHostController, group: GroupModel) {
         navController.navigate(ChatGraph(group)) {
+            launchSingleTop = true
+        }
+    }
+
+    override fun navigateToAiGiftChat(navController: NavHostController, group: GroupModel) {
+        navController.navigate(AiGiftChatGraph(group)) {
             launchSingleTop = true
         }
     }

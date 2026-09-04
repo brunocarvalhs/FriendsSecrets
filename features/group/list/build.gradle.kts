@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.gson)
     implementation(libs.accompanist.permissions)
+    implementation(libs.zxing.android.embedded)
 
     // Testes
     testImplementation(libs.junit)

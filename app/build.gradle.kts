@@ -22,8 +22,8 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
-        versionCode = 16
-        versionName = "3.0.2"
+        versionCode = 33
+        versionName = "3.10.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,6 +91,11 @@ android {
     }
 }
 
+secrets {
+    propertiesFileName = ".env"
+    defaultPropertiesFileName = ".env.example"
+}
+
 androidComponents {
     onVariants { variant ->
         variant.instrumentation.setAsmFramesComputationMode(
@@ -111,6 +116,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:biometric"))
     implementation(project(":core:storage"))
+    implementation(project(":core:notifications"))
 
     implementation(project(":features:group:list"))
     implementation(project(":features:group:details"))
@@ -157,6 +163,9 @@ dependencies {
     implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.appcheck)
+    implementation(libs.firebase.appcheck.playintegrity)
+    debugImplementation(libs.firebase.appcheck.debug)
 
     // Testes
     testImplementation(libs.junit)

@@ -1,0 +1,125 @@
+# CI/CD Centralized Configuration
+# This file is the source of truth for all pipeline behaviors.
+
+project:
+  name: "FriendsSecrets"
+  display_name: "Friends Secrets"
+  package_name: "br.com.brunocarvalhs.friendssecrets"
+
+# Git bot configuration for automated commits
+git:
+  bot_name: "github-actions[bot]"
+  bot_email: "41898282+github-actions[bot]@users.noreply.github.com"
+  branches:
+    main: "master"
+    develop: "develop"
+
+# File paths used across the pipeline
+paths:
+  gradle_file: "app/build.gradle.kts"
+  changelog: "CHANGELOG.md"
+  keystore: "app/release.keystore"
+  apk_debug: "app/build/outputs/apk/debug/*.apk"
+  apk_release: "app/build/outputs/apk/release/*.apk"
+  aab_release: "app/build/outputs/bundle/release/*.aab"
+
+# Global Build Settings
+build:
+  java-distribution: "temurin"
+  java-version: "17"
+  gradle-version: "9.5.0"
+  gradle_opts: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3072m"
+  build-tools-version: "35.0.0"
+  ignore-cache: false
+  
+  # Build variants (flavors)
+  flavors:
+    - name: "debug"
+      description: "Development / Internal Testing"
+      gradle_task: "assembleDebug"
+      enabled: true
+      path: "app/build/outputs/apk/debug/*.apk"
+      artifact_name: "FriendsSecrets-apk-debug"
+      deploy:
+        firebase:
+          label: "DEBUG"
+          app_id: "1:212108336384:android:e74d22bacd5f156e2427e5"
+          
+    - name: "release"
+      description: "Production Ready APK"
+      gradle_task: "assembleRelease"
+      enabled: true
+      path: "app/build/outputs/apk/release/*.apk"
+      artifact_name: "FriendsSecrets-apk-release"
+      deploy:
+        firebase:
+          label: "RELEASE"
+          app_id: "1:212108336384:android:e74d22bacd5f156e2427e5"
+
+# Test Suites
+test:
+  - name: "unit_tests"
+    description: "Business Logic & Unit Testing"
+    enabled: true
+    command: "./gradlew testDebug"
+    path: 
+      - "app/build/reports/tests/testDebugUnitTest/index.html"
+    gradlew-path: "."
+    build-path: "app/build/reports/tests/testDebugUnitTest/index.html"
+    reporter-type: "html"
+    reporter-path: "app/build/reports/tests/testDebugUnitTest/index.html"
+
+# Static Analysis & Linters
+linters:
+  lint:
+    name: "Android Lint"
+    description: "Android Layout & Performance Checks"
+    enabled: true
+    command: "./gradlew lintDebug"
+  detekt:
+    name: "Detekt"
+    description: "Kotlin Static Code Analysis"
+    enabled: true
+    command: "./gradlew detekt"
+
+# Store & GitHub Release Settings
+release:
+  enabled: true
+  command_aab: "./gradlew bundleRelease"
+  firebase:
+    enabled: true
+  github_release:
+    draft: false
+    prerelease: false
+  google_play:
+    track: "production"
+    status: "completed"
+    user_fraction: 0.5
+
+# Danger JS Rules and Settings
+danger:
+  enabled: true
+  node_version: 24
+  rules:
+    pr_size_limit: 500
+    jira_pattern: "\\[?[A-Z]{2,}-\\d+\\]?"
+    naming:
+      resource_prefixes:
+        'features:chat': 'feature_chat_'
+        'features:biometric': 'feature_biometric_'
+        'features:group:list': 'feature_group_list_'
+        'features:group:details': 'feature_group_details_'
+        'features:group:create': 'feature_group_create_'
+        'features:group:draw': 'feature_group_draw_'
+        'features:settings': 'feature_settings_'
+        'core:ui': 'core_ui_'
+      suffixes:
+        ViewModel: 'ViewModel'
+        Repository: 'Repository'
+        RepositoryImpl: 'RepositoryImpl'
+    architecture:
+      rules:
+        features: ['core', 'domain']
+        core: ['core', 'domain']
+        domain: ['domain']
+        data: ['domain', 'core']

@@ -1,9 +1,13 @@
 package br.com.brunocarvalhs.group.details.app.presentation
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,26 +22,36 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,16 +70,24 @@ import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
 import br.com.brunocarvalhs.group.details.R
 import br.com.brunocarvalhs.group.details.app.presentation.components.ActionIconCard
+import br.com.brunocarvalhs.group.details.app.presentation.components.AddLikeBottomSheet
+import br.com.brunocarvalhs.group.details.app.presentation.components.EditLikesBottomSheet
+import br.com.brunocarvalhs.group.details.app.presentation.components.InviteBottomSheet
 import br.com.brunocarvalhs.group.details.app.presentation.components.MemberItem
 import br.com.brunocarvalhs.group.details.app.presentation.components.SectionHeader
 import br.com.brunocarvalhs.group.details.app.presentation.components.SettingItem
 import coil.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun GroupDetailsScreen(
     viewModel: GroupDetailsViewModel,
     onBack: () -> Unit = {},
     onChat: (GroupModel) -> Unit = {},
+    onAiGiftChat: (GroupModel) -> Unit = {},
     onDraw: (GroupModel) -> Unit = {},
     onEdit: (GroupModel) -> Unit = {},
     onAddMembers: (GroupModel) -> Unit = {},
@@ -73,6 +95,24 @@ internal fun GroupDetailsScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.group
+    var memberPendingRemoval by remember { mutableStateOf<UserModel?>(null) }
+    var editingLikesMember by remember { mutableStateOf<UserModel?>(null) }
+    var addingLikeMember by remember { mutableStateOf<UserModel?>(null) }
+    var showInviteSheet by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.handleIntent(GroupDetailsIntent.DismissError)
+        }
+    }
+
+    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -101,15 +141,87 @@ internal fun GroupDetailsScreen(
         maxPrice = group.maxPrice,
         giftType = group.type,
         members = group.members,
+        currentDeviceId = uiState.currentDeviceId,
         onBack = onBack,
         onDraw = { onDraw.invoke(group) },
         onChat = { onChat.invoke(group) },
+        onAiGiftChat = { onAiGiftChat.invoke(group) },
         onDelete = { viewModel.handleIntent(GroupDetailsIntent.Delete(onBack)) },
-        onShareGroup = { viewModel.handleIntent(GroupDetailsIntent.Share) },
+        onInviteClick = { showInviteSheet = true },
         onExit = { viewModel.handleIntent(GroupDetailsIntent.Exit(onBack)) },
         onEdit = { onEdit.invoke(group) },
-        onAddMembers = { onAddMembers.invoke(group) }
+        onAddMembers = { onAddMembers.invoke(group) },
+        isReminderEnabled = uiState.isReminderEnabled,
+        onToggleReminder = { enabled ->
+            if (enabled &&
+                notificationPermissionState != null &&
+                !notificationPermissionState.status.isGranted
+            ) {
+                notificationPermissionState.launchPermissionRequest()
+            }
+            viewModel.handleIntent(GroupDetailsIntent.ToggleReminder(enabled))
+        },
+        onRemoveMember = { member -> memberPendingRemoval = member },
+        onShareWishlist = { viewModel.handleIntent(GroupDetailsIntent.ShareWishlist) },
+        onEditLikes = { member -> editingLikesMember = member },
+        onAddLike = { member -> addingLikeMember = member },
+        snackbarHostState = snackbarHostState
     )
+
+    memberPendingRemoval?.let { member ->
+        AlertDialog(
+            onDismissRequest = { memberPendingRemoval = null },
+            title = { Text(stringResource(R.string.remove_participant_confirmation_title)) },
+            text = {
+                Text(
+                    stringResource(R.string.remove_participant_confirmation_message, member.name)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.handleIntent(GroupDetailsIntent.RemoveMember(member.id))
+                    memberPendingRemoval = null
+                }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { memberPendingRemoval = null }) {
+                    Text(stringResource(R.string.remove_participant_confirmation_cancel))
+                }
+            }
+        )
+    }
+
+    editingLikesMember?.let { member ->
+        EditLikesBottomSheet(
+            initialLikes = member.likes,
+            onDismiss = { editingLikesMember = null },
+            onSave = { likes ->
+                viewModel.handleIntent(GroupDetailsIntent.UpdateLikes(likes))
+                editingLikesMember = null
+            }
+        )
+    }
+
+    addingLikeMember?.let { member ->
+        AddLikeBottomSheet(
+            participant = member.name,
+            onDismiss = { addingLikeMember = null },
+            onSave = { like ->
+                viewModel.handleIntent(GroupDetailsIntent.AddLike(member.id, like))
+                addingLikeMember = null
+            }
+        )
+    }
+
+    if (showInviteSheet) {
+        InviteBottomSheet(
+            onDismiss = { showInviteSheet = false },
+            onShareLink = { viewModel.handleIntent(GroupDetailsIntent.Share) },
+            onShareQrCode = { viewModel.handleIntent(GroupDetailsIntent.ShareQr) }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,16 +242,26 @@ private fun GroupDetailsContent(
     onBack: () -> Unit,
     onDraw: () -> Unit,
     onChat: () -> Unit,
+    onAiGiftChat: () -> Unit,
     onDelete: () -> Unit,
     onExit: () -> Unit,
-    onShareGroup: () -> Unit,
+    onInviteClick: () -> Unit,
     onEdit: () -> Unit,
     onAddMembers: () -> Unit,
+    isReminderEnabled: Boolean = false,
+    onToggleReminder: (Boolean) -> Unit = {},
+    onRemoveMember: (UserModel) -> Unit = {},
+    onShareWishlist: () -> Unit = {},
+    currentDeviceId: String = "",
+    onEditLikes: (UserModel) -> Unit = {},
+    onAddLike: (UserModel) -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         topBar = {
             GroupDetailsTopBar(onBack = onBack)
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValue ->
         LazyColumn(
             modifier = Modifier
@@ -158,8 +280,9 @@ private fun GroupDetailsContent(
             item {
                 GroupDetailsActions(
                     isDrawn = isDrawn,
-                    onShareGroup = onShareGroup,
+                    onInviteClick = onInviteClick,
                     onChat = onChat,
+                    onAiGiftChat = onAiGiftChat,
                     onDraw = onDraw
                 )
             }
@@ -177,7 +300,9 @@ private fun GroupDetailsContent(
                     drawDate = drawDate,
                     minPrice = minPrice,
                     maxPrice = maxPrice,
-                    giftType = giftType
+                    giftType = giftType,
+                    isReminderEnabled = isReminderEnabled,
+                    onToggleReminder = onToggleReminder
                 )
             }
 
@@ -197,9 +322,27 @@ private fun GroupDetailsContent(
             }
 
             items(members) { member ->
+                val isCurrentUser = currentDeviceId.isNotBlank() &&
+                    (member.id == currentDeviceId || member.phoneNumber == currentDeviceId)
                 MemberItem(
                     participant = member.name,
+                    likes = member.likes,
                     isAdministrator = isOwner,
+                    onRemove = if (isOwner && !isDrawn) {
+                        { onRemoveMember(member) }
+                    } else {
+                        null
+                    },
+                    onEdit = if (isCurrentUser) {
+                        { onEditLikes(member) }
+                    } else {
+                        null
+                    },
+                    onAddLike = if (isCurrentUser) {
+                        null
+                    } else {
+                        { onAddLike(member) }
+                    },
                 )
             }
 
@@ -208,7 +351,8 @@ private fun GroupDetailsContent(
                     isOwner = isOwner,
                     onEdit = onEdit,
                     onDelete = onDelete,
-                    onExit = onExit
+                    onExit = onExit,
+                    onShareWishlist = onShareWishlist
                 )
             }
         }
@@ -267,24 +411,30 @@ private fun GroupDetailsHeader(
 @Composable
 private fun GroupDetailsActions(
     isDrawn: Boolean,
-    onShareGroup: () -> Unit,
+    onInviteClick: () -> Unit,
     onChat: () -> Unit,
+    onAiGiftChat: () -> Unit,
     onDraw: () -> Unit
 ) {
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ActionIconCard(
-                Icons.Default.Share,
-                stringResource(R.string.invite), onShareGroup
+                Icons.Default.PersonAdd,
+                stringResource(R.string.invite), onInviteClick
             )
             ActionIconCard(
                 Icons.AutoMirrored.Filled.Chat,
                 stringResource(R.string.chat), onChat
+            )
+            ActionIconCard(
+                Icons.Default.AutoAwesome,
+                stringResource(R.string.ai_gift_suggestions), onAiGiftChat
             )
             ActionIconCard(
                 icon = Icons.Default.Casino,
@@ -348,18 +498,45 @@ private fun GroupDrawDetails(
     drawDate: String?,
     minPrice: Double?,
     maxPrice: Double?,
-    giftType: String?
+    giftType: String?,
+    isReminderEnabled: Boolean = false,
+    onToggleReminder: (Boolean) -> Unit = {},
 ) {
     val hasDrawDetails = drawDate != null || minPrice != null || maxPrice != null || giftType != null
     if (hasDrawDetails) {
         Column {
             SectionHeader(title = stringResource(R.string.draw_details))
             drawDate?.let {
-                SettingItem(
-                    Icons.Default.CalendarToday,
-                    stringResource(R.string.draw_date),
-                    it
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        SettingItem(
+                            Icons.Default.CalendarToday,
+                            stringResource(R.string.draw_date),
+                            it
+                        )
+                    }
+                    IconButton(onClick = { onToggleReminder(!isReminderEnabled) }) {
+                        Icon(
+                            imageVector = if (isReminderEnabled) {
+                                Icons.Default.NotificationsActive
+                            } else {
+                                Icons.Default.NotificationsNone
+                            },
+                            contentDescription = stringResource(
+                                if (isReminderEnabled) {
+                                    R.string.reminder_disable_action
+                                } else {
+                                    R.string.reminder_enable_action
+                                }
+                            ),
+                            tint = if (isReminderEnabled) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    }
+                }
             }
             if (minPrice != null || maxPrice != null) {
                 val priceRange = if (minPrice != null && maxPrice != null) {
@@ -398,10 +575,16 @@ private fun GroupDetailsFooter(
     isOwner: Boolean,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onExit: () -> Unit
+    onExit: () -> Unit,
+    onShareWishlist: () -> Unit = {}
 ) {
     Column {
         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), thickness = 0.5.dp)
+        SettingItem(
+            Icons.Default.CardGiftcard,
+            stringResource(R.string.share_wishlist_action),
+            onClick = onShareWishlist
+        )
         if (isOwner) {
             SettingItem(
                 Icons.Default.Edit,
@@ -444,8 +627,10 @@ private fun GroupDetailsPreview() {
         onChat = {},
         onDelete = {},
         onExit = {},
-        onShareGroup = {},
+        onInviteClick = {},
+        onAiGiftChat = {},
         onEdit = {},
+        onAddLike = {},
         onAddMembers = {}
     )
 }
