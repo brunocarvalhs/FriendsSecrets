@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.2] - 2026-09-04
+
+* fix(network): stop decoding Firestore write confirmations as full DTOs
+* fix(group-list): treat rejoining a known group as success, not a failure
+* fix(logger): don't report coroutine cancellation as a Crashlytics non-fatal
+
+
 ## [3.10.1] - 2026-09-04
 
 * Merge remote-tracking branch 'origin/master' into pr86-conflict-resolution
