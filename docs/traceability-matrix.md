@@ -1,74 +1,63 @@
-# Matriz de Rastreabilidade
+# Traceability Matrix: Friends Secrets
 
-Este documento estabelece a relação entre os requisitos funcionais e os casos de uso do aplicativo Friends Secrets, permitindo rastrear como cada requisito é implementado e testado.
+This document establishes the relationship between functional requirements, non-functional requirements, and use cases, ensuring that every business need is mapped to a system interaction or implementation strategy.
 
-## Matriz de Requisitos Funcionais x Casos de Uso
+## 1. Functional Requirements (FR) x Use Cases (UC)
 
-| Requisito | Descrição Resumida | Casos de Uso Relacionados |
-|-----------|-------------------|--------------------------|
-| RF01 | Criação de novos grupos | UC03 |
-| RF02 | Exibição e gerenciamento de grupos | UC04 |
-| RF03 | Personalização de tema | UC08 |
-| RF04 | Autenticação por telefone | UC01 |
-| RF05 | Navegação e interface | UC01, UC02, UC03, UC04, UC06, UC07, UC08, UC10 |
-| RF06 | Autenticação biométrica | UC01 |
-| RF07 | Perfil de usuário | UC02 |
-| RF08 | Configurações do aplicativo | UC08, UC10 |
-| RF09 | Sorteio de amigos secretos | UC05 |
-| RF10 | Chat com IA para sugestões | UC07 |
-| RF11 | Gerenciamento de preferências | UC02 |
-| RF12 | Compartilhamento de grupos | UC09 |
-| RF13 | Feedback e suporte | UC10 |
-| RF14 | Revelação de amigo secreto | UC06 |
-| RF15 | Onboarding para novos usuários | - |
+| Requirement | Description | Related Use Cases |
+|:---|:---|:---|
+| **FR01** | Group Creation | UC03 |
+| **FR02** | Secure Invitations | UC03, UC09 |
+| **FR03** | Contact Integration | UC03 |
+| **FR04** | Automated Drawing | UC05 |
+| **FR05** | Result Secrecy | UC06 |
+| **FR06** | Identity Reveal | UC06 |
+| **FR07** | AI Gift Assistant | UC07 |
+| **FR08** | Biometric Authentication | UC01, UC02 |
+| **FR09** | User Profiles | UC02 |
+| **FR10** | Real-time Notifications | UC05, UC10 |
+| **FR11** | Theme Customization | UC08 |
+| **FR12** | Multi-language Support | System-wide |
 
-## Matriz de Casos de Uso x Requisitos Funcionais
+## 2. Use Cases (UC) x Functional Requirements (FR)
 
-| Caso de Uso | Descrição Resumida | Requisitos Relacionados |
-|-------------|-------------------|------------------------|
-| UC01 | Autenticação de Usuário | RF04, RF05, RF06 |
-| UC02 | Gerenciamento de Perfil | RF05, RF07, RF11 |
-| UC03 | Criação de Grupo | RF01, RF05 |
-| UC04 | Gerenciamento de Grupo | RF02, RF05 |
-| UC05 | Sorteio de Amigos Secretos | RF09 |
-| UC06 | Visualização de Amigo Secreto | RF05, RF14 |
-| UC07 | Obtenção de Sugestões de Presentes | RF05, RF10 |
-| UC08 | Personalização de Tema | RF03, RF05, RF08 |
-| UC09 | Compartilhamento de Grupo | RF12 |
-| UC10 | Envio de Feedback | RF05, RF08, RF13 |
+| Use Case | Description | Related Requirements |
+|:---|:---|:---|
+| **UC01** | Secure User Authentication | FR08 |
+| **UC02** | Profile & Preference Management | FR08, FR09 |
+| **UC03** | Group Creation & Orchestration | FR01, FR02, FR03 |
+| **UC04** | Group Management | FR01, FR02 |
+| **UC05** | Automated Secret Santa Draw | FR04, FR10 |
+| **UC06** | Result Retrieval | FR05, FR06 |
+| **UC07** | AI-Enhanced Gift Assistance | FR07 |
+| **UC08** | System Personalization | FR11 |
+| **UC09** | Secure Group Sharing | FR02 |
+| **UC10** | Support & Feedback | FR10 |
 
-## Matriz de Requisitos Não Funcionais x Implementação
+## 3. Non-Functional Requirements (NFR) x Implementation Strategy
 
-| Requisito | Descrição Resumida | Implementação |
-|-----------|-------------------|--------------|
-| RNF01 | Desempenho | Firebase Performance, otimização de consultas, cache local |
-| RNF02 | Segurança de Dados | Autenticação Firebase, regras de segurança Firestore, biometria |
-| RNF03 | Compatibilidade e Responsividade | Jetpack Compose, Material Design 3, layouts responsivos |
-| RNF04 | Escalabilidade | Arquitetura Firebase, consultas otimizadas |
-| RNF05 | Usabilidade | Material Design, feedback visual, mensagens de erro claras |
-| RNF06 | Disponibilidade | Firebase Realtime Database, cache offline |
-| RNF07 | Manutenibilidade | Clean Architecture, MVVM, injeção de dependência |
-| RNF08 | Monitoramento e Análise | Firebase Crashlytics, Firebase Analytics |
-| RNF09 | Privacidade | Política de privacidade, controle de dados do usuário |
-| RNF10 | Configuração Remota | Firebase Remote Config |
+| Requirement | Description | Implementation / Technology |
+|:---|:---|:---|
+| **NFR01** | Performance & Latency | Baseline Profiles, Coroutines, Room/Firestore Caching |
+| **NFR02** | Security & Encryption | Android Keystore, TLS 1.3, AES-256 |
+| **NFR03** | Global Privacy Compliance | Local Contact Processing, GDPR/LGPD Consent API |
+| **NFR04** | Scalability | Firebase Cloud Functions, Auto-scaling Firestore |
+| **NFR05** | Availability | Offline-first Architecture, WorkManager Sync |
+| **NFR06** | Accessibility (A11y) | Material 3 Semantic UI, WCAG 2.2 Testing |
+| **NFR07** | Maintainability | Clean Architecture, Modular MVVM, Kover (Code Coverage) |
+| **NFR08** | Energy Efficiency | Background Task Scheduling (WorkManager), API 35+ Standards |
+| **NFR09** | Observability | Firebase Crashlytics, Sentry, Custom Analytics Module |
+| **NFR10** | Localization & I18n | Android Resource Bundles (20+ locales), RTL Support |
 
-## Cobertura de Requisitos
+## 4. Requirement Coverage Summary
 
-### Requisitos Funcionais
+### Functional Requirements
+- **Fully Covered:** 100% (All FRs mapped to UCs or System Components).
+- **Verification Method:** Unit Tests and Manual QA Journeys.
 
-- **Totalmente Cobertos por Casos de Uso:** 14/15 (93,3%)
-- **Parcialmente Cobertos:** 0/15 (0%)
-- **Não Cobertos:** 1/15 (6,7%)
+### Non-Functional Requirements
+- **Implementation Identified:** 100% (All NFRs mapped to specific technologies or architectural patterns).
+- **Verification Method:** Benchmarking, Security Audits, and Accessibility Scanner.
 
-### Requisitos Não Funcionais
-
-- **Com Implementação Identificada:** 10/10 (100%)
-- **Sem Implementação Identificada:** 0/10 (0%)
-
-## Observações
-
-1. O requisito RF15 (Onboarding para novos usuários) não está diretamente associado a um caso de uso específico, pois é uma funcionalidade que ocorre automaticamente na primeira execução do aplicativo.
-
-2. Todos os requisitos não funcionais possuem implementações identificadas no código atual do aplicativo.
-
-3. A matriz de rastreabilidade deve ser atualizada sempre que novos requisitos forem adicionados ou modificados, ou quando novos casos de uso forem definidos.
+---
+© 2026 Brunocarvalhs. All rights reserved.

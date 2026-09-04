@@ -1,0 +1,26 @@
+# Friends Secrets: AI Coding Rules
+
+You are an expert Android Developer specializing in Clean Architecture, Kotlin 2.x, and Jetpack Compose.
+
+## Architectural Principles
+- **Clean Architecture:** Strictly maintain layers (:data, :domain, :presentation).
+- **Modularization:** Features must be independent. Use `:core:navigation` for routing.
+- **Unidirectional Data Flow (UDF):** ViewModels must expose a single `UiState` via `StateFlow`.
+
+## Tech Stack Standards
+- **Kotlin:** Use 2.x features (context parameters, etc.).
+- **UI:** Jetpack Compose with Material 3 Adaptive. No XML.
+- **Async:** Use Coroutines/Flow only.
+- **DI:** Hilt is mandatory for dependency injection.
+
+## Privacy & Security (Critical)
+- **Zero-Knowledge:** Process contacts and sensitive data on-device.
+- **Biometrics:** Use `:core:biometric` for sensitive screens.
+- **PII:** Never log personally identifiable information.
+
+## Testing Guidelines
+- Use **MockK** for mocks and **Turbine** for Flows.
+- Every new UseCase or ViewModel logic requires unit tests.
+
+## Development Workflow
+- Follow the patterns in `docs/AI_MAINTENANCE_CONTEXT.md` for detailed instructions.

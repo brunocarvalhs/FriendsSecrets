@@ -1,36 +1,51 @@
-**Terms & Conditions**
+# Global Terms & Conditions
 
-By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to Brunocarvalhs.
+**Last Updated:** May 2, 2026
 
-Brunocarvalhs is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.
+Welcome to Friends Secrets. These Global Terms & Conditions ("Terms") govern your access to and use of the Friends Secrets mobile application ("App") and any related services (collectively, the "Service") provided by Brunocarvalhs ("we," "our," or "us").
 
-The Friends Secrets app stores and processes personal data that you have provided to us, in order to provide my Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the Friends Secrets app won’t work properly or at all.
+By downloading, installing, or using the App, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, you must immediately cease all use of the App.
 
-The app does use third party services that declare their own Terms and Conditions.
+---
 
-Link to Terms and Conditions of third party service providers used by the app
+### 1. Eligibility and Registration
+*   **Age Requirement:** You must be at least 13 years old (or the minimum age required in your country) to use this Service.
+*   **Account Responsibility:** You are responsible for maintaining the confidentiality of your device and any group access codes. You agree to accept responsibility for all activities that occur under your instance of the App.
 
-- [Google Play Services](https://policies.google.com/terms)
-- [Google Analytics for Firebase](https://firebase.google.com/terms/analytics)
+### 2. Intellectual Property Rights
+*   **Ownership:** All content, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof) are owned by Brunocarvalhs and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
+*   **License:** We grant you a personal, non-exclusive, non-transferable, revocable license to use the App for personal, non-commercial purposes in accordance with these Terms.
 
-You should be aware that there are certain things that Brunocarvalhs will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Brunocarvalhs cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.
+### 3. Prohibited Conduct
+You agree not to:
+*   Use the App for any illegal purpose or in violation of any local, state, national, or international law.
+*   Reverse engineer, decompile, or attempt to extract the source code of the App.
+*   Use the Service to harass, abuse, or harm another person.
+*   Interfere with or disrupt the integrity or performance of the Service.
 
-If you’re using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.
+### 4. Service Specifics: Secret Santa (Amigo Secreto)
+*   **Nature of Service:** The App is a tool to facilitate "Secret Santa" draws. We are not responsible for the actual exchange of gifts, the behavior of participants, or the results of the automated draw.
+*   **Data Accuracy:** You are responsible for the accuracy of the contact information you provide or select from your device to facilitate the draw.
 
-Along the same lines, Brunocarvalhs cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, Brunocarvalhs cannot accept responsibility.
+### 5. Third-Party Services and Links
+The App integrates with or provides links to third-party services (e.g., Google Play Services, Firebase). Your use of these services is subject to their respective terms and privacy policies. We do not control and are not responsible for the content or practices of any third-party services.
 
-With respect to Brunocarvalhs’s responsibility for your use of the app, when you’re using the app, it’s important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Brunocarvalhs accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.
+### 6. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL BRUNOCARVALHS BE LIABLE FOR ANY INDIRECT, PUNITIVE, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, INCLUDING WITHOUT LIMITATION DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA, OR OTHER INTANGIBLE LOSSES, ARISING OUT OF OR RELATING TO THE USE OF, OR INABILITY TO USE, THE SERVICE.
 
-At some point, we may wish to update the app. The app is currently available on Android & iOS – the requirements for both systems(and for any additional systems we decide to extend the availability of the app to) may change, and you’ll need to download the updates if you want to keep using the app. Brunocarvalhs does not promise that it will always update the app so that it is relevant to you and/or works with the Android & iOS version that you have installed on your device. However, you promise to always accept updates to the application when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.
+### 7. Disclaimer of Warranties
+THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. WE EXPRESSLY DISCLAIM ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
-**Changes to This Terms and Conditions**
+### 8. Governing Law and Jurisdiction
+These Terms shall be governed by and construed in accordance with the laws of Brazil, without regard to its conflict of law provisions. Any legal action or proceeding arising under these Terms will be brought exclusively in the courts located in Brazil, and the parties hereby irrevocably consent to the personal jurisdiction and venue therein. (Users in the EU/UK may have additional rights under local mandatory consumer laws).
 
-I may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Terms and Conditions on this page.
+### 9. Modifications to Service and Terms
+We reserve the right to modify or discontinue, temporarily or permanently, the Service (or any part thereof) with or without notice. We may update these Terms from time to time. Your continued use of the App after any such changes constitutes your acceptance of the new Terms.
 
-These terms and conditions are effective as of 2021-08-13
+---
 
-**Contact Us**
+### 10. Contact Information
+If you have any questions about these Terms, please contact us at:
+**Email:** bruno.silva.carvalho@outlook.com.br
 
-If you have any questions or suggestions about my Terms and Conditions, do not hesitate to contact me at bruno.silva.carvalho@outlook.com.br.
-
-This Terms and Conditions page was generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.nisrulz.com/)
+© 2026 Brunocarvalhs. All rights reserved.
