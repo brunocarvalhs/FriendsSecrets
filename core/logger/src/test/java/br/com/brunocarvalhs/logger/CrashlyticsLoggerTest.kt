@@ -8,6 +8,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import timber.log.Timber
+import java.util.concurrent.CancellationException
 
 class CrashlyticsLoggerTest {
 
@@ -68,6 +69,14 @@ class CrashlyticsLoggerTest {
                 it is Exception && it.message == message
             })
         }
+        verify(exactly = 0) { crashlytics.log(any()) }
+    }
+
+    @Test
+    fun shouldIgnoreCancellationException() {
+        Timber.e(CancellationException("job was cancelled"), "coroutine cancelled")
+
+        verify(exactly = 0) { crashlytics.recordException(any()) }
         verify(exactly = 0) { crashlytics.log(any()) }
     }
 }
