@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.10.2] - 2026-09-04
+
+* Merge pull request #86 from brunocarvalhs/develop
+
+
 ## [3.10.1] - 2026-09-04
 
 * Merge remote-tracking branch 'origin/master' into pr86-conflict-resolution
