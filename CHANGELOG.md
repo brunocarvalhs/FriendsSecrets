@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.10.1] - 2026-09-04
+
+* Merge remote-tracking branch 'origin/master' into pr86-conflict-resolution
+* chore: bump version to 3.10.0 [skip ci]
+
+
 ## [3.10.0] - 2026-09-01
 
 * feat(review): prompt for a store rating after a successful draw (#85)
