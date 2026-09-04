@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.create.app.data.repository
 
 import br.com.brunocarvalhs.core.network.domain.NetworkService
 import br.com.brunocarvalhs.core.domain.model.GroupModel
-import br.com.brunocarvalhs.group.create.app.data.model.GroupCreateDTO
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,9 +33,9 @@ class GroupCreateRepositoryImplTest {
                     it.endpoint == "groups" &&
                             it.method == NetworkService.Method.POST
                 },
-                response = GroupCreateDTO::class
+                response = String::class
             )
-        } returns mockk()
+        } returns "generated-id"
 
         // When
         val result = repository.create(group)
@@ -57,7 +56,7 @@ class GroupCreateRepositoryImplTest {
                     it.endpoint == "groups" &&
                             it.method == NetworkService.Method.POST
                 },
-                response = GroupCreateDTO::class
+                response = String::class
             )
         } returns null
 
@@ -79,9 +78,9 @@ class GroupCreateRepositoryImplTest {
                     it.endpoint == "groups/1" &&
                             it.method == NetworkService.Method.PUT
                 },
-                response = GroupCreateDTO::class
+                response = Boolean::class
             )
-        } returns mockk()
+        } returns true
 
         // When
         val result = repository.update(group)

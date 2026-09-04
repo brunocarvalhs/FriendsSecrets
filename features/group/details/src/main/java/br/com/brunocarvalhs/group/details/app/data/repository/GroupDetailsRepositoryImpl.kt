@@ -41,14 +41,17 @@ internal class GroupDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun update(group: GroupModel): GroupModel = withContext(Dispatchers.IO) {
         val dto = GroupDetailsDTO.fromDomain(group)
-        val response = network.make(
+        // Firestore's update returns a plain write confirmation, not the
+        // full document body - decoding it as GroupDetailsDTO always failed,
+        // making every successful edit look like a failure.
+        network.make(
             request = NetworkRequest(
                 endpoint = "${GroupModel.COLLECTION_NAME}/${group.id}",
                 payload = dto.toMap(),
                 method = NetworkService.Method.PUT
             ),
-            response = GroupDetailsDTO::class
+            response = Boolean::class
         ) ?: throw GroupUpdateException()
-        return@withContext response.toDomain()
+        return@withContext group
     }
 }

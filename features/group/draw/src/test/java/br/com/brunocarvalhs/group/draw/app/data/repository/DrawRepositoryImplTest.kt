@@ -3,7 +3,7 @@ package br.com.brunocarvalhs.group.draw.app.data.repository
 import br.com.brunocarvalhs.core.network.domain.NetworkService
 import br.com.brunocarvalhs.core.domain.model.GroupModel
 import br.com.brunocarvalhs.core.domain.model.UserModel
-import br.com.brunocarvalhs.group.draw.app.data.model.GroupDrawDTO
+import br.com.brunocarvalhs.group.draw.app.data.exceptions.FailedDrawException
 import br.com.brunocarvalhs.group.draw.app.data.services.DrawManager
 import io.mockk.coEvery
 import io.mockk.every
@@ -52,14 +52,47 @@ class DrawRepositoryImplTest {
                             it.method == NetworkService.Method.PUT &&
                             it.payload is Map<*, *>
                 },
-                response = GroupDrawDTO::class
+                response = Boolean::class
             )
-        } returns mockk()
+        } returns true
 
         // When
         val result = repository.drawMembers(group)
 
         // Then
         assertEquals(expectedDraw, result)
+    }
+
+    @Test(expected = FailedDrawException::class)
+    fun `drawMembers should throw exception when network returns null`() = runTest {
+        // Given
+        val members = listOf(
+            UserModel(name = "Bruno"),
+            UserModel(name = "Alice"),
+            UserModel(name = "Bob")
+        )
+
+        val group = GroupModel(id = "1", members = members)
+        val memberNames = members.map { it.name }.toMutableList()
+
+        every { drawManager.draw(memberNames) } returns mapOf(
+            "Bruno" to "Alice",
+            "Alice" to "Bob",
+            "Bob" to "Bruno"
+        )
+
+        coEvery {
+            network.make(
+                request = match {
+                    it.endpoint == "groups/1" &&
+                            it.method == NetworkService.Method.PUT &&
+                            it.payload is Map<*, *>
+                },
+                response = Boolean::class
+            )
+        } returns null
+
+        // When
+        repository.drawMembers(group)
     }
 }

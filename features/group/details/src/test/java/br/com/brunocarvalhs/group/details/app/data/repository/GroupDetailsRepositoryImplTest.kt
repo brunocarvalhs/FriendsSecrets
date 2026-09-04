@@ -88,15 +88,14 @@ class GroupDetailsRepositoryImplTest {
     fun `update should return updated group when network succeeds`() = runTest {
         // Given
         val group = GroupModel(id = "1", name = "Updated")
-        val dto = GroupDetailsDTO(id = "1", name = "Updated")
         coEvery {
             network.make(
                 request = match {
                     it.endpoint == "groups/1" && it.method == NetworkService.Method.PUT
                 },
-                response = GroupDetailsDTO::class
+                response = Boolean::class
             )
-        } returns dto
+        } returns true
 
         // When
         val result = repository.update(group)
@@ -115,7 +114,7 @@ class GroupDetailsRepositoryImplTest {
                 request = match {
                     it.endpoint == "groups/1" && it.method == NetworkService.Method.PUT
                 },
-                response = GroupDetailsDTO::class
+                response = Boolean::class
             )
         } returns null
 

@@ -18,13 +18,16 @@ internal class GroupCreateRepositoryImpl @Inject constructor(
         runCatching {
             val dto = GroupCreateDTO.fromDomain(group)
 
+            // Firestore's create returns the new document id, not the full
+            // document body - decoding it as GroupCreateDTO always failed,
+            // making every successful create look like a failure.
             network.make(
                 request = NetworkRequest(
                     endpoint = "groups",
                     payload = dto.toMap(),
                     method = NetworkService.Method.POST
                 ),
-                response = GroupCreateDTO::class
+                response = String::class
             ) ?: throw FailedCreateGroupException()
 
             Unit
@@ -35,13 +38,16 @@ internal class GroupCreateRepositoryImpl @Inject constructor(
         runCatching {
             val dto = GroupCreateDTO.fromDomain(group)
 
+            // Firestore's update returns a plain write confirmation, not the
+            // full document body - decoding it as GroupCreateDTO always
+            // failed, making every successful update look like a failure.
             network.make(
                 request = NetworkRequest(
                     endpoint = "groups/" + group.id,
                     payload = dto.toMap(),
                     method = NetworkService.Method.PUT
                 ),
-                response = GroupCreateDTO::class
+                response = Boolean::class
             ) ?: throw FailedCreateGroupException()
 
             Unit
