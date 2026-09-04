@@ -2,7 +2,6 @@ package br.com.brunocarvalhs.group.list.app.domain.useCases
 
 import br.com.brunocarvalhs.deviceid.DeviceService
 import br.com.brunocarvalhs.core.domain.model.GroupModel
-import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupAlreadyExistException
 import br.com.brunocarvalhs.group.list.app.data.exceptions.GroupNotFoundException
 import br.com.brunocarvalhs.group.list.app.data.model.GroupListDTO
 import br.com.brunocarvalhs.group.list.app.domain.repository.GroupListRepository
@@ -76,7 +75,7 @@ class GroupByTokenUseCaseTest {
     }
 
     @Test
-    fun `invoke should return failure when group already exists in list`() = runTest {
+    fun `invoke should succeed and skip re-saving when group already exists in list`() = runTest {
         // Given
         val token = "EXISTING"
         val dto = GroupListDTO(id = "1", token = token)
@@ -88,7 +87,8 @@ class GroupByTokenUseCaseTest {
         val result = useCase.invoke(token)
 
         // Then
-        assertTrue(result.isFailure)
-        assertTrue(result.exceptionOrNull() is GroupAlreadyExistException)
+        assertTrue(result.isSuccess)
+        assertEquals(token, result.getOrNull()?.token)
+        coVerify(exactly = 0) { storage.save(GroupModel.COLLECTION_NAME, any()) }
     }
 }
