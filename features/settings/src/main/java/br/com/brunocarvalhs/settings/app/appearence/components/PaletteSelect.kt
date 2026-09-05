@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,6 +41,9 @@ import br.com.brunocarvalhs.settings.R
 
 /**
  * Row of tappable color swatches letting the user pick one of the pre-selected [AppPalette]s.
+ * [AppPalette.CUSTOM] is deliberately excluded - it's entered via a dedicated switch instead
+ * (see `CustomThemeSwitch`/[br.com.brunocarvalhs.settings.app.appearence.AppearanceIntent.SetCustomThemeEnabled]),
+ * since picking it isn't a single tap but a whole color-building flow.
  *
  * When [enabled] is false (e.g. because Dynamic Theme is active and overrides any manual
  * palette), swatches are dimmed and non-interactive, matching how [ThemeSelect] and the
@@ -50,22 +54,20 @@ internal fun PaletteSelect(
     modifier: Modifier = Modifier,
     selected: String = AppPalette.Default.id,
     enabled: Boolean = true,
-    customPrimaryColor: Color = AppPalette.Default.lightColorScheme.primary,
-    customSecondaryColor: Color = AppPalette.Default.lightColorScheme.secondary,
     onClick: (String) -> Unit = {},
 ) {
+    val palettes = remember { AppPalette.entries.filter { it != AppPalette.CUSTOM } }
+
     LazyRow(
         modifier = modifier.selectableGroup(),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = PaddingValues(vertical = 4.dp)
     ) {
-        items(items = AppPalette.entries, key = { it.id }) { palette ->
+        items(items = palettes, key = { it.id }) { palette ->
             PaletteSwatch(
                 palette = palette,
                 isSelected = palette.id == selected,
                 enabled = enabled,
-                customPrimaryColor = customPrimaryColor,
-                customSecondaryColor = customSecondaryColor,
                 onClick = { onClick(palette.id) }
             )
         }
@@ -77,13 +79,11 @@ private fun PaletteSwatch(
     palette: AppPalette,
     isSelected: Boolean,
     enabled: Boolean,
-    customPrimaryColor: Color,
-    customSecondaryColor: Color,
     onClick: () -> Unit,
 ) {
     val name = stringResource(id = paletteDisplayNameRes(palette))
-    val primaryColor = if (palette == AppPalette.CUSTOM) customPrimaryColor else palette.lightColorScheme.primary
-    val accentColor = if (palette == AppPalette.CUSTOM) customSecondaryColor else palette.lightColorScheme.tertiary
+    val primaryColor = palette.lightColorScheme.primary
+    val accentColor = palette.lightColorScheme.tertiary
     val contentAlpha = if (enabled) 1f else DISABLED_ALPHA
 
     Column(

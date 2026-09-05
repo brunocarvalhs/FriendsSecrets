@@ -28,6 +28,7 @@
     <string name="palette_berry">Jagodowa</string>
     <string name="palette_midnight_gold">Północne Złoto</string>
     <string name="palette_custom">Niestandardowa</string>
+    <string name="appearance_screen_custom_theme_title">Motyw niestandardowy</string>
     <string name="appearance_screen_custom_primary_label">Kolor podstawowy</string>
     <string name="appearance_screen_custom_secondary_label">Kolor dodatkowy</string>
 

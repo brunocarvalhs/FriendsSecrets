@@ -28,6 +28,7 @@
     <string name="palette_berry">Baies</string>
     <string name="palette_midnight_gold">Or de Minuit</string>
     <string name="palette_custom">Personnalisée</string>
+    <string name="appearance_screen_custom_theme_title">Thème personnalisé</string>
     <string name="appearance_screen_custom_primary_label">Couleur principale</string>
     <string name="appearance_screen_custom_secondary_label">Couleur secondaire</string>
 

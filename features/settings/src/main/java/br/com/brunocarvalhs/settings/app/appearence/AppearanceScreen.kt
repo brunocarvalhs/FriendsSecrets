@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.sharp.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,6 +58,9 @@ internal fun AppearanceScreen(
         onPalette = {
             viewModel.handleIntent(AppearanceIntent.SetPalette(it))
         },
+        onCustomTheme = {
+            viewModel.handleIntent(AppearanceIntent.SetCustomThemeEnabled(it))
+        },
         onCustomPrimaryColor = {
             viewModel.handleIntent(
                 AppearanceIntent.SetCustomColors(it.toArgb(), state.value.customSecondaryColor)
@@ -82,6 +86,7 @@ private fun AppearanceContent(
     onDynamicTheme: (Boolean) -> Unit = {},
     onTheme: (String) -> Unit = {},
     onPalette: (String) -> Unit = {},
+    onCustomTheme: (Boolean) -> Unit = {},
     onCustomPrimaryColor: (Color) -> Unit = {},
     onCustomSecondaryColor: (Color) -> Unit = {}
 ) {
@@ -143,11 +148,16 @@ private fun AppearanceContent(
                     modifier = Modifier.fillMaxWidth(),
                     selected = paletteSelected,
                     enabled = !isDynamicThemeEnabled,
-                    customPrimaryColor = customPrimaryColor,
-                    customSecondaryColor = customSecondaryColor,
                     onClick = onPalette,
                 )
-                if (paletteSelected == AppPalette.CUSTOM.id && !isDynamicThemeEnabled) {
+                Spacer(modifier = Modifier.height(8.dp))
+                SettingsListItemOptions(
+                    selected = paletteSelected == AppPalette.CUSTOM.id,
+                    title = stringResource(R.string.appearance_screen_custom_theme_title),
+                    icon = Icons.Filled.Palette,
+                    onClick = onCustomTheme
+                )
+                if (paletteSelected == AppPalette.CUSTOM.id) {
                     Spacer(modifier = Modifier.height(16.dp))
                     CustomColorPicker(
                         modifier = Modifier.fillMaxWidth(),

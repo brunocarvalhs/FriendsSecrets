@@ -28,6 +28,7 @@
     <string name="palette_berry">Framboesa</string>
     <string name="palette_midnight_gold">Noite Dourada</string>
     <string name="palette_custom">Personalizada</string>
+    <string name="appearance_screen_custom_theme_title">Tema Personalizado</string>
     <string name="appearance_screen_custom_primary_label">Cor primária</string>
     <string name="appearance_screen_custom_secondary_label">Cor secundária</string>
 
