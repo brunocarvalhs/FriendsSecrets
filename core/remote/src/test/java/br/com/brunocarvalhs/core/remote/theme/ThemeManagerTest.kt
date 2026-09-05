@@ -37,6 +37,9 @@ class ThemeManagerTest {
         // defaults seguros
         coEvery { storage.load("theme_key", String::class) } returns "SYSTEM"
         coEvery { storage.load("dynamic_theme_key", Boolean::class) } returns false
+        coEvery { storage.load("palette_key", String::class) } returns null
+        coEvery { storage.load("custom_primary_color_key", Int::class) } returns null
+        coEvery { storage.load("custom_secondary_color_key", Int::class) } returns null
     }
 
     @After
@@ -119,5 +122,78 @@ class ThemeManagerTest {
         advanceUntilIdle()
 
         assertEquals(ThemeService.Theme.DARK, manager.theme.value)
+    }
+
+    @Test
+    fun `should default to classic palette when nothing stored`() = runTest {
+        manager = createManager()
+
+        manager.initialize()
+
+        advanceUntilIdle()
+
+        assertEquals("classic", manager.palette.value)
+    }
+
+    @Test
+    fun `should initialize palette from storage`() = runTest {
+        coEvery { storage.load("palette_key", String::class) } returns "festive"
+
+        manager = createManager()
+
+        manager.initialize()
+
+        advanceUntilIdle()
+
+        assertEquals("festive", manager.palette.value)
+    }
+
+    @Test
+    fun `should update palette and persist`() = runTest {
+        coEvery { storage.save(any(), any()) } just Runs
+
+        manager = createManager()
+
+        manager.setPalette("tropical")
+        advanceUntilIdle()
+
+        assertEquals("tropical", manager.palette.value)
+
+        coVerify(exactly = 1) {
+            storage.save("palette_key", "tropical")
+        }
+    }
+
+    @Test
+    fun `should initialize custom colors from storage`() = runTest {
+        coEvery { storage.load("custom_primary_color_key", Int::class) } returns 0xFF112233.toInt()
+        coEvery { storage.load("custom_secondary_color_key", Int::class) } returns 0xFF445566.toInt()
+
+        manager = createManager()
+
+        manager.initialize()
+
+        advanceUntilIdle()
+
+        assertEquals(0xFF112233.toInt(), manager.customPrimaryColor.value)
+        assertEquals(0xFF445566.toInt(), manager.customSecondaryColor.value)
+    }
+
+    @Test
+    fun `should update custom colors and persist`() = runTest {
+        coEvery { storage.save(any(), any()) } just Runs
+
+        manager = createManager()
+
+        manager.setCustomColors(0xFF112233.toInt(), 0xFF445566.toInt())
+        advanceUntilIdle()
+
+        assertEquals(0xFF112233.toInt(), manager.customPrimaryColor.value)
+        assertEquals(0xFF445566.toInt(), manager.customSecondaryColor.value)
+
+        coVerify(exactly = 1) {
+            storage.save("custom_primary_color_key", 0xFF112233.toInt())
+            storage.save("custom_secondary_color_key", 0xFF445566.toInt())
+        }
     }
 }

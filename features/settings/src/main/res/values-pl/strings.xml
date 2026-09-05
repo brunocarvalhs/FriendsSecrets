@@ -19,6 +19,18 @@
     <string name="light_theme">Jasny motyw</string>
     <string name="dark_theme">Ciemny motyw</string>
     <string name="system_theme">Motyw systemowy</string>
+    <string name="appearance_screen_palette_title">Wybierz paletę kolorów dla aplikacji.</string>
+    <string name="appearance_screen_palette_title_disabled">Paleta kolorów (wyłączona, gdy Dynamiczny motyw jest włączony — wyłącz go, aby wybrać paletę).</string>
+    <string name="palette_classic">Klasyczna</string>
+    <string name="palette_festive">Świąteczna</string>
+    <string name="palette_tropical">Tropikalna</string>
+    <string name="palette_ocean">Ocean</string>
+    <string name="palette_berry">Jagodowa</string>
+    <string name="palette_midnight_gold">Północne Złoto</string>
+    <string name="palette_custom">Niestandardowa</string>
+    <string name="appearance_screen_custom_theme_title">Motyw niestandardowy</string>
+    <string name="appearance_screen_custom_primary_label">Kolor podstawowy</string>
+    <string name="appearance_screen_custom_secondary_label">Kolor dodatkowy</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

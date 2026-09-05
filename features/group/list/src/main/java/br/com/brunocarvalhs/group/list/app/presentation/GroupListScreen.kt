@@ -87,7 +87,7 @@ private fun ListContent(
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shadowElevation = 4.dp
             ) {
                 Column {

@@ -32,7 +32,10 @@ internal fun GroupListAppBar(
     TopAppBar(
         title = { Text("Friends Secrets", style = MaterialTheme.typography.titleLarge) },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Companion.Transparent
+            containerColor = Color.Companion.Transparent,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ),
         actions = {
             if (isJoinGroupEnabled) {

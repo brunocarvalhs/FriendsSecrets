@@ -19,6 +19,18 @@
     <string name="light_theme">Licht thema</string>
     <string name="dark_theme">Donker thema</string>
     <string name="system_theme">Systeemthema</string>
+    <string name="appearance_screen_palette_title">Kies een kleurenpalet voor de app.</string>
+    <string name="appearance_screen_palette_title_disabled">Kleurenpalet (uitgeschakeld terwijl Dynamisch Thema actief is — schakel het uit om een palet te kiezen).</string>
+    <string name="palette_classic">Klassiek</string>
+    <string name="palette_festive">Feestelijk</string>
+    <string name="palette_tropical">Tropisch</string>
+    <string name="palette_ocean">Oceaan</string>
+    <string name="palette_berry">Bes</string>
+    <string name="palette_midnight_gold">Middernachtgoud</string>
+    <string name="palette_custom">Aangepast</string>
+    <string name="appearance_screen_custom_theme_title">Aangepast thema</string>
+    <string name="appearance_screen_custom_primary_label">Primaire kleur</string>
+    <string name="appearance_screen_custom_secondary_label">Secundaire kleur</string>
 
     <!-- FAQ -->
     <string name="title_faq">Veelgestelde vragen</string>
