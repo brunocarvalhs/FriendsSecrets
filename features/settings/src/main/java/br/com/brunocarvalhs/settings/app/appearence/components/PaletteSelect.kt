@@ -126,7 +126,7 @@ private fun PaletteSwatch(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = null,
-                    tint = if (primaryColor.luminance() > 0.5f) Color.Black else Color.White,
+                    tint = if (primaryColor.luminance() > LUMINANCE_THRESHOLD) Color.Black else Color.White,
                     modifier = Modifier.size(CHECK_ICON_SIZE)
                 )
             }
@@ -156,6 +156,7 @@ private val UNSELECTED_BORDER_WIDTH = 1.dp
 private val ACCENT_DOT_SIZE = 16.dp
 private val CHECK_ICON_SIZE = 20.dp
 private const val DISABLED_ALPHA = 0.4f
+private const val LUMINANCE_THRESHOLD = 0.5f
 
 @Composable
 @Preview

@@ -102,7 +102,7 @@ private fun ColorSwatch(color: Color, isSelected: Boolean, onClick: () -> Unit) 
             .background(color)
             .clickable(onClick = onClick)
             .semantics {
-                this.contentDescription = "#%06X".format(color.toArgb() and 0xFFFFFF)
+                this.contentDescription = "#%06X".format(color.toArgb() and RGB_MASK)
                 this.role = Role.RadioButton
                 this.selected = isSelected
             },
@@ -112,7 +112,7 @@ private fun ColorSwatch(color: Color, isSelected: Boolean, onClick: () -> Unit) 
             Icon(
                 imageVector = Icons.Filled.Check,
                 contentDescription = null,
-                tint = if (color.luminance() > 0.5f) Color.Black else Color.White,
+                tint = if (color.luminance() > LUMINANCE_THRESHOLD) Color.Black else Color.White,
                 modifier = Modifier.size(CHECK_ICON_SIZE)
             )
         }
@@ -123,6 +123,8 @@ private val SWATCH_SIZE = 40.dp
 private val SELECTED_BORDER_WIDTH = 3.dp
 private val UNSELECTED_BORDER_WIDTH = 1.dp
 private val CHECK_ICON_SIZE = 18.dp
+private const val RGB_MASK = 0xFFFFFF
+private const val LUMINANCE_THRESHOLD = 0.5f
 
 @Composable
 @Preview
