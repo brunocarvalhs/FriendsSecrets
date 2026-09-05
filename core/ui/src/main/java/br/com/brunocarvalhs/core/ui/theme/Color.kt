@@ -3,10 +3,11 @@ package br.com.brunocarvalhs.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF7B3FA0)
+// Strong, vivid royal blue — contrast against white text measures ~6.6:1 (WCAG AA).
+val primaryLight = Color(0xFF1D4ED8)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFEADCF5)
-val onPrimaryContainerLight = Color(0xFF2A0A3D)
+val primaryContainerLight = Color(0xFFDCE7FF)
+val onPrimaryContainerLight = Color(0xFF0F2A6B)
 // NOTE: darkened from the original #F57C00 to meet WCAG AA (4.5:1) contrast
 // against white text (onSecondaryLight) — the original combination measured ~2.7:1.
 val secondaryLight = Color(0xFFB75C00)
@@ -30,10 +31,10 @@ val onSurfaceVariantLight = Color(0xFF49454F)
 val outlineLight = Color(0xFF79747E)
 
 
-val primaryDark = Color(0xFFD0A9F5)
-val onPrimaryDark = Color(0xFF2A0A3D)
-val primaryContainerDark = Color(0xFF5B2C82)
-val onPrimaryContainerDark = Color(0xFFEADCF5)
+val primaryDark = Color(0xFFA9C6FF)
+val onPrimaryDark = Color(0xFF0A2A5C)
+val primaryContainerDark = Color(0xFF1E3A78)
+val onPrimaryContainerDark = Color(0xFFD7E4FF)
 val secondaryDark = Color(0xFFFFB74D)
 val onSecondaryDark = Color(0xFF3E1F00)
 val secondaryContainerDark = Color(0xFF7A3E00)

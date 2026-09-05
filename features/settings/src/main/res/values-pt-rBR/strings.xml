@@ -27,6 +27,9 @@
     <string name="palette_ocean">Oceano</string>
     <string name="palette_berry">Framboesa</string>
     <string name="palette_midnight_gold">Noite Dourada</string>
+    <string name="palette_custom">Personalizada</string>
+    <string name="appearance_screen_custom_primary_label">Cor primária</string>
+    <string name="appearance_screen_custom_secondary_label">Cor secundária</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

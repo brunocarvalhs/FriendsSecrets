@@ -11,11 +11,17 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.core.view.WindowCompat
 import br.com.brunocarvalhs.core.remote.domain.ThemeRemote
 import br.com.brunocarvalhs.core.remote.domain.ThemeService
+import kotlinx.coroutines.flow.StateFlow
+
+private val DEFAULT_CUSTOM_PRIMARY = AppPalette.Default.lightColorScheme.primary.toArgb()
+private val DEFAULT_CUSTOM_SECONDARY = AppPalette.Default.lightColorScheme.secondary.toArgb()
 
 @Composable
 fun FriendsSecretsTheme(
@@ -29,6 +35,12 @@ fun FriendsSecretsTheme(
     val theme by rememberThemeState(themeService, isInPreview)
     val dynamicColorEnabled by rememberDynamicColorState(themeService, isInPreview)
     val paletteId by rememberPaletteState(themeService, isInPreview)
+    val customPrimaryColor by rememberCustomColorState(
+        themeService, isInPreview, DEFAULT_CUSTOM_PRIMARY
+    ) { it.customPrimaryColor }
+    val customSecondaryColor by rememberCustomColorState(
+        themeService, isInPreview, DEFAULT_CUSTOM_SECONDARY
+    ) { it.customSecondaryColor }
 
     val darkTheme = calculateDarkTheme(theme)
     val colorScheme = pickColorScheme(
@@ -36,7 +48,9 @@ fun FriendsSecretsTheme(
         dynamicColorEnabled = dynamicColorEnabled,
         isThemeRemote = isThemeRemote,
         themeRemoteProvider = themeRemoteProvider,
-        palette = AppPalette.fromId(paletteId)
+        palette = AppPalette.fromId(paletteId),
+        customPrimaryColor = Color(customPrimaryColor),
+        customSecondaryColor = Color(customSecondaryColor)
     )
 
     SideEffectWindow(darkTheme)
@@ -79,6 +93,18 @@ private fun rememberPaletteState(
 }
 
 @Composable
+private fun rememberCustomColorState(
+    themeService: ThemeService?,
+    isInPreview: Boolean,
+    default: Int,
+    selector: (ThemeService) -> StateFlow<Int>
+) = if (!isInPreview && themeService != null) {
+    selector(themeService).collectAsState()
+} else {
+    remember { androidx.compose.runtime.mutableStateOf(default) }
+}
+
+@Composable
 private fun calculateDarkTheme(theme: ThemeService.Theme) = when (theme) {
     ThemeService.Theme.DARK -> true
     ThemeService.Theme.LIGHT -> false
@@ -91,24 +117,35 @@ private fun pickColorScheme(
     dynamicColorEnabled: Boolean,
     isThemeRemote: Boolean,
     themeRemoteProvider: ThemeRemote?,
-    palette: AppPalette
+    palette: AppPalette,
+    customPrimaryColor: Color,
+    customSecondaryColor: Color
 ): androidx.compose.material3.ColorScheme {
     val context = LocalContext.current
+
+    fun paletteScheme() = if (palette == AppPalette.CUSTOM) {
+        customColorScheme(customPrimaryColor, customSecondaryColor, dark = darkTheme)
+    } else if (darkTheme) {
+        palette.darkColorScheme
+    } else {
+        palette.lightColorScheme
+    }
+
     return when {
         dynamicColorEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
         darkTheme -> if (isThemeRemote) {
-            themeRemoteProvider?.getDarkColorScheme() ?: palette.darkColorScheme
+            themeRemoteProvider?.getDarkColorScheme() ?: paletteScheme()
         } else {
-            palette.darkColorScheme
+            paletteScheme()
         }
 
         else -> if (isThemeRemote) {
-            themeRemoteProvider?.getLightColorScheme() ?: palette.lightColorScheme
+            themeRemoteProvider?.getLightColorScheme() ?: paletteScheme()
         } else {
-            palette.lightColorScheme
+            paletteScheme()
         }
     }
 }

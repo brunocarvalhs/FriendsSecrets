@@ -27,7 +27,9 @@ internal class AppearanceViewModel @Inject constructor(
         value = AppearanceState(
             themeSelected = themeService.theme.value.type,
             isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value,
-            paletteSelected = themeService.palette.value
+            paletteSelected = themeService.palette.value,
+            customPrimaryColor = themeService.customPrimaryColor.value,
+            customSecondaryColor = themeService.customSecondaryColor.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
@@ -42,6 +44,8 @@ internal class AppearanceViewModel @Inject constructor(
             is AppearanceIntent.SetTheme -> setTheme(intent.theme)
             is AppearanceIntent.SetDynamicThemeEnabled -> setDynamicThemeEnabled(intent.enabled)
             is AppearanceIntent.SetPalette -> setPalette(intent.paletteId)
+            is AppearanceIntent.SetCustomColors ->
+                setCustomColors(intent.primaryColor, intent.secondaryColor)
         }
     }
 
@@ -98,6 +102,22 @@ internal class AppearanceViewModel @Inject constructor(
         viewModelScope.launch {
             themeService.setPalette(paletteId)
             _state.update { it.copy(paletteSelected = paletteId) }
+        }
+    }
+
+    @AddTrace(name = "AppearanceViewModel.setCustomColors", enabled = true)
+    private fun setCustomColors(primaryColor: Int, secondaryColor: Int) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_custom_colors"
+            )
+        )
+        viewModelScope.launch {
+            themeService.setCustomColors(primaryColor, secondaryColor)
+            _state.update {
+                it.copy(customPrimaryColor = primaryColor, customSecondaryColor = secondaryColor)
+            }
         }
     }
 }

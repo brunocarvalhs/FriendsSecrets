@@ -27,6 +27,9 @@
     <string name="palette_ocean">Oceaan</string>
     <string name="palette_berry">Bes</string>
     <string name="palette_midnight_gold">Middernachtgoud</string>
+    <string name="palette_custom">Aangepast</string>
+    <string name="appearance_screen_custom_primary_label">Primaire kleur</string>
+    <string name="appearance_screen_custom_secondary_label">Secundaire kleur</string>
 
     <!-- FAQ -->
     <string name="title_faq">Veelgestelde vragen</string>

@@ -25,6 +25,14 @@ class ThemeManager @Inject constructor(
     private val _palette = MutableStateFlow(DEFAULT_PALETTE_ID)
     override val palette = _palette.asStateFlow()
 
+    // Mirror the CLASSIC palette's primary/secondary from core:ui's Color.kt as literals, for
+    // the same reason as DEFAULT_PALETTE_ID above.
+    private val _customPrimaryColor = MutableStateFlow(DEFAULT_CUSTOM_PRIMARY_COLOR)
+    override val customPrimaryColor = _customPrimaryColor.asStateFlow()
+
+    private val _customSecondaryColor = MutableStateFlow(DEFAULT_CUSTOM_SECONDARY_COLOR)
+    override val customSecondaryColor = _customSecondaryColor.asStateFlow()
+
     override suspend fun initialize() {
         val themeValue =
             storage.load("theme_key", String::class)
@@ -39,6 +47,12 @@ class ThemeManager @Inject constructor(
 
         _palette.value =
             storage.load("palette_key", String::class) ?: DEFAULT_PALETTE_ID
+
+        _customPrimaryColor.value =
+            storage.load("custom_primary_color_key", Int::class) ?: DEFAULT_CUSTOM_PRIMARY_COLOR
+
+        _customSecondaryColor.value =
+            storage.load("custom_secondary_color_key", Int::class) ?: DEFAULT_CUSTOM_SECONDARY_COLOR
     }
 
     override suspend fun setTheme(theme: ThemeService.Theme) {
@@ -56,7 +70,16 @@ class ThemeManager @Inject constructor(
         storage.save("palette_key", id)
     }
 
+    override suspend fun setCustomColors(primaryColor: Int, secondaryColor: Int) {
+        _customPrimaryColor.value = primaryColor
+        _customSecondaryColor.value = secondaryColor
+        storage.save("custom_primary_color_key", primaryColor)
+        storage.save("custom_secondary_color_key", secondaryColor)
+    }
+
     private companion object {
         const val DEFAULT_PALETTE_ID = "classic"
+        const val DEFAULT_CUSTOM_PRIMARY_COLOR = 0xFF1D4ED8.toInt()
+        const val DEFAULT_CUSTOM_SECONDARY_COLOR = 0xFFB75C00.toInt()
     }
 }

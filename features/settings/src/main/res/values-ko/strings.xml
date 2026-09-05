@@ -27,6 +27,9 @@
     <string name="palette_ocean">오션</string>
     <string name="palette_berry">베리</string>
     <string name="palette_midnight_gold">미드나잇 골드</string>
+    <string name="palette_custom">사용자 지정</string>
+    <string name="appearance_screen_custom_primary_label">기본 색상</string>
+    <string name="appearance_screen_custom_secondary_label">보조 색상</string>
 
     <!-- FAQ -->
     <string name="title_faq">자주 묻는 질문</string>

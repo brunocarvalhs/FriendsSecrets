@@ -27,6 +27,9 @@
     <string name="palette_ocean">Océano</string>
     <string name="palette_berry">Frambuesa</string>
     <string name="palette_midnight_gold">Oro de Medianoche</string>
+    <string name="palette_custom">Personalizada</string>
+    <string name="appearance_screen_custom_primary_label">Color primario</string>
+    <string name="appearance_screen_custom_secondary_label">Color secundario</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

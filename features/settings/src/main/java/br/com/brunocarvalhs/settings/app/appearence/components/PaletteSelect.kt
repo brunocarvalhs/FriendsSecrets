@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -49,6 +50,8 @@ internal fun PaletteSelect(
     modifier: Modifier = Modifier,
     selected: String = AppPalette.Default.id,
     enabled: Boolean = true,
+    customPrimaryColor: Color = AppPalette.Default.lightColorScheme.primary,
+    customSecondaryColor: Color = AppPalette.Default.lightColorScheme.secondary,
     onClick: (String) -> Unit = {},
 ) {
     LazyRow(
@@ -61,6 +64,8 @@ internal fun PaletteSelect(
                 palette = palette,
                 isSelected = palette.id == selected,
                 enabled = enabled,
+                customPrimaryColor = customPrimaryColor,
+                customSecondaryColor = customSecondaryColor,
                 onClick = { onClick(palette.id) }
             )
         }
@@ -72,10 +77,13 @@ private fun PaletteSwatch(
     palette: AppPalette,
     isSelected: Boolean,
     enabled: Boolean,
+    customPrimaryColor: Color,
+    customSecondaryColor: Color,
     onClick: () -> Unit,
 ) {
     val name = stringResource(id = paletteDisplayNameRes(palette))
-    val scheme = palette.lightColorScheme
+    val primaryColor = if (palette == AppPalette.CUSTOM) customPrimaryColor else palette.lightColorScheme.primary
+    val accentColor = if (palette == AppPalette.CUSTOM) customSecondaryColor else palette.lightColorScheme.tertiary
     val contentAlpha = if (enabled) 1f else DISABLED_ALPHA
 
     Column(
@@ -103,7 +111,7 @@ private fun PaletteSwatch(
                 )
                 .padding(4.dp)
                 .clip(CircleShape)
-                .background(scheme.primary),
+                .background(primaryColor),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -112,13 +120,13 @@ private fun PaletteSwatch(
                     .size(ACCENT_DOT_SIZE)
                     .border(width = 1.dp, color = Color.White, shape = CircleShape)
                     .clip(CircleShape)
-                    .background(scheme.tertiary)
+                    .background(accentColor)
             )
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = null,
-                    tint = scheme.onPrimary,
+                    tint = if (primaryColor.luminance() > 0.5f) Color.Black else Color.White,
                     modifier = Modifier.size(CHECK_ICON_SIZE)
                 )
             }
@@ -139,6 +147,7 @@ private fun paletteDisplayNameRes(palette: AppPalette): Int = when (palette) {
     AppPalette.OCEAN -> R.string.palette_ocean
     AppPalette.BERRY -> R.string.palette_berry
     AppPalette.MIDNIGHT_GOLD -> R.string.palette_midnight_gold
+    AppPalette.CUSTOM -> R.string.palette_custom
 }
 
 private val SWATCH_SIZE = 52.dp

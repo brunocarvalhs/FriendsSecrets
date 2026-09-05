@@ -27,6 +27,9 @@
     <string name="palette_ocean">Ocean</string>
     <string name="palette_berry">Berry</string>
     <string name="palette_midnight_gold">Midnight Gold</string>
+    <string name="palette_custom">Custom</string>
+    <string name="appearance_screen_custom_primary_label">Primary color</string>
+    <string name="appearance_screen_custom_secondary_label">Secondary color</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

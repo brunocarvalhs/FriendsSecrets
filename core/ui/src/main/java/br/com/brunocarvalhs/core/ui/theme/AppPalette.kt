@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
  * contrast (>= 4.5:1) for normal text.
  */
 enum class AppPalette(val id: String) {
-    /** The app's original identity: purple, orange and green. */
+    /** The app's default identity: strong blue, orange and green. */
     CLASSIC("classic"),
 
     /** Warm red, green and gold — evokes the end-of-year "Amigo Secreto" gift exchange. */
@@ -33,7 +33,15 @@ enum class AppPalette(val id: String) {
     BERRY("berry"),
 
     /** Elegant indigo, gold and emerald — a "gala night" evening-party feel. */
-    MIDNIGHT_GOLD("midnight_gold");
+    MIDNIGHT_GOLD("midnight_gold"),
+
+    /**
+     * User-picked primary/secondary colors (see [customColorScheme]). [lightColorScheme] and
+     * [darkColorScheme] below are unused placeholders for this entry — callers that apply the
+     * theme (see `FriendsSecretsTheme`) must special-case CUSTOM and build the scheme from the
+     * user's stored colors instead of reading these properties.
+     */
+    CUSTOM("custom");
 
     val lightColorScheme: ColorScheme
         get() = when (this) {
@@ -43,6 +51,7 @@ enum class AppPalette(val id: String) {
             OCEAN -> oceanLightScheme
             BERRY -> berryLightScheme
             MIDNIGHT_GOLD -> midnightGoldLightScheme
+            CUSTOM -> classicLightScheme
         }
 
     val darkColorScheme: ColorScheme
@@ -53,6 +62,7 @@ enum class AppPalette(val id: String) {
             OCEAN -> oceanDarkScheme
             BERRY -> berryDarkScheme
             MIDNIGHT_GOLD -> midnightGoldDarkScheme
+            CUSTOM -> classicDarkScheme
         }
 
     companion object {
