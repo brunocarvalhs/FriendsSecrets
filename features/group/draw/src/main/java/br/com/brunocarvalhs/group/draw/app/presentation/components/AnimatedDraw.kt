@@ -1,6 +1,10 @@
 package br.com.brunocarvalhs.group.draw.app.presentation.components
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +28,9 @@ import kotlin.random.Random
 private const val INITIAL_VELOCITY_RANGE = 30f
 private const val INITIAL_VELOCITY_OFFSET = 15f
 private const val DROP_VELOCITY = -30f
-private const val DRAW_DELAY = 2000L
+private const val AVATARS_VISIBLE_WHILE_FALLING_DURATION = 500L
+private const val LOADING_INDICATOR_DURATION = 2000L
+private const val DRAW_DELAY = AVATARS_VISIBLE_WHILE_FALLING_DURATION + LOADING_INDICATOR_DURATION
 
 @Composable
 internal fun AnimatedDraw(
@@ -33,6 +39,7 @@ internal fun AnimatedDraw(
     modifier: Modifier = Modifier.Companion
 ) {
     var isFalling by remember { mutableStateOf(false) }
+    var showLoading by remember { mutableStateOf(false) }
     var selectedMember by remember { mutableStateOf<UserModel?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -59,12 +66,25 @@ internal fun AnimatedDraw(
 
         Spacer(modifier = Modifier.Companion.height(32.dp))
 
-        DrawAnimationArea(
-            movingMembers = movingMembers,
-            isFalling = isFalling,
-            selectedMember = selectedMember,
-            modifier = Modifier.Companion.weight(1f)
-        )
+        Box(
+            modifier = Modifier.Companion.weight(1f),
+            contentAlignment = Alignment.Companion.Center
+        ) {
+            DrawAnimationArea(
+                movingMembers = movingMembers,
+                isFalling = isFalling,
+                selectedMember = selectedMember,
+                modifier = Modifier.Companion.fillMaxSize()
+            )
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = showLoading,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 200))
+            ) {
+                DrawShufflingIndicator()
+            }
+        }
 
         Spacer(modifier = Modifier.Companion.height(32.dp))
 
@@ -75,6 +95,10 @@ internal fun AnimatedDraw(
                     selectedMember = movingMembers.random().user
                     movingMembers.forEach { it.vy = DROP_VELOCITY }
                     isFalling = true
+                    scope.launch {
+                        delay(AVATARS_VISIBLE_WHILE_FALLING_DURATION)
+                        showLoading = true
+                    }
                     scope.launch {
                         delay(DRAW_DELAY)
                         onDraw()
