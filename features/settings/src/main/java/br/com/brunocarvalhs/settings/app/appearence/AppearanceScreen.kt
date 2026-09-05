@@ -25,7 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.brunocarvalhs.core.ui.theme.AppPalette
 import br.com.brunocarvalhs.settings.R
+import br.com.brunocarvalhs.settings.app.appearence.components.PaletteSelect
 import br.com.brunocarvalhs.settings.app.appearence.components.ThemeSelect
 import br.com.brunocarvalhs.settings.app.list.components.SettingsListItemOptions
 
@@ -39,12 +41,16 @@ internal fun AppearanceScreen(
     AppearanceContent(
         themeSelected = state.value.themeSelected,
         isDynamicThemeEnabled = state.value.isDynamicThemeEnabled,
+        paletteSelected = state.value.paletteSelected,
         onBack = onBack,
         onDynamicTheme = {
             viewModel.handleIntent(AppearanceIntent.SetDynamicThemeEnabled(it))
         },
         onTheme = {
             viewModel.handleIntent(AppearanceIntent.SetTheme(it))
+        },
+        onPalette = {
+            viewModel.handleIntent(AppearanceIntent.SetPalette(it))
         }
     )
 }
@@ -54,9 +60,11 @@ internal fun AppearanceScreen(
 private fun AppearanceContent(
     themeSelected: String,
     isDynamicThemeEnabled: Boolean = false,
+    paletteSelected: String = AppPalette.Default.id,
     onBack: () -> Unit = {},
     onDynamicTheme: (Boolean) -> Unit = {},
-    onTheme: (String) -> Unit = {}
+    onTheme: (String) -> Unit = {},
+    onPalette: (String) -> Unit = {}
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -101,6 +109,25 @@ private fun AppearanceContent(
                 )
             }
             item {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = stringResource(
+                        if (isDynamicThemeEnabled) {
+                            R.string.appearance_screen_palette_title_disabled
+                        } else {
+                            R.string.appearance_screen_palette_title
+                        }
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                PaletteSelect(
+                    modifier = Modifier.fillMaxWidth(),
+                    selected = paletteSelected,
+                    enabled = !isDynamicThemeEnabled,
+                    onClick = onPalette,
+                )
+            }
+            item {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = stringResource(R.string.appearance_screen_title_description))
@@ -124,9 +151,25 @@ internal fun AppearanceContentPreview() {
     AppearanceContent(
         themeSelected = "Light",
         isDynamicThemeEnabled = true,
+        paletteSelected = AppPalette.Default.id,
         onBack = {},
         onDynamicTheme = {},
-        onTheme = {}
+        onTheme = {},
+        onPalette = {}
+    )
+}
+
+@Composable
+@Preview
+internal fun AppearanceContentPalettePreview() {
+    AppearanceContent(
+        themeSelected = "Light",
+        isDynamicThemeEnabled = false,
+        paletteSelected = AppPalette.TROPICAL.id,
+        onBack = {},
+        onDynamicTheme = {},
+        onTheme = {},
+        onPalette = {}
     )
 }
 

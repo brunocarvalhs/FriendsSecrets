@@ -37,6 +37,7 @@ class ThemeManagerTest {
         // defaults seguros
         coEvery { storage.load("theme_key", String::class) } returns "SYSTEM"
         coEvery { storage.load("dynamic_theme_key", Boolean::class) } returns false
+        coEvery { storage.load("palette_key", String::class) } returns null
     }
 
     @After
@@ -119,5 +120,45 @@ class ThemeManagerTest {
         advanceUntilIdle()
 
         assertEquals(ThemeService.Theme.DARK, manager.theme.value)
+    }
+
+    @Test
+    fun `should default to classic palette when nothing stored`() = runTest {
+        manager = createManager()
+
+        manager.initialize()
+
+        advanceUntilIdle()
+
+        assertEquals("classic", manager.palette.value)
+    }
+
+    @Test
+    fun `should initialize palette from storage`() = runTest {
+        coEvery { storage.load("palette_key", String::class) } returns "festive"
+
+        manager = createManager()
+
+        manager.initialize()
+
+        advanceUntilIdle()
+
+        assertEquals("festive", manager.palette.value)
+    }
+
+    @Test
+    fun `should update palette and persist`() = runTest {
+        coEvery { storage.save(any(), any()) } just Runs
+
+        manager = createManager()
+
+        manager.setPalette("tropical")
+        advanceUntilIdle()
+
+        assertEquals("tropical", manager.palette.value)
+
+        coVerify(exactly = 1) {
+            storage.save("palette_key", "tropical")
+        }
     }
 }

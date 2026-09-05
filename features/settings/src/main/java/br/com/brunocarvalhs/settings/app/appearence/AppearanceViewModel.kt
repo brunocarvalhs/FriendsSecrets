@@ -26,7 +26,8 @@ internal class AppearanceViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         value = AppearanceState(
             themeSelected = themeService.theme.value.type,
-            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value
+            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value,
+            paletteSelected = themeService.palette.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
@@ -40,6 +41,7 @@ internal class AppearanceViewModel @Inject constructor(
         when (intent) {
             is AppearanceIntent.SetTheme -> setTheme(intent.theme)
             is AppearanceIntent.SetDynamicThemeEnabled -> setDynamicThemeEnabled(intent.enabled)
+            is AppearanceIntent.SetPalette -> setPalette(intent.paletteId)
         }
     }
 
@@ -81,6 +83,21 @@ internal class AppearanceViewModel @Inject constructor(
         viewModelScope.launch {
             themeService.setDynamicThemeEnabled(enabled)
             _state.update { it.copy(isDynamicThemeEnabled = enabled) }
+        }
+    }
+
+    @AddTrace(name = "AppearanceViewModel.setPalette", enabled = true)
+    private fun setPalette(paletteId: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_palette",
+                AnalyticsParam.PARAM to paletteId
+            )
+        )
+        viewModelScope.launch {
+            themeService.setPalette(paletteId)
+            _state.update { it.copy(paletteSelected = paletteId) }
         }
     }
 }

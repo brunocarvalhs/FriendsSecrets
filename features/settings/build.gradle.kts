@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":core:biometric"))
     implementation(project(":core:remote"))
     implementation(project(":core:review"))
+    implementation(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

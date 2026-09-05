@@ -19,6 +19,14 @@
     <string name="light_theme">Light theme</string>
     <string name="dark_theme">Dark theme</string>
     <string name="system_theme">System theme</string>
+    <string name="appearance_screen_palette_title">Pick a color palette for the app.</string>
+    <string name="appearance_screen_palette_title_disabled">Color palette (disabled while Dynamic Theme is on — turn it off to pick a palette).</string>
+    <string name="palette_classic">Classic</string>
+    <string name="palette_festive">Festive</string>
+    <string name="palette_tropical">Tropical</string>
+    <string name="palette_ocean">Ocean</string>
+    <string name="palette_berry">Berry</string>
+    <string name="palette_midnight_gold">Midnight Gold</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

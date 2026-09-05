@@ -7,11 +7,15 @@ val primaryLight = Color(0xFF7B3FA0)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFEADCF5)
 val onPrimaryContainerLight = Color(0xFF2A0A3D)
-val secondaryLight = Color(0xFFF57C00)
+// NOTE: darkened from the original #F57C00 to meet WCAG AA (4.5:1) contrast
+// against white text (onSecondaryLight) — the original combination measured ~2.7:1.
+val secondaryLight = Color(0xFFB75C00)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFFFE0B2)
 val onSecondaryContainerLight = Color(0xFF3E1F00)
-val tertiaryLight = Color(0xFF4CAF50)
+// NOTE: darkened from the original #4CAF50 to meet WCAG AA (4.5:1) contrast
+// against white text (onTertiaryLight) — the original combination measured ~2.8:1.
+val tertiaryLight = Color(0xFF3A843D)
 val onTertiaryLight = Color(0xFFFFFFFF)
 val tertiaryContainerLight = Color(0xFFC8E6C9)
 val onTertiaryContainerLight = Color(0xFF0F2E12)
@@ -36,7 +40,9 @@ val secondaryContainerDark = Color(0xFF7A3E00)
 val onSecondaryContainerDark = Color(0xFFFFE0B2)
 val tertiaryDark = Color(0xFFA5D6A7)
 val onTertiaryDark = Color(0xFF0F2E12)
-val tertiaryContainerDark = Color(0xFF2E7D32)
+// NOTE: darkened slightly from the original #2E7D32 to meet WCAG AA (4.5:1)
+// contrast against onTertiaryContainerDark — the original combination measured ~3.8:1.
+val tertiaryContainerDark = Color(0xFF296E2C)
 val onTertiaryContainerDark = Color(0xFFC8E6C9)
 val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF690005)

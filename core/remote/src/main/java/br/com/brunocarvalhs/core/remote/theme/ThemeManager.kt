@@ -20,6 +20,11 @@ class ThemeManager @Inject constructor(
     private val _isDynamicThemeEnabled = MutableStateFlow(false)
     override val isDynamicThemeEnabled = _isDynamicThemeEnabled.asStateFlow()
 
+    // Mirrors AppPalette.Default.id ("classic") from core:ui. Kept as a literal here since
+    // core:remote must not depend on core:ui.
+    private val _palette = MutableStateFlow(DEFAULT_PALETTE_ID)
+    override val palette = _palette.asStateFlow()
+
     override suspend fun initialize() {
         val themeValue =
             storage.load("theme_key", String::class)
@@ -31,6 +36,9 @@ class ThemeManager @Inject constructor(
 
         _isDynamicThemeEnabled.value =
             storage.load("dynamic_theme_key", Boolean::class) ?: false
+
+        _palette.value =
+            storage.load("palette_key", String::class) ?: DEFAULT_PALETTE_ID
     }
 
     override suspend fun setTheme(theme: ThemeService.Theme) {
@@ -41,5 +49,14 @@ class ThemeManager @Inject constructor(
     override suspend fun setDynamicThemeEnabled(enabled: Boolean) {
         _isDynamicThemeEnabled.value = enabled
         storage.save("dynamic_theme_key", enabled)
+    }
+
+    override suspend fun setPalette(id: String) {
+        _palette.value = id
+        storage.save("palette_key", id)
+    }
+
+    private companion object {
+        const val DEFAULT_PALETTE_ID = "classic"
     }
 }
