@@ -101,7 +101,7 @@ private fun rememberCustomColorState(
 ) = if (!isInPreview && themeService != null) {
     selector(themeService).collectAsState()
 } else {
-    remember { androidx.compose.runtime.mutableStateOf(default) }
+    remember { androidx.compose.runtime.mutableIntStateOf(default) }
 }
 
 @Composable
