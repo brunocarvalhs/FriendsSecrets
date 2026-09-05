@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
  * contrast (>= 4.5:1) for normal text.
  */
 enum class AppPalette(val id: String) {
-    /** The app's default identity: strong blue, orange and green. */
+    /** The app's default identity: Christmas red, orange and green. */
     CLASSIC("classic"),
 
     /** Warm red, green and gold — evokes the end-of-year "Amigo Secreto" gift exchange. */
@@ -94,7 +94,7 @@ private val classicLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(primaryLight, surfaceLight)
 
 private val classicDarkScheme = darkColorScheme(
     primary = primaryDark,
@@ -118,7 +118,7 @@ private val classicDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(primaryDark, surfaceDark)
 
 // region Festive — red / green / gold
 private val festiveLightScheme = lightColorScheme(
@@ -143,7 +143,7 @@ private val festiveLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(Color(0xFFDD2F3E), surfaceLight)
 
 private val festiveDarkScheme = darkColorScheme(
     primary = Color(0xFFE3505C),
@@ -167,7 +167,7 @@ private val festiveDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(Color(0xFFE3505C), surfaceDark)
 // endregion
 
 // region Tropical — pink / yellow / teal
@@ -193,7 +193,7 @@ private val tropicalLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(Color(0xFFDC207E), surfaceLight)
 
 private val tropicalDarkScheme = darkColorScheme(
     primary = Color(0xFFE44494),
@@ -217,7 +217,7 @@ private val tropicalDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(Color(0xFFE44494), surfaceDark)
 // endregion
 
 // region Ocean — teal / coral / sunny yellow
@@ -243,7 +243,7 @@ private val oceanLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(Color(0xFF1A8094), surfaceLight)
 
 private val oceanDarkScheme = darkColorScheme(
     primary = Color(0xFF1D90A6),
@@ -267,7 +267,7 @@ private val oceanDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(Color(0xFF1D90A6), surfaceDark)
 // endregion
 
 // region Berry — magenta / gold / teal
@@ -293,7 +293,7 @@ private val berryLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(Color(0xFFD42895), surfaceLight)
 
 private val berryDarkScheme = darkColorScheme(
     primary = Color(0xFFDC49A7),
@@ -317,7 +317,7 @@ private val berryDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(Color(0xFFDC49A7), surfaceDark)
 // endregion
 
 // region Midnight Gold — indigo / gold / emerald
@@ -343,7 +343,7 @@ private val midnightGoldLightScheme = lightColorScheme(
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
     outline = outlineLight,
-)
+).withTintedContainers(Color(0xFF626BD1), surfaceLight)
 
 private val midnightGoldDarkScheme = darkColorScheme(
     primary = Color(0xFF737CD6),
@@ -367,5 +367,5 @@ private val midnightGoldDarkScheme = darkColorScheme(
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
     outline = outlineDark,
-)
+).withTintedContainers(Color(0xFF737CD6), surfaceDark)
 // endregion

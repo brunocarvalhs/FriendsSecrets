@@ -92,7 +92,7 @@ private fun SettingsContent(
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 title = { Text(text = stringResource(R.string.title_settings)) },

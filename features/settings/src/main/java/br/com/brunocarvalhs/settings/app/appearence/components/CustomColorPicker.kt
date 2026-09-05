@@ -45,11 +45,11 @@ import br.com.brunocarvalhs.settings.R
  */
 @Composable
 internal fun CustomColorPicker(
-    modifier: Modifier = Modifier,
     primaryColor: Color,
     secondaryColor: Color,
-    onPrimaryColorChange: (Color) -> Unit,
-    onSecondaryColorChange: (Color) -> Unit,
+    modifier: Modifier = Modifier,
+    onPrimaryColorChange: (Color) -> Unit = {},
+    onSecondaryColorChange: (Color) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Text(

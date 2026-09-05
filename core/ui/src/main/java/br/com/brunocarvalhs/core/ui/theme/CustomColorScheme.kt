@@ -64,7 +64,7 @@ fun customColorScheme(primary: Color, secondary: Color, dark: Boolean): ColorSch
             surfaceVariant = surfaceVariantDark,
             onSurfaceVariant = onSurfaceVariantDark,
             outline = outlineDark,
-        )
+        ).withTintedContainers(primary, surfaceDark)
     } else {
         lightColorScheme(
             primary = primary,
@@ -88,7 +88,7 @@ fun customColorScheme(primary: Color, secondary: Color, dark: Boolean): ColorSch
             surfaceVariant = surfaceVariantLight,
             onSurfaceVariant = onSurfaceVariantLight,
             outline = outlineLight,
-        )
+        ).withTintedContainers(primary, surfaceLight)
     }
 }
 
