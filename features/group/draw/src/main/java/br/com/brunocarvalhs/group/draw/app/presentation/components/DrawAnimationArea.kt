@@ -19,7 +19,7 @@ import br.com.brunocarvalhs.group.draw.R
 @Composable
 internal fun DrawAnimationArea(
     movingMembers: List<MovingMember>,
-    phase: DrawPhase,
+    isFalling: Boolean,
     selectedMember: UserModel?,
     modifier: Modifier = Modifier
 ) {
@@ -30,11 +30,11 @@ internal fun DrawAnimationArea(
         val width = constraints.maxWidth.toFloat()
         val height = constraints.maxHeight.toFloat()
 
-        LaunchedEffect(phase) {
+        LaunchedEffect(isFalling) {
             while (true) {
                 withFrameMillis {
                     movingMembers.forEach { m ->
-                        updateMemberPosition(m, phase, width, height)
+                        updateMemberPosition(m, isFalling, width, height)
                     }
                 }
             }
@@ -54,7 +54,6 @@ internal fun DrawAnimationArea(
                     .graphicsLayer {
                         translationX = member.x
                         translationY = member.y
-                        rotationZ = member.rotation
                         scaleX = scale
                         scaleY = scale
                     }

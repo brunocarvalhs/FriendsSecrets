@@ -7,35 +7,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.brunocarvalhs.core.domain.model.UserModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 
 private const val INITIAL_VELOCITY_RANGE = 30f
 private const val INITIAL_VELOCITY_OFFSET = 15f
 private const val DROP_VELOCITY = -30f
-private const val SPIN_DURATION_MS = 1800L
-private const val FALL_DURATION_MS = 600L
 
 @Composable
 internal fun AnimatedDraw(
     members: List<UserModel>,
+    isDrawn: Boolean,
     onDraw: () -> Unit,
     modifier: Modifier = Modifier.Companion
 ) {
-    var phase by remember { mutableStateOf(DrawPhase.IDLE) }
+    var isFalling by remember { mutableStateOf(false) }
+    var isDrawing by remember { mutableStateOf(false) }
     var selectedMember by remember { mutableStateOf<UserModel?>(null) }
-    val scope = rememberCoroutineScope()
 
     val movingMembers = remember(members) {
         members.map {
@@ -46,6 +43,13 @@ internal fun AnimatedDraw(
                 vx = Random.Default.nextFloat() * INITIAL_VELOCITY_RANGE - INITIAL_VELOCITY_OFFSET,
                 vy = Random.Default.nextFloat() * INITIAL_VELOCITY_RANGE - INITIAL_VELOCITY_OFFSET
             )
+        }
+    }
+
+    LaunchedEffect(isDrawn) {
+        if (isDrawn) {
+            movingMembers.forEach { it.vy = DROP_VELOCITY }
+            isFalling = true
         }
     }
 
@@ -62,7 +66,7 @@ internal fun AnimatedDraw(
 
         DrawAnimationArea(
             movingMembers = movingMembers,
-            phase = phase,
+            isFalling = isFalling,
             selectedMember = selectedMember,
             modifier = Modifier.Companion.weight(1f)
         )
@@ -70,18 +74,12 @@ internal fun AnimatedDraw(
         Spacer(modifier = Modifier.Companion.height(32.dp))
 
         DrawActionButton(
-            isFalling = phase != DrawPhase.IDLE,
+            isFalling = isDrawing,
             onClick = {
-                if (phase == DrawPhase.IDLE) {
+                if (!isDrawing) {
                     selectedMember = movingMembers.random().user
-                    phase = DrawPhase.SPINNING
-                    scope.launch {
-                        delay(SPIN_DURATION_MS)
-                        movingMembers.forEach { it.vy = DROP_VELOCITY }
-                        phase = DrawPhase.FALLING
-                        delay(FALL_DURATION_MS)
-                        onDraw()
-                    }
+                    isDrawing = true
+                    onDraw()
                 }
             }
         )
