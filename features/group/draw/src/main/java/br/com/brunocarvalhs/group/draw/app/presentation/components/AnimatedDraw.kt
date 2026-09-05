@@ -21,8 +21,8 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 
-private const val INITIAL_VELOCITY_RANGE = 6f
-private const val INITIAL_VELOCITY_OFFSET = 3f
+private const val INITIAL_VELOCITY_RANGE = 30f
+private const val INITIAL_VELOCITY_OFFSET = 15f
 private const val DROP_VELOCITY = -30f
 private const val SPIN_DURATION_MS = 1800L
 private const val FALL_DURATION_MS = 600L

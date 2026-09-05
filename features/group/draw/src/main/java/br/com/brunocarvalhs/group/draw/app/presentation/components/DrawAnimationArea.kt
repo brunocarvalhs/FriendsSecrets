@@ -23,8 +23,6 @@ internal fun DrawAnimationArea(
     selectedMember: UserModel?,
     modifier: Modifier = Modifier
 ) {
-    val tilt = rememberDeviceTilt()
-
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
@@ -36,7 +34,7 @@ internal fun DrawAnimationArea(
             while (true) {
                 withFrameMillis {
                     movingMembers.forEach { m ->
-                        updateMemberPosition(m, phase, tilt.value, width, height)
+                        updateMemberPosition(m, phase, width, height)
                     }
                 }
             }
