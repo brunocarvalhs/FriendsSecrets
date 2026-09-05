@@ -19,6 +19,14 @@
     <string name="light_theme">라이트</string>
     <string name="dark_theme">다크 테마</string>
     <string name="system_theme">시스템 테마</string>
+    <string name="appearance_screen_palette_title">앱의 색상 팔레트를 선택하세요.</string>
+    <string name="appearance_screen_palette_title_disabled">색상 팔레트(다이내믹 테마가 켜져 있는 동안 비활성화됨 — 팔레트를 선택하려면 꺼주세요).</string>
+    <string name="palette_classic">클래식</string>
+    <string name="palette_festive">페스티브</string>
+    <string name="palette_tropical">트로피컬</string>
+    <string name="palette_ocean">오션</string>
+    <string name="palette_berry">베리</string>
+    <string name="palette_midnight_gold">미드나잇 골드</string>
 
     <!-- FAQ -->
     <string name="title_faq">자주 묻는 질문</string>

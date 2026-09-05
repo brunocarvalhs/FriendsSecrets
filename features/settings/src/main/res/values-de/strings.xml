@@ -19,6 +19,14 @@
     <string name="light_theme">Helles Design</string>
     <string name="dark_theme">Dunkles Design</string>
     <string name="system_theme">Systemdesign</string>
+    <string name="appearance_screen_palette_title">Wähle eine Farbpalette für die App.</string>
+    <string name="appearance_screen_palette_title_disabled">Farbpalette (deaktiviert, während das dynamische Design aktiv ist — deaktiviere es, um eine Palette auszuwählen).</string>
+    <string name="palette_classic">Klassisch</string>
+    <string name="palette_festive">Festlich</string>
+    <string name="palette_tropical">Tropisch</string>
+    <string name="palette_ocean">Ozean</string>
+    <string name="palette_berry">Beere</string>
+    <string name="palette_midnight_gold">Mitternachtsgold</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>

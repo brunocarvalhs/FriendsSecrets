@@ -19,6 +19,14 @@
     <string name="light_theme">Thème clair</string>
     <string name="dark_theme">Thème sombre</string>
     <string name="system_theme">Thème du système</string>
+    <string name="appearance_screen_palette_title">Choisissez une palette de couleurs pour l\'application.</string>
+    <string name="appearance_screen_palette_title_disabled">Palette de couleurs (désactivée tant que le thème dynamique est actif — désactivez-le pour choisir une palette).</string>
+    <string name="palette_classic">Classique</string>
+    <string name="palette_festive">Festive</string>
+    <string name="palette_tropical">Tropicale</string>
+    <string name="palette_ocean">Océan</string>
+    <string name="palette_berry">Baies</string>
+    <string name="palette_midnight_gold">Or de Minuit</string>
 
     <!-- FAQ -->
     <string name="title_faq">FAQ</string>
