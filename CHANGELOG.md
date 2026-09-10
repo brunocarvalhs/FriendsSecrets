@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.11.0] - 2026-09-10
+
+* Merge pull request #88 from brunocarvalhs/feat/color-palette-picker
+* fix(group-list): make the home screen's top bar follow the palette too
+* fix(theme): use primaryContainer for headers instead of a faint surface tint
+* feat(settings): add a dedicated Custom Theme switch, mutually exclusive with Dynamic Theme
+* feat(theme): make cards and top app bars follow the selected palette
+* style(theme): use mutableIntStateOf for the custom color fallback state
+* style: extract magic numbers in the palette swatch components
+* feat(theme): add a Custom palette with user-picked primary/secondary colors
+* fix(theme,settings): satisfy detekt/lint on the palette picker PR
+* feat(settings): add pre-selected color palette picker to Appearance
+* chore: bump version to 3.10.2 [skip ci]
+
+
 ## [3.10.2] - 2026-09-04
 
 * fix(network): stop decoding Firestore write confirmations as full DTOs
