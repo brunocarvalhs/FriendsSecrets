@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.brunocarvalhs.core.analytics.AnalyticsService
 import br.com.brunocarvalhs.core.analytics.commons.AnalyticsEvent
 import br.com.brunocarvalhs.core.remote.domain.ThemeService
+import br.com.brunocarvalhs.core.ui.theme.AppPalette
 import com.google.firebase.perf.metrics.AddTrace
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,10 @@ internal class AppearanceViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         value = AppearanceState(
             themeSelected = themeService.theme.value.type,
-            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value
+            isDynamicThemeEnabled = themeService.isDynamicThemeEnabled.value,
+            paletteSelected = themeService.palette.value,
+            customPrimaryColor = themeService.customPrimaryColor.value,
+            customSecondaryColor = themeService.customSecondaryColor.value
         )
     )
     val state: StateFlow<AppearanceState> = _state.asStateFlow()
@@ -40,6 +44,10 @@ internal class AppearanceViewModel @Inject constructor(
         when (intent) {
             is AppearanceIntent.SetTheme -> setTheme(intent.theme)
             is AppearanceIntent.SetDynamicThemeEnabled -> setDynamicThemeEnabled(intent.enabled)
+            is AppearanceIntent.SetPalette -> setPalette(intent.paletteId)
+            is AppearanceIntent.SetCustomColors ->
+                setCustomColors(intent.primaryColor, intent.secondaryColor)
+            is AppearanceIntent.SetCustomThemeEnabled -> setCustomThemeEnabled(intent.enabled)
         }
     }
 
@@ -80,7 +88,71 @@ internal class AppearanceViewModel @Inject constructor(
         )
         viewModelScope.launch {
             themeService.setDynamicThemeEnabled(enabled)
-            _state.update { it.copy(isDynamicThemeEnabled = enabled) }
+            val turnOffCustomTheme = enabled && _state.value.paletteSelected == AppPalette.CUSTOM.id
+            if (turnOffCustomTheme) {
+                themeService.setPalette(AppPalette.Default.id)
+            }
+            _state.update {
+                it.copy(
+                    isDynamicThemeEnabled = enabled,
+                    paletteSelected = if (turnOffCustomTheme) AppPalette.Default.id else it.paletteSelected
+                )
+            }
+        }
+    }
+
+    @AddTrace(name = "AppearanceViewModel.setPalette", enabled = true)
+    private fun setPalette(paletteId: String) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_palette",
+                AnalyticsParam.PARAM to paletteId
+            )
+        )
+        viewModelScope.launch {
+            themeService.setPalette(paletteId)
+            _state.update { it.copy(paletteSelected = paletteId) }
+        }
+    }
+
+    @AddTrace(name = "AppearanceViewModel.setCustomColors", enabled = true)
+    private fun setCustomColors(primaryColor: Int, secondaryColor: Int) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_custom_colors"
+            )
+        )
+        viewModelScope.launch {
+            themeService.setCustomColors(primaryColor, secondaryColor)
+            _state.update {
+                it.copy(customPrimaryColor = primaryColor, customSecondaryColor = secondaryColor)
+            }
+        }
+    }
+
+    @AddTrace(name = "AppearanceViewModel.setCustomThemeEnabled", enabled = true)
+    private fun setCustomThemeEnabled(enabled: Boolean) {
+        analyticsService.logEvent(
+            name = AnalyticsEvent.CLICK,
+            params = mapOf(
+                AnalyticsParam.ACTION to "set_custom_theme_enabled",
+                AnalyticsParam.PARAM to enabled.toString()
+            )
+        )
+        val paletteId = if (enabled) AppPalette.CUSTOM.id else AppPalette.Default.id
+        viewModelScope.launch {
+            themeService.setPalette(paletteId)
+            if (enabled && _state.value.isDynamicThemeEnabled) {
+                themeService.setDynamicThemeEnabled(false)
+            }
+            _state.update {
+                it.copy(
+                    paletteSelected = paletteId,
+                    isDynamicThemeEnabled = if (enabled) false else it.isDynamicThemeEnabled
+                )
+            }
         }
     }
 }

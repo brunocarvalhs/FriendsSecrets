@@ -10,14 +10,16 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * A titled switch row. [selected] is read directly from the caller on every recomposition
+ * (rather than snapshotted into internal state), so it stays in sync when something other than
+ * this switch changes the underlying value - e.g. two mutually-exclusive switches where turning
+ * one on programmatically turns the other off.
+ */
 @Composable
 internal fun SettingsListItemOptions(
     title: String,
@@ -25,22 +27,15 @@ internal fun SettingsListItemOptions(
     selected: Boolean = false,
     onClick: (Boolean) -> Unit,
 ) {
-    var checked by rememberSaveable { mutableStateOf(value = selected) }
-
-    fun onClick(value: Boolean) {
-        checked = value
-        onClick.invoke(value)
-    }
-
     ListItem(
         modifier = Modifier
-            .clickable { onClick(checked.not()) }
+            .clickable { onClick(!selected) }
             .selectableGroup(),
         headlineContent = { Text(title) },
         trailingContent = {
             Switch(
-                checked = checked,
-                onCheckedChange = { onClick(it) }
+                checked = selected,
+                onCheckedChange = onClick
             )
         },
         leadingContent = {

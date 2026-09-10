@@ -141,7 +141,7 @@ private fun ContactsContent(
                             Text(
                                 text = stringResource(R.string.contacts_adicional_members),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Text(
                                 text = stringResource(
@@ -149,7 +149,7 @@ private fun ContactsContent(
                                     selectedMembers.size
                                 ),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     },
@@ -158,7 +158,7 @@ private fun ContactsContent(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.content_description_back),
-                                tint = MaterialTheme.colorScheme.secondary
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     },
@@ -169,17 +169,15 @@ private fun ContactsContent(
                         ) {
                             Text(
                                 text = stringResource(R.string.content_description_next),
-                                color = if (selectedMembers.size >= MIN_MEMBERS) {
-                                    MaterialTheme.colorScheme.secondary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                },
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                    alpha = if (selectedMembers.size >= MIN_MEMBERS) 1f else 0.5f
+                                ),
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
             },
