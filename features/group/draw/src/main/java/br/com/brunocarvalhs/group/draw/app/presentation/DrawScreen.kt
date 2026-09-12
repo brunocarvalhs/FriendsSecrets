@@ -94,6 +94,7 @@ private fun DrawContent(
             ) {
                 AnimatedDraw(
                     members = members,
+                    isDrawn = isDrawn,
                     onDraw = onDraw
                 )
             }
